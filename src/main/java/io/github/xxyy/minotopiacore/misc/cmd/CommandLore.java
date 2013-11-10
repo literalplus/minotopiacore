@@ -1,0 +1,59 @@
+package io.github.xxyy.minotopiacore.misc.cmd;
+
+import io.github.xxyy.common.HelpManager;
+import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import io.github.xxyy.minotopiacore.misc.LoreManager;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+
+public class CommandLore implements CommandExecutor{
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
+		if(!MTCHelper.isEnabledAndMsg(".command.lore", sender)) return true;
+		if(args.length == 0){
+			if(!(sender instanceof Player)){
+				sender.sendMessage("Das Kommando /"+label+" kann nur von einem Spieler benutzt werden!");
+			}
+			this.printHelpToSender(sender,label);
+		}else if(args.length >= 1){
+			LoreManager lm = new LoreManager(sender,label,args,this);
+			switch(args[0]){
+			case "add":
+				lm.addLore();
+				break;
+			case "clear":
+				lm.clearLore();
+				break;
+			case "remove":
+				lm.removeLore();
+				break;
+			case "set":
+				lm.setLoreAt();
+				break;
+			case "list":
+				lm.listlore();
+				break;
+			default:
+				sender.sendMessage("§8Invalide Aktion '"+args[0]+"'! Valide Aktionen: add,clear,remove,set,list.");
+				this.printHelpToSender(sender, label);
+			}
+		}else{
+			sender.sendMessage("§8Falsche Verwendung von "+label+"!");
+			this.printHelpToSender(sender,label);
+		}
+		return true;
+	}
+	public void printHelpToSender(CommandSender sender,String label){
+		HelpManager.tryPrintHelp("lore", sender, label, "", "mtc help lore");
+	}
+	
+	
+	
+	
+
+}

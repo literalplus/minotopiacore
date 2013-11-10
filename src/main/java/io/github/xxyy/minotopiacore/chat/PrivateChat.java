@@ -1,0 +1,133 @@
+package io.github.xxyy.minotopiacore.chat;
+
+import io.github.xxyy.minotopiacore.LogHelper;
+import io.github.xxyy.minotopiacore.MTC;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+
+import org.bukkit.entity.Player;
+
+
+public class PrivateChat {
+	public int chatId = 0;
+	public ArrayList<Player> recipients = new ArrayList<>();
+	public Player leader;
+	public List<Player> activeRecipients = new ArrayList<>();
+	public String topic = "";
+	
+	public static int currentId = 0;
+	public static HashMap<Player,List<PrivateChat>> recChats = new HashMap<>();
+	public static HashMap<Player,List<PrivateChat>> invitedChats = new HashMap<>();
+	public static HashMap<Player,PrivateChat> activeChats = new HashMap<>();
+	public PrivateChat(Player leader, ArrayList<Player> recipients){
+		this.leader = leader; this.recipients = recipients; 
+		this.activeRecipients.add(leader);
+		this.chatId = PrivateChat.currentId++;
+		for(Player plr : recipients){
+			if(!PrivateChat.recChats.containsKey(plr)){
+				List<PrivateChat> list = new ArrayList<>();
+				list.add(this);
+				PrivateChat.recChats.put(plr, list);
+			}else{
+				List<PrivateChat> list = PrivateChat.recChats.get(plr);
+				if(list == null) {
+                    list = new ArrayList<>();
+                }
+				list.add(this);
+				PrivateChat.recChats.put(plr, list);
+			}
+			if(!plr.getName().equalsIgnoreCase(leader.getName())){
+				plr.sendMessage(MTC.chatPrefix+"§b"+leader.getName()+"§6 hat dich zu einem privaten Chat eingeladen.");
+				plr.sendMessage(MTC.chatPrefix+"Annehmen: §b/chat switch "+this.chatId+" §a§k| §6Deine Chats: §b/chat list");
+			}
+		}
+		PrivateChat.updateActiveChat(leader,this);
+		LogHelper.getPrivChatLogger().log(Level.INFO, leader.getName()+" CREATED: "+recipients);
+	}
+	public String getFormattedPlayerListAsString(){
+		String recs = "";
+		int i = 0;
+		for(Player rec : this.recipients){
+			recs += ((PrivateChat.isActiveChat(rec, this)) ? "§a" : "§c")+rec.getName()+((i == (this.recipients.size() - 1)) ? "" : "§6,");
+			i++;
+		}
+		if(recs.isEmpty()) return "leer";
+		return recs;
+	}
+	public boolean isLeader(Player plr){
+		return this.leader.getName().equalsIgnoreCase(plr.getName());
+	}
+	public void sendMessage(String msg){
+		if(this.activeRecipients.size() == 0) return;
+		for(Player plr : this.activeRecipients){
+			plr.sendMessage(msg);
+		}
+	}
+	//	public static void notifyActiveRecipientsLeave(Player plr, PrivateChat pc){
+//		if(pc.activeRecipients.isEmpty()) return;
+//		for(Player rec : pc.activeRecipients){
+//			rec.sendMessage(MinoTopiaCore.chatPrefix+"§b"+plr.getName()+"§6 hat den Chat gewechselt.");
+//		}
+//	}
+	public static PrivateChat getActiveChat(Player plr){
+		if(!PrivateChat.activeChats.containsKey(plr)) return null;
+		return PrivateChat.activeChats.get(plr);
+	}
+	public static boolean isActiveChat(Player plr,PrivateChat pc){
+		return PrivateChat.getActiveChat(plr) == pc;
+	}
+public static boolean isInAnyPChat(Player plr){
+		if(!PrivateChat.activeChats.containsKey(plr)) return false;
+		PrivateChat pc = PrivateChat.activeChats.get(plr);
+		if(pc == null) return false;
+		return true;
+	}
+	public static void tryRemoveChatFromP(Player plr,PrivateChat pc){
+		if(!PrivateChat.isInAnyPChat(plr)) return;
+		List<PrivateChat> lst = PrivateChat.recChats.get(plr);
+		lst.remove(pc);
+		pc.recipients.remove(plr);
+		if(pc.activeRecipients.contains(plr)){
+			pc.activeRecipients.remove(plr);
+			PrivateChat.activeChats.remove(plr);
+		}
+		PrivateChat.recChats.put(plr, lst);
+		pc.sendMessage(MTC.chatPrefix+"§b"+plr.getName()+" §6hat den Chat verlassen.");
+		if(pc.leader.getName().equalsIgnoreCase(plr.getName())){
+			if(pc.activeRecipients.isEmpty()){
+				MTCChatHelper.directChats.remove(pc.chatId);
+				pc = null;
+				return;
+			}
+			int newLeaderId = (new Random()).nextInt(pc.activeRecipients.size());
+			pc.leader = pc.activeRecipients.get(newLeaderId);
+			pc.sendMessage(MTC.chatPrefix+"§b"+pc.leader.getName()+"§6 ist der neue Leiter dieses Chats!");
+		}
+	}
+	public static boolean updateActiveChat(Player plr,PrivateChat pc){
+		return PrivateChat.updateActiveChatWMsg(plr,pc) == null;
+	}
+	public static String updateActiveChatWMsg(Player plr,PrivateChat pc){
+		if(!pc.recipients.contains(plr)) return "Du wurdest nicht in diesen Chat eingeladen!";
+		if(!PrivateChat.activeChats.containsKey(plr)){
+			PrivateChat.activeChats.put(plr, pc);
+			if(!pc.activeRecipients.contains(plr)) {
+                pc.activeRecipients.add(plr);
+            }
+			return null;
+		}
+		PrivateChat previousChat = PrivateChat.activeChats.get(plr);
+		PrivateChat.activeChats.put(plr, pc);
+		if(!pc.activeRecipients.contains(plr)) {
+            pc.activeRecipients.add(plr);
+        }
+		previousChat.activeRecipients.remove(plr);
+		previousChat.sendMessage(MTC.chatPrefix+"§b"+plr.getName()+" §6hat den Chat gewechselt.");
+//		notifyActiveRecipientsLeave(plr,pc);
+		return null;
+	}
+}

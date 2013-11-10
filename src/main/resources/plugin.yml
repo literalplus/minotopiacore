@@ -1,0 +1,134 @@
+name: MinoTopiaCore
+version: "@VERSION@_b@BUILDNUM@ built at @BUILDTIME@"
+description: MinoTopiaCore - A collections of essential functions for MinoTopia.
+author: xxyy98<xxyy98[at]gmail.com> | Philipp Nowak
+main: io.github.xxyy.minotopiacore.MTC
+softdepend: [Vault]
+
+commands: 
+  gtime:
+    description: Gibt die Serverzeit aus.
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [gt, gettime, getdate, gd]
+  lore:
+    description: Befehl zum Arbeiten mit zusaetzlichen Zeilen in Itemtooltips (Lore)
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [ii]
+  mtc:
+    description: "Wichtige Kommandos fuer MTC. Mehr Info: /mtc help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [xyu, mts, mtc, minotopiacore]
+  playerhead:
+    description: "Spielerkopf-Tools. Mehr Info: /mtc help <command>"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [ph]
+  war:
+    description: "TeamBattle-Kommando. Mehr info: /mtc help <command>"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [krieg]
+  waradmin:
+    description: "Adminfunktionen fuer TeamBattle! Mehr Info: /mtc help <command>"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [wa,wara]
+  globalmute:
+    description: Aendert den Status von GlobalMute.
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [glomu, xglomu]
+  chatclear:
+    description: Leert den globalen Chat.
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [cc, clearchat, xcc]
+  chatfarbe: 
+    description: "Aendert deine Chatfarbe. Mehr: /<command> help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [cf, chatcolor]
+  chat:
+    decription: "Private Chats mit einem User. Mehr Info: /<command> help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [pchat]
+  mute:
+    description: "MTC Mute. Mehr Info: /<command>"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [mtcmute,mtsmute,mmute]
+  falldown:
+    description: "Falldown...Ein Spiel von MinoTopia... Mehr! /<command> help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [fd, fdown, falld]
+  falldownadmin:
+    description: "Falldown admin tools.. /<command> help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [fda, fa, falldowna, fdadmin]
+  ban:
+    description: "Bannt einen Spieler."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [bann, bannen, permaban, permban, permanentban, b]
+  unban:
+    description: "Hebt den Bann eines Spielers auf."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [unban, unbann, unpermaban, unbannen, entbann, entbannen, deban, ub]
+  tempban:
+    description: "Bannt einen Spieler auf Zeit."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [tban, zeitban, zban, temporaererban, tb]
+  baninfo:
+    description: "Zeigt Informationen ueber einen Spieler an."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [iban, bani, bi]
+  addwarn:
+    description: "Fuegt einem Spieler einen (oder mehrere) Warn(s) hinzu."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [warn, aw, w, warnen]
+  removewarn:
+    description: "Loescht bestimmte Warns. Mehr Info: /<command> help"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [remwarn, rw, delwarn, dw, warnentfernen, delwarns]
+  listwarns:
+    descriptions: "Zeigt deine Warns oder die Warns eines Anderen."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [lw, warns, ws, warnungen, mywarns]
+  warnstats:
+    description: "Zeigt Statistiken fuer Warns an."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  cmdspy:
+    description: "CommandSpy."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  full:
+    description: "FullTag Main Command."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [fulltag]
+  xclan:
+    description: "Clan UI"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [clan, c, gilde, xc]
+  clanadmin:
+    description: "Clan ACP"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [ca, clana, xca]
+  xyc:
+    description: "XYC"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  team:
+    description: "Zeigt alle Teammitglieder an (Konfigurierbar!)"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  list:
+    description: "Zaehlt alle Spieler."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  giveall:
+    description: "Gibt allen Sspielern ein Item."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [ga, mtcgiveall]
+  breload:
+    description: "Reload mit Countdown!"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+  frieden:
+    description: "Schliesse Frieden mit deinen allerbesten Freunden! <3"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [nichtangriffspakt, peace, fr, friede]
+  infdisp:
+    description: "Mache Dispenser unendlich!!!11"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [infd, infinitedispenser, idisp, inhp, infhpr, ihpr, infinitehopper]
+  random:
+    description: "Sucht einen zufälligen Spieler aus."
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [rdm]

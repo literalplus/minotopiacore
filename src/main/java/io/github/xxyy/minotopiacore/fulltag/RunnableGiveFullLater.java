@@ -1,0 +1,29 @@
+package io.github.xxyy.minotopiacore.fulltag;
+
+import io.github.xxyy.minotopiacore.LogHelper;
+
+import java.util.logging.Level;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.Inventory;
+
+
+public class RunnableGiveFullLater implements Runnable {
+    private boolean thorns;
+    private byte partId;
+    private boolean ignoreItemType;
+    private CommandSender sender;
+    private String recName;
+    private String comment;
+    private Inventory inv;
+    public RunnableGiveFullLater(boolean thorns,byte partId,boolean ignoreItemType, CommandSender sender, String recName,String comment, Inventory inv){
+        this.thorns = thorns; this.partId = partId; this.ignoreItemType = ignoreItemType; this.sender = sender;
+        this.recName = recName; this.comment = comment; this.inv = inv;
+    }
+    
+    @Override
+    public void run() {
+        LogHelper.getFullLogger().log(Level.INFO,"Trying again for "+this.recName+" (by "+this.sender.getName()+")");
+        FullTagHelper.tryGiveFull(this.thorns, this.partId, this.ignoreItemType, this.sender, this.recName, this.comment, this.inv);
+    }
+}
