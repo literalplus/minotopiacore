@@ -11,15 +11,15 @@ import java.util.logging.Logger;
 
 
 public class LogHelper {
-    private static Logger mainLogger = Logger.getLogger("MTC");
-    private static Logger cmdLogger = Logger.getLogger("MTC.CMD");
-    private static Logger badCmdLogger = Logger.getLogger("MTC.BCMD");
-    private static Logger chatLogger = Logger.getLogger("MTC.CHAT");
-    private static Logger clanChatLogger = Logger.getLogger("MTC.CCHAT");
-    private static Logger privChatLogger = Logger.getLogger("MTC.PCHAT");
-    private static Logger banLogger = Logger.getLogger("MTC.BANS");
-    private static Logger warnLogger = Logger.getLogger("MTC.WARNS");
-    private static Logger fullLogger = Logger.getLogger("MTC.FULLS");
+    private static final Logger mainLogger = Logger.getLogger("MTC");
+    private static final Logger cmdLogger = Logger.getLogger("MTC.CMD");
+    private static final Logger badCmdLogger = Logger.getLogger("MTC.BCMD");
+    private static final Logger chatLogger = Logger.getLogger("MTC.CHAT");
+    private static final Logger clanChatLogger = Logger.getLogger("MTC.CCHAT");
+    private static final Logger privChatLogger = Logger.getLogger("MTC.PCHAT");
+    private static final Logger banLogger = Logger.getLogger("MTC.BANS");
+    private static final Logger warnLogger = Logger.getLogger("MTC.WARNS");
+    private static final Logger fullLogger = Logger.getLogger("MTC.FULLS");
     public static void flushAll(){
         LogHelper.flush(LogHelper.mainLogger);
         LogHelper.flush(LogHelper.cmdLogger);

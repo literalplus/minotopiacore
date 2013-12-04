@@ -21,22 +21,63 @@ import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
-import io.github.xxyy.minotopiacore.bans.cmd.*;
+import io.github.xxyy.minotopiacore.bans.cmd.CommandBan;
+import io.github.xxyy.minotopiacore.bans.cmd.CommandBaninfo;
+import io.github.xxyy.minotopiacore.bans.cmd.CommandTempban;
+import io.github.xxyy.minotopiacore.bans.cmd.CommandUnban;
 import io.github.xxyy.minotopiacore.bans.listener.BanJoinListener;
-import io.github.xxyy.minotopiacore.chat.*;
-import io.github.xxyy.minotopiacore.clan.ui.*;
+import io.github.xxyy.minotopiacore.chat.ChatListener;
+import io.github.xxyy.minotopiacore.chat.CommandChatClear;
+import io.github.xxyy.minotopiacore.chat.CommandChatFarbe;
+import io.github.xxyy.minotopiacore.chat.CommandCmdSpy;
+import io.github.xxyy.minotopiacore.chat.CommandGlobalMute;
+import io.github.xxyy.minotopiacore.chat.CommandMute;
+import io.github.xxyy.minotopiacore.chat.CommandPrivateChat;
+import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
+import io.github.xxyy.minotopiacore.clan.ui.CommandClan;
+import io.github.xxyy.minotopiacore.clan.ui.CommandClanAdmin;
 import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.minotopiacore.fulltag.CommandFull;
 import io.github.xxyy.minotopiacore.fulltag.FullTagListener;
 import io.github.xxyy.minotopiacore.games.teambattle.CommandTeamBattle;
 import io.github.xxyy.minotopiacore.games.teambattle.TeamBattle;
 import io.github.xxyy.minotopiacore.games.teambattle.admin.CommandTeamBattleAdmin;
-import io.github.xxyy.minotopiacore.games.teambattle.event.*;
+import io.github.xxyy.minotopiacore.games.teambattle.event.CmdListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.DeathListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.DmgListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.JoinListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.LeaveListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.RespawnListener;
 import io.github.xxyy.minotopiacore.gettime.CommandTime;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.helper.StatsHelper;
-import io.github.xxyy.minotopiacore.listener.*;
-import io.github.xxyy.minotopiacore.misc.cmd.*;
+import io.github.xxyy.minotopiacore.listener.AntiFreeCamListener;
+import io.github.xxyy.minotopiacore.listener.AntiInfPotionListener;
+import io.github.xxyy.minotopiacore.listener.AntiLogoutListener;
+import io.github.xxyy.minotopiacore.listener.AnvilNBrewingStandStackListener;
+import io.github.xxyy.minotopiacore.listener.ColoredSignListener;
+import io.github.xxyy.minotopiacore.listener.DmgPotionListener;
+import io.github.xxyy.minotopiacore.listener.EnderPearlProjectileLaunchListener;
+import io.github.xxyy.minotopiacore.listener.InfiniteDispenseListener;
+import io.github.xxyy.minotopiacore.listener.LightningListener;
+import io.github.xxyy.minotopiacore.listener.MagicSnowballHitListener;
+import io.github.xxyy.minotopiacore.listener.MainCommandListener;
+import io.github.xxyy.minotopiacore.listener.MainDamageListener;
+import io.github.xxyy.minotopiacore.listener.MainInventoryOpenListener;
+import io.github.xxyy.minotopiacore.listener.MainJoinListener;
+import io.github.xxyy.minotopiacore.listener.MinecartPortalListener;
+import io.github.xxyy.minotopiacore.listener.MoveNetherRoofListener;
+import io.github.xxyy.minotopiacore.listener.PlayerHideInteractListener;
+import io.github.xxyy.minotopiacore.listener.StatsDeathListener;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandBReload;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandGiveAll;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandInfiniteDispenser;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandList;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandLore;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandPeace;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandPlayerHead;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandRandom;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandTeam;
 import io.github.xxyy.minotopiacore.warns.CommandDeleteWarn;
 import io.github.xxyy.minotopiacore.warns.CommandListWarns;
 import io.github.xxyy.minotopiacore.warns.CommandWarn;
@@ -81,6 +122,12 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public Location spawn = null; //TODO wtf
     public boolean pvpMode = true; //TODO otha clazz
     public boolean cycle = true; //TODO store somehere else
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        ConfigHelper.onConfigReload();
+    }
 
     @Override
     public void disable() {
@@ -182,7 +229,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             CommandHelper.sendMessageToOpsAndConsole(
                     "§4[MTC][WARNING] Could not find any Vault Economy Provider!");
         }
-
 
         //SCOREBOARD
         if (ConfigHelper.isEnableScB()) {
@@ -327,7 +373,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
         this.regEvents(pm, new AntiInfPotionListener(), "enable.infPotionFix", true);
         this.regEvents(pm, new MoveNetherRoofListener(), "enable.netherrooffix", true);
-        this.regEvents(pm, new MotdPingListener(), "enable.motd", true);
         this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);

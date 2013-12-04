@@ -39,7 +39,7 @@ public class ConfigHelper {
     @Deprecated private static String langRevision;
     private static boolean statsEnabled;
     private static HashMap<String, String> teamMap;//name -> prefix
-    private static LinkedList<String> teamGroupsInOrder = new LinkedList<>();
+    private static final LinkedList<String> teamGroupsInOrder = new LinkedList<>();
     private static int clanMaxUsers;
     private static int clanMaxUsersExtended;
     private static boolean chatUseClan;
@@ -136,9 +136,6 @@ public static String getTabListAllowedColors() {
     {
         return ConfigHelper.vehicleAllowedCmds;
     }
-    //    public static ArrayList<ArrayList<String>> getTeamList() {
-//        return ConfigHelper.teamList;
-//    }
     public static void initMainConfig(){
         FileConfiguration cfg = MTC.instance().getConfig();
         cfg.options().copyDefaults(true);
@@ -232,7 +229,7 @@ public static String getTabListAllowedColors() {
         return ConfigHelper.worldSpecificChat;
     }
     
-    public static void onConfigReload(){
+    protected static void onConfigReload() {
         ConfigHelper.initClassProperties(MTC.instance().getConfig());
     }
     public static void setClanEnabled(boolean clanEnabled) {
@@ -385,9 +382,7 @@ public static String getTabListAllowedColors() {
         ConfigHelper.enableItemOnJoin = cfg.getBoolean("enable.itemonjoin");
         ConfigHelper.anvilAllowedItems = cfg.getIntegerList("fixes.anvil-allowed-item-ids");
         ConfigHelper.clanEnabled = cfg.getBoolean("enable.clan",true);
-//        ConfigHelper.langRevision = cfg.getString("lang.revision",MTC.langRevision);
         ConfigHelper.statsEnabled = cfg.getBoolean("enable.stats",true);
-       // ConfigHelper.teamList = (ArrayList<ArrayList<String>>) cfg.getList("team", new ArrayList<ArrayList<String>>());
         ConfigHelper.initTeamList(cfg);
         ConfigHelper.clanMaxUsers = cfg.getInt("clan.maxusers",15);
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended",25);
@@ -435,8 +430,6 @@ public static String getTabListAllowedColors() {
         }
     }
     private static void initTeamList(FileConfiguration cfg){
-        //cfg.addDefault("team.groups", new String[]{"Owner=&4&lOwner:","Developer=&3Developer:",
-        //        "Admin=&cAdmins:","Moderator=&5Moderatoren:","Supporter=&bSupporter"});
         List<String> lst = cfg.getStringList("team.groups");
         ConfigHelper.teamMap = new HashMap<>();//diamonds! :D
         for(int i = 0;i < lst.size(); i++){//with advanced for, the order gets messed up
