@@ -13,9 +13,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class LeaveManager {
-	private File locationLocation = new File("plugins/MinoTopiaCore","teambattle_prevlocs.donotedit.yml");
+	private final File locationLocation = new File("plugins/MinoTopiaCore","teambattle_prevlocs.donotedit.yml");
 	public YamlConfiguration fl = YamlConfiguration.loadConfiguration(this.locationLocation);
-	private List<String> loginUsedPlrs=new ArrayList<>();
+	private final List<String> loginUsedPlrs=new ArrayList<>();
 	
 	public LeaveManager(){}
 	

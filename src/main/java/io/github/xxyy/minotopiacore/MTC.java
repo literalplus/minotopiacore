@@ -74,6 +74,7 @@ import io.github.xxyy.minotopiacore.misc.cmd.CommandGiveAll;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandInfiniteDispenser;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandList;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandLore;
+import io.github.xxyy.minotopiacore.misc.cmd.CommandMTCConfig;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandPeace;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandPlayerHead;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandRandom;
@@ -102,11 +103,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private boolean showDisableMsg = true;
     public static String priChatCol = "§6";
     public static String codeChatCol = "§3";
-//    public static String versionName = "'Loligo vulgaris'";
     public static String chatPrefix = "§6[§bMTS§6] ";
     public static String banChatPrefix = "§6[§bMTS§6] ";
     public static String warnChatPrefix = "§6[§bMTS§6] ";
-//    public String motd = "§6§lMinoTopia.me";
     public SafeSql ssql2 = null;
     public static SqlConsts2 tMconsts;
     public TeamBattle tb;
@@ -293,6 +292,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.getCommand("gtime").setExecutor(new CommandTime());
         this.getCommand("lore").setExecutor(new CommandLore());
         this.getCommand("mtc").setExecutor(new CommandMTC());
+        this.getCommand("mtccfg").setExecutor(new CommandMTCConfig());
         this.getCommand("cmdspy").setExecutor(new CommandCmdSpy());
         this.getCommand("playerhead").setExecutor(new CommandPlayerHead());
         this.getCommand("giveall").setExecutor(new CommandGiveAll());
@@ -303,20 +303,20 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.getCommand("war").setExecutor(new CommandTeamBattle());
             this.getCommand("waradmin").setExecutor(new CommandTeamBattleAdmin());
         }
-        if (this.getConfig().getBoolean("enable.chat", true)) {//CHAT
+        if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
             this.getCommand("globalmute").setExecutor(new CommandGlobalMute());
             this.getCommand("chatclear").setExecutor(new CommandChatClear());
             this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe());
             this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
         }
-        if (this.getConfig().getBoolean("enable.bans", true)) {//BANS
+        if (this.getConfig().getBoolean("enable.bans", true)) { //BANS
             this.getCommand("ban").setExecutor(new CommandBan());
             this.getCommand("baninfo").setExecutor(new CommandBaninfo());
             this.getCommand("tempban").setExecutor(new CommandTempban());
             this.getCommand("unban").setExecutor(new CommandUnban());
         }
-        if (this.getConfig().getBoolean("enable.warns", true)) {//WARNS
+        if (this.getConfig().getBoolean("enable.warns", true)) { //WARNS
             this.getCommand("addwarn").setExecutor(new CommandWarn());
             this.getCommand("remwarn").setExecutor(new CommandDeleteWarn());
             this.getCommand("listwarns").setExecutor(new CommandListWarns());

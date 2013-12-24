@@ -9,13 +9,13 @@ import org.bukkit.inventory.Inventory;
 
 
 public class RunnableGiveFullLater implements Runnable {
-    private boolean thorns;
-    private byte partId;
-    private boolean ignoreItemType;
-    private CommandSender sender;
-    private String recName;
-    private String comment;
-    private Inventory inv;
+    private final boolean thorns;
+    private final byte partId;
+    private final boolean ignoreItemType;
+    private final CommandSender sender;
+    private final String recName;
+    private final String comment;
+    private final Inventory inv;
     public RunnableGiveFullLater(boolean thorns,byte partId,boolean ignoreItemType, CommandSender sender, String recName,String comment, Inventory inv){
         this.thorns = thorns; this.partId = partId; this.ignoreItemType = ignoreItemType; this.sender = sender;
         this.recName = recName; this.comment = comment; this.inv = inv;

@@ -1,0 +1,6 @@
+CLAN
+Scoreboard
+Ban
+Warn
+Chat:
+	Mute

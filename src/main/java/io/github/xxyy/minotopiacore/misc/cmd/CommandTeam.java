@@ -23,8 +23,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class CommandTeam extends MTCCommandExecutor
 {
-    private static HashMap<String, ArrayList<String>> groups = new HashMap<>();
-    private static HashMap<String, String> groupPrefixes = new HashMap<>();
+    private static final HashMap<String, ArrayList<String>> groups = new HashMap<>();
+    private static final HashMap<String, String> groupPrefixes = new HashMap<>();
     
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {

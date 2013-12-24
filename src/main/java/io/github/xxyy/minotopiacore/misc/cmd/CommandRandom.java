@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 public class CommandRandom extends MTCCommandExecutor
 {
     private class RunnableAnnounceChoice implements Runnable{
-        private String plrName;
+        private final String plrName;
         
         RunnableAnnounceChoice(String plrName)
         {

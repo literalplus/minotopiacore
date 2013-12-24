@@ -24,18 +24,18 @@ import org.bukkit.potion.PotionEffect;
 public class TeamBattle {
 	private static TeamBattle instance;
 	@Deprecated
-	private boolean gameRunning=false;
-	private List<Player> playersBlue=new ArrayList<>();
-	private List<Player> playersRed=new ArrayList<>();
-	private List<Player> playersLobby=new ArrayList<>();
+	private final boolean gameRunning=false;
+	private final List<Player> playersBlue=new ArrayList<>();
+	private final List<Player> playersRed=new ArrayList<>();
+	private final List<Player> playersLobby=new ArrayList<>();
 	private short pointsBlue=0; //wins after 50 points, 1point/kill
 	private short pointsRed=0; 
 	public static int winPoints=20;
 	public static int betterKitPoints=10;
 	public static int maxPlayers=16;
-	private File configLocation = new File("plugins/MinoTopiaCore","teambattle.cfg.yml");
+	private final File configLocation = new File("plugins/MinoTopiaCore","teambattle.cfg.yml");
 	public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.configLocation);
-	private HashMap<Player,Location> prevLocations = new HashMap<>();
+	private final HashMap<Player,Location> prevLocations = new HashMap<>();
 	private Location spawnBlue;
 	private Location spawnRed;
 	private Location lobby;

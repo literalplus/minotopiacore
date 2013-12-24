@@ -19,7 +19,7 @@ public final class SBHelper {
     private SBHelper() {
         throw new AssertionError("SBHelper may not be initialised.");
     }
-    private static HashMap<String, Scoreboard> pBoardCache = new HashMap<>();
+    private static final HashMap<String, Scoreboard> pBoardCache = new HashMap<>();
     private static boolean selectMoney = true;
     private static boolean selectStats = true;
     private static final String QUERY_BOTH =

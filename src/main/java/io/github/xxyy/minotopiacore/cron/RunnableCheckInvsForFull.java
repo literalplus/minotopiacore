@@ -23,10 +23,10 @@ import org.bukkit.inventory.PlayerInventory;
 
 
 public class RunnableCheckInvsForFull implements Runnable {
-    private int plrsDone = 0;
-    private StopWatch watch = new StopWatch();
+    private final int plrsDone = 0;
+    private final StopWatch watch = new StopWatch();
     private Iterator<Player> it = null;
-    private List<Integer> fullsFound = new ArrayList<>();
+    private final List<Integer> fullsFound = new ArrayList<>();
     @Override
     public void run() {
         if(this.it == null) {

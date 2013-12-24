@@ -1,0 +1,136 @@
+======================
+permissions-help.txt
+Permisions Help
+MTC Copyright (C) by xxyy98
+do not distribute without explicit written permission.
+======================
+mtc.*: Gives access to all the features listed below.
+
+	mtc.cmd.*: Gives access to all mtc commands.
+	
+		mtc.cmd.lore: Allows use of the /lore command.
+			mtc.cmd.lore.add: Allows to add a new line to Lore.
+			mtc.cmd.lore.list: Allows to list Lore.
+			mtc.cmd.lore.remove: Allows to remove a specified line of Lore.
+			mtc.cmd.lore.clear: Allows to clear Lore.
+			mtc.cmd.lore.set: Allows to set a specific line of Lore.
+			
+		mtc.cmd.gtime: Allows use of the /gettime command
+			mtc.cmd.gtime.time: Allows to display the current time.
+			mtc.cmd.gtime.date: Allows to display the current date.
+			
+		mtc.cmd.playerhead: Allows use of the /ph command.
+		
+			mtc.cmd.playerhead.get.*: Allows getting PlayerHeads.
+				mtc.cmd.playerhead.get.USERNAME: Allows getting the head of USERNAME.
+				
+			mtc.cmd.playerhead.set.*: Allows to set a PlayerHead.
+				mtc.cmd.playerhead.set.USERNAME: Allows setting an existing head to USERNAME.
+				
+			mtc.cmd.playerhead.getall.*: Allows to give every Player on the Server a head.
+				mtc.cmd.playerhead.getall.USERNAME: Allows to give every Player the head of USERNAME.
+				
+		mtc.cmd.mtc: Allows use of the mtc Management command
+		
+			mtc.cmd.mtc.credits: ALlows to show the credits & version info
+			mtc.cmd.mtc.help: Allows reading help
+			mtc.cmd.mtc.reload: Allows to reload mtc
+			mtc.cmd.mtc.milk: Simulates milk
+			mtc.cmd.mtc.config.*: Grants access to config management
+				mtc.cmd.mtc.config.set: Allows to set config values
+				mtc.cmd.mtc.config.get: Allows to get config values
+				mtc.cmd.mtc.config.reload: Allows to reload (only) the config.
+				mtc.cmd.mtc.config: Displays a message if none of the above is matched
+			mtc.cmd.mtc.fm: Displays a fake message
+			mtc.cmd.mtc.rename: Allows to rename item in hand
+			mtc.cmd.mtc.ci: REALLY clears your inv.
+			mtc.cmd.mtc.sign: ALlows editing of signs
+			mtc.cmd.mtc.forcecron: ALlows to force the 5m cronjob
+			mts.cmd.mtc.setspawn: Allows to set MTC spawn (for tp-ing back after some1 hits the nether roof
+			mtc.cmd.mtc.rnentity: Allows renaming of nearby entities... Cmd = /mtc rne
+	mtc.chatclear: Allows clearing of chat...NOT covered by mtc.chatclear.* !!
+	mtc.chatclear.exempt: Your chat won't get cleared on /cc
+	
+	mtc.motd: Allows to view and change the server motd
+	
+	mtc.globalmute.*
+		mtc.globalmute.toggle: Allows to change GLobalMute state.../glomu
+		mtc.globalmute.exempt: You can chat when GloMu is active
+		
+	mtc.chatcolor: Normale Farben im Chat
+	mtc.chatcolor.special: Spezialfarben im Chat (i.e. l,m,n,...)
+	
+	mtc.cmdspy: Allows usage of cmdspy
+	
+	mtc.chatfarbe.*: 
+		mtc.chatfarbe.change: Erlaubt das Ändern der Chatfarbe
+		mtc.chatfarbe.special: Alle Farben in der Chatfarbe benutzen
+		mtc.chatfarbe.player: Ändert die CF eines Spielers
+		mtc.chatfarbe.use: Die Chatfarbe wird angezeigt.
+	
+	mtc.ignore: Spam, Nether Roof etc. will not be blocked...For Admins & Owners
+	
+	mtc.chat.*:
+		mtc.chat.add: Allows to add 3 ppl to a chat REQUIRED FOR ANY /chat add COMMANDS
+		mtc.chat.add.extended: Allows to add 5 ppl to a chat
+		mtc.chat.add.infinte: Allows to add infinite ppl to a chat
+		mtc.chat.overwrite: Admin Overwrite
+		mtc.chat.topic.color: Allows to use color & formatting codes in chat topic.
+		
+	mtc.misc.lightning.notify: Allows to be notified if a special lightning event happens!
+		mtc.misc.lightning.notify.coordinates: Coordinated are sent, too.
+		
+	mtc.ban.*: Allows full access to ban system.
+		mtc.ban.permanent: Allows access to /ban
+		mtc.ban.info: Allows access to /baninfo
+		mtc.ban.temporary: Allows access to /tempban command
+		mtc.ban.unban: Allows access to /unban command
+		mtc.ban.adminmsg: Allows to see which player executed a ban
+		
+	mtc.warns.*: Allows full access to warn system
+		mtc.warns.warn: Allows access to /warn
+		mtc.warns.adminmsg: Allows to see which player executed a warn
+		mtc.warns.list: Allows to see your own warns
+		mtc.warns.list.others: Allows to see warns of ANY player
+		mtc.warns.remove: Allows to mark a warn invalid
+		mtc.warns.remove.permanent: Allows to PERMANENTLY void a warn
+		
+	mtc.teambattle.*: Allows full access to TeamBattle AND ADMIN COMMANDS
+	
+		mtc.teambattle.member.*: Allows full member access to TeamBattle (Member cmds)
+		
+			mtc.teambattle.member.cmd: Allows usage of the /war cmd.
+				mtc.teambattle.member.cmd.join: Allows usage of /war join.
+				mtc.teambattle.member.cmd.leave: Allows usage of /war leave.
+				mtc.teambattle.member.cmd.help: Allows usage of /war help.
+				mtc.teambattle.member.cmd.list: Allows usage of /war list.
+				
+		mtc.teambattle.admin.*: Allows full admin access to TeamBattle (Admin cmds)
+		
+			mtc.teambattle.admin.cmd: Allows usage of /waradmin
+			
+				mtc.teambattle.admin.cmd.setspawn: Allows usage of /war setspawn.
+				mtc.teambattle.admin.cmd.setbounds: Allows usage of /war setbounds.
+				mtc.teambattle.admin.cmd.toggle: Allows usage of /war toggle (on/off).
+				mtc.teambattle.admin.cmd.setkit: Allows usage of /war setkit.
+				mtc.teambattle.admin.execute.other: Allows execution of other commands while in TeamBattle
+				
+	mtc.cake: Allows to access some hidden features. These are hidden and will thus not be listed here :) Hint: mDon't give this permission to normal members :P
+	
+	mtc.clan: Clan Permissions 
+		mtc.clan.create: Allows creation of clans
+		mtc.clan.remove: Allows removal of clans
+		mtc.clan.invite: Allows to invite players into clans
+		mtc.clan.invitations: Allows to see invitations
+	mtc.clana: Clan Admin Tools
+		mtc.clana.override: Ignores clan permissions.
+	
+	mtc.giveall: Allows use of /giveall
+	
+	mtc.magicsnowball: 
+		mtc.magicsnowball.hit: Allows to use mgic snowballs.
+		mtc.magicsnowball.chance: If this player is hit by a snowball, there's a 50% chance that no effects will be applied (invisibility will be taken away anyway)
+		mtc.magicsnowball.always: Snowballs shot by this player ALWAYS hit, ignoring .chance
+	mtc.signcolor:
+		mtc.signcolor.all: Allows usage of all colors.
+		mtc.signcolor.limited: Allows usage of some colors.

@@ -21,8 +21,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class CommandBReload extends MTCCommandExecutor {
     
-    private static List<Integer> seconds = new ArrayList<>();
-    private static List<Long> delays = new ArrayList<>();
+    private static final List<Integer> seconds = new ArrayList<>();
+    private static final List<Long> delays = new ArrayList<>();
     public static int taskId = -2;
     
     @Override
