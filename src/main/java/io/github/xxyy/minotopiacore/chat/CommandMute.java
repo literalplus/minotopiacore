@@ -2,14 +2,13 @@ package io.github.xxyy.minotopiacore.chat;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.MTC;
-
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
 
 
 public class CommandMute implements CommandExecutor{
@@ -75,11 +74,6 @@ public class CommandMute implements CommandExecutor{
             }
 			return true;
 		}else if(args.length >= 1 && args[0].equalsIgnoreCase("info")){
-//			Player target = Bukkit.getPlayerExact(args[1]);
-//			if(target == null){
-//				sender.sendMessage(MinoTopiaCore.chatPrefix+"Dieser Spieler ist nicht bekannt.");
-//				return true;
-//			}
 			String tgtName = args[1];
 			if(args.length < 2)
             {
