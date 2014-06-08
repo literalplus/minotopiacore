@@ -10,6 +10,10 @@
     <name>MinoTopia Core</name>
     <url>http://xxyy.github.io/</url>
 
+    <scm>
+        <connection>scm:git://git@bitbucket.org:minotopia/minotopiacore.git</connection>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -117,11 +121,10 @@
                     <doCheck>true</doCheck>
                     <doUpdate>false</doUpdate>
                     <shortRevisionLength>7</shortRevisionLength>
-                    <timestampFormat>{0,date,yyyy.MM.dd}</timestampFormat>
-                    <format>{1}-g{2}</format>
+                    <timestampFormat>{0,date,yyyy.MM.dd HH:mm}</timestampFormat>
+                    <format>{1}</format>
                     <items>
                         <item>timestamp</item>
-                        <item>buildNumber1</item>
                         <item>scmVersion</item>
                     </items>
                 </configuration>
@@ -184,5 +187,12 @@
         </plugins>
 
         <finalName>${project.artifactId}-${project.version}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

@@ -1,9 +1,11 @@
 name: MinoTopiaCore
-version: "@VERSION@_b@BUILDNUM@ built at @BUILDTIME@"
-description: MinoTopiaCore - A collections of essential functions for MinoTopia.
-author: xxyy98<xxyy98[at]gmail.com> | Philipp Nowak
+version: ${project.version}-git-${buildNumber}
+description: MinoTopiaCore - A collection of semi-essential stuff for MinoTopia.
+author: xxyy98/Literallie
 main: io.github.xxyy.minotopiacore.MTC
-softdepend: [Vault]
+softdepend: [Vault, xLogin_Spigot]
+website: http://xxyy.github.io/
+
 
 commands: 
   gtime:
