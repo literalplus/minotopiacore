@@ -4,24 +4,18 @@ import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.misc.PeaceInfo;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.Calendar;
-
 import org.bukkit.DyeColor;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Calendar;
 
 
 public class MainDamageListener implements Listener
@@ -40,16 +34,6 @@ public class MainDamageListener implements Listener
         Player plr;
         Player plrDamager;
         boolean message = true;
-        if (e.getEntityType() != EntityType.PLAYER)
-        {
-            if (e.getEntity() instanceof Tameable)
-            {
-                AnimalTamer tmr = ((Tameable) e.getEntity()).getOwner();
-                if (!(tmr instanceof Player)) return;
-                plr = (Player) tmr;
-            }
-            else return;
-        }
         plr = (Player) e.getEntity();
         plr.removePotionEffect(PotionEffectType.INVISIBILITY);
         switch (e.getDamager().getType()) {
@@ -59,9 +43,9 @@ public class MainDamageListener implements Listener
         case ARROW:
         case SNOWBALL:
         case SPLASH_POTION:
-            LivingEntity leShooter = ((Projectile) e.getDamager()).getShooter();
-            if (leShooter == null || leShooter.getType() != EntityType.PLAYER) return;
-            plrDamager = (Player) leShooter;
+            ProjectileSource source = ((Projectile) e.getDamager()).getShooter();
+            if (source == null || !(source instanceof Player)) return;
+            plrDamager = (Player) source;
             break;
         case WOLF:
             Wolf wolf = (Wolf) e.getDamager();

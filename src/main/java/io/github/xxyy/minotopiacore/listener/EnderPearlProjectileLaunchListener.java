@@ -2,17 +2,17 @@ package io.github.xxyy.minotopiacore.listener;
 
 import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.minotopiacore.MTC;
-import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
+
+import java.util.List;
 
 public class EnderPearlProjectileLaunchListener implements Listener {
 
@@ -22,24 +22,26 @@ public class EnderPearlProjectileLaunchListener implements Listener {
         if (e.getEntity().getType() != EntityType.ENDER_PEARL) {
             return;
         }
-        LivingEntity le = ((EnderPearl) e.getEntity()).getShooter();
-        if (le.getType() != EntityType.PLAYER) {
+        ProjectileSource projectileSource = e.getEntity().getShooter();
+        if (!(projectileSource instanceof Player)) {
             return;
         }
-        Player plr = (Player) le;
-        if (!plr.hasPermission("mtc.enderpearl.use")) {
+
+        Player shooter = (Player) projectileSource;
+
+        if (!shooter.hasPermission("mtc.enderpearl.use")) {
             e.setCancelled(true);
-            plr.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", plr.getName(), MTC.instance().getName()));
-            EnderPearlProjectileLaunchListener.returnPearl(plr);
+            shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", shooter.getName(), MTC.instance().getName()));
+            EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
         @SuppressWarnings("deprecation")
-        List<Block> LoS = plr.getLineOfSight(null, 100); //Bukkit is ruining all the fun :(
-        for (short i = 0; i < LoS.size(); i++) {
-            if (LoS.get(i).getType() == Material.BEDROCK) {
+        List<Block> lineOfSight = shooter.getLineOfSight(null, 100); //Bukkit is ruining all the fun :(
+        for (Block lineOfSightItem : lineOfSight) {
+            if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);
-                plr.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", plr.getName(), MTC.instance().getName()));
-                EnderPearlProjectileLaunchListener.returnPearl(plr);
+                shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", shooter.getName(), MTC.instance().getName()));
+                EnderPearlProjectileLaunchListener.returnPearl(shooter);
                 return;
             }
         }
