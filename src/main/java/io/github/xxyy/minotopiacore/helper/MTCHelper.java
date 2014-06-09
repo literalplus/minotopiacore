@@ -258,7 +258,6 @@ public class MTCHelper { //FIXME wtf is this
      * @return localized String
      * @param sendMTCPrefix Prepends {{@link MTC#chatPrefix} to the final message.
      * @see LangHelper#localiseString(String, String, String)
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static String loc(String key, boolean sendMTCPrefix){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, "CONSOLE", MTC.instance().getName());
@@ -271,7 +270,6 @@ public class MTCHelper { //FIXME wtf is this
      * @param sendMTCPrefix Prepends {{@link MTC#chatPrefix} to the final message.
      * @return localized String
      * @see LangHelper#localiseString(String, String, String)
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static String loc(String key,CommandSender sender, boolean sendMTCPrefix){
         return LangHelper.localiseString(key, sender.getName(), MTC.instance().getName());
@@ -284,7 +282,6 @@ public class MTCHelper { //FIXME wtf is this
      * @param sendMTCPrefix Prepends {{@link MTC#chatPrefix} to the final message.
      * @return localized String
      * @see LangHelper#localiseString(String, String, String)
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static String loc(String key,String senderName, boolean sendMTCPrefix){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, senderName, MTC.instance().getName());
@@ -298,7 +295,6 @@ public class MTCHelper { //FIXME wtf is this
      * @param args Arguments. See: {{@link String#format(String, Object...)}
      * @see LangHelper#localiseString(String, String, String)
      * @return localized string
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static String locArgs(String key,String senderName, boolean sendMTCPrefix, Object... args){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+String.format(LangHelper.localiseString(key, senderName, MTC.instance().getName()),args);
@@ -313,8 +309,7 @@ public class MTCHelper { //FIXME wtf is this
      * spaces on the beginning of each line.
      * @param msg Message to be sent, preferably multi-line (use /n)
      * @param sender Receiver of the message
-     * @author xxyy98<xxyy98@gmail.com
-     * @return 
+     * @return TRUE
      */
     @Deprecated
     public static boolean msg(String msg, CommandSender sender){
@@ -333,7 +328,6 @@ public class MTCHelper { //FIXME wtf is this
      * @see LangHelper#localiseString(String, String, String)
      * @see CommandSender#sendMessage(String)
      * @return Returns <code>true</code> for use with {@link CommandExecutor#onCommand(CommandSender, Command, String, String[])}
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static boolean sendLoc(String key,CommandSender sender, boolean sendMTCPrefix){
         CommandHelper.msg(((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, sender.getName(), MTC.instance().getName()),sender);
@@ -350,7 +344,6 @@ public class MTCHelper { //FIXME wtf is this
      * @see LangHelper#localiseString(String, String, String)
      * @see CommandSender#sendMessage(String)
      * @return Returns <code>true</code> for use with {@link CommandExecutor#onCommand(CommandSender, Command, String, String[])}
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static boolean sendLocArgs(String key, CommandSender sender, boolean sendMTCPrefix, Object... args){
         CommandHelper.msg(((sendMTCPrefix) ? MTC.chatPrefix : "")+String.format(LangHelper.localiseString(key, sender.getName(), MTC.instance().getName()),args),sender);
