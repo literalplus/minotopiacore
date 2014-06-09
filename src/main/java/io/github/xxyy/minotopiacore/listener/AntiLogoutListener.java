@@ -1,13 +1,8 @@
 package io.github.xxyy.minotopiacore.listener;
 
 import io.github.xxyy.minotopiacore.ConfigHelper;
+import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import io.github.xxyy.minotopiacore.helper.PluginAPIInterfacer;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,44 +15,51 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
-public class AntiLogoutListener implements Listener
-{
-    
-    public static final HashMap<String, Date> playersInAFight = new HashMap<>();
-//    public static final List<String>
-    
+public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacore.misc.AntiLogoutHandler {
+    private final MTC plugin;
+    private final HashMap<String, Date> playersInAFight = new HashMap<>();
+
+    public AntiLogoutListener(MTC plugin) {
+        this.plugin = plugin;
+    }
+
+
     @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent e){
-        AntiLogoutListener.playersInAFight.remove(e.getPlayer().getName());
+        playersInAFight.remove(e.getPlayer().getName());
     }
     
     @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent e){//TODO gets called when player is kicked...
-        AntiLogoutListener.punishIfInAnyFight(e.getPlayer());
+        punishIfInAnyFight(e.getPlayer());
     }
     
     @EventHandler(priority=EventPriority.NORMAL)
     public void onTp(PlayerTeleportEvent e){
-        if(!AntiLogoutListener.isInAnyFight(e.getPlayer().getName()) ||
+        if(!isFighting(e.getPlayer().getName()) ||
                 e.getCause() != TeleportCause.ENDER_PEARL) return;
         MTCHelper.sendLoc("XU-fighttp", e.getPlayer(), true);
         e.setCancelled(true);
     }
     
-    public static boolean isInAnyFight(String plrName){
-        Date fightStart = AntiLogoutListener.playersInAFight.get(plrName);
+    @Override
+    public boolean isFighting(String plrName){
+        Date fightStart = playersInAFight.get(plrName);
         if(fightStart == null) return false;
         if(fightStart.before(Calendar.getInstance().getTime())){
-            AntiLogoutListener.playersInAFight.remove(plrName);
+            playersInAFight.remove(plrName);
             return false;
         }
         return true;
     }
     
-    public static boolean punishIfInAnyFight(Player plr){
-        if(!PluginAPIInterfacer.isPvPEnabledAt(plr.getLocation())) return false;
-        if(AntiLogoutListener.isInAnyFight(plr.getName())){
+    public boolean punishIfInAnyFight(Player plr){
+        if(!plugin.getWorldGuardHook().isPvP(plr.getLocation())) return false;
+        if(isFighting(plr.getName())){
             for(ItemStack stk : plr.getInventory().getArmorContents()){
                 if(stk == null || stk.getType() == Material.AIR)
                 {
@@ -72,24 +74,30 @@ public class AntiLogoutListener implements Listener
         return false;
     }
     
-    public static void setFighting(final Player plr, final Player other, final Calendar cal){
+    @Override
+    public void setFighting(final Player plr, final Player other, final Calendar cal){
         cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
         if(!plr.hasPermission("mtc.ignore"))
         {
-            AntiLogoutListener.setFightingInternal(plr, other.getName(), cal.getTime());
+            setFightingInternal(plr, other.getName(), cal.getTime());
         }
         if(!other.hasPermission("mtc.ignore"))
         {
-            AntiLogoutListener.setFightingInternal(other, plr.getName(), cal.getTime());
+            setFightingInternal(other, plr.getName(), cal.getTime());
         }
     }
+
+    @Override
+    public void clearFighters() {
+        this.playersInAFight.clear();
+    }
     
-    private static void setFightingInternal(final Player plr, final String otherName, final Date dt){
+    private void setFightingInternal(final Player plr, final String otherName, final Date dt){
         final String plrName = plr.getName();
-        if(!AntiLogoutListener.playersInAFight.containsKey(plrName)){
-//            PluginAPIInterfacer.cancelAllEssTeleports(plr);
+        if(!playersInAFight.containsKey(plrName)){
+//            PluginAPIInterfacer.cancelAllEssTeleports(plr); //TODO why is this commented out? Should we readd this?
             MTCHelper.sendLocArgs("XU-fightstart", plr, true, otherName);
         }
-        AntiLogoutListener.playersInAFight.put(plrName, dt);
+        playersInAFight.put(plrName, dt);
     }
 }

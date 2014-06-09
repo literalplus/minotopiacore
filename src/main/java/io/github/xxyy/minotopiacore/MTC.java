@@ -20,20 +20,14 @@ import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandBan;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandBaninfo;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandTempban;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandUnban;
 import io.github.xxyy.minotopiacore.bans.listener.BanJoinListener;
-import io.github.xxyy.minotopiacore.chat.ChatListener;
-import io.github.xxyy.minotopiacore.chat.CommandChatClear;
-import io.github.xxyy.minotopiacore.chat.CommandChatFarbe;
-import io.github.xxyy.minotopiacore.chat.CommandCmdSpy;
-import io.github.xxyy.minotopiacore.chat.CommandGlobalMute;
-import io.github.xxyy.minotopiacore.chat.CommandMute;
-import io.github.xxyy.minotopiacore.chat.CommandPrivateChat;
-import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
+import io.github.xxyy.minotopiacore.chat.*;
 import io.github.xxyy.minotopiacore.clan.ui.CommandClan;
 import io.github.xxyy.minotopiacore.clan.ui.CommandClanAdmin;
 import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
@@ -42,50 +36,20 @@ import io.github.xxyy.minotopiacore.fulltag.FullTagListener;
 import io.github.xxyy.minotopiacore.games.teambattle.CommandTeamBattle;
 import io.github.xxyy.minotopiacore.games.teambattle.TeamBattle;
 import io.github.xxyy.minotopiacore.games.teambattle.admin.CommandTeamBattleAdmin;
-import io.github.xxyy.minotopiacore.games.teambattle.event.CmdListener;
-import io.github.xxyy.minotopiacore.games.teambattle.event.DeathListener;
-import io.github.xxyy.minotopiacore.games.teambattle.event.DmgListener;
-import io.github.xxyy.minotopiacore.games.teambattle.event.JoinListener;
-import io.github.xxyy.minotopiacore.games.teambattle.event.LeaveListener;
-import io.github.xxyy.minotopiacore.games.teambattle.event.RespawnListener;
+import io.github.xxyy.minotopiacore.games.teambattle.event.*;
 import io.github.xxyy.minotopiacore.gettime.CommandTime;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.helper.StatsHelper;
-import io.github.xxyy.minotopiacore.listener.AntiFreeCamListener;
-import io.github.xxyy.minotopiacore.listener.AntiInfPotionListener;
-import io.github.xxyy.minotopiacore.listener.AntiLogoutListener;
-import io.github.xxyy.minotopiacore.listener.AnvilNBrewingStandStackListener;
-import io.github.xxyy.minotopiacore.listener.ColoredSignListener;
-import io.github.xxyy.minotopiacore.listener.DmgPotionListener;
-import io.github.xxyy.minotopiacore.listener.EnderPearlProjectileLaunchListener;
-import io.github.xxyy.minotopiacore.listener.InfiniteDispenseListener;
-import io.github.xxyy.minotopiacore.listener.LightningListener;
-import io.github.xxyy.minotopiacore.listener.MagicSnowballHitListener;
-import io.github.xxyy.minotopiacore.listener.MainCommandListener;
-import io.github.xxyy.minotopiacore.listener.MainDamageListener;
-import io.github.xxyy.minotopiacore.listener.MainInventoryOpenListener;
-import io.github.xxyy.minotopiacore.listener.MainJoinListener;
-import io.github.xxyy.minotopiacore.listener.MinecartPortalListener;
-import io.github.xxyy.minotopiacore.listener.MoveNetherRoofListener;
-import io.github.xxyy.minotopiacore.listener.PlayerHideInteractListener;
-import io.github.xxyy.minotopiacore.listener.StatsDeathListener;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandBReload;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandGiveAll;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandInfiniteDispenser;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandList;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandLore;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandMTCConfig;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandPeace;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandPlayerHead;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandRandom;
-import io.github.xxyy.minotopiacore.misc.cmd.CommandTeam;
+import io.github.xxyy.minotopiacore.hook.VaultHook;
+import io.github.xxyy.minotopiacore.hook.WorldGuardHook;
+import io.github.xxyy.minotopiacore.hook.XLoginHook;
+import io.github.xxyy.minotopiacore.listener.*;
+import io.github.xxyy.minotopiacore.misc.AntiLogoutHandler;
+import io.github.xxyy.minotopiacore.misc.cmd.*;
 import io.github.xxyy.minotopiacore.warns.CommandDeleteWarn;
 import io.github.xxyy.minotopiacore.warns.CommandListWarns;
 import io.github.xxyy.minotopiacore.warns.CommandWarn;
 import io.github.xxyy.minotopiacore.warns.CommandWarnStats;
-import java.util.logging.Level;
-import lombok.Getter;
-import me.minotopia.mitoscb.RunnableUpdateBoards;
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
 import org.bukkit.Bukkit;
@@ -95,11 +59,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.logging.Level;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     private static MTC instance;
+    public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
     private boolean showDisableMsg = true;
     public static String priChatCol = "§6";
     public static String codeChatCol = "§3";
@@ -109,18 +75,17 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public SafeSql ssql2 = null;
     public static SqlConsts2 tMconsts;
     public TeamBattle tb;
-    @Getter
-    private static net.milkbowl.vault.chat.Chat chat = null;
-    @Getter
-    private static net.milkbowl.vault.permission.Permission perms;
-    @Getter
-    private static net.milkbowl.vault.economy.Economy econ;
     public static int SpeedOnJoinPotency = -1; //TODO <--
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
     public Location spawn = null; //TODO wtf
     public boolean pvpMode = true; //TODO otha clazz
     public boolean cycle = true; //TODO store somehere else
+    //Hooks
+    private VaultHook vaultHook;
+    private XLoginHook xLoginHook;
+    private WorldGuardHook worldGuardHook;
+    private AntiLogoutHandler logoutHandler;
 
     @Override
     public void reloadConfig() {
@@ -211,23 +176,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             Bukkit.getConsoleSender().sendMessage("§8[MTC] AUTOSAVE enabled!");
         }
 
-        //VAULT
-        if (this.getConfig().getBoolean("enable.chat", true)) //not needed if not TODO: ConfigHelper
-        {
-            if (!MTC.setupChat()) {
-                CommandHelper.sendMessageToOpsAndConsole(
-                        "§4[MTC][WARNING] Could not find any Valut Chat Provider! Chat will not display prefixes.");
-            }
-
-            if (!MTC.setupPermissions()) {
-                CommandHelper.sendMessageToOpsAndConsole(
-                        "§4[MTC][WARNING] Could not find any Vault Permission Provider!");
-            }
-        }
-        if (ConfigHelper.isClanEnabled() && !MTC.setupEconomy()) {
-            CommandHelper.sendMessageToOpsAndConsole(
-                    "§4[MTC][WARNING] Could not find any Vault Economy Provider!");
-        }
+        //HOOKS
+        this.xLoginHook = new XLoginHook(this);
+        this.vaultHook = new VaultHook(this);
+        this.worldGuardHook = new WorldGuardHook(this);
 
         //SCOREBOARD
         if (ConfigHelper.isEnableScB()) {
@@ -251,9 +203,8 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
                 this.ssql2 = new SafeSql(MTC.tMconsts);
             }
 
-            SBHelper.init();
 
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableUpdateBoards(),
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SBHelper(this).getUpdateTask(),
                     ConfigHelper.getScBUpdateInterval(), ConfigHelper.getScBUpdateInterval());
         }
 
@@ -306,7 +257,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
             this.getCommand("globalmute").setExecutor(new CommandGlobalMute());
             this.getCommand("chatclear").setExecutor(new CommandChatClear());
-            this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe());
+            this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe(this));
             this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
         }
@@ -326,7 +277,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.getCommand("full").setExecutor(new CommandFull());
         }
         if (ConfigHelper.isClanEnabled()) {
-            this.getCommand("xclan").setExecutor(new CommandClan());
+            this.getCommand("xclan").setExecutor(new CommandClan(this));
             this.getCommand("clanadmin").setExecutor(new CommandClanAdmin());
         }
         if (this.getConfig().getBoolean("enable.command.team", true)) {
@@ -356,13 +307,15 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             }
         }
         if (this.getConfig().getBoolean("enable.chat", true)) {
-            pm.registerEvents(new ChatListener(), this);
+            pm.registerEvents(new ChatListener(this), this);
             Bukkit.getConsoleSender().sendMessage("§8[MTC] CHAT enabled!");
         }
         if (ConfigHelper.isEnableTablist() || ConfigHelper.isNoobProtection() || MTC.SpeedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {
             pm.registerEvents(new MainJoinListener(), this);
         }
+
+        logoutHandler = this.regEvents(pm, new AntiLogoutListener(this), "enable.antilogout", false);
 
         this.regEvents(pm, new LightningListener(), "enable.misc.lighting.cow", true);
         this.regEvents(pm, new DmgPotionListener(), "enable.betterdmgpotions", true);
@@ -376,10 +329,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
-        this.regEvents(pm, new AntiLogoutListener(), "enable.antilogout", false);
         this.regEvents(pm, new InfiniteDispenseListener(), "enable.infdisp", true);
         if (ConfigHelper.isClanEnabled()) {
-            pm.registerEvents(new MainDamageListener(), this);
+            pm.registerEvents(new MainDamageListener(this), this);
         }
         if (ConfigHelper.isProhibitCmdsInBoats()) {
             pm.registerEvents(new MainInventoryOpenListener(), this);
@@ -390,7 +342,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         if (ConfigHelper.isMagicSnowballEnabled()) {
             pm.registerEvents(new MagicSnowballHitListener(), this);
         }
-        pm.registerEvents(new MainCommandListener(), this);
+        pm.registerEvents(new MainCommandListener(this), this);
     }
 
     @Override
@@ -423,7 +375,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         return this.getConfig().getString("sql.user");
     }
 
-    public void refreshSpawn() {
+    public void refreshSpawn() { //TODO wtf is this doing here
         this.spawn = new Location(Bukkit.getWorld(this.getConfig().getString("fixes.netherroof.spawn.worldName", "world")),
                 this.getConfig().getInt("fixes.netherroof.spawn.x", 0),
                 this.getConfig().getInt("fixes.netherroof.spawn.y", 70),
@@ -432,56 +384,33 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
                 (float) this.getConfig().getDouble("fixes.netherroof.spawn.pitch", 0));
     }
 
-    private <T extends Listener> void regEvents(PluginManager pm, T listener, String cfgOption, boolean defaultValue) {
+    private <T extends Listener> T regEvents(PluginManager pm, T listener, String cfgOption, boolean defaultValue) {
         if (!this.getConfig().getBoolean(cfgOption, defaultValue)) {
-            return;
+            return null;
         }
+
         pm.registerEvents(listener, this);
+
+        return listener;
     }
 
-    /**
-     * public static Plugin instance() gets the instance of MinoTopiaCore.
-     *
-     * @return Plugin
-     */
     public static MTC instance() {
-        //PluginManager pm = Bukkit.getPluginManager();
         return MTC.instance;
     }
 
-    public static boolean setupChat() {
-        try {
-            RegisteredServiceProvider<net.milkbowl.vault.chat.Chat> rsp = MTC.instance.getServer().getServicesManager().getRegistration(
-                    net.milkbowl.vault.chat.Chat.class);
-            MTC.chat = rsp.getProvider();
-            return MTC.chat != null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public VaultHook getVaultHook() {
+        return vaultHook;
     }
 
-    public static boolean setupEconomy() {
-        try {
-            RegisteredServiceProvider<net.milkbowl.vault.economy.Economy> rsp = MTC.instance.getServer().getServicesManager().getRegistration(
-                    net.milkbowl.vault.economy.Economy.class);
-            MTC.econ = rsp.getProvider();
-            return MTC.econ != null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public XLoginHook getXLoginHook() {
+        return xLoginHook;
     }
 
-    public static boolean setupPermissions() {
-        try {
-            RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> rsp = MTC.instance.getServer().getServicesManager().getRegistration(
-                    net.milkbowl.vault.permission.Permission.class);
-            MTC.perms = rsp.getProvider();
-            return MTC.perms != null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public WorldGuardHook getWorldGuardHook() {
+        return worldGuardHook;
+    }
+
+    public AntiLogoutHandler getLogoutHandler() {
+        return logoutHandler;
     }
 }

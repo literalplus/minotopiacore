@@ -6,18 +6,10 @@ import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
-import io.github.xxyy.minotopiacore.clan.ClanHelper;
-import io.github.xxyy.minotopiacore.clan.ClanInfo;
-import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
-import io.github.xxyy.minotopiacore.clan.ClanPermission;
-import io.github.xxyy.minotopiacore.clan.InvitationInfo;
-import io.github.xxyy.minotopiacore.clan.RunnableTpClanBase;
+import io.github.xxyy.minotopiacore.clan.*;
 import io.github.xxyy.minotopiacore.clan.ClanPermission.Permission;
 import io.github.xxyy.minotopiacore.helper.LaterMessageHelper;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-
-import java.util.logging.Level;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,9 +17,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.logging.Level;
 
-public class CommandClan extends MTCCommandExecutor {
-    
+
+public class CommandClan extends MTCCommandExecutor { //REFACTOR
+
+    private final MTC plugin;
+
+    public CommandClan(MTC plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         if(args.length == 0 || args[0].equalsIgnoreCase("help")) return CommandClan.printHelpTo(sender, label, (args.length >= 2) ? args[1] : "1");
@@ -37,7 +37,7 @@ public class CommandClan extends MTCCommandExecutor {
             if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.create", label)) return true;
             if(args.length < 3) return MTCHelper.sendLoc("XC-createusage", sender, true);
             if(args[1].length() > 20) return MTCHelper.sendLoc("XC-namelength", sender, true);
-            if(args[2].length() > 5 || args[2].length() < 1) return MTCHelper.sendLoc("XC-prefixlength", sender, true); 
+            if(args[2].length() > 5 || args[2].length() < 1) return MTCHelper.sendLoc("XC-prefixlength", sender, true);
             if(ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-inclan", sender, true);
             if(ClanHelper.getClanInfoByName(args[1]).id > 0) return MTCHelper.sendLoc("XC-nameexists", sender, true);
             if(ClanHelper.getClanInfoByPrefix(args[2]).id > 0) return MTCHelper.sendLoc("XC-prefixexists", sender, true);
@@ -54,13 +54,14 @@ public class CommandClan extends MTCCommandExecutor {
             return MTCHelper.sendLocArgs("XC-created", sender, true, MTC.codeChatCol);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("remove")){
+            if(CommandHelper.kickConsoleFromMethod(sender, label+" remove")) return true;
             if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.remove", label)) return true;
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
             if(!ClanPermission.hasAndMessage(sender, Permission.REMOVE)) return true;
             if(args.length >= 2 && args[1].equalsIgnoreCase("sure")){
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
                 if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
-                MTC.econ.depositPlayer(senderName, ci.money);
+                plugin.getVaultHook().depositPlayer((Player) sender, ci.money);
                 ClanHelper.broadcastOrSave(ClanHelper.getClanInfoByPlayerName(senderName).id, MTCHelper.locArgs("XC-removedbroadcast",senderName, false, senderName),1,true);
                 ci.nullify();
                 ClanHelper.cacheById.remove(ci.id);
@@ -207,7 +208,7 @@ public class CommandClan extends MTCCommandExecutor {
             Player plr = (Player)sender;
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
             if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
-            Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableTpClanBase(plr, plr.getLocation(), plr.getHealth(), ci.id),40); 
+            Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableTpClanBase(plr, plr.getLocation(), plr.getHealth(), ci.id),40);
             return MTCHelper.sendLoc("XC-preparetp", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("setbase")){
@@ -261,8 +262,8 @@ public class CommandClan extends MTCCommandExecutor {
             Player plr = Bukkit.getPlayerExact(args[1]);
             InvitationInfo.invStringCache.remove(args[0]);
             if(plr == null){
-                LaterMessageHelper.addMessage(args[1], "C", 5, 
-                        MTCHelper.locArgs("XC-revokeduser", args[1], true, ci.name, MTC.codeChatCol, MTC.priChatCol),   
+                LaterMessageHelper.addMessage(args[1], "C", 5,
+                        MTCHelper.locArgs("XC-revokeduser", args[1], true, ci.name, MTC.codeChatCol, MTC.priChatCol),
                         true, false);
             }else{
                 MTCHelper.sendLocArgs("XC-revokeduser", plr, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
@@ -344,7 +345,7 @@ public class CommandClan extends MTCCommandExecutor {
             return MTCHelper.sendLoc("XC-404", sender, true);
         }
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("permission")) return MTCHelper.sendLoc("XC-nyi", sender, true);   
+        else if(args[0].equalsIgnoreCase("permission")) return MTCHelper.sendLoc("XC-nyi", sender, true);
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if(args[0].equalsIgnoreCase("search")) return MTCHelper.sendLoc("XC-nyi", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,11 +380,11 @@ public class CommandClan extends MTCCommandExecutor {
         }
         return true;
     }
-    
+
     private static boolean printHelpTo(CommandSender sender, String label, String page){
         //TODO like a factions
         ClanHelpManager.tryPrintHelp("xclan", sender, label, page, "clan help");
         return true;
     }
-    
+
 }

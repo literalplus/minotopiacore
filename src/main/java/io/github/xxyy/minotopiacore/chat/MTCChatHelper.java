@@ -4,23 +4,17 @@ import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
-
-import me.minotopia.xLogin.login.LoginHelper;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
 
 
 
@@ -141,40 +135,24 @@ public class MTCChatHelper extends ChatHelper {
 		}
 	}
 	public static void sendMessage(String msg,Player sender){
-		int i = 0;
-		boolean isXlo = true;
-		try{
-		    Class.forName("me.minotopia.xLogin.login.LoginHelper");
-		}catch(Exception e){
-		    isXlo = false;
-		}
-		LogHelper.getChatLogger().log(Level.INFO, msg);
-		for(Player plr : Bukkit.getOnlinePlayers()){
-			if(!PrivateChat.activeChats.containsKey(plr) && (!isXlo || LoginHelper.isLoggedIn(plr.getName()))){
-				plr.sendMessage(msg); i++;
-			}
-		}
-		if(i <= 1){
-			sender.sendMessage(MTC.chatPrefix+"Niemand hört dich :(");
-		}
+        sendMessage(msg, sender, Arrays.asList(Bukkit.getOnlinePlayers()));
 	}
-	public static void sendMessageWorld(String msg, Player plr, World world){
-	    int i = 0;
-	    boolean isXlo = true;
-        try{
-            Class.forName("me.minotopia.xLogin.login.LoginHelper");
-        }catch(Exception e){
-            isXlo = false;
-        }
-        LogHelper.getChatLogger().log(Level.INFO, "{"+world.getName()+"} "+msg);
-        for(Player target : world.getPlayers()){
-            if(!PrivateChat.activeChats.containsKey(target) && (!isXlo || LoginHelper.isLoggedIn(plr.getName()))){
-                target.sendMessage(msg); i++;
+
+    private static void sendMessage(String msg, Player sender, Collection<Player> receivers) {
+        int i = 0;
+        LogHelper.getChatLogger().log(Level.INFO, msg);
+        for(Player plr : receivers){
+            if(!PrivateChat.activeChats.containsKey(plr) && MTC.instance().getXLoginHook().isAuthenticated(sender)){
+                plr.sendMessage(msg); i++;
             }
         }
         if(i <= 1){
-            plr.sendMessage(MTC.chatPrefix+"Niemand hört dich :(");
+            sender.sendMessage(MTC.chatPrefix+"Niemand hört dich :(");
         }
+    }
+
+    public static void sendMessageWorld(String msg, Player plr, World world){
+	    sendMessage(msg, plr, world.getPlayers());
 	}
 	
 	public static String sendPrivateChat(Player sender,String msg,String clanTag){

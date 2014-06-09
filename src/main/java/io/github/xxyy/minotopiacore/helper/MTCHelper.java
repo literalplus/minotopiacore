@@ -7,13 +7,6 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.ToShortStringable;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.clan.ui.ClanHelpManager;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,11 +15,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.*;
 
-public class MTCHelper {
-    
-    
-    
+
+public class MTCHelper { //FIXME wtf is this
+
     public static void addViolation(String code, String violator, String info){
         SafeSql sql = MTC.instance().ssql;
         sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+".mtc_violations SET code=?,violator=?,timestamp=NOW(),info=?", code, violator, info);
@@ -221,7 +214,7 @@ public class MTCHelper {
 	 * Example: isEnabled("") checks if MTC is enabled.
 	 * @param path Path in config (Will be prefixed with 'enable')
 	 * @return boolean
-	 * @see isEnabledAndMsg
+	 * @see #isEnabledAndMsg(String, org.bukkit.command.CommandSender)
 	 */
 	public static boolean isEnabled(String path){
 		//System.out.println(MTCMain.instance().getConfig().getBoolean("enable"+path,true));
@@ -242,7 +235,7 @@ public class MTCHelper {
      * Example: isEnabledAndMSg("") checks if MTC is enabled.
      * @param path Path in config (Will be prefixed with 'enable')
      * @return boolean
-     * @see isEnabledAndMsg
+     * @see #isEnabled(String)
      */
     public static boolean isEnabledAndMsg(String path,CommandSender sender){
         String str = MTC.instance().getConfig().getString("enable"+path);

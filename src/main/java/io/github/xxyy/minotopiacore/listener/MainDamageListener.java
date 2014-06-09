@@ -1,5 +1,6 @@
 package io.github.xxyy.minotopiacore.listener;
 
+import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
@@ -18,18 +19,22 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 
-public class MainDamageListener implements Listener
-{
+public class MainDamageListener implements Listener {
     private static final DecimalFormat df = new DecimalFormat("#.##");
-    static
-    {
+
+    static {
         MainDamageListener.df.setRoundingMode(RoundingMode.HALF_UP);
     }
-    
+
+    private final MTC plugin;
+
+    public MainDamageListener(MTC plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     // event should be cancelled before by i.e. WorldGuard
-    public void onHit(EntityDamageByEntityEvent e)
-    {
+    public void onHit(EntityDamageByEntityEvent e) {
         if (e.isCancelled()) return;
         Player plr;
         Player plrDamager;
@@ -37,25 +42,25 @@ public class MainDamageListener implements Listener
         plr = (Player) e.getEntity();
         plr.removePotionEffect(PotionEffectType.INVISIBILITY);
         switch (e.getDamager().getType()) {
-        case PLAYER:
-            plrDamager = (Player) e.getDamager();
-            break;
-        case ARROW:
-        case SNOWBALL:
-        case SPLASH_POTION:
-            ProjectileSource source = ((Projectile) e.getDamager()).getShooter();
-            if (source == null || !(source instanceof Player)) return;
-            plrDamager = (Player) source;
-            break;
-        case WOLF:
-            Wolf wolf = (Wolf) e.getDamager();
-            AnimalTamer tmr = wolf.getOwner();
-            if (!(tmr instanceof Player)) return;
-            plrDamager = (Player) tmr;
-            message = false;
-            break;
-        default:
-            return;
+            case PLAYER:
+                plrDamager = (Player) e.getDamager();
+                break;
+            case ARROW:
+            case SNOWBALL:
+            case SPLASH_POTION:
+                ProjectileSource source = ((Projectile) e.getDamager()).getShooter();
+                if (source == null || !(source instanceof Player)) return;
+                plrDamager = (Player) source;
+                break;
+            case WOLF:
+                Wolf wolf = (Wolf) e.getDamager();
+                AnimalTamer tmr = wolf.getOwner();
+                if (!(tmr instanceof Player)) return;
+                plrDamager = (Player) tmr;
+                message = false;
+                break;
+            default:
+                return;
         }
         // ANTILOGOUT
         Calendar cal = Calendar.getInstance();
@@ -64,13 +69,10 @@ public class MainDamageListener implements Listener
         // CLAN
         ClanMemberInfo cmiVictim = ClanHelper.getMemberInfoByPlayerName(plr.getName());
         ClanMemberInfo cmiDamager = ClanHelper.getMemberInfoByPlayerName(plrDamager.getName());
-        if (cmiVictim.clanId < 0 || cmiDamager.clanId < 0 || (cmiVictim.clanId != cmiDamager.clanId))
-        {
+        if (cmiVictim.clanId < 0 || cmiDamager.clanId < 0 || (cmiVictim.clanId != cmiDamager.clanId)) {
             String clnPrefix = ClanHelper.getPrefix(plr.getName()) + ((cmiVictim.clanId < 0) ? "" : ClanHelper.getStarsByRank(cmiVictim.getRank()));
-            if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName()))
-            {// this happens if the players are in peace
-                if (message)
-                {
+            if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
+                if (message) {
                     MTCHelper.sendLocArgs("XU-peacehit", plrDamager, true, clnPrefix,
                             plr.getName(), MainDamageListener.df.format(plr.getHealth() / 2.0F), "❤");
                 }
@@ -78,24 +80,21 @@ public class MainDamageListener implements Listener
                 return;
             }
             //this happens if the players can hit each other
-            AntiLogoutListener.setFighting(plr, plrDamager, cal); //ANTILOGOUT
+            plugin.getLogoutHandler().setFighting(plr, plrDamager, cal); //ANTILOGOUT
             MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clnPrefix,
                     plr.getName(), MainDamageListener.df.format(plr.getHealth() / 2.0F), "❤");
             return;
         }
         //this happens if the players are in the same clan.
         MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
-        if (message)
-        {
+        if (message) {
             MTCHelper.sendLoc("XC-clanhit", plrDamager, true);
         }
     }
-    
-    private static void cancelAndStopWolves(EntityDamageByEntityEvent e)
-    {
+
+    private static void cancelAndStopWolves(EntityDamageByEntityEvent e) {
         e.setCancelled(true);
-        if (e.getDamager().getType() == EntityType.WOLF)
-        {
+        if (e.getDamager().getType() == EntityType.WOLF) {
             Wolf wolf = (Wolf) e.getDamager();
             wolf.setCollarColor(DyeColor.ORANGE);
             AnimalTamer prevOwner = wolf.getOwner();

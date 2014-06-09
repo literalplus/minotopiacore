@@ -2,7 +2,7 @@ package io.github.xxyy.minotopiacore.helper;
 
 import org.bukkit.entity.Player;
 
-public class NoobProtHelper {
+public class NoobProtHelper { //TODO implement
 	/**
 	 * Initializes protection for plr and tells them so.
 	 * @param plr Player to protect

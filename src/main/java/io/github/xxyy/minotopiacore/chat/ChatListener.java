@@ -10,9 +10,6 @@ import io.github.xxyy.minotopiacore.clan.ClanInfo;
 import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
 import io.github.xxyy.minotopiacore.clan.ClanPermission;
 import io.github.xxyy.minotopiacore.clan.ClanPermission.Permission;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -22,20 +19,29 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
+
 
 public class ChatListener implements Listener {
-	
-	HashMap<String,String> plrLastMsgs = new HashMap<>();
+
+    private final MTC plugin;
+	HashMap<String,String> lastMessages = new HashMap<>();
 	HashMap<String,Boolean> plrAdCounts = new HashMap<>();
-	
+
+    public ChatListener(MTC plugin) {
+        this.plugin = plugin;
+    }
+
 	@EventHandler(ignoreCancelled=true,priority=EventPriority.HIGH)
-	public void onPlayerChat(AsyncPlayerChatEvent e){
+	public void onPlayerChat(AsyncPlayerChatEvent e){ //REFACTOR
 		Player plr = e.getPlayer();
 		String plrName = plr.getName();
 		String clanTag = "";
 		String finalMsg = e.getMessage();
 	    boolean isClanChat = ClanHelper.isInChat(plrName) || e.getMessage().startsWith("#");
-        String vaultUserPrefix = ChatColor.translateAlternateColorCodes('&', (MTC.chat == null) ? "§7[Fehler]" : MTC.chat.getPlayerPrefix(plr));
+        String vaultUserPrefix = ChatColor.translateAlternateColorCodes('&', plugin.getVaultHook().getPlayerPrefix(plr));
 
 		//glomu
 		if(ChatHelper.isGlobalMute && !plr.hasPermission("mtc.globalmute.exempt") && !plr.hasPermission("mtc.ignore") && !isClanChat){
@@ -56,15 +62,15 @@ public class ChatListener implements Listener {
             plr.sendMessage(MTC.chatPrefix+"Der Server laggt gar nicht! Lügner!!11");
 		}
 		//spam
-		if(this.plrLastMsgs.containsKey(plrName) && 
-		        StringUtils.getLevenshteinDistance(this.plrLastMsgs.get(plrName), finalMsg) <= 2){
+		if(this.lastMessages.containsKey(plrName) &&
+		        StringUtils.getLevenshteinDistance(this.lastMessages.get(plrName), finalMsg) <= 2){
 		    LogHelper.getChatLogger().log(Level.WARNING, "SPAM DETECTED=>"+plrName+"("+plr.getAddress()+"): '"+finalMsg+"'");
 			e.setCancelled(true);
 			plr.sendMessage(MTC.chatPrefix+"Bitte nicht spammen :)");
 			return;
 		}
 		if(!plr.hasPermission("mtc.ignore")) {
-            this.plrLastMsgs.put(plrName, finalMsg);
+            this.lastMessages.put(plrName, finalMsg);
         }
 		
 		//werbung
