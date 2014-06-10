@@ -195,6 +195,9 @@
                     <proguardInclude>obf.pro</proguardInclude>
                     <attach>true</attach>
                     <attachArtifactClassifier>obf</attachArtifactClassifier>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                    </libs>
                     <exclusions>
                         <exclusion>
                             <groupId>com.sk89q</groupId>

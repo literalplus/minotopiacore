@@ -1,6 +1,3 @@
-
--libraryjars 'C:\Program Files\Java\jre7\lib\rt.jar'
-
 -dontskipnonpubliclibraryclassmembers
 -forceprocessing
 -dontshrink
