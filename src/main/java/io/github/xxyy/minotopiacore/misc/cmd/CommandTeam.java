@@ -2,7 +2,7 @@ package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
