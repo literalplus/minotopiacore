@@ -281,7 +281,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.getCommand("clanadmin").setExecutor(new CommandClanAdmin());
         }
         if (this.getConfig().getBoolean("enable.command.team", true)) {
-            this.getCommand("team").setExecutor(new CommandTeam(instance));
+            this.getCommand("team").setExecutor(new CommandTeam());
         }
         if (this.getConfig().getBoolean("enable.infdisp", true)) {
             this.getCommand("infdisp").setExecutor(new CommandInfiniteDispenser());

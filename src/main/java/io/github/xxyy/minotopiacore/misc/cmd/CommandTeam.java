@@ -1,6 +1,5 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
-import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import org.apache.commons.lang.Validate;
@@ -17,17 +16,11 @@ import java.util.stream.Collectors;
 
 public class CommandTeam extends MTCCommandExecutor {
     private final List<TeamGroup> groups = new ArrayList<>();
-    private final MTC plugin;
-
-    public CommandTeam(MTC plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         MTCHelper.sendLoc("XU-teamheader", sender, false);
         if (this.groups.isEmpty()) {
-            boolean overridePrefixes = MTC.instance().getConfig().getBoolean("team.overridePrefixes");
             try {
                 if (!PermissionsEx.isAvailable()) {
                     sender.sendMessage("§cPermissionsEx ist nicht verfügbar.");
@@ -62,11 +55,6 @@ public class CommandTeam extends MTCCommandExecutor {
         private final UUID uuid;
         private boolean lastOnline = false;
         private String lastName;
-
-        public TeamMember(UUID uuid) {
-            Validate.notNull(uuid);
-            this.uuid = uuid;
-        }
 
         public TeamMember(PermissionUser user) {
             Validate.notNull(user);
@@ -107,6 +95,7 @@ public class CommandTeam extends MTCCommandExecutor {
                     "line", "CONSOLE", false, this.getLastName());
         }
 
+        @SuppressWarnings("RedundantIfStatement")
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -129,13 +118,6 @@ public class CommandTeam extends MTCCommandExecutor {
         private final Set<TeamMember> members = new HashSet<>();
         private final String name;
         private final String prefix;
-
-        public TeamGroup(String name, String prefix) {
-            Validate.notNull(name);
-            Validate.notNull(prefix);
-            this.name = name;
-            this.prefix = prefix;
-        }
 
         /**
          * Constructs a new TeamGroup from a PEx PermissionGroup.
@@ -167,13 +149,14 @@ public class CommandTeam extends MTCCommandExecutor {
         }
 
         public String niceRepresentation() {
-            StringBuilder sb = new StringBuilder(this.prefix).append(' ');
+            StringBuilder sb = new StringBuilder(getPrefix()).append(' ');
             String separator = MTCHelper.loc("XU-teamseperator", "CONSOLE", false);
             this.members.parallelStream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));
             sb.delete(sb.length() - separator.length(), sb.length()); //Remove trailing separator
             return sb.toString();
         }
 
+        @SuppressWarnings("RedundantIfStatement")
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
