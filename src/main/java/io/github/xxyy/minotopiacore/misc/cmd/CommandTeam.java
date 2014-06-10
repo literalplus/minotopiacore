@@ -2,6 +2,7 @@ package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -149,7 +150,7 @@ public class CommandTeam extends MTCCommandExecutor {
         }
 
         public String niceRepresentation() {
-            StringBuilder sb = new StringBuilder(getPrefix()).append(' ');
+            StringBuilder sb = new StringBuilder(ChatColor.translateAlternateColorCodes('&',getPrefix())).append(' ');
             String separator = MTCHelper.loc("XU-teamseperator", "CONSOLE", false);
             this.members.parallelStream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));
             sb.delete(sb.length() - separator.length(), sb.length()); //Remove trailing separator
