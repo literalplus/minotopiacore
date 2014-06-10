@@ -90,7 +90,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
-        ConfigHelper.onConfigReload();
+        ConfigHelper.onConfigReload(this);
     }
 
     @Override

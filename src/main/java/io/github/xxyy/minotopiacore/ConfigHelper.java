@@ -2,17 +2,14 @@ package io.github.xxyy.minotopiacore;
 
 import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.common.util.CommandHelper;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.io.File;
+import java.util.*;
 
 
 public class ConfigHelper {
@@ -229,8 +226,8 @@ public static String getTabListAllowedColors() {
         return ConfigHelper.worldSpecificChat;
     }
     
-    protected static void onConfigReload() {
-        ConfigHelper.initClassProperties(MTC.instance().getConfig());
+    protected static void onConfigReload(MTC plugin) {
+        ConfigHelper.initClassProperties(plugin.getConfig());
     }
     public static void setClanEnabled(boolean clanEnabled) {
         ConfigHelper.clanEnabled = clanEnabled;
