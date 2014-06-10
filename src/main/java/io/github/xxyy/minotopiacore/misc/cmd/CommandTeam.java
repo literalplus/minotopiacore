@@ -30,6 +30,7 @@ public class CommandTeam extends MTCCommandExecutor {
 
                 PermissionsEx.getPermissionManager().getGroupList().stream()
                         .filter(group -> group.getOptionBoolean("team", null, false))
+                        .sorted((group, group2) -> group.getOptionInteger("teamweight", null, 0) - group2.getOptionInteger("teamweight",null,0))
                         .forEach(group -> this.groups.add(new TeamGroup(group)));
             } catch (Throwable e) {
                 sender.sendMessage("§cFehler beim Holen der Teammitglieder.");
