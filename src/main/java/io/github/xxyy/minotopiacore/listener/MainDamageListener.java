@@ -35,11 +35,10 @@ public class MainDamageListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     // event should be cancelled before by i.e. WorldGuard
     public void onHit(EntityDamageByEntityEvent e) {
-        if (e.isCancelled()) return;
-        Player plr;
+        if (e.isCancelled() || e.getEntityType() != EntityType.PLAYER) return;
         Player plrDamager;
         boolean message = true;
-        plr = (Player) e.getEntity();
+        Player plr = (Player) e.getEntity();
         plr.removePotionEffect(PotionEffectType.INVISIBILITY);
         switch (e.getDamager().getType()) {
             case PLAYER:
