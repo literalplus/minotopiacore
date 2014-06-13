@@ -1,6 +1,7 @@
 package io.github.xxyy.minotopiacore.hook;
 
 import io.github.xxyy.minotopiacore.hook.impl.XLoginHookImpl;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -27,6 +28,20 @@ public class XLoginHook extends SimpleHookWrapper {
 
     public boolean isAuthenticated(UUID uuid) {
         return isActive() && unsafe.isAuthenticated(uuid);
+    }
+
+    public Location getSpawnLocation() {
+        if(!isActive()) {
+            return null;
+        }
+
+        return unsafe.getSpawnLocation();
+    }
+
+    public void resetSpawnLocation() {
+        if(isActive()) {
+            unsafe.resetSpawnLocation();
+        }
     }
 
     @Override

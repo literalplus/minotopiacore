@@ -8,12 +8,6 @@ import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
 import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,6 +22,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
 public class CommandMTC implements CommandExecutor {
 
@@ -238,6 +239,7 @@ public class CommandMTC implements CommandExecutor {
                 BanHelper.banCache = new HashMap<>();
                 MTCChatHelper.cfCache = new HashMap<>();
                 ClanHelper.clearCache();
+                MTC.instance().getXLoginHook().resetSpawnLocation();
                 sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
                 return true;
             case "forcecron":

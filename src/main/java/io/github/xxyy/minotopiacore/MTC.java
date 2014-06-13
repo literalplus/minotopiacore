@@ -325,7 +325,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new BanJoinListener(), "enable.bans", true);
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
         this.regEvents(pm, new AntiInfPotionListener(), "enable.infPotionFix", true);
-        this.regEvents(pm, new MoveNetherRoofListener(), "enable.netherrooffix", true);
+        this.regEvents(pm, new MoveNetherRoofListener(this), "enable.netherrooffix", true);
         this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
