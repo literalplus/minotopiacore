@@ -3,6 +3,9 @@ package io.github.xxyy.minotopiacore.warns;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 
 public class WarnHelper {
@@ -25,7 +24,7 @@ public class WarnHelper {
 		WarnHelper.checkWarnNumberAndDoStuff(victimName, culprit, WarnHelper.getWarnCountByPlayerName(victimName), warnsAdded);
 	}
 	public static void checkWarnNumberAndDoStuff(String victimName, CommandSender culprit, int warnCount, byte warnsAdded){
-		Player victim = Bukkit.getPlayerExact(victimName);
+		Player victim = Bukkit.getPlayerExact(victimName); //REFACTOR
 		if(victim == null || !victim.isOnline()) return;
 		if(warnCount >= 10){
 			Bukkit.broadcastMessage(MTC.warnChatPrefix+"§cDer Spieler §e"+victimName+"§c hat §o"+warnCount+"§c Warns erreicht und wurde deswegen" +
