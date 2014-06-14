@@ -5,7 +5,6 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class DmgPotionListener implements Listener{
@@ -13,10 +12,8 @@ public class DmgPotionListener implements Listener{
 	public void onDmg(EntityDamageByEntityEvent e){
 		if(e.getDamager().getType() != EntityType.SPLASH_POTION) return;
 		ThrownPotion pot = (ThrownPotion)e.getDamager();
-		for(PotionEffect eff : pot.getEffects()){
-		    if(eff.getType().equals(PotionEffectType.HARM)){
-		        e.setDamage(eff.getAmplifier() + 1);
-		    }
-		}
+        pot.getEffects().stream()
+                .filter(eff -> eff.getType().equals(PotionEffectType.HARM))
+                .forEach(eff -> e.setDamage(eff.getAmplifier() + 1));
 	}
 }
