@@ -33,7 +33,6 @@ public class ConfigHelper {
     private static boolean enableItemOnJoin;
     private static List<Integer> anvilAllowedItems;
     private static boolean clanEnabled;
-    @Deprecated private static String langRevision;
     private static boolean statsEnabled;
     private static HashMap<String, String> teamMap;//name -> prefix
     private static final LinkedList<String> teamGroupsInOrder = new LinkedList<>();
@@ -56,6 +55,7 @@ public class ConfigHelper {
     private static int secsInFight;
     private static List<String> fightAllowedCmds;
     private static List<String> vehicleAllowedCmds;
+    private static boolean enableBungeeAPI;
     public static short getAdDetectionLevel() {
         return ConfigHelper.adDetectionLevel;
     }
@@ -86,9 +86,6 @@ public class ConfigHelper {
     }
     public static ItemStack getItemOnJoin() {
         return ConfigHelper.itemOnJoin;
-    }
-    public static String getLangRevision() {
-        return ConfigHelper.langRevision;
     }
     public static int getNoobProtectionDuration() {
         return ConfigHelper.noobProtectionDuration;
@@ -225,16 +222,15 @@ public static String getTabListAllowedColors() {
     {
         return ConfigHelper.worldSpecificChat;
     }
-    
+    public static boolean isEnableBungeeAPI() {
+        return enableBungeeAPI;
+    }
+
     protected static void onConfigReload(MTC plugin) {
         ConfigHelper.initClassProperties(plugin.getConfig());
     }
     public static void setClanEnabled(boolean clanEnabled) {
         ConfigHelper.clanEnabled = clanEnabled;
-    }
-    public static void setLangRevision(String langRevision) {
-        ConfigHelper.langRevision = langRevision;
-        MTC.instance().getConfig().set("lang.revision", langRevision);
     }
     private static void addChatDefaults(FileConfiguration cfg){
         cfg.addDefault("chat.adDetectionLevel", 1);
@@ -315,26 +311,22 @@ public static String getTabListAllowedColors() {
         cfg.addDefault("fixes.netherroof.spawn.z", 0);
         cfg.addDefault("fixes.netherroof.spawn.pitch", 0);
         cfg.addDefault("fixes.netherroof.spawn.yaw", 0);
-        cfg.addDefault("fixes.anvil-allowed-item-ids", Arrays.asList(new Integer[]{0, 256, 257, 261, 267, 264,
-            265, 266, 268, 269, 270, 272, 273, 274, 275, 276, 277, 278, 283, 285, 284, 298, 299, 300, 301,
-            302, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317}));
+        cfg.addDefault("fixes.anvil-allowed-item-ids", Arrays.asList(0, 256, 257, 261, 267, 264,
+                265, 266, 268, 269, 270, 272, 273, 274, 275, 276, 277, 278, 283, 285, 284, 298, 299, 300, 301,
+                302, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317));
     }
     private static void addMiscDefaults(FileConfiguration cfg){
-        cfg.addDefault("badCmds", Arrays.asList(new String[]{"op","gamemode","full","banip"}));
+        cfg.addDefault("badCmds", Arrays.asList("op","gamemode","full","banip"));
         cfg.addDefault("tablist.allowedColors", "0123456789abcdef");
         cfg.addDefault("warnban.serversuffix","§7§o[UnknownServer]");
         cfg.addDefault("motd","&6&lMinoTopia.me");
         cfg.addDefault("speedonjoin.potency", 5);
         cfg.addDefault("servername","Unknown-"+(new File("").getAbsolutePath()));
         cfg.addDefault("noobprotection.durationInMinutes", 20);
-        cfg.addDefault("fulltag.allowedPlayers", Arrays.asList(new String[]{"xxyy98","chris301234","kANNEY","dani448","SkillerProfiZ"}));
+        cfg.addDefault("fulltag.allowedPlayers", Arrays.asList("xxyy98","chris301234","kANNEY","dani448","SkillerProfiZ"));
         cfg.addDefault("fulltag.removeUnkownFulls", false);
         cfg.addDefault("fulltag.checkEveryInMinutes",20);
         cfg.addDefault("itemonjoin", new ItemStack(Material.WATCH));
-        //cfg.addDefault("lang.revision", MTC.langRevision);
-        cfg.addDefault("team.groups", Arrays.asList(new String[]{"Owner=&4&lOwner:","Developer=&3Developer:",
-                "Admin=&cAdmins:","Moderator=&5Moderatoren:","Supporter=&bSupporter:"}));
-        cfg.addDefault("team.overridePrefixes", false);
         cfg.addDefault("scoreboard.updateIntervalTicks", 100);
         cfg.addDefault("scoreboard.mode", "ALL");
         cfg.addDefault("scoreboard.modeExplanation", "ALL=cycle through; PVP=only PvP; TM=only TM");
@@ -380,7 +372,6 @@ public static String getTabListAllowedColors() {
         ConfigHelper.anvilAllowedItems = cfg.getIntegerList("fixes.anvil-allowed-item-ids");
         ConfigHelper.clanEnabled = cfg.getBoolean("enable.clan",true);
         ConfigHelper.statsEnabled = cfg.getBoolean("enable.stats",true);
-        ConfigHelper.initTeamList(cfg);
         ConfigHelper.clanMaxUsers = cfg.getInt("clan.maxusers",15);
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended",25);
         ConfigHelper.chatUseClan = CommandHelper.writeAndPass(cfg.getBoolean("chat.useclan",true));
@@ -400,6 +391,7 @@ public static String getTabListAllowedColors() {
         ConfigHelper.fightAllowedCmds = cfg.getStringList("antilogout.allowedCmds");
         ChatHelper.allowedChatColors = cfg.getString("chat.farbe.allowed","012356789AaBbDdEeFfRr");
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");
+        ConfigHelper.enableBungeeAPI = cfg.getBoolean("enable.bungeeapi");
     }
     private static void initPotionProps(FileConfiguration cfg){//4, 9, 15
         ConfigHelper.magicSnowballEnabled = cfg.getBoolean("enable.snowball",true);
@@ -424,15 +416,6 @@ public static String getTabListAllowedColors() {
                 }
                 ConfigHelper.snowballEffects.add(new PotionEffect(type, 100, 0));//5s
             }
-        }
-    }
-    private static void initTeamList(FileConfiguration cfg){
-        List<String> lst = cfg.getStringList("team.groups");
-        ConfigHelper.teamMap = new HashMap<>();//diamonds! :D
-        for(int i = 0;i < lst.size(); i++){//with advanced for, the order gets messed up
-            String[] strs = lst.get(i).split("=");
-            ConfigHelper.teamMap.put(strs[0], strs[1]);//name->prefix
-            ConfigHelper.teamGroupsInOrder.add(strs[0]);
         }
     }
 }

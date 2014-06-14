@@ -1,6 +1,7 @@
 package io.github.xxyy.minotopiacore.warns;
 
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.minotopiacore.ConfigHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.misc.BungeeHelper;
@@ -68,7 +69,7 @@ public class CommandWarn implements CommandExecutor {
             return true;
         }
         CommandHelper.broadcast(MTC.warnChatPrefix + "§6" + args[0] + "§c wurde von §6" + sender.getName() + "§c gewarnt.", "mtc.warns.adminmsg");
-        if (MTC.instance().getConfig().getBoolean("enable.bungeeapi", true)) {
+        if (ConfigHelper.isEnableBungeeAPI()) {
             for (byte i = 0; i < multiplier; i++) {
                 BungeeHelper.notifyServersWarn(WarnHelper.addWarn(args[0], sender, reason, (byte) 0));
             }
