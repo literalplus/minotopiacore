@@ -173,6 +173,7 @@
                             <include>io.github.xxyy:common</include>
                         </includes>
                     </artifactSet>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
             </plugin>
 
