@@ -67,11 +67,25 @@ public class AnvilNBrewingStandStackListener implements Listener {
         if (!inv.getType().equals(InventoryType.BREWING)) {
             return;
         }
-        if ((e.getCursor() != null && e.getCursor().getAmount() > 1) || (e.getCurrentItem() != null && e.getCurrentItem().getAmount() > 1)
+
+        int maxAmount = getPermittedStackAmount(plr);
+
+        if ((e.getCursor() != null && e.getCursor().getAmount() > maxAmount) || (e.getCurrentItem() != null && e.getCurrentItem().getAmount() > maxAmount)
                 || e.getAction().equals(InventoryAction.HOTBAR_SWAP) || e.getAction().equals(InventoryAction.HOTBAR_MOVE_AND_READD)) {
-            plr.sendMessage("§c[MTS]§6 Du darfst im Braustand keine gestackten Items verwenden. (Bugusinggefahr <3)");
+            plr.sendMessage("§c[MTS]§6 Du darfst im Braustand keine gestackten Items verwenden.");
             plr.closeInventory();
             e.setCancelled(true);
         }
+    }
+
+    private int getPermittedStackAmount(Player plr) {
+        return ConfigHelper.getBrewStackCheckpoints().stream()
+                .filter(checkpoint -> hasPermissionForAmount(plr, checkpoint))
+                .findFirst()
+                .orElse(1);
+    }
+
+    private boolean hasPermissionForAmount(Player plr, int amount) {
+        return plr.hasPermission("mtc.brewstack."+amount);
     }
 }
