@@ -14,6 +14,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -69,10 +71,14 @@ public class CommandWarn implements CommandExecutor {
             return true;
         }
         CommandHelper.broadcast(MTC.warnChatPrefix + "§6" + args[0] + "§c wurde von §6" + sender.getName() + "§c gewarnt.", "mtc.warns.adminmsg");
+
+        List<WarnInfo> givenWarns = new ArrayList<>();
+        for (byte i = 0; i < multiplier; i++) {
+            givenWarns.add(WarnHelper.addWarn(args[0], sender, reason, (byte) 0));
+        }
+
         if (ConfigHelper.isEnableBungeeAPI()) {
-            for (byte i = 0; i < multiplier; i++) {
-                BungeeHelper.notifyServersWarn(WarnHelper.addWarn(args[0], sender, reason, (byte) 0));
-            }
+            givenWarns.stream().forEach(BungeeHelper::notifyServersWarn);
         } else {
             Bukkit.broadcastMessage(MTC.warnChatPrefix + "§e" + args[0] + "§c wurde "
                     + ((multiplier == 1) ? "" : multiplier + "mal ") + "gewarnt. Grund:");
