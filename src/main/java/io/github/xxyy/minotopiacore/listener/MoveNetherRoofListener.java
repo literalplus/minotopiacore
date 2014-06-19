@@ -25,13 +25,9 @@ public class MoveNetherRoofListener implements Listener {
             e.getPlayer().sendMessage("§c[MTC] §eWenn du mit dieser automatisierten Entscheidung unzufrieden bist, wende dich " +
                     "bitte mit Screenshot dieser Nachricht an das Team! (Forum!)");
 
-            if (MTC.instance().spawn == null) {
-                e.getPlayer().sendMessage("§cBitte warte, bis MTC fertig geladen ist!");
+            if (plugin.getXLoginHook().getSpawnLocation() == null) {
                 e.setTo(e.getFrom());
-                return;
-            }
-
-            if(plugin.getXLoginHook().getSpawnLocation() != null) {
+            } else {
                 e.getPlayer().teleport(plugin.getXLoginHook().getSpawnLocation());
             }
         }

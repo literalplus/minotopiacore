@@ -40,6 +40,7 @@ import io.github.xxyy.minotopiacore.games.teambattle.event.*;
 import io.github.xxyy.minotopiacore.gettime.CommandTime;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.helper.StatsHelper;
+import io.github.xxyy.minotopiacore.hook.PexHook;
 import io.github.xxyy.minotopiacore.hook.VaultHook;
 import io.github.xxyy.minotopiacore.hook.WorldGuardHook;
 import io.github.xxyy.minotopiacore.hook.XLoginHook;
@@ -54,7 +55,6 @@ import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -78,7 +78,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public static int SpeedOnJoinPotency = -1; //TODO <--
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
-    public Location spawn = null; //TODO wtf
     public boolean pvpMode = true; //TODO otha clazz
     public boolean cycle = true; //TODO store somehere else
     //Hooks
@@ -86,6 +85,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private XLoginHook xLoginHook;
     private WorldGuardHook worldGuardHook;
     private AntiLogoutHandler logoutHandler;
+    private PexHook pexHook;
 
     @Override
     public void reloadConfig() {
@@ -180,6 +180,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.xLoginHook = new XLoginHook(this);
         this.vaultHook = new VaultHook(this);
         this.worldGuardHook = new WorldGuardHook(this);
+        this.pexHook = new PexHook(this);
 
         //SCOREBOARD
         if (ConfigHelper.isEnableScB()) {
@@ -222,16 +223,13 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.warnBanServerSuffix = this.getConfig().getString("warnban.serversuffix", "§7§o[Unknown]");
         this.serverName = this.getConfig().getString("servername", "UNKNOWN");
 
-        //NETHERROOFSPAWN
-        this.refreshSpawn();
-
         //LOGS
         LogHelper.initLogs();
 
         //SQL LOGGER
         this.getSql().errLogger = LogHelper.getMainLogger();
 
-        //PREPARING FOR BEING DIABLED
+        //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
 
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
@@ -281,7 +279,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.getCommand("clanadmin").setExecutor(new CommandClanAdmin());
         }
         if (this.getConfig().getBoolean("enable.command.team", true)) {
-            this.getCommand("team").setExecutor(new CommandTeam());
+            this.getCommand("team").setExecutor(new CommandTeam(this));
         }
         if (this.getConfig().getBoolean("enable.infdisp", true)) {
             this.getCommand("infdisp").setExecutor(new CommandInfiniteDispenser());
@@ -375,15 +373,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         return this.getConfig().getString("sql.user");
     }
 
-    public void refreshSpawn() { //TODO wtf is this doing here
-        this.spawn = new Location(Bukkit.getWorld(this.getConfig().getString("fixes.netherroof.spawn.worldName", "world")),
-                this.getConfig().getInt("fixes.netherroof.spawn.x", 0),
-                this.getConfig().getInt("fixes.netherroof.spawn.y", 70),
-                this.getConfig().getInt("fixes.netherroof.spawn.z", 0),
-                (float) this.getConfig().getDouble("fixes.netherroof.spawn.yaw", 0),
-                (float) this.getConfig().getDouble("fixes.netherroof.spawn.pitch", 0));
-    }
-
     private <T extends Listener> T regEvents(PluginManager pm, T listener, String cfgOption, boolean defaultValue) {
         if (!this.getConfig().getBoolean(cfgOption, defaultValue)) {
             return null;
@@ -404,6 +393,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     public XLoginHook getXLoginHook() {
         return xLoginHook;
+    }
+
+    public PexHook getPexHook() {
+        return pexHook;
     }
 
     public WorldGuardHook getWorldGuardHook() {
