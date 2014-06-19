@@ -47,237 +47,231 @@ public class CommandMTC implements CommandExecutor {
             return true;
         } else {
             switch (args[0].toLowerCase()) {
-            case "rename":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.rename", label + " rename")
-                        || CommandHelper.kickConsoleFromMethod(sender, label + " rename")) {
+                case "rename":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.rename", label + " rename")
+                            || CommandHelper.kickConsoleFromMethod(sender, label + " rename")) {
+                        return true;
+                    }
+                    Player renamePlayer = (Player) sender;
+                    ItemStack stack = renamePlayer.getItemInHand();
+                    if (stack == null || stack.getAmount() == 0) {
+                        renamePlayer.sendMessage("§8Du hast nichts in der Hand!");
+                        return true;
+                    }
+                    final String text = StringHelper.varArgsString(args, 1, true);
+                    if (text.length() >= 60) {
+                        renamePlayer.sendMessage("§8So lange Namen crashen Server :/ true story, bro!");
+                        return true;
+                    }
+                    ItemMeta meta = stack.getItemMeta();
+                    meta.setDisplayName(text);
+                    stack.setItemMeta(meta);
+                    renamePlayer.setItemInHand(stack);
+                    renamePlayer.sendMessage("§7Der Name deines Items wurde auf §3" + text + "§7 gesetzt.");
                     return true;
-                }
-                Player renamePlayer = (Player) sender;
-                ItemStack stack = renamePlayer.getItemInHand();
-                if (stack == null || stack.getAmount() == 0) {
-                    renamePlayer.sendMessage("§8Du hast nichts in der Hand!");
+                case "reload":
+                    if (!CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.mtc.reload", "MTC reloaden")) {
+                        return true;
+                    }
+                    CommandHelper.sendImportantActionMessage(sender, "Reloading MTC..");
+                    Bukkit.getPluginManager().disablePlugin(MTC.instance());
+                    Bukkit.getPluginManager().enablePlugin(MTC.instance());
+                    CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC!");
                     return true;
-                }
-                final String text = StringHelper.varArgsString(args, 1, true);
-                if (text.length() >= 60) {
-                    renamePlayer.sendMessage("§8So lange Namen crashen Server :/ true story, bro!");
-                    return true;
-                }
-                ItemMeta meta = stack.getItemMeta();
-                meta.setDisplayName(text);
-                stack.setItemMeta(meta);
-                renamePlayer.setItemInHand(stack);
-                renamePlayer.sendMessage("§7Der Name deines Items wurde auf §3" + text + "§7 gesetzt.");
-                return true;
-            case "reload":
-                if (!CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.mtc.reload", "MTC reloaden")) {
-                    return true;
-                }
-                CommandHelper.sendImportantActionMessage(sender, "Reloading MTC..");
-                Bukkit.getPluginManager().disablePlugin(MTC.instance());
-                Bukkit.getPluginManager().enablePlugin(MTC.instance());
-                CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC!");
-                return true;
-            case "fm":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.fm", label + " fm")) {
-                    return true;
-                }
-                Bukkit.broadcastMessage(StringHelper.varArgsString(args, 1, true));
-                return true;
-            case "milk":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.milk", label + " milk")
-                        || CommandHelper.kickConsoleFromMethod(sender, label + "milk")) {
-                    return true;
-                }
-                Player milkTarget = (Player) sender;
-                for (PotionEffect pot : milkTarget.getActivePotionEffects()) {
-                    milkTarget.removePotionEffect(pot.getType());
-                }
-                milkTarget.sendMessage("§7Du hast die Macht der §f§lMILCH §7benutzt.");
-                return true;
-            case "ci":
-            case "marceldavis":
-                if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
-                CommandHelper.clearInv((Player) sender);
-                sender.sendMessage("§7Marcel Davis von 1&1 hat deine Items gegessen.");
-                return true;
-            case "sign":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.sign", label + " sign")
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
-                if (args.length < 3) {
-                    sender.sendMessage("§3/" + label + " sign <line#> <text>§7 <-- Benutzung");
-                    return true;
-                }
-                int line = 0;
-                try {
-                    line = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage("§8Das ist keine Zahl.");
-                    return true;
-                }
-                Player signPlayer = (Player) sender;
-                @SuppressWarnings("deprecation") List<Block> blks = signPlayer.getLastTwoTargetBlocks(null, 120);
-                Block target = blks.get(1);
-                if (!(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
-                    sender.sendMessage("§8Das nennst du ein Schild?!");
-                    return true;
-                }
+                case "fm":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.fm", label + " fm")) {
+                        return true;
+                    }
 
-                Sign sgn = (Sign) target.getState();
-                sgn.setLine(line, StringHelper.varArgsString(args, 2, true));
-                sgn.update();
-                sender.sendMessage("§7Das Schild wurde editiert.");
-                return true;
-            case "dline":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.sign", label + " dline")
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage("§3/" + label + " dline <line>§7 <-- Benutzung");
-                    return true;
-                }
-                int lineToDelete = 0;
-                try {
-                    lineToDelete = Integer.parseInt(args[1]);
-                } catch (NumberFormatException e) {
-                    sender.sendMessage("§8Das ist keine Zahl.");
-                    return true;
-                }
-                Player dlinePlayer = (Player) sender;
-                @SuppressWarnings("deprecation") List<Block> dlineBlocks = dlinePlayer.getLastTwoTargetBlocks(null, 120);
-                Block dlineTargetBlock = dlineBlocks.get(1);
-                if (!(dlineTargetBlock.getType() == Material.WALL_SIGN) && !(dlineTargetBlock.getType() == Material.SIGN_POST)) {
-                    sender.sendMessage("§8Das nennst du ein Schild?!");
-                    return true;
-                }
-                Sign dlineSign = (Sign) dlineTargetBlock.getState();
-                dlineSign.setLine(lineToDelete, "");
-                dlineSign.update();
-                sender.sendMessage("§7Das Schild wurde editiert.");
-                return true;
-            case "rne":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.rnentity", label + " rnentity")
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
-                if (args.length < 2) {
-                    sender.sendMessage("§3/" + label + " rne <neuer Name>§7 <-- Benutzung");
-                    return true;
-                }
-                Player rnePlayer = (Player) sender;
-                List<Entity> ents = rnePlayer.getNearbyEntities(1, 1, 1);
-                if (ents.size() < 1) {
-                    rnePlayer.sendMessage("§8FOREVER_ALONE.png");
-                    return true;
-                }
-                Entity ent = ents.get(0);
-                if (!(ent instanceof LivingEntity)) {
-                    rnePlayer.sendMessage("§8Das ist tot.");
-                    return true;
-                }
-                ((LivingEntity) ent).setCustomName(StringHelper.varArgsString(args, 1, true));
-                ((LivingEntity) ent).setCustomNameVisible(true);
-                rnePlayer.sendMessage("§7Der Name des/der " + ent.getType().toString() + " in deiner Nähe wurde geändert.");
-                return true;
-            case "spy":
-            case "chatspy":
-            case "nsa":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.spy", label)
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
-                if (MTCChatHelper.spies.contains(sender.getName())) {
-                    MTCChatHelper.spies.remove(sender.getName());
-                    sender.sendMessage(MTC.chatPrefix + "NSA-Modus deaktiviert!");
-                    return true;
-                }
-                MTCChatHelper.spies.add(sender.getName());
-                sender.sendMessage(MTC.chatPrefix + "NSA-Modus aktiviert!");
-                return true;
-            case "rstlng":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.rstlng", label)) {
-                    return true;
-                }
-                HashMap<String, YamlConfiguration> map = new HashMap<>();
-                for (String lang : MTC.instance().getShippedLocales()) {
-                    String dir = "plugins/" + MTC.instance().getName() + "/lang/";
-                    String fl = lang + ".lng.yml";
-                    File destFl = new File(dir + fl);
-                    File destDir = new File(dir);
-                    if (destFl.exists()) {
-                        map.put(lang, YamlConfiguration.loadConfiguration(destFl));
-                    } else {
-                        try {
-                            destDir.mkdirs();
-                            destFl.createNewFile();
-                            try (FileOutputStream out = new FileOutputStream(destFl);
-                                 InputStream in = MTC.instance().getResource("xyc_lang/" + lang + ".lng.yml")) {
-                                int read;
-                                while ((read = in.read()) != -1) {
-                                    out.write(read);
-                                }
-                                out.flush();
-                                map.put(lang, YamlConfiguration.loadConfiguration(destFl));
-                            }
-                        } catch (IOException e) {
-                            System.out.println("Could not copy XYC localization files from JAR: " + lang);
-                            e.printStackTrace();
+                    String message = StringHelper.varArgsString(args, 1, true);
+                    String adminMessage = "§7(/" + label + " fm|" + sender.getName() + ")§f ";
+
+                    for (Player plr : Bukkit.getOnlinePlayers()) {
+                        if (plr.hasPermission("mtc.spy")) {
+                            plr.sendMessage(adminMessage);
+                        } else {
+                            plr.sendMessage(message);
                         }
                     }
-                }
-                sender.sendMessage(MTC.chatPrefix + "Sprachdateien resettet!");
-                return true;
-            case "clearcache":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.clearcache", label)) {
-                    return true;
-                }
-                BanHelper.banCache = new HashMap<>();
-                MTCChatHelper.cfCache = new HashMap<>();
-                ClanHelper.clearCache();
-                MTC.instance().getXLoginHook().resetSpawnLocation();
-                sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
-                return true;
-            case "forcecron":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.forcecron", label)) {
-                    return true;
-                }
-                (new RunnableCronjob5Minutes(true)).run();
-                sender.sendMessage(MTC.chatPrefix + "Forced Cronjob (5m)!");
-                return true;
-            case "setspawn":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.setspawn", label)
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                    return true;
-                }
 
-                Player plr = (Player) sender;
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.worldName", plr.getLocation().getWorld().getName());
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.x", plr.getLocation().getBlockX());
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.y", plr.getLocation().getBlockY());
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.z", plr.getLocation().getBlockZ());
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.pitch", plr.getLocation().getPitch());
-                MTC.instance().getConfig().set("fixes.netherroof.spawn.yaw", plr.getLocation().getYaw());
-                MTC.instance().refreshSpawn();
-                MTC.instance().saveConfig();
-                sender.sendMessage(MTC.chatPrefix + "Spawn gesetzt.");
-                return true;
-            case "ietmonjoin":
-                if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc", label)
-                        || CommandHelper.kickConsoleFromMethod(sender, label)) {
                     return true;
-                }
+                case "milk":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.milk", label + " milk")
+                            || CommandHelper.kickConsoleFromMethod(sender, label + "milk")) {
+                        return true;
+                    }
+                    Player milkTarget = (Player) sender;
+                    for (PotionEffect pot : milkTarget.getActivePotionEffects()) {
+                        milkTarget.removePotionEffect(pot.getType());
+                    }
+                    milkTarget.sendMessage("§7Du hast die Macht der §f§lMILCH §7benutzt.");
+                    return true;
+                case "ci":
+                case "marceldavis":
+                    if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+                    CommandHelper.clearInv((Player) sender);
+                    sender.sendMessage("§7Marcel Davis von 1&1 hat deine Items gegessen.");
+                    return true;
+                case "sign":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.sign", label + " sign")
+                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+                    if (args.length < 3) {
+                        sender.sendMessage("§3/" + label + " sign <line#> <text>§7 <-- Benutzung");
+                        return true;
+                    }
+                    int line = 0;
+                    try {
+                        line = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("§8Das ist keine Zahl.");
+                        return true;
+                    }
+                    Player signPlayer = (Player) sender;
+                    @SuppressWarnings("deprecation") List<Block> blks = signPlayer.getLastTwoTargetBlocks(null, 120);
+                    Block target = blks.get(1);
+                    if (!(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
+                        sender.sendMessage("§8Das nennst du ein Schild?!");
+                        return true;
+                    }
 
-                MTC.instance().getConfig().set("itemonjoin", ((Player) sender).getItemInHand());
-                MTC.instance().saveConfig();
-                sender.sendMessage(MTC.chatPrefix + "itemonjoin gesetzt.");
-                return true;
-            default:
-                sender.sendMessage("§cUnbekannte Aktion.");
+                    Sign sgn = (Sign) target.getState();
+                    sgn.setLine(line, StringHelper.varArgsString(args, 2, true));
+                    sgn.update();
+                    sender.sendMessage("§7Das Schild wurde editiert.");
+                    return true;
+                case "dline":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.sign", label + " dline")
+                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage("§3/" + label + " dline <line>§7 <-- Benutzung");
+                        return true;
+                    }
+                    int lineToDelete = 0;
+                    try {
+                        lineToDelete = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage("§8Das ist keine Zahl.");
+                        return true;
+                    }
+                    Player dlinePlayer = (Player) sender;
+                    @SuppressWarnings("deprecation") List<Block> dlineBlocks = dlinePlayer.getLastTwoTargetBlocks(null, 120);
+                    Block dlineTargetBlock = dlineBlocks.get(1);
+                    if (!(dlineTargetBlock.getType() == Material.WALL_SIGN) && !(dlineTargetBlock.getType() == Material.SIGN_POST)) {
+                        sender.sendMessage("§8Das nennst du ein Schild?!");
+                        return true;
+                    }
+                    Sign dlineSign = (Sign) dlineTargetBlock.getState();
+                    dlineSign.setLine(lineToDelete, "");
+                    dlineSign.update();
+                    sender.sendMessage("§7Das Schild wurde editiert.");
+                    return true;
+                case "rne":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.rnentity", label + " rnentity")
+                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+                    if (args.length < 2) {
+                        sender.sendMessage("§3/" + label + " rne <neuer Name>§7 <-- Benutzung");
+                        return true;
+                    }
+                    Player rnePlayer = (Player) sender;
+                    List<Entity> ents = rnePlayer.getNearbyEntities(1, 1, 1);
+                    if (ents.size() < 1) {
+                        rnePlayer.sendMessage("§8FOREVER_ALONE.png");
+                        return true;
+                    }
+                    Entity ent = ents.get(0);
+                    if (!(ent instanceof LivingEntity)) {
+                        rnePlayer.sendMessage("§8Das ist tot.");
+                        return true;
+                    }
+                    ((LivingEntity) ent).setCustomName(StringHelper.varArgsString(args, 1, true));
+                    ((LivingEntity) ent).setCustomNameVisible(true);
+                    rnePlayer.sendMessage("§7Der Name des/der " + ent.getType().toString() + " in deiner Nähe wurde geändert.");
+                    return true;
+                case "spy":
+                case "chatspy":
+                case "nsa":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.spy", label)
+                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+                    if (MTCChatHelper.spies.contains(sender.getName())) {
+                        MTCChatHelper.spies.remove(sender.getName());
+                        sender.sendMessage(MTC.chatPrefix + "NSA-Modus deaktiviert!");
+                        return true;
+                    }
+                    MTCChatHelper.spies.add(sender.getName());
+                    sender.sendMessage(MTC.chatPrefix + "NSA-Modus aktiviert!");
+                    return true;
+                case "rstlng":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.rstlng", label)) {
+                        return true;
+                    }
+                    HashMap<String, YamlConfiguration> map = new HashMap<>();
+                    for (String lang : MTC.instance().getShippedLocales()) {
+                        String dir = "plugins/" + MTC.instance().getName() + "/lang/";
+                        String fl = lang + ".lng.yml";
+                        File destFl = new File(dir + fl);
+                        File destDir = new File(dir);
+                        if (destFl.exists()) {
+                            map.put(lang, YamlConfiguration.loadConfiguration(destFl));
+                        } else {
+                            try {
+                                destDir.mkdirs();
+                                destFl.createNewFile();
+                                try (FileOutputStream out = new FileOutputStream(destFl);
+                                     InputStream in = MTC.instance().getResource("xyc_lang/" + lang + ".lng.yml")) {
+                                    int read;
+                                    while ((read = in.read()) != -1) {
+                                        out.write(read);
+                                    }
+                                    out.flush();
+                                    map.put(lang, YamlConfiguration.loadConfiguration(destFl));
+                                }
+                            } catch (IOException e) {
+                                System.out.println("Could not copy XYC localization files from JAR: " + lang);
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    sender.sendMessage(MTC.chatPrefix + "Sprachdateien resettet!");
+                    return true;
+                case "clearcache":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.clearcache", label)) {
+                        return true;
+                    }
+                    BanHelper.banCache = new HashMap<>();
+                    MTCChatHelper.cfCache = new HashMap<>();
+                    ClanHelper.clearCache();
+                    MTC.instance().getXLoginHook().resetSpawnLocation();
+                    sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
+                    return true;
+                case "forcecron":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.forcecron", label)) {
+                        return true;
+                    }
+                    (new RunnableCronjob5Minutes(true)).run();
+                    sender.sendMessage(MTC.chatPrefix + "Forced Cronjob (5m)!");
+                    return true;
+                case "ietmonjoin":
+                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc", label)
+                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+
+                    MTC.instance().getConfig().set("itemonjoin", ((Player) sender).getItemInHand());
+                    MTC.instance().saveConfig();
+                    sender.sendMessage(MTC.chatPrefix + "itemonjoin gesetzt.");
+                    return true;
+                default:
+                    sender.sendMessage("§cUnbekannte Aktion.");
             }
             if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.help", label)) {
                 return true;
