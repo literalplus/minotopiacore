@@ -1,5 +1,7 @@
 package io.github.xxyy.minotopiacore.warns;
 
+import org.bukkit.command.CommandExecutor;
+
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;

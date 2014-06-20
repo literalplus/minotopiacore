@@ -1,34 +1,38 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
+import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import org.bukkit.ChatColor;
+import io.github.xxyy.minotopiacore.hook.PexHook;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.tehkode.permissions.PermissionGroup;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class CommandTeam extends MTCCommandExecutor {
     private final List<TeamGroup> groups = new ArrayList<>();
+    private final MTC plugin;
+
+    public CommandTeam(MTC plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         MTCHelper.sendLoc("XU-teamheader", sender, false);
         if (this.groups.isEmpty()) {
             try {
-                if (!PermissionsEx.isAvailable()) {
+                if (!plugin.getPexHook().isActive()) {
                     sender.sendMessage("§cPermissionsEx ist nicht verfügbar.");
                     return true;
                 }
 
-                PermissionsEx.getPermissionManager().getGroupList().stream()
+                plugin.getPexHook().getGroupList().stream()
                         .filter(group -> group.getOptionBoolean("team", null, false))
                         .sorted((group, group2) -> group2.getOptionInteger("teamweight", null, 0) - group.getOptionInteger("teamweight",null,0))
                         .forEach(group -> this.groups.add(new TeamGroup(group)));
@@ -44,11 +48,13 @@ public class CommandTeam extends MTCCommandExecutor {
         this.groups.stream().forEach((grp) -> allMembers.addAll(grp.getMembers()));
 
         Arrays.asList(Bukkit.getOnlinePlayers()).stream()
-                .forEach((plr) -> allMembers.parallelStream()
+                .forEach((plr) -> allMembers.stream()
                         .forEach((member) -> member.checkMatch(plr)
                         )); //Only loop through online players once
 
-        this.groups.stream().forEach(group -> sender.sendMessage(group.niceRepresentation()));
+        this.groups.stream()
+                .filter(TeamGroup::hasMembers)
+                .forEach(group -> sender.sendMessage(group.niceRepresentation()));
 
         return true;
     }
@@ -58,7 +64,7 @@ public class CommandTeam extends MTCCommandExecutor {
         private boolean lastOnline = false;
         private String lastName;
 
-        public TeamMember(PermissionUser user) {
+        public TeamMember(PexHook.User user) {
             Validate.notNull(user);
 
             this.uuid = UUID.fromString(user.getIdentifier());
@@ -87,7 +93,7 @@ public class CommandTeam extends MTCCommandExecutor {
          * @return This object's lastOnline state.
          */
         public boolean checkMatch(Player plr) {
-            lastOnline = (plr.getUniqueId().equals(getUuid())) || plr.getName().equals(lastName); //TODO do we need the name check??
+            lastOnline = (plr.getUniqueId().equals(getUuid()) || plr.getName().equals(lastName)); //TODO do we need the name check??
             return lastOnline;
         }
 
@@ -127,7 +133,7 @@ public class CommandTeam extends MTCCommandExecutor {
          *
          * @param permissionGroup Group to import
          */
-        public TeamGroup(PermissionGroup permissionGroup) {
+        public TeamGroup(PexHook.Group permissionGroup) {
             Validate.notNull(permissionGroup);
 
             this.name = permissionGroup.getName();
@@ -150,7 +156,15 @@ public class CommandTeam extends MTCCommandExecutor {
             return prefix;
         }
 
+        public boolean hasMembers() {
+            return !members.isEmpty();
+        }
+
         public String niceRepresentation() {
+            if(!hasMembers()){
+                return null;
+            }
+
             StringBuilder sb = new StringBuilder(ChatColor.translateAlternateColorCodes('&',getPrefix())).append(' ');
             String separator = MTCHelper.loc("XU-teamseperator", "CONSOLE", false);
             this.members.parallelStream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));

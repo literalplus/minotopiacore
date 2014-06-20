@@ -28,6 +28,8 @@ import io.github.xxyy.minotopiacore.bans.cmd.CommandTempban;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandUnban;
 import io.github.xxyy.minotopiacore.bans.listener.BanJoinListener;
 import io.github.xxyy.minotopiacore.chat.*;
+import io.github.xxyy.minotopiacore.chat.cmdspy.CmdSpyListener;
+import io.github.xxyy.minotopiacore.chat.cmdspy.CommandCmdSpy;
 import io.github.xxyy.minotopiacore.clan.ui.CommandClan;
 import io.github.xxyy.minotopiacore.clan.ui.CommandClanAdmin;
 import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
@@ -328,6 +330,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
         this.regEvents(pm, new InfiniteDispenseListener(), "enable.infdisp", true);
+        this.regEvents(pm, new CmdSpyListener(), "enable.cmdspy", true);
         if (ConfigHelper.isClanEnabled()) {
             pm.registerEvents(new MainDamageListener(this), this);
         }

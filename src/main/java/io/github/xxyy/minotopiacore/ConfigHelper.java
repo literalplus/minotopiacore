@@ -2,6 +2,8 @@ package io.github.xxyy.minotopiacore;
 
 import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.minotopiacore.chat.cmdspy.BadCommandSpyFilter;
+import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -361,7 +363,7 @@ public class ConfigHelper {
         cfg.addDefault("fixes.anvil-allowed-item-ids", Arrays.asList(0, 256, 257, 261, 267, 264,
                 265, 266, 268, 269, 270, 272, 273, 274, 275, 276, 277, 278, 283, 285, 284, 298, 299, 300, 301,
                 302, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317));
-        cfg.addDefault("fixes.brewstack.checkpoints", Arrays.asList(4,8,12,16));
+        cfg.addDefault("fixes.brewstack.checkpoints", Arrays.asList(4, 8, 12, 16));
     }
 
     private static void addMiscDefaults(FileConfiguration cfg) {
@@ -405,7 +407,6 @@ public class ConfigHelper {
         ConfigHelper.adDetectionReplacePointLikeChars = cfg.getBoolean("chat.adDetectionReplacepointLikeChars");
         ChatHelper.percentForCaps = cfg.getInt("chat.maxCapsInPercent", 50);
         ConfigHelper.SpeedOnJoinPotency = (cfg.getBoolean("enable.speedonjoin", false) ? (cfg.getInt("speedonjoin.potency", 5) - 1) : -1);
-        ConfigHelper.badCmds = cfg.getStringList("badCmds");
         ConfigHelper.tabListAllowedColors = cfg.getString("tablist.allowedColors", "7012345689abcdef");
         ConfigHelper.cmdSpyEnabled = cfg.getBoolean("enable.cmdspy", true);
         ConfigHelper.prohibitCmdsInBoats = cfg.getBoolean("enable.fixes.boatCmds", true);
@@ -444,6 +445,11 @@ public class ConfigHelper {
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");
         ConfigHelper.enableBungeeAPI = cfg.getBoolean("enable.bungeeapi");
         setBrewStackCheckpoints(cfg.getIntegerList("fixes.brewstack.checkpoints"));
+        cfg.getStringList("badCmds").stream()
+                .map(str -> CommandSpyFilters.stringFilter(str,
+                                (pats) -> new BadCommandSpyFilter(pats, LogHelper.getBadCmdLogger()))
+                )
+                .forEach(CommandSpyFilters.getActiveFilters()::add);
     }
 
     private static void initPotionProps(FileConfiguration cfg) {//4, 9, 15
