@@ -1,7 +1,6 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.hook.PexHook;
 import org.apache.commons.lang.Validate;
@@ -58,6 +57,13 @@ public class CommandTeam extends MTCCommandExecutor {
 
         return true;
     }
+
+    @Override
+    public void clearCache() {
+        this.groups.clear();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static class TeamMember {
         private final UUID uuid;

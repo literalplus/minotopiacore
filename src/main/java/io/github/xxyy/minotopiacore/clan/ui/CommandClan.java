@@ -4,7 +4,7 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.ConfigHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.MTCCommandExecutor;
+import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
 import io.github.xxyy.minotopiacore.clan.*;
 import io.github.xxyy.minotopiacore.clan.ClanPermission.Permission;

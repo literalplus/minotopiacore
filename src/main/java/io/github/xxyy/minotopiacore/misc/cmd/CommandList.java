@@ -1,6 +1,5 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
-import io.github.xxyy.minotopiacore.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 
 import org.bukkit.Bukkit;

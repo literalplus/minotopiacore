@@ -1,6 +1,6 @@
 package io.github.xxyy.minotopiacore.invsee;
 
-import io.github.xxyy.minotopiacore.MTCPlayerOnlyCommandExecutor;
+import io.github.xxyy.minotopiacore.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 
 import org.bukkit.command.Command;

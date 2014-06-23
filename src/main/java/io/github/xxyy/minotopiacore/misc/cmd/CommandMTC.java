@@ -1,13 +1,17 @@
-package io.github.xxyy.minotopiacore;
+package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.common.HelpManager;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.minotopiacore.Const;
+import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
 import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import io.github.xxyy.minotopiacore.misc.CacheHelper;
+import io.github.xxyy.minotopiacore.misc.ClearCacheEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -143,34 +147,6 @@ public class CommandMTC implements CommandExecutor {
                     sgn.update();
                     sender.sendMessage("§7Das Schild wurde editiert.");
                     return true;
-                case "dline":
-                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.sign", label + " dline")
-                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                        return true;
-                    }
-                    if (args.length < 2) {
-                        sender.sendMessage("§3/" + label + " dline <line>§7 <-- Benutzung");
-                        return true;
-                    }
-                    int lineToDelete = 0;
-                    try {
-                        lineToDelete = Integer.parseInt(args[1]);
-                    } catch (NumberFormatException e) {
-                        sender.sendMessage("§8Das ist keine Zahl.");
-                        return true;
-                    }
-                    Player dlinePlayer = (Player) sender;
-                    @SuppressWarnings("deprecation") List<Block> dlineBlocks = dlinePlayer.getLastTwoTargetBlocks(null, 120);
-                    Block dlineTargetBlock = dlineBlocks.get(1);
-                    if (!(dlineTargetBlock.getType() == Material.WALL_SIGN) && !(dlineTargetBlock.getType() == Material.SIGN_POST)) {
-                        sender.sendMessage("§8Das nennst du ein Schild?!");
-                        return true;
-                    }
-                    Sign dlineSign = (Sign) dlineTargetBlock.getState();
-                    dlineSign.setLine(lineToDelete, "");
-                    dlineSign.update();
-                    sender.sendMessage("§7Das Schild wurde editiert.");
-                    return true;
                 case "rne":
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.rnentity", label + " rnentity")
                             || CommandHelper.kickConsoleFromMethod(sender, label)) {
@@ -251,6 +227,8 @@ public class CommandMTC implements CommandExecutor {
                     MTCChatHelper.cfCache = new HashMap<>();
                     ClanHelper.clearCache();
                     MTC.instance().getXLoginHook().resetSpawnLocation();
+                    MTC.instance().getServer().getPluginManager().callEvent(new ClearCacheEvent());
+                    CacheHelper.clearCaches();
                     sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
                     return true;
                 case "forcecron":

@@ -1,6 +1,6 @@
 package io.github.xxyy.minotopiacore.clan.ui;
 
-import io.github.xxyy.minotopiacore.MTCCommandExecutor;
+import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

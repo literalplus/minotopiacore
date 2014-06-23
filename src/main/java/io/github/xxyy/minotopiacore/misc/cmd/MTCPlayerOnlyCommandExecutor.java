@@ -1,4 +1,4 @@
-package io.github.xxyy.minotopiacore;
+package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.common.util.CommandHelper;
 

@@ -2,7 +2,6 @@ package io.github.xxyy.minotopiacore.misc.cmd;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.misc.PeaceInfo;
 
