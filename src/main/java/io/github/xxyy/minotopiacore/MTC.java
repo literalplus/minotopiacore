@@ -69,17 +69,22 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private static MTC instance;
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
     private boolean showDisableMsg = true;
+
     public static String priChatCol = "§6";
     public static String codeChatCol = "§3";
     public static String chatPrefix = "§6[§bMTS§6] ";
     public static String banChatPrefix = "§6[§bMTS§6] ";
     public static String warnChatPrefix = "§6[§bMTS§6] ";
-    public SafeSql ssql2 = null;
-    public static SqlConsts2 tMconsts;
-    public TeamBattle tb;
+
+    public SafeSql ssql2 = null; //TODO
+    public static SqlConsts2 tMconsts; //TODO
+    public TeamBattle tb; //TODO
+
     public static int SpeedOnJoinPotency = -1; //TODO <--
+
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
+
     public boolean pvpMode = true; //TODO otha clazz
     public boolean cycle = true; //TODO store somehere else
     //Hooks
