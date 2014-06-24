@@ -46,7 +46,7 @@ public class CommandTeam extends MTCCommandExecutor {
         List<TeamMember> allMembers = new LinkedList<>();
         this.groups.stream().forEach((grp) -> allMembers.addAll(grp.getMembers()));
 
-        Arrays.asList(Bukkit.getOnlinePlayers()).stream()
+        Arrays.asList(Bukkit.getOnlinePlayers()).parallelStream()
                 .forEach((plr) -> allMembers.stream()
                         .forEach((member) -> member.checkMatch(plr)
                         )); //Only loop through online players once
