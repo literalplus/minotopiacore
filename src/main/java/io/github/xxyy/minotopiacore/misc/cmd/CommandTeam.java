@@ -65,7 +65,7 @@ public class CommandTeam extends MTCCommandExecutor {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static class TeamMember {
+    public static class TeamMember {
         private final UUID uuid;
         private boolean lastOnline = false;
         private String lastName;
@@ -73,7 +73,7 @@ public class CommandTeam extends MTCCommandExecutor {
         public TeamMember(PexHook.User user) {
             Validate.notNull(user);
 
-            this.uuid = UUID.fromString(user.getIdentifier());
+            this.uuid = user.getUniqueId();
             this.lastName = user.getName();
         }
 
@@ -128,7 +128,7 @@ public class CommandTeam extends MTCCommandExecutor {
         }
     }
 
-    private static class TeamGroup {
+    public static class TeamGroup {
         private final Set<TeamMember> members = new HashSet<>();
         private final String name;
         private final String prefix;
