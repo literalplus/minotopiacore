@@ -1,8 +1,10 @@
-package io.github.xxyy.minotopiacore;
+package io.github.xxyy.minotopiacore.test;
 
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.mockito.Mockito.mock;
@@ -23,5 +25,12 @@ public class TestHelper {
         when(server.getConsoleSender()).thenAnswer(invocation -> mock(ConsoleCommandSender.class));
 
         return server;
+    }
+
+    public static Player mockPlayer(final UUID uuid, final String name) {
+        Player plr = mock(Player.class);
+        when(plr.getUniqueId()).thenReturn(uuid);
+        when(plr.getName()).thenReturn(name);
+        return plr;
     }
 }

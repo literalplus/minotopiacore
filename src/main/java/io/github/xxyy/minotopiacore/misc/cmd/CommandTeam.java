@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 public class CommandTeam extends MTCCommandExecutor {
     private final List<TeamGroup> groups = new ArrayList<>();
     private final MTC plugin;
+    private final List<TeamMember> allMembers = new LinkedList<>();
 
     public CommandTeam(MTC plugin) {
         this.plugin = plugin;
@@ -25,6 +25,7 @@ public class CommandTeam extends MTCCommandExecutor {
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         MTCHelper.sendLoc("XU-teamheader", sender, false);
         if (this.groups.isEmpty()) {
+            plugin.getLogger().info("Now fetching groups!");
             try {
                 if (!plugin.getPexHook().isActive()) {
                     sender.sendMessage("§cPermissionsEx ist nicht verfügbar.");
@@ -33,8 +34,10 @@ public class CommandTeam extends MTCCommandExecutor {
 
                 plugin.getPexHook().getGroupList().stream()
                         .filter(group -> group.getOptionBoolean("team", null, false))
-                        .sorted((group, group2) -> group2.getOptionInteger("teamweight", null, 0) - group.getOptionInteger("teamweight",null,0))
+                        .sorted((group, group2) -> group2.getOptionInteger("teamweight", null, 0) - group.getOptionInteger("teamweight", null, 0))
                         .forEach(group -> this.groups.add(new TeamGroup(group)));
+
+                groups.stream().forEach(grp -> allMembers.addAll(grp.getMembers()));
             } catch (Throwable e) {
                 sender.sendMessage("§cFehler beim Holen der Teammitglieder.");
                 e.printStackTrace();
@@ -42,14 +45,6 @@ public class CommandTeam extends MTCCommandExecutor {
                 return true;
             }
         }
-
-        List<TeamMember> allMembers = new LinkedList<>();
-        this.groups.stream().forEach((grp) -> allMembers.addAll(grp.getMembers()));
-
-        Arrays.asList(Bukkit.getOnlinePlayers()).parallelStream()
-                .forEach((plr) -> allMembers.stream()
-                        .forEach((member) -> member.checkMatch(plr)
-                        )); //Only loop through online players once
 
         this.groups.stream()
                 .filter(TeamGroup::hasMembers)
@@ -67,45 +62,35 @@ public class CommandTeam extends MTCCommandExecutor {
 
     public static class TeamMember {
         private final UUID uuid;
-        private boolean lastOnline = false;
         private String lastName;
 
         public TeamMember(PexHook.User user) {
             Validate.notNull(user);
 
-            this.uuid = user.getUniqueId();
+            this.uuid = user.getUniqueId(); //Not calling (UUID, String) for the null-check
             this.lastName = user.getName();
+        }
+
+        public TeamMember(UUID uuid, String lastName) { //For tests
+            this.uuid = uuid;
+            this.lastName = lastName;
         }
 
         public UUID getUuid() {
             return uuid;
         }
 
-        /**
-         * @return An online state of this user, as found in the last online check.
-         */
-        public boolean isLastOnline() {
-            return lastOnline;
-        }
-
         public String getLastName() {
             return lastName;
         }
 
-        /**
-         * Checks whether the given player is representing the same player as this object.
-         *
-         * @param plr PLayer to check
-         * @return This object's lastOnline state.
-         */
-        public boolean checkMatch(Player plr) {
-            lastOnline = (plr.getUniqueId().equals(getUuid()) || plr.getName().equals(lastName)); //TODO do we need the name check??
-            return lastOnline;
+        public boolean isOnline() {
+            return Bukkit.getPlayer(uuid) != null;
         }
 
         public String niceRepresentation() {
             return MTCHelper.locArgs("XU-team" +
-                    (isLastOnline() ? "on" : "off") +
+                    (isOnline() ? "on" : "off") +
                     "line", "CONSOLE", false, this.getLastName());
         }
 
@@ -167,13 +152,13 @@ public class CommandTeam extends MTCCommandExecutor {
         }
 
         public String niceRepresentation() {
-            if(!hasMembers()){
+            if (!hasMembers()) {
                 return null;
             }
 
-            StringBuilder sb = new StringBuilder(ChatColor.translateAlternateColorCodes('&',getPrefix())).append(' ');
+            StringBuilder sb = new StringBuilder(ChatColor.translateAlternateColorCodes('&', getPrefix())).append(' ');
             String separator = MTCHelper.loc("XU-teamseperator", "CONSOLE", false);
-            this.members.parallelStream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));
+            this.members.stream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));
             sb.delete(sb.length() - separator.length(), sb.length()); //Remove trailing separator
             return sb.toString();
         }
