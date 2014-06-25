@@ -27,7 +27,7 @@ public class XLoginHook extends SimpleHookWrapper {
     }
 
     public boolean isAuthenticated(UUID uuid) {
-        return isActive() && unsafe.isAuthenticated(uuid);
+        return isActive() && Hooks.Unsafe.safeCall(unsafe::isAuthenticated, uuid, true, null);
     }
 
     public Location getSpawnLocation() {
@@ -35,12 +35,12 @@ public class XLoginHook extends SimpleHookWrapper {
             return null;
         }
 
-        return unsafe.getSpawnLocation();
+        return Hooks.Unsafe.safeCall(unsafe::getSpawnLocation, null, null);
     }
 
     public void resetSpawnLocation() {
         if(isActive()) {
-            unsafe.resetSpawnLocation();
+            Hooks.Unsafe.safeCall(unsafe::resetSpawnLocation, null);
         }
     }
 

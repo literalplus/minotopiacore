@@ -21,7 +21,7 @@ public class VaultHook extends SimpleHookWrapper {
     }
 
     public boolean assureHasAccount(OfflinePlayer offlinePlayer) {
-        return isEconomyHooked() && unsafe.assureHasAccount(offlinePlayer);
+        return isEconomyHooked() && Hooks.Unsafe.safeCall(unsafe::assureHasAccount, offlinePlayer, false, null);
     }
 
     public double getBalance(OfflinePlayer offlinePlayer) {
@@ -29,11 +29,11 @@ public class VaultHook extends SimpleHookWrapper {
             throw new IllegalStateException("Economy not hooked!");
         }
 
-        return unsafe.getBalance(offlinePlayer);
+        return Hooks.Unsafe.safeCall(unsafe::getBalance, offlinePlayer, 0D, null);
     }
 
     public String getPlayerPrefix(OfflinePlayer offlinePlayer) {
-        return isChatHooked() ? unsafe.getPlayerPrefix(offlinePlayer) : "§c[ERR]";
+        return isChatHooked() ? Hooks.Unsafe.safeCall(unsafe::getPlayerPrefix, offlinePlayer, "§c§o[ERR]", null) : "§c[ERR]";
     }
 
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) { //FIXME Will throw CNFE if no Vault loaded - shade?

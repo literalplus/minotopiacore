@@ -28,7 +28,7 @@ public class PexHook extends SimpleHookWrapper {
             return new ArrayList<>();
         }
 
-        return unsafe.getGroupList();
+        return Hooks.Unsafe.safeCall(unsafe::getGroupList, new ArrayList<PexHook.Group>(), null);
     }
 
     @Override

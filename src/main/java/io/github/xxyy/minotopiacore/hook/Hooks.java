@@ -1,6 +1,9 @@
 package io.github.xxyy.minotopiacore.hook;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Helps managing hooks.
@@ -26,6 +29,7 @@ public final class Hooks {
             hookInstance = tryHook((Class<T>) Class.forName(hookClassName), wrapper);
         } catch (ClassNotFoundException | NoClassDefFoundError | NoSuchMethodError e) {
             e.printStackTrace();
+            wrapper.getPlugin().getLogger().warning("Plugin hook failed: "+hookClassName);
         }
 
         return hookInstance;
@@ -42,5 +46,50 @@ public final class Hooks {
         }
 
         return hookInstance;
+    }
+
+    public static class Unsafe {
+        public static <T, R> R safeCall(Function<T, R> func, T param, R def, Runnable onError) {
+            try {
+                return func.apply(param);
+            } catch(Exception | Error e) {
+                if(onError != null) {
+                    onError.run();
+                }
+                return def;
+            }
+        }
+
+        public static <T, U, R> R safeCall(BiFunction<T, U, R> func, T param, U param2, R def, Runnable onError) {
+            try {
+                return func.apply(param, param2);
+            } catch(Exception | Error e) {
+                if(onError != null) {
+                    onError.run();
+                }
+                return def;
+            }
+        }
+
+        public static <R> R safeCall(Supplier<R> func, R def, Runnable onError) {
+            try {
+                return func.get();
+            } catch(Exception | Error e) {
+                if(onError != null) {
+                    onError.run();
+                }
+                return def;
+            }
+        }
+
+        public static void safeCall(Runnable func, Runnable onError) {
+            try {
+                func.run();
+            } catch(Exception | Error e) {
+                if(onError != null) {
+                    onError.run();
+                }
+            }
+        }
     }
 }
