@@ -6,6 +6,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 /**
  * Implements unsafe parts of the Vault API.
@@ -50,7 +51,12 @@ public class VaultHookImpl {
         T provider = null;
 
         try {
-            provider = wrapper.getPlugin().getServer().getServicesManager().getRegistration(providerClass).getProvider();
+            RegisteredServiceProvider<T> rsp = wrapper.getPlugin().getServer().getServicesManager().getRegistration(providerClass);
+            if(rsp == null) {
+                wrapper.getPlugin().getLogger().info("No "+providerClass.getSimpleName()+" provider found to hook into!");
+                return null;
+            }
+            provider = rsp.getProvider();
         } catch (Exception e) {
             e.printStackTrace();
         }
