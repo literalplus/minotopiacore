@@ -109,7 +109,7 @@ public class PexHookImpl {
         @Override
         public List<PexHook.User> getUsers() {
             return parent.getUsers().stream()
-                    .map(UserImpl::new)
+                    .map(puser -> new UserImpl(puser)) //constructor ref is broken in j8u5 for some reason
                     .filter(UserImpl::isValid)
                     .collect(Collectors.toList());
         }
