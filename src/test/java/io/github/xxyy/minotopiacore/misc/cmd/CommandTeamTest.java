@@ -42,8 +42,8 @@ public class CommandTeamTest {
 
         CommandTeam.TeamMember target = groups.stream().findAny().get()
                 .getMembers().stream().filter(mem -> mem.getUuid().equals(fakeUserId)).findAny().get();
-        Assert.assertNotNull(target);
-        Assert.assertTrue(target.isLastOnline());
+        Assert.assertNotNull("Couldn't find target member!", target);
+        Assert.assertTrue("Online target not marked as online!", target.isLastOnline());
     }
 
     private PexHook.Group mockGroup(List<PexHook.User> users) {
