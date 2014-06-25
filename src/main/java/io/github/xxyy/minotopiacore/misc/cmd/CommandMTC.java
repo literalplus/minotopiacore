@@ -3,7 +3,6 @@ package io.github.xxyy.minotopiacore.misc.cmd;
 import io.github.xxyy.common.HelpManager;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.minotopiacore.Const;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
@@ -17,7 +16,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -34,10 +32,10 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommandMTC implements CommandExecutor {
+public class CommandMTC extends MTCCommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         if (!MTCHelper.isEnabledAndMsg(".command.mtc", sender)) {
             return true;
         }
@@ -46,7 +44,7 @@ public class CommandMTC implements CommandExecutor {
                 return true;
             }
             sender.sendMessage("§eMinoTopiaCore AKA MTC AKA MTS AKA XyUtil by xxyy98. http://bit.ly/_xy");
-            sender.sendMessage("§9Version " + Const.versionString + ")");
+            sender.sendMessage("§9Version " + MTC.PLUGIN_VERSION.toString() + ")");
             sender.sendMessage("§3Hilfe? /" + label + " help | Kommandos? /help minotopiacore");
             return true;
         } else {

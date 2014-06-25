@@ -1,6 +1,6 @@
 package io.github.xxyy.minotopiacore;
 
-
+@Deprecated
 public class Const {
     public static String version = "@VERSION@";
 //    private static String[] desc;
