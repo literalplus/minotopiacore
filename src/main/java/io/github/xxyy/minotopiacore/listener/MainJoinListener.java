@@ -1,12 +1,10 @@
 package io.github.xxyy.minotopiacore.listener;
 
-import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.ConfigHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.clan.InvitationInfo;
 import io.github.xxyy.minotopiacore.helper.LaterMessageHelper;
 import io.github.xxyy.minotopiacore.helper.StatsHelper;
-import java.util.Iterator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.Iterator;
 
 public class MainJoinListener implements Listener {
     //TODO merge in BanJoinListener
@@ -40,7 +40,7 @@ public class MainJoinListener implements Listener {
             }
         }
         if (MTC.SpeedOnJoinPotency > 0) {
-            plr.addPotionEffect(CommandHelper.writeAndPass(new PotionEffect(PotionEffectType.SPEED, 60000, MTC.SpeedOnJoinPotency, false)), true);
+            plr.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60000, MTC.SpeedOnJoinPotency, false), true);
         }
         if ((ConfigHelper.isEnableItemOnJoin() && ConfigHelper.getItemOnJoin() != null)
                 && !plr.getInventory().containsAtLeast(ConfigHelper.getItemOnJoin(), 1)) {

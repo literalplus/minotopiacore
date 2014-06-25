@@ -1,7 +1,6 @@
 package io.github.xxyy.minotopiacore;
 
 import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.chat.cmdspy.BadCommandSpyFilter;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.Material;
@@ -426,7 +425,7 @@ public class ConfigHelper {
         ConfigHelper.statsEnabled = cfg.getBoolean("enable.stats", true);
         ConfigHelper.clanMaxUsers = cfg.getInt("clan.maxusers", 15);
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended", 25);
-        ConfigHelper.chatUseClan = CommandHelper.writeAndPass(cfg.getBoolean("chat.useclan", true));
+        ConfigHelper.chatUseClan = cfg.getBoolean("chat.useclan", true);
         ConfigHelper.enableScB = cfg.getBoolean("enable.scoreboard", true);
         ConfigHelper.scBUpdateInterval = cfg.getInt("scoreboard.updateIntervalTicks", 100);
         ConfigHelper.scBMode = cfg.getString("scoreboard.mode", "ALL");

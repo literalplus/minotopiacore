@@ -156,7 +156,7 @@ public class FullTagHelper {
 	    if(FullTagHelper.parts.isEmpty()) {
             FullTagHelper.initParts();
         }
-	    return (FullTagHelper.parts.containsKey(partId) ? CommandHelper.writeAndPass(new ItemStack(FullTagHelper.parts.get(partId),1)) : null);
+	    return (FullTagHelper.parts.containsKey(partId) ? new ItemStack(FullTagHelper.parts.get(partId),1) : null);
 	}
 	
 	public static HashMap<String,Integer> getTop(String column, int perPage, int startIndex){
@@ -192,7 +192,7 @@ public class FullTagHelper {
     }
 	
 	public static void initParts(){
-        FullTagHelper.parts.put(0, Material.DIAMOND_CHESTPLATE);
+        FullTagHelper.parts.put(0, Material.DIAMOND_CHESTPLATE); //REFACTOR enum
         FullTagHelper.parts.put(1, Material.DIAMOND_LEGGINGS);
         FullTagHelper.parts.put(2, Material.DIAMOND_BOOTS);
         FullTagHelper.parts.put(3, Material.DIAMOND_HELMET);
