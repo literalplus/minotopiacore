@@ -86,7 +86,7 @@ public class CommandMTC extends MTCCommandExecutor {
                     }
 
                     String message = StringHelper.varArgsString(args, 1, true);
-                    String adminMessage = "§7(/" + label + " fm|" + sender.getName() + ")§f ";
+                    String adminMessage = "§7(/" + label + " fm|" + sender.getName() + ")§f " + message;
 
                     for (Player plr : Bukkit.getOnlinePlayers()) {
                         if (plr.hasPermission("mtc.spy")) {
