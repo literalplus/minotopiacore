@@ -298,14 +298,6 @@
                     </execution>
                 </executions>
             </plugin>-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <generateProjectInfo>false</generateProjectInfo>
-                </configuration>
-            </plugin>
         </plugins>
 
         <finalName>${project.artifactId}-${project.version}</finalName>
