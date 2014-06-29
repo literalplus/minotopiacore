@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommandMTC extends MTCCommandExecutor {
 
@@ -188,7 +189,7 @@ public class CommandMTC extends MTCCommandExecutor {
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.rstlng", label)) {
                         return true;
                     }
-                    HashMap<String, YamlConfiguration> map = new HashMap<>();
+                    Map<String, YamlConfiguration> map = new HashMap<>();
                     for (String lang : MTC.instance().getShippedLocales()) {
                         String dir = "plugins/" + MTC.instance().getName() + "/lang/";
                         String fl = lang + ".lng.yml";

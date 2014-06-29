@@ -37,7 +37,7 @@ public class CommandGiveAll extends MTCCommandExecutor {
                 } else {
                     if (args.length >= 2) {
                         String[] itemInfo = args[0].split(":");
-                        short damage = 0;
+                        short damage = 0; //TODO
                         if (!StringUtils.isNumeric(args[1])) {
                             sender.sendMessage(MTC.chatPrefix + "Die An§lzahl" + MTC.priChatCol + " ist keine Zahl: " + args[1]);
                             return true;

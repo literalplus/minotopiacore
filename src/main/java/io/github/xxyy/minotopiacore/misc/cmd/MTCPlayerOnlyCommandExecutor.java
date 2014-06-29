@@ -28,7 +28,6 @@ public abstract class MTCPlayerOnlyCommandExecutor extends MTCCommandExecutor
      * @param label Alias used
      * @param args Arguments passed
      * @return return false to pretend this command is not loaded. This is not intended in most cases, so return true.
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public abstract boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args);
     

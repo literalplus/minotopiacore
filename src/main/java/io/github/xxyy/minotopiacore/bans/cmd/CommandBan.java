@@ -37,7 +37,7 @@ public class CommandBan implements CommandExecutor {
             if (args.length > 2) {
                 StringBuilder sb = new StringBuilder();
                 for (byte i = 2; i < args.length; i++) {
-                    sb.append(" ").append(args[i]);
+                    sb.append(' ').append(args[i]);
                 }
                 reason += sb.toString();
             }

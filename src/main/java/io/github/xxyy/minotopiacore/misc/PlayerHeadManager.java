@@ -2,7 +2,6 @@ package io.github.xxyy.minotopiacore.misc;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -10,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.Map;
 
 public class PlayerHeadManager {
 
@@ -29,7 +30,7 @@ public class PlayerHeadManager {
         ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         head.setItemMeta(PlayerHeadManager.setSkullOwner((SkullMeta) head.getItemMeta(), this.args[1]));
         for (Player plr : Bukkit.getOnlinePlayers()) {
-            HashMap<Integer, ItemStack> rtrn = plr.getInventory().addItem(head);
+            Map<Integer, ItemStack> rtrn = plr.getInventory().addItem(head);
             if (rtrn.size() != 0) {
                 plr.sendMessage("§7Du hättest den Kopf von §3" + this.args[1] + " §7bekommen, wenn du Platz in deinem Inventar gehabt hättest :(");
             }
@@ -53,7 +54,7 @@ public class PlayerHeadManager {
         Player plr = (Player) sender;
         ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         head.setItemMeta(PlayerHeadManager.setSkullOwner((SkullMeta) head.getItemMeta(), this.args[1]));
-        HashMap<Integer, ItemStack> rtrn = plr.getInventory().addItem(head);
+        Map<Integer, ItemStack> rtrn = plr.getInventory().addItem(head);
         if (rtrn.size() != 0) {
             plr.sendMessage("§7Dein Inventar ist voll! Bitte schaffe Platz und versuche es erneut!");
             return true;

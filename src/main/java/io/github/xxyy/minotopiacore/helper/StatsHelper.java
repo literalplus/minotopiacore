@@ -11,17 +11,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 
 public class StatsHelper {
-    public static volatile HashMap<String, Integer> killMap = new HashMap<>();
-    public static volatile HashMap<String, Integer> deathMap = new HashMap<>();
+    private StatsHelper() {
+
+    }
+
+    public static Map<String, Integer> killMap = new HashMap<>();
+    public static Map<String, Integer> deathMap = new HashMap<>();
     
-    public static volatile HashMap<String, Integer> killQueue = new HashMap<>();
-    public static volatile HashMap<String, Integer> deathQueue = new HashMap<>();
-    
-    public static void a(){}
+    public static Map<String, Integer> killQueue = new HashMap<>();
+    public static Map<String, Integer> deathQueue = new HashMap<>();
     
     public static void cacheModification(String plrName, boolean isKill){
         if(isKill){
@@ -41,7 +44,7 @@ public class StatsHelper {
     
     public static void createEntry(String plrName){
         SafeSql sql = MTC.instance().ssql;
-        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS+"" +
+        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS +
                 " SET user_name=?", plrName);
         StatsHelper.killMap.put(plrName, 0);
         StatsHelper.deathMap.put(plrName, 0);        
@@ -49,7 +52,7 @@ public class StatsHelper {
     
     public static void createEntry(String plrName, String initialColumn, int initialValue){
         SafeSql sql = MTC.instance().ssql;
-        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS+"" +
+        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS +
         		" SET user_name=?"+((initialColumn.isEmpty()) ? ", "+initialColumn+"="+initialValue : ""), plrName);
         StatsHelper.killMap.put(plrName, ((initialColumn.equals("kills")) ? initialValue : 0));
         StatsHelper.deathMap.put(plrName, ((initialColumn.equals("deaths")) ? initialValue : 0));        
@@ -57,7 +60,7 @@ public class StatsHelper {
     
     public static void createEntryBoth(String plrName, int kills, int deaths){
         SafeSql sql = MTC.instance().ssql;
-        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS+"" +
+        sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS +
                 " SET user_name=?, kills="+kills+", deaths="+deaths, plrName);
         StatsHelper.killMap.put(plrName, kills);
         StatsHelper.deathMap.put(plrName, deaths);        
@@ -117,7 +120,6 @@ public class StatsHelper {
      * Gets all deaths (incudling queue!) of a player.
      * @param plrName well...
      * @return count OR -1 on failure
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static int getRealDeaths(String plrName){
         int rtrn = -1;
@@ -137,7 +139,6 @@ public class StatsHelper {
      * Gets all kills (incudling queue!) of a player.
      * @param plrName well...
      * @return count OR -1 on failure
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static int getRealKills(String plrName){
         int rtrn = -1;

@@ -22,20 +22,6 @@ import java.util.Random;
 
 
 public class MagicSnowballHitListener implements Listener {
-    protected class RunnableMagicSnowballTimeout implements Runnable {
-        protected String plrName;
-
-        protected RunnableMagicSnowballTimeout(String plrName) {
-            MagicSnowballHitListener.this.deniedPlayers.add(plrName);
-            this.plrName = plrName;
-        }
-
-        @Override
-        public void run() {
-            MagicSnowballHitListener.this.deniedPlayers.remove(this.plrName);
-        }
-
-    }
 
     protected List<String> deniedPlayers = new ArrayList<>();
 
@@ -74,5 +60,20 @@ public class MagicSnowballHitListener implements Listener {
 
         MTCHelper.sendLocArgs("XU-snowballtarget", plr, true, plrShooter.getName());
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableMagicSnowballTimeout(plrShooter.getName()), ConfigHelper.getSnowballTimeoutTicks());
+    }
+
+    protected class RunnableMagicSnowballTimeout implements Runnable {
+        protected String plrName;
+
+        protected RunnableMagicSnowballTimeout(String plrName) {
+            MagicSnowballHitListener.this.deniedPlayers.add(plrName);
+            this.plrName = plrName;
+        }
+
+        @Override
+        public void run() {
+            MagicSnowballHitListener.this.deniedPlayers.remove(this.plrName);
+        }
+
     }
 }

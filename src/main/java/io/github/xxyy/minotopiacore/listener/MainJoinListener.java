@@ -39,8 +39,8 @@ public class MainJoinListener implements Listener {
                 plr.setPlayerListName("§" + colChar + plrName.substring(0, 14));
             }
         }
-        if (MTC.SpeedOnJoinPotency > 0) {
-            plr.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60000, MTC.SpeedOnJoinPotency, false), true);
+        if (MTC.speedOnJoinPotency > 0) {
+            plr.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60000, MTC.speedOnJoinPotency, false), true);
         }
         if ((ConfigHelper.isEnableItemOnJoin() && ConfigHelper.getItemOnJoin() != null)
                 && !plr.getInventory().containsAtLeast(ConfigHelper.getItemOnJoin(), 1)) {

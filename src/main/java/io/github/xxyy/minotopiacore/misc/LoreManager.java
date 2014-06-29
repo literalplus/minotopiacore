@@ -2,13 +2,14 @@ package io.github.xxyy.minotopiacore.misc;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandLore;
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoreManager {
 
@@ -89,11 +90,11 @@ public class LoreManager {
     }
 
     public boolean checkNeedExtendedArgCount() {
-        return this.checkNeedExtendedArgCount((short) 2);
+        return this.checkNeedExtendedArgCount(2);
     }
 
-    public boolean checkNeedExtendedArgCount(short want) {
-        if (this.args.length < want) {
+    public boolean checkNeedExtendedArgCount(int requiredAmount) {
+        if (this.args.length < requiredAmount) {
             this.sender.sendMessage("§7Falsche Verwendung von /" + this.label + ":§7 Mindestens 2 Argumente erforderlich!");
             this.cl.printHelpToSender(this.sender, this.label);
             return true;
@@ -160,14 +161,14 @@ public class LoreManager {
     }
 
     public boolean prepareLore(boolean extArgCount) {
-        return this.prepareLore(extArgCount, (short) 2);
+        return this.prepareLore(extArgCount, 2);
     }
 
-    public boolean prepareLore(boolean extArgCount, short howManyArgs) {
+    public boolean prepareLore(boolean extArgCount, int minArgAmount) {
         if (LoreManager.kickConsoleFromMethod(this.sender, this.label)) {
             return true;
         }
-        if (extArgCount && this.checkNeedExtendedArgCount(howManyArgs)) {
+        if (extArgCount && this.checkNeedExtendedArgCount(minArgAmount)) {
             return true;
         }
         this.plr = (Player) this.sender;
@@ -220,7 +221,7 @@ public class LoreManager {
     }
 
     public boolean setLoreAt() {
-        if (this.prepareLore(true, (short) 3)) {
+        if (this.prepareLore(true, 3)) {
             return true;
         }
         if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.cmd.lore.set", this.label + " set")) {

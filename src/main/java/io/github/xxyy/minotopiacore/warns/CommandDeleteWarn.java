@@ -1,7 +1,5 @@
 package io.github.xxyy.minotopiacore.warns;
 
-import org.bukkit.command.CommandExecutor;
-
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
@@ -107,7 +105,7 @@ public class CommandDeleteWarn implements CommandExecutor {
             if (StringUtils.isNumeric(arg)) {
                 try {
                     removeCount = Integer.parseInt(arg);
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ignore) {
                     //lol...do nuthin' --> will be caught later by -127-check
                 }
             }
@@ -138,7 +136,7 @@ public class CommandDeleteWarn implements CommandExecutor {
                     break;
                 }
                 WarnInfo wi = warns.get(i);
-                LogHelper.getWarnLogger().log(Level.WARNING, sender.getName() + " F-DW: " + targetName + " W-COZ: " + wi.reason + " BY: " + wi.warnedByName);
+                LogHelper.getWarnLogger().log(Level.WARNING, sender.getName() + " F-DW: " + targetName + " W-COZ: " + wi.reason + " BY: " + wi.warnedByName); //REFACTOR
                 wi.nullify();
             }
         } else if (unknownReason) {

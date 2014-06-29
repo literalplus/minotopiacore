@@ -9,7 +9,6 @@ import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.clan.ClanInfo;
 import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
 import io.github.xxyy.minotopiacore.clan.ClanPermission;
-import io.github.xxyy.minotopiacore.clan.ClanPermission.Permission;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -20,6 +19,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
@@ -27,8 +27,8 @@ import java.util.regex.Pattern;
 public class ChatListener implements Listener {
 
     private final MTC plugin;
-	HashMap<String,String> lastMessages = new HashMap<>();
-	HashMap<String,Boolean> plrAdCounts = new HashMap<>();
+	Map<String,String> lastMessages = new HashMap<>();
+	Map<String,Boolean> plrAdCounts = new HashMap<>();
 
     public ChatListener(MTC plugin) {
         this.plugin = plugin;
@@ -105,7 +105,7 @@ public class ChatListener implements Listener {
     			}else{
         			if(isClanChat){
         				e.setCancelled(true);
-        				if(!ClanPermission.hasAndMessage(plr, Permission.USECHAT)) return;
+        				if(!ClanPermission.hasAndMessage(plr, ClanPermission.USECHAT)) return;
         				ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(plrName, cmi.getRank()),
         				        ClanHelper.parseChatMessage(finalMsg, cmi));
         				MTCChatHelper.sendClanSpyMsg(plrName+": "+e.getMessage(),ci.prefix);

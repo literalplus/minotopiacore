@@ -4,18 +4,18 @@ import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.minotopiacore.Const;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import org.apache.commons.lang.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
 
 
 public class InvitationInfo {
-    public static HashMap<String, String> invStringCache = new HashMap<>();
+    public static Map<String, String> invStringCache = new HashMap<>();
     
     public int id = -1;
     public String userName = "Marcel.Davis";
@@ -118,8 +118,7 @@ public class InvitationInfo {
      * Returns all InviatationInfos in a human-readable format.
      * @param plrName 
      * @param cryIfNone If true, returns a message if there are none; else null is returned.
-     * @return 
-     * @author xxyy98<xxyy98@gmail.com
+     * @return fullInfo
      */
     public static String getInvitationString(String plrName, boolean cryIfNone){
         if(InvitationInfo.invStringCache.containsKey(plrName)) return InvitationInfo.invStringCache.get(plrName);//do it twice, safe a SQL query.
@@ -131,8 +130,7 @@ public class InvitationInfo {
      * @param plrName
      * @param set Set that was fetched before by {@link InvitationInfo#getByName(String)}
      * @param cryIfNone If true, returns a message if there are none; else null is returned.
-     * @return 
-     * @author xxyy98<xxyy98@gmail.com
+     * @return fullInfo
      */
     public static String getInvitationString(String plrName, Set<InvitationInfo> set, boolean cryIfNone){
         if(InvitationInfo.invStringCache.containsKey(plrName)) return InvitationInfo.invStringCache.get(plrName);

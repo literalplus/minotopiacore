@@ -4,12 +4,11 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.ConfigHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
 import io.github.xxyy.minotopiacore.clan.*;
-import io.github.xxyy.minotopiacore.clan.ClanPermission.Permission;
 import io.github.xxyy.minotopiacore.helper.LaterMessageHelper;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -57,7 +56,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             if(CommandHelper.kickConsoleFromMethod(sender, label+" remove")) return true;
             if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.remove", label)) return true;
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.REMOVE)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REMOVE)) return true;
             if(args.length >= 2 && args[1].equalsIgnoreCase("sure")){
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
                 if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
@@ -101,11 +100,11 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
         }else if(args[0].equalsIgnoreCase("kick")){
             if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.kick", label)) return true;
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.KICK)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.KICK)) return true;
             if(args.length < 2) return MTCHelper.sendLoc("XC-kickusage", sender, true);
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(args[1]);
             if(cmi.clanId == -102) return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
-            if(ClanPermission.has(cmi, Permission.IGNOREKICK)) return MTCHelper.sendLoc("XC-ignorekick", sender, true);
+            if(ClanPermission.has(cmi, ClanPermission.IGNOREKICK)) return MTCHelper.sendLoc("XC-ignorekick", sender, true);
             if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
             if(ci.id < 0) return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
@@ -130,7 +129,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
         }else if(args[0].equalsIgnoreCase("invite")){
             if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.invite", label)) return true;
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.INVITE)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.INVITE)) return true;
             if(args.length < 2) return MTCHelper.sendLoc("XC-inviteusage", sender, true);
             if(senderName.equalsIgnoreCase(args[1])) return MTCHelper.sendLoc("XC-inviteself", sender, true);
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
@@ -204,7 +203,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
         }else if(args[0].equalsIgnoreCase("base")){
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
             if(CommandHelper.kickConsoleFromMethod(sender, label+" base")) return true;
-            if(!ClanPermission.hasAndMessage(sender, Permission.TPBASE)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.TPBASE)) return true;
             Player plr = (Player)sender;
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
             if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
@@ -213,7 +212,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("setbase")){
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.SETBASE)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.SETBASE)) return true;
 //            if(!ClanHelper.isLeader(senderName)) return MTCHelper.sendLoc("XC-notleader", sender, true);
             if(CommandHelper.kickConsoleFromMethod(sender, label+" setbase")) return true;
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
@@ -225,7 +224,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("chat")){
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.USECHAT)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.USECHAT)) return true;
             if(args.length == 1){
                 if(ClanHelper.inClanChatNames.contains(senderName)) {
                     ClanHelper.inClanChatNames.remove(senderName);
@@ -250,7 +249,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             LogHelper.getClanChatLogger().log(Level.INFO, "[C-"+ci.prefix+"="+ci.name+"]"+senderName+": "+msg);
         }else if(args[0].equalsIgnoreCase("revoke")){
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, Permission.REVOKE)) return true;
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REVOKE)) return true;
             if(args.length < 2) return MTCHelper.sendLoc("XC-revokeusage", sender, true);
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
             if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
@@ -273,12 +272,12 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(senderName);
             if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, cmi.clanId);
-            if(!ClanPermission.hasAndMessage(cmi, Permission.SETRANK, sender)) return true;
+            if(!ClanPermission.hasAndMessage(cmi, ClanPermission.SETRANK, sender)) return true;
             if(args.length < 3 || args[1].equalsIgnoreCase("help")) return MTCHelper.sendLoc("XC-setrankhelp", sender, false);
             ClanMemberInfo cmiTarget = ClanHelper.getMemberInfoByPlayerName(args[1]);
             if(cmiTarget.clanId != cmi.clanId || cmiTarget.clanId == -102) return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
             if(cmiTarget.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true,cmiTarget.clanId);
-            short rankId = ClanMemberInfo.getRankIdFromString(args[2]);
+            int rankId = ClanMemberInfo.getRankIdFromString(args[2]);
             if(rankId < 0) return MTCHelper.sendLoc("XC-invalidrank", sender, true);
             if(rankId >= cmi.userRankId && !sender.hasPermission("mtc.clana.override")) return MTCHelper.sendLoc("XC-sethigherrank", sender, true);
             cmiTarget.userRankId = rankId;

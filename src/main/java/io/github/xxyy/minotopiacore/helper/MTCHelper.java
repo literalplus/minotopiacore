@@ -29,7 +29,6 @@ public class MTCHelper { //FIXME wtf is this
      * CS == Comma Seperate
      * @param col An Iterable to seperate
      * @return
-     * @author xxyy98<xxyy98@gmail.com
      */
     public static String CSCollection(Iterable<? extends Object> col){
         Iterator<? extends Object> i = col.iterator();
@@ -46,7 +45,6 @@ public class MTCHelper { //FIXME wtf is this
      * CS == Comma Seperate
      * @param col An Iterable to seperate
      * @return w/ line breaks and bullets
-     * @author xxyy98<xxyy98@gmail.com
      */
     public static String CSCollectionShort(Iterable<? extends ToShortStringable> col){
         Iterator<? extends ToShortStringable> i = col.iterator();
@@ -86,13 +84,12 @@ public class MTCHelper { //FIXME wtf is this
 	
 	/**
 	 * initialize help system.
-	 * 
-	 * @author xxyy98<xxyy98@gmail.com
+	 *
 	 */
 	public static void initHelp(){
         HelpManager.helpMans = new HashMap<>();
         //LORE
-        HashMap<String,String> loreMap=new HashMap<>();
+        Map<String,String> loreMap=new HashMap<>();
         loreMap.put("add [Text]", "Fügt eine neue Zeile zur Lore hinzu.");
         loreMap.put("clear", "Löscht die Lore des Items.");
         loreMap.put("remove [Zeilennummer]", "Angegebene Zeile entfernen.");
@@ -104,7 +101,7 @@ public class MTCHelper { //FIXME wtf is this
         HelpManager.helpMans.put("lore", helpLore);
         HelpManager.helpMans.put("ii", helpLore);
         //TIME
-        HashMap<String,String> timeMap=new HashMap<>();
+        Map<String,String> timeMap=new HashMap<>();
         timeMap.put("", "");
         HelpManager helpTime=new HelpManager("GetTime-Hilfe",
                 new String[]{"Zeigt die aktuelle (RL-)Serverzeit und das heutige Datum an."},
@@ -115,7 +112,7 @@ public class MTCHelper { //FIXME wtf is this
         HelpManager.helpMans.put("getdate", helpTime);
         HelpManager.helpMans.put("gd", helpTime);
         //MAINCMD
-        HashMap<String,String> mainMap=new HashMap<>();
+        Map<String,String> mainMap=new HashMap<>();
         mainMap.put("help [Kommando] <Seite>", "Ruft die MTC-Hilfe für das gegebene Kommando ab.");
         mainMap.put("reload", "Lädt MTC neu.");
         mainMap.put("rename [Name]", "Setzt den Namen des Items in deiner Hand. mit &XFarbe!");
@@ -137,7 +134,7 @@ public class MTCHelper { //FIXME wtf is this
         HelpManager.helpMans.put("mts", helpMain);
         HelpManager.helpMans.put("mtc", helpMain);
         //PLAYERHEADS
-        HashMap<String,String> phMap = new HashMap<>();
+        Map<String,String> phMap = new HashMap<>();
         phMap.put("get [Spielername]", "Legt den Kopf des angegebenen in dein Inventar.");
         phMap.put("set [Spielername]", "Ändert den Kopf in deiner Hand.");
         phMap.put("getall [Spielername]", "Gibt jedem Spieler am Server den Kopf des angegebenen Spielers.");
@@ -146,7 +143,7 @@ public class MTCHelper { //FIXME wtf is this
                 phMap);
         HelpManager.helpMans.put("ph", helpPh);
         HelpManager.helpMans.put("playerhead", helpPh);
-        HashMap<String, String> tbMap = new HashMap<>();
+        Map<String, String> tbMap = new HashMap<>();
         tbMap.put("join", "Betritt das Spiel.");
         tbMap.put("leave", "Verlässt das Spiel.");
         tbMap.put("list", "Listet alle aktiven Spieler auf.");
@@ -156,7 +153,7 @@ public class MTCHelper { //FIXME wtf is this
                 new String[]{"Ein lustiges PvP-Spiel, in dem sich zwei Teams (rot und blau) bekriegen. Beide haben seperate Spawns. Das Team mit den meisten Kills gewinnt."},
                 tbMap);
         HelpManager.helpMans.put("war", helpTb);
-        HashMap<String, String> tbaMap = new HashMap<>();
+        Map<String, String> tbaMap = new HashMap<>();
         tbaMap.put("setspawn [blue|red]", "Setzt den Spawn des gegebenen Teams auf deine aktuelle Position.");
         tbaMap.put("addpoint [blue|red]", "Fügt dem Team einen Punkt hinzu.");
         tbaMap.put("forcejoin [PLAYER|all]", "Fügt PLAYER oder alle Spieler dem TeamBattle hinzu.");
@@ -177,7 +174,7 @@ public class MTCHelper { //FIXME wtf is this
         HelpManager.helpMans.put("wara", helpTbA);
         HelpManager.helpMans.put("wa", helpTbA);
         //CLAN
-        HashMap<String, String> clanMap = new HashMap<>();
+        Map<String, String> clanMap = new HashMap<>();
         clanMap.put("create [Name] [Chatprefix]","Erstellt einen neuen Clan mit einem Namen und Prefix. Das Prefix wird bei allen Mitglieder im Globalchat angezeigt.");
         clanMap.put("invite [Name]", "Lädt einen Spieler in deinen Clan ein, optional mit einer Nachricht.");
         clanMap.put("invitations", "Zeigt deine Claneinladungen an.");

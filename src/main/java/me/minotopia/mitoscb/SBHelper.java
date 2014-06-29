@@ -14,6 +14,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SBHelper {
 
@@ -28,7 +29,7 @@ public class SBHelper {
         selectStats = !ConfigHelper.isStatsEnabled();
     }
 
-    private final HashMap<String, Scoreboard> pBoardCache = new HashMap<>();
+    private final Map<String, Scoreboard> pBoardCache = new HashMap<>();
     private boolean selectMoney = true;
     private boolean selectStats = true;
     private static final String QUERY_BOTH =
@@ -97,11 +98,9 @@ public class SBHelper {
                 kills = tempKills;
             }
         }
-        if (!selectMoney) {
-            if (plugin.getVaultHook().assureHasAccount(plr)) {
-                money = (int) plugin.getVaultHook().getBalance(plr);
-                fetchMoney = false;
-            }
+        if (!selectMoney && plugin.getVaultHook().assureHasAccount(plr)) {
+            money = (int) plugin.getVaultHook().getBalance(plr);
+            fetchMoney = false;
         }
         if (fetchStats || fetchMoney) {
             SafeSql sql = MTC.instance().getSql();

@@ -1,19 +1,15 @@
 package io.github.xxyy.minotopiacore.listener;
 
-import java.util.List;
-import java.util.Random;
-
 import org.bukkit.Location;
-import org.bukkit.entity.Cow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.MushroomCow;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
+import java.util.Random;
 
 public class LightningListener implements Listener {
 	/**
@@ -27,8 +23,8 @@ public class LightningListener implements Listener {
 	public void onLightningStrike(LightningStrikeEvent e){
 		//System.out.println("Lightning!");
 		LightningStrike bolt = e.getLightning();
-		List<Entity> NearbyEntities = bolt.getNearbyEntities(2, 2, 2);
-		for(Entity item : NearbyEntities){
+		List<Entity> nearbyEntities = bolt.getNearbyEntities(2, 2, 2);
+		for(Entity item : nearbyEntities){
 			if(item.getType() == EntityType.COW){
 				Cow cow=(Cow)item;
 				cow.setFireTicks(0);

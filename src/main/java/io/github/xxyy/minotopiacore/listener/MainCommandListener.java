@@ -22,7 +22,7 @@ public class MainCommandListener implements Listener {
 
         String plrName = e.getPlayer().getName();
         String cmd = e.getMessage();
-        cmd = cmd.substring(1, cmd.contains(" ") ? cmd.indexOf(" ") : cmd.length());
+        cmd = cmd.substring(1, cmd.contains(" ") ? cmd.indexOf(' ') : cmd.length());
 
         if (e.getPlayer().isInsideVehicle() && ConfigHelper.isProhibitCmdsInBoats() &&
                 !ConfigHelper.getVehicleAllowedCmds().contains(cmd)) {

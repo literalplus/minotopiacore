@@ -33,7 +33,7 @@ public class CommandMute implements CommandExecutor{
 				CommandHelper.broadcast(MTC.chatPrefix+"§b"+sender.getName()+"§6 hat §b"+args[0]+"§6 entmuted."+(reason.equalsIgnoreCase("") ? "" : " Grund: §7"+reason), "mtc.spy");
 				return true;
 			}
-            MuteHelper.mutePlayer(args[0], (reason == "" ? "Kein Grund angegeben. Das ist gegen unsere Standards." : reason), sender.getName());
+            MuteHelper.mutePlayer(args[0], (reason.equals("") ? "Kein Grund angegeben. Das ist gegen unsere Standards." : reason), sender.getName());
             if(target != null && target.isOnline())
             {
                 target.sendMessage(MTC.chatPrefix+"Du wurdest von §b"+sender.getName()+"§6 gemuted."+(reason.equalsIgnoreCase("") ? "" : " Grund: §7"+reason));

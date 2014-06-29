@@ -1,15 +1,18 @@
 package io.github.xxyy.minotopiacore.helper;
 
 import io.github.xxyy.minotopiacore.MTC;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 
+public final class LaterMessageHelper {
+    private LaterMessageHelper() {
 
-public class LaterMessageHelper {
+    }
+
     public static final File storFile = new File("plugins/"+MTC.instance().getName()+"/laterMessages.stor.yml");
     public static YamlConfiguration storage = YamlConfiguration.loadConfiguration(LaterMessageHelper.storFile);
     
@@ -32,7 +35,6 @@ public class LaterMessageHelper {
      * pretty self-explaining :P
      * @param senderName
      * @return
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static boolean hasMessages(String senderName){
         return LaterMessageHelper.storage.contains(senderName);
@@ -44,7 +46,6 @@ public class LaterMessageHelper {
      * Removes all messages that have both types.
      * @param type
      * @param type2
-     * @author xxyy98<xxyy98@gmail.com
      */
     public static void removeType(String senderName, String type, int type2){
         if(!LaterMessageHelper.storage.contains(senderName)) return;
@@ -74,7 +75,6 @@ public class LaterMessageHelper {
      * specified, deletes them.
      * @param plrName Player
      * @return If any messages got printed
-     * @author xxyy98<xxyy98@gmail.com>
      */
     public static boolean sendMessages(CommandSender sender){
         String senderName = sender.getName();

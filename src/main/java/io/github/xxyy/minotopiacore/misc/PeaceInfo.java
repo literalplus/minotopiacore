@@ -12,96 +12,98 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class PeaceInfo
-{
+public class PeaceInfo {
     public static final ConcurrentHashMap<String, PeaceInfo> cache = new ConcurrentHashMap<>();
-    
+
     public String plrName;
     public List<String> peacedPlrs = null;
     public int errCode = 1; //no error
-    
-    private PeaceInfo(int errCode, String plrName){ this.errCode = errCode; this.plrName = plrName; this.peacedPlrs = new ArrayList<>();}
-    private PeaceInfo(String plrName, List<String> peacedPlrs)
-    { this.plrName = plrName; this.peacedPlrs = peacedPlrs; }
-    private PeaceInfo(String plrName, String peacedPlrs){
+
+    private PeaceInfo(int errCode, String plrName) {
+        this.errCode = errCode;
+        this.plrName = plrName;
+        this.peacedPlrs = new ArrayList<>();
+    }
+
+    private PeaceInfo(String plrName, List<String> peacedPlrs) {
+        this.plrName = plrName;
+        this.peacedPlrs = peacedPlrs;
+    }
+
+    private PeaceInfo(String plrName, String peacedPlrs) {
         this.plrName = plrName;
         this.peacedPlrs = new ArrayList<>(Arrays.asList(peacedPlrs.split(",")));//returned list is fixed-size
     }
-    
-    public void create(){
+
+    public void create() {
         MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace SET player_name=?, peace_players=?",
                 this.plrName, CommandHelper.CSCollection(this.peacedPlrs, ""));
         this.errCode = 2;
         PeaceInfo.cache.put(this.plrName, this);
     }
-    
-    public void flush(){
-        if(this.peacedPlrs.isEmpty()){
+
+    public void flush() {
+        if (this.peacedPlrs.isEmpty()) {
             this.nullify();
             return;
         }
-        if(this.errCode < 0){
+        if (this.errCode < 0) {
             this.create();
             return;
         }
-        MTC.instance().ssql.safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?", 
+        MTC.instance().getSql().safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?",
                 CommandHelper.CSCollection(this.peacedPlrs, ""), this.plrName);
         PeaceInfo.cache.put(this.plrName, this);
     }
-    
-    public void nullify(){
-        MTC.instance().ssql.safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
+
+    public void nullify() {
+        MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
         PeaceInfo.cache.remove(this.plrName);
     }
-    
-    public static PeaceInfo get(String plrName){
-        if(PeaceInfo.cache.containsKey(plrName)) return PeaceInfo.cache.get(plrName);
+
+    public static PeaceInfo get(String plrName) {
+        if (PeaceInfo.cache.containsKey(plrName)) return PeaceInfo.cache.get(plrName);
         PeaceInfo rtrn = PeaceInfo.fetch(plrName);
         PeaceInfo.cache.put(plrName, rtrn);
         return rtrn;
     }
-    
-    public static boolean hasRequest(String checkName, String targetName){
-        SafeSql sql = MTC.instance().ssql;
-        ResultSet rs = sql.safelyExecuteQuery("SELECT EXISTS( SELECT 1 FROM mtc_peace_requests WHERE sender_name=? AND receiver_name=?)",
+
+    public static boolean hasRequest(String checkName, String targetName) {
+        SafeSql sql = MTC.instance().getSql();
+        ResultSet rs = sql.safelyExecuteQuery("SELECT EXISTS( SELECT 1 FROM mtc_peace_requests WHERE sender_name=? AND receiver_name=?)", //REFACTOR
                 checkName, targetName);
-        try
-        {
-            if(rs == null || !rs.next()) return false;
+        try {
+            if (rs == null || !rs.next()) return false;
             return rs.getBoolean(1);
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             sql.formatAndPrintException(e, "");
             return false;
         }
     }
-    
-    public static boolean isInPeaceWith(String checkName, String targetName){
+
+    public static boolean isInPeaceWith(String checkName, String targetName) {
         PeaceInfo pi = PeaceInfo.get(checkName);
-        if(pi.errCode < 0) return false;
-        return pi.peacedPlrs.contains(targetName);
+        return pi.errCode >= 0 && pi.peacedPlrs.contains(targetName);
     }
-    
-    public static void revokeRequest(String senderName, String targetName){
-        MTC.instance().ssql.safelyExecuteUpdate("DELETE FROM mtc_peace_requests WHERE " +
-        		"sender_name=? AND receiver_name=?", senderName, targetName);
+
+    public static void revokeRequest(String senderName, String targetName) {
+        MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace_requests WHERE " +
+                "sender_name=? AND receiver_name=?", senderName, targetName);
     }
-    
-    public static void sendRequest(String senderName, String targetName){
-        MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace_requests SET " +
-        		"sender_name=?, receiver_name=?", senderName, targetName);
+
+    public static void sendRequest(String senderName, String targetName) {
+        MTC.instance().getSql().safelyExecuteUpdate("INSERT INTO mtc_peace_requests SET " +
+                "sender_name=?, receiver_name=?", senderName, targetName);
     }
-    
-    private static PeaceInfo fetch(String plrName){
-        SafeSql sql = MTC.instance().ssql;
+
+    private static PeaceInfo fetch(String plrName) {
+        SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT peace_players FROM mtc_peace WHERE player_name=?", plrName);
-        if(rs == null) return new PeaceInfo(-2, plrName);
-        try
-        {
-            if(!rs.next()) return new PeaceInfo(-4, plrName);
+        if (rs == null) return new PeaceInfo(-2, plrName);
+        try {
+            if (!rs.next()) return new PeaceInfo(-4, plrName);
             return new PeaceInfo(plrName, rs.getString("peace_players"));
-        } catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return new PeaceInfo(-3, plrName);
         }

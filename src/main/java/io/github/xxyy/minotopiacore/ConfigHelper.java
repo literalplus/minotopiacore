@@ -35,7 +35,7 @@ public class ConfigHelper {
     private static List<Integer> anvilAllowedItems;
     private static boolean clanEnabled;
     private static boolean statsEnabled;
-    private static HashMap<String, String> teamMap;//name -> prefix
+    private static Map<String, String> teamMap;//name -> prefix
     private static final LinkedList<String> teamGroupsInOrder = new LinkedList<>();
     private static int clanMaxUsers;
     private static int clanMaxUsersExtended;
@@ -141,7 +141,7 @@ public class ConfigHelper {
         return ConfigHelper.teamGroupsInOrder;
     }
 
-    public static HashMap<String, String> getTeamMap() {
+    public static Map<String, String> getTeamMap() {
         return ConfigHelper.teamMap;
     }
 

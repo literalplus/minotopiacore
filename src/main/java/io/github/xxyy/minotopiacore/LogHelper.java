@@ -10,7 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class LogHelper {
+public final class LogHelper {
+    private LogHelper() {
+
+    }
+
     private static final Logger mainLogger = Logger.getLogger("MTC");
     private static final Logger cmdLogger = Logger.getLogger("MTC.CMD");
     private static final Logger badCmdLogger = Logger.getLogger("MTC.BCMD");
@@ -69,16 +73,14 @@ public class LogHelper {
     }
     
     public static void initLogs(){
-//        System.out.println("HEY");
-        new File("plugins/"+MTC.instance().getName()+"/logs/").mkdirs();
+        new File(MTC.instance().getDataFolder()+"/logs/").mkdirs();
         if(ConfigHelper.isMainLoggerEnabled()){
-//            System.out.println("I JUST MET YOU");
             try {
-                FileHandler hdlr = new FileHandler("plugins/"+MTC.instance().getName()+"/logs/main.log",10000000, 5, true);
+                FileHandler hdlr = new FileHandler(MTC.instance().getDataFolder()+"/logs/main.log",10000000, 5, true);
                 hdlr.setLevel(Level.FINEST);
                 hdlr.setFormatter(new XYCFormatter(MTC.instance(), "Main Log.", true));
                 hdlr.setEncoding("UTF-8");
-                FileHandler hdlr2 = new FileHandler("plugins/"+MTC.instance().getName()+"/logs/error.log",10000000, 5, true);
+                FileHandler hdlr2 = new FileHandler(MTC.instance().getDataFolder()+"/logs/error.log",10000000, 5, true);
                 hdlr2.setLevel(Level.WARNING);
                 hdlr2.setFormatter(new XYCFormatter(MTC.instance(), "Main Log.", true));
                 hdlr2.setEncoding("UTF-8");
@@ -92,26 +94,21 @@ public class LogHelper {
             }
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.cmds",false)){
-//          System.out.println("AND THIS IS CRAZY");
-            LogHelper.tryInitLogger(LogHelper.cmdLogger, "plugins/"+MTC.instance().getName()+"/logs/commands.log","CmdLogger",true);
-            LogHelper.tryInitLogger(LogHelper.badCmdLogger,"plugins/"+MTC.instance().getName()+"/logs/badcmds.log","BadCmdLogger",true);
+            LogHelper.tryInitLogger(LogHelper.cmdLogger, MTC.instance().getDataFolder()+"/logs/commands.log","CmdLogger",true);
+            LogHelper.tryInitLogger(LogHelper.badCmdLogger,MTC.instance().getDataFolder()+"/logs/badcmds.log","BadCmdLogger",true);
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.chat",true)){
-//          System.out.println("BUT HERE'S MY LOGGER");
-            LogHelper.tryInitLogger(LogHelper.chatLogger,"plugins/"+MTC.instance().getName()+"/logs/chat.log","ChatLogger",true);
-            LogHelper.tryInitLogger(LogHelper.clanChatLogger,"plugins/"+MTC.instance().getName()+"/logs/clanchat.log","ClanChatLogger",true);
-            LogHelper.tryInitLogger(LogHelper.privChatLogger,"plugins/"+MTC.instance().getName()+"/logs/privatechats.log","PrivChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.chatLogger,MTC.instance().getDataFolder()+"/logs/chat.log","ChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.clanChatLogger,MTC.instance().getDataFolder()+"/logs/clanchat.log","ClanChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.privChatLogger,MTC.instance().getDataFolder()+"/logs/privatechats.log","PrivChatLogger",true);
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.bansNwarns",true)){
-//          System.out.println("SO LOG ME MAYBE");
-            LogHelper.tryInitLogger(LogHelper.warnLogger,"plugins/"+MTC.instance().getName()+"/logs/warns.log","WarnLogger",true);
-            LogHelper.tryInitLogger(LogHelper.banLogger,"plugins/"+MTC.instance().getName()+"/logs/bans.log","BanLogger",true);
+            LogHelper.tryInitLogger(LogHelper.warnLogger,MTC.instance().getDataFolder()+"/logs/warns.log","WarnLogger",true);
+            LogHelper.tryInitLogger(LogHelper.banLogger,MTC.instance().getDataFolder()+"/logs/bans.log","BanLogger",true);
         }
         if(ConfigHelper.isFullLogEnabled()){
-//          System.out.println("ALSO, THE CAKE");
-            LogHelper.tryInitLogger(LogHelper.fullLogger, "plugins/"+MTC.instance().getName()+"/logs/fulls.log","FullLogger",true);
+            LogHelper.tryInitLogger(LogHelper.fullLogger, MTC.instance().getDataFolder()+"/logs/fulls.log","FullLogger",true);
         }
-//        System.out.println("IS A LIE");
         LogHelper.mainLogger.setUseParentHandlers(false);
         LogHelper.cmdLogger.setUseParentHandlers(false);
         LogHelper.badCmdLogger.setUseParentHandlers(false);

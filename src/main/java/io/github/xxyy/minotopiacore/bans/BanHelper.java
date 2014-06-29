@@ -8,16 +8,22 @@ import org.bukkit.Bukkit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 
-public class BanHelper {
-    public static volatile HashMap<String, BanInfo> banCache = new HashMap<>();
+public final class BanHelper {
+    private BanHelper() {
+
+    }
+
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    public static Map<String, BanInfo> banCache = new HashMap<>();
 
     public static void broadcastBanChatMsg(BanInfo bi) {
         String timeString = "§lpermanent";
 
         if (bi.banExpiryTimestamp > 0) {
-            timeString = "bis §6" + (new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(bi.banExpiryTimestamp * 1000L)) + "";
+            timeString = "bis §6" + (SIMPLE_DATE_FORMAT.format(bi.banExpiryTimestamp * 1000L));
         }
 
         CommandHelper.broadcast(MTC.banChatPrefix + "§6" + bi.plrName + "§c wurde von §6" + bi.bannedByName + "§c gebannt:", "mtc.ban.adminmsg");
@@ -65,11 +71,11 @@ public class BanHelper {
      */
     public static long getMillisFromRelativeString(String str) {
         if (str.length() == 0) return Calendar.getInstance().getTimeInMillis();
-        long SecondsToAdd = 0;
+        long secondsToAdd = 0;
         String currNum = "";
         for (byte i = 0; i < str.length(); i++) {
             char cr = str.charAt(i);
-            if (StringUtils.isNumeric(cr + "")) {
+            if (StringUtils.isNumeric(String.valueOf(cr))) {
                 currNum += cr;
                 continue;
             }
@@ -80,7 +86,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num;
+                secondsToAdd += num;
                 currNum = "";
             } else if (cr == 'm') {
                 int num;
@@ -89,7 +95,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 60L;
+                secondsToAdd += num * 60L;
                 currNum = "";
             } else if (cr == 'h') {
                 int num;
@@ -98,7 +104,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 3600L;
+                secondsToAdd += num * 3600L;
                 currNum = "";
             } else if (cr == 'd') {
                 int num;
@@ -107,7 +113,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 86400L;
+                secondsToAdd += num * 86400L;
                 currNum = "";
             } else if (cr == 'w') {
                 int num;
@@ -116,7 +122,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 604800L;
+                secondsToAdd += num * 604800L;
                 currNum = "";
             } else if (cr == 'M') {
                 int num;
@@ -125,7 +131,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 2592000L;
+                secondsToAdd += num * 2592000L;
                 currNum = "";
             } else if (cr == 'y') {
                 int num;
@@ -134,7 +140,7 @@ public class BanHelper {
                 } catch (NumberFormatException e) {
                     return -1;
                 }
-                SecondsToAdd += num * 31536000L;
+                secondsToAdd += num * 31536000L;
                 currNum = "";
             } else
                 return -2;
@@ -146,10 +152,10 @@ public class BanHelper {
             } catch (NumberFormatException e) {
                 return -1;
             }
-            SecondsToAdd += num;
+            secondsToAdd += num;
             currNum = "";
         }
-        return Calendar.getInstance().getTimeInMillis() + (SecondsToAdd * 1000);
+        return Calendar.getInstance().getTimeInMillis() + (secondsToAdd * 1000);
     }
 
 

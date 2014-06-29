@@ -23,7 +23,7 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandBan;
-import io.github.xxyy.minotopiacore.bans.cmd.CommandBaninfo;
+import io.github.xxyy.minotopiacore.bans.cmd.CommandBanInfo;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandTempban;
 import io.github.xxyy.minotopiacore.bans.cmd.CommandUnban;
 import io.github.xxyy.minotopiacore.bans.listener.BanJoinListener;
@@ -80,7 +80,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public static SqlConsts2 tMconsts; //TODO
     public TeamBattle tb; //TODO
 
-    public static int SpeedOnJoinPotency = -1; //TODO <--
+    public static int speedOnJoinPotency = -1; //TODO <--
 
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
@@ -268,7 +268,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         }
         if (this.getConfig().getBoolean("enable.bans", true)) { //BANS
             this.getCommand("ban").setExecutor(new CommandBan());
-            this.getCommand("baninfo").setExecutor(new CommandBaninfo());
+            this.getCommand("baninfo").setExecutor(new CommandBanInfo());
             this.getCommand("tempban").setExecutor(new CommandTempban());
             this.getCommand("unban").setExecutor(new CommandUnban());
         }
@@ -315,7 +315,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             pm.registerEvents(new ChatListener(this), this);
             Bukkit.getConsoleSender().sendMessage("§8[MTC] CHAT enabled!");
         }
-        if (ConfigHelper.isEnableTablist() || ConfigHelper.isNoobProtection() || MTC.SpeedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
+        if (ConfigHelper.isEnableTablist() || ConfigHelper.isNoobProtection() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {
             pm.registerEvents(new MainJoinListener(), this);
         }

@@ -18,10 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacore.misc.AntiLogoutHandler {
     private final MTC plugin;
-    private final HashMap<String, Date> playersInAFight = new HashMap<>();
+    private final Map<String, Date> playersInAFight = new HashMap<>();
 
     public AntiLogoutListener(MTC plugin) {
         this.plugin = plugin;

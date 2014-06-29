@@ -3,14 +3,13 @@ package io.github.xxyy.minotopiacore.misc;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.misc.cmd.CommandBReload;
-
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -72,7 +71,7 @@ public class RunnableReloadTimer implements Runnable {
     
     private static String getFormattedTime(int seconds){
         if(seconds < 60) return "§l"+seconds+" §dSekunde"+((seconds == 1) ? "" : "n");
-        short minutes = (short) (seconds / 60);
+        int minutes = (seconds / 60);
         seconds = seconds - (60 * minutes);
         return minutes+" Minute"+((minutes == 1) ? "" : "n")+((seconds == 0) ? "" : " und "+seconds+" Sekunde"+((seconds == 1) ? "" : "n"));
     }

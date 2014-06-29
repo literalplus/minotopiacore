@@ -9,19 +9,22 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 
-public class TeamBattleSign {
-	public static Location SignLocation;
+public final class TeamBattleSign { //REFACTOR class name
+    private TeamBattleSign() {
+
+    }
+
+	public static Location signLocation;
 	public static boolean enabled=false;
 	public static int taskId=-1;
 	/**
 	 * public static boolean updateSign()
-	 * Updates the sign. 
-	 * @author xxyy98(xxyy98[at]gmail.com)
+	 * Updates the sign.
 	 * @return If something is invalid and the task should be stopped, return false.
 	 */
 	public static boolean updateSign(){
 		if(!enabled) return false;
-		Block blk = SignLocation.getWorld().getBlockAt(SignLocation);
+		Block blk = signLocation.getWorld().getBlockAt(signLocation);
 		if(!(blk.getType() == Material.WALL_SIGN) && !(blk.getType() == Material.SIGN_POST)){
 			System.out.println("Das TeamBattle-InfoSchild ist kein Schild! /wa setsign");
 			return false;
@@ -45,7 +48,7 @@ public class TeamBattleSign {
 		int y=TeamBattle.instance().cfg.getInt("options.sign.y",0);
 		int z=TeamBattle.instance().cfg.getInt("options.sign.z",0);
 		String world=TeamBattle.instance().cfg.getString("options.sign.worldName","world");
-		TeamBattleSign.SignLocation=new Location(Bukkit.getWorld(world),x,y,z);
+		TeamBattleSign.signLocation =new Location(Bukkit.getWorld(world),x,y,z);
 		updateSign();
 		
 		//auto-update
@@ -68,6 +71,6 @@ public class TeamBattleSign {
 		TeamBattle.instance().cfg.set("options.sign.y", y);
 		TeamBattle.instance().cfg.set("options.sign.z", z);
 		TeamBattle.instance().cfg.set("options.sign.worldName", worldName);
-		TeamBattleSign.SignLocation=new Location(Bukkit.getWorld(worldName),x,y,z);
+		TeamBattleSign.signLocation =new Location(Bukkit.getWorld(worldName),x,y,z);
 	}
 }

@@ -8,7 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Set;
 
-public class MuteHelper {
+public final class MuteHelper {
+    private MuteHelper() {
+
+    }
+
     public static final File muteCfgFile = new File("plugins/MinoTopiaCore", "mute.lst.yml");
     public static final YamlConfiguration muteCfg = YamlConfiguration.loadConfiguration(muteCfgFile);
 
