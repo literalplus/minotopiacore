@@ -298,6 +298,14 @@
                     </execution>
                 </executions>
             </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <generateProjectInfo>false</generateProjectInfo>
+                </configuration>
+            </plugin>
         </plugins>
 
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -331,11 +339,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.7</version>
-                <configuration>
-                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                    <linkOnly>true</linkOnly>
-                </configuration>
+                <reportSets> <!-- Hack to prevent dep path errors (Ess3 links deps using systemPath relatively ._.) - Need site for checkstyle. -->
+                    <reportSet>
+                        <reports>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
