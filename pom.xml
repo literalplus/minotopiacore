@@ -279,12 +279,13 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>2.5.4</version>
                 <configuration>
                     <effort>min</effort>
                     <threshold>low</threshold>
                     <xmlOutput>true</xmlOutput>
                     <failOnError>false</failOnError>
+                    <debug>true</debug>
                     <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
                 </configuration>
                 <executions>
