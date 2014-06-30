@@ -9,25 +9,6 @@
         <property name="max" value="2000"/>
         <property name="fileExtensions" value="java"/>
     </module>
-    <module name="LineLength">
-        <property name="severity" value="ignore"/>
-    </module>
-    <module name="WhiteSpaceAround">
-        <property name="severity" value="ignore"/>
-    </module>
-    <module name="WhiteSpaceAfter">
-        <property name="severity" value="ignore"/>
-    </module>
-    <module name="WhiteSpaceBefore">
-        <property name="severity" value="ignore"/>
-    </module>
-    <module name="FinalParameters">
-        <property name="severity" value="ignore"/>
-    </module>
-    <module name="OperatorWrap">
-        <property name="tokens" value="BAND, BOR, BSR, BXOR, COLON, DIV, EQUAL, GE, GT, LAND, LE, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR"/>
-        <property name="option" value="eol"/>
-    </module>
     <module name="FileTabCharacter">
         <property name="severity" value="info"/>
     </module>
@@ -40,9 +21,28 @@
         <property name="ignoreCase" value="true"/>
     </module>
     <module name="TreeWalker">
-        <property name="tabWidth" value="1"/>
+        <property name="tabWidth" value="4"/>
+        <module name="WhitespaceAround">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="WhitespaceAfter">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="NoWhitespaceBefore">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="FinalParameters">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="OperatorWrap">
+            <property name="tokens" value="BAND, BOR, BSR, BXOR, COLON, DIV, EQUAL, GE, GT, LAND, LE, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR"/>
+            <property name="option" value="eol"/>
+        </module>
         <module name="AnonInnerLength">
             <property name="severity" value="warning"/>
+        </module>
+        <module name="LineLength">
+            <property name="severity" value="ignore"/>
         </module>
         <module name="ArrayTypeStyle">
             <property name="severity" value="info"/>
@@ -147,7 +147,6 @@
         </module>
         <module name="JavadocStyle">
             <property name="severity" value="info"/>
-            <property name="excludeScope" value="private"/>
             <property name="excludeScope" value="protected"/>
         </module>
         <module name="LeftCurly">
@@ -265,7 +264,7 @@
         </module>
         <module name="TodoComment">
             <property name="severity" value="info"/>
-            <property name="tokens" value="TODO,FIXME,REFACTOR"/>
+            <property name="format" value="(TODO|FIXME|REFACTOR):"/>
         </module>
         <module name="TypeName">
             <property name="severity" value="warning"/>
