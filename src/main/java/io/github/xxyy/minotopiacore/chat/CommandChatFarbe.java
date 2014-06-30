@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
-public class CommandChatFarbe implements CommandExecutor {
+public final class CommandChatFarbe implements CommandExecutor {
 
     private final MTC plugin;
 

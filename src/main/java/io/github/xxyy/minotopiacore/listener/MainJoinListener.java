@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Iterator;
 
-public class MainJoinListener implements Listener {
+public final class MainJoinListener implements Listener {
     //TODO merge in BanJoinListener
 
     @EventHandler(priority = EventPriority.HIGHEST)

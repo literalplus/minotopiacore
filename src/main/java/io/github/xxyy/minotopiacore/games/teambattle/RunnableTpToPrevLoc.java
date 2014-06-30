@@ -1,7 +1,7 @@
 package io.github.xxyy.minotopiacore.games.teambattle;
 
 
-public class RunnableTpToPrevLoc implements Runnable {
+public final class RunnableTpToPrevLoc implements Runnable {
 	public CommandTeamBattleHelper helper;
 	
 	public RunnableTpToPrevLoc(CommandTeamBattleHelper helper){

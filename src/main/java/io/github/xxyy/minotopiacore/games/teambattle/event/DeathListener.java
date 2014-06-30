@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 
 
-public class DeathListener implements Listener {
+public final class DeathListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(EntityDeathEvent e){
 		if(e.getEntityType() != EntityType.PLAYER) {

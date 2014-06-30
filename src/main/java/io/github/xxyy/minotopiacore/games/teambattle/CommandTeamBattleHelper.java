@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
-public class CommandTeamBattleHelper {
+public final class CommandTeamBattleHelper {
     public CommandSender sender;
     public String[] args;
     public String label;

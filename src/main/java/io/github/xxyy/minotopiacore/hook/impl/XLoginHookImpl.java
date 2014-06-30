@@ -14,7 +14,7 @@ import java.util.UUID;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public class XLoginHookImpl {
+public final class XLoginHookImpl {
     private Location spawnLocation = null;
 
     public XLoginHookImpl(XLoginHook wrapper) {

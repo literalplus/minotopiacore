@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 
-public class RunnableTpClanBase implements Runnable {
+public final class RunnableTpClanBase implements Runnable {
     public Player plr;
     public int clanId;
     public Location firstPos;

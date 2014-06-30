@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 
-public class MainCommandListener implements Listener {
+public final class MainCommandListener implements Listener {
     private final MTC plugin;
 
     public MainCommandListener(MTC plugin) {

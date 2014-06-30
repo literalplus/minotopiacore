@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ClanHelpManager {
+public final class ClanHelpManager {
     public String helpPageTitle;
     public String[] cmdDescLines;
     public Map<String, String> subCmds;

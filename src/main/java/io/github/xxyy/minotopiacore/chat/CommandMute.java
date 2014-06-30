@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.Set;
 
 
-public class CommandMute implements CommandExecutor{
+public final class CommandMute implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,String label, String[] args) {

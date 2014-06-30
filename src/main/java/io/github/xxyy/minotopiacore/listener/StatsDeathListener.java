@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 
-public class StatsDeathListener implements Listener {
+public final class StatsDeathListener implements Listener {
     @EventHandler(priority=EventPriority.LOW)
     public void onDeath(PlayerDeathEvent e){
         Player plr = e.getEntity();

@@ -5,7 +5,7 @@ import io.github.xxyy.minotopiacore.MTC;
 import org.bukkit.Bukkit;
 
 
-public class RunnableTpNextPlayerFromLobby implements Runnable {
+public final class RunnableTpNextPlayerFromLobby implements Runnable {
 
 	@Override
 	public void run() {

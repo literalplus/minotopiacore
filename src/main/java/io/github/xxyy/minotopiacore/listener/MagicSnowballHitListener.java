@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class MagicSnowballHitListener implements Listener {
+public final class MagicSnowballHitListener implements Listener {
 
     protected List<String> deniedPlayers = new ArrayList<>();
 

@@ -1,7 +1,7 @@
 package io.github.xxyy.minotopiacore.games.teambattle;
 
 
-public class RunnableLeaveBattle implements Runnable {
+public final class RunnableLeaveBattle implements Runnable {
 	public CommandTeamBattleHelper helper;
 	
 	public RunnableLeaveBattle(CommandTeamBattleHelper helper){

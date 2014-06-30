@@ -2,17 +2,16 @@ package io.github.xxyy.minotopiacore.gettime;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-public class CommandTime implements CommandExecutor{
+
+public final class CommandTime implements CommandExecutor{
 
 	@Override
 	//onCommand(sender,command,label(Comamnd that was typed by user),args

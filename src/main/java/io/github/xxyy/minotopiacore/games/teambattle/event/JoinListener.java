@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 
-public class JoinListener implements Listener {
+public final class JoinListener implements Listener {
 	@EventHandler(ignoreCancelled=true,priority=EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent e){
 		if(!TeamBattle.leaveMan.doesLocExist(e.getPlayer().getName())) {

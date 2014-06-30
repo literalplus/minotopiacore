@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 
-public class CommandClanAdmin extends MTCCommandExecutor {
+public final class CommandClanAdmin extends MTCCommandExecutor {
     
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command command, String label, String[] args) {

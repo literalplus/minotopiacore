@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 
-public class CommandDeleteWarn implements CommandExecutor {
+public final class CommandDeleteWarn implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

@@ -14,7 +14,7 @@ import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.List;
 
-public class EnderPearlProjectileLaunchListener implements Listener {
+public final class EnderPearlProjectileLaunchListener implements Listener {
 
     @EventHandler
     public void onProjectileLaunchEP(ProjectileLaunchEvent e) {

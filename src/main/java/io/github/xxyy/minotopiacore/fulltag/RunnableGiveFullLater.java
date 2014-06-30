@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.logging.Level;
 
 
-public class RunnableGiveFullLater implements Runnable {
+public final class RunnableGiveFullLater implements Runnable {
     private final boolean thorns;
     private final byte partId;
     private final boolean ignoreItemType;

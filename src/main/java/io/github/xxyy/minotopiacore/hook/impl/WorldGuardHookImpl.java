@@ -11,7 +11,7 @@ import org.bukkit.Location;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public class WorldGuardHookImpl {
+public final class WorldGuardHookImpl {
 
     public WorldGuardHookImpl(WorldGuardHook wrapper) {
 

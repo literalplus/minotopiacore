@@ -14,7 +14,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public class VaultHookImpl {
+public final class VaultHookImpl {
 
     private final VaultHook wrapper;
     private Chat chat;

@@ -4,9 +4,6 @@ import io.github.xxyy.minotopiacore.ConfigHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
-
-import java.util.Calendar;
-
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.HumanEntity;
@@ -24,8 +21,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Calendar;
 
-public class FullTagListener implements Listener {
+
+public final class FullTagListener implements Listener {
     @EventHandler(priority=EventPriority.LOWEST)
     public void onCombust(EntityCombustEvent e){
         if(!e.getEntityType().equals(EntityType.DROPPED_ITEM)) {

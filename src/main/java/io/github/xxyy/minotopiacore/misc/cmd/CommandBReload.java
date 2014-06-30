@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class CommandBReload extends MTCCommandExecutor {
+public final class CommandBReload extends MTCCommandExecutor {
 
     private static final List<Integer> seconds = new ArrayList<>();
     private static final List<Long> delays = new ArrayList<>();

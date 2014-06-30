@@ -13,7 +13,7 @@ import java.util.List;
 
 
 
-public class RunnableReloadTimer implements Runnable {
+public final class RunnableReloadTimer implements Runnable {
     
     public static List<Integer> seconds;
     public static Iterator<Integer> iSeconds;

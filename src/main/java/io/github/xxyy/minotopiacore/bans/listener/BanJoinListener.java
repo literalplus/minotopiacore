@@ -3,17 +3,16 @@ package io.github.xxyy.minotopiacore.bans.listener;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
 import io.github.xxyy.minotopiacore.bans.BanInfo;
-
-import java.util.Calendar;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
+import java.util.Calendar;
 
-public class BanJoinListener implements Listener {
+
+public final class BanJoinListener implements Listener {
 	@EventHandler(priority=EventPriority.LOW)
 	public void onJoin(PlayerLoginEvent e){
 		BanInfo bi = BanHelper.getBanInfoByPlayerName(e.getPlayer().getName().toLowerCase());

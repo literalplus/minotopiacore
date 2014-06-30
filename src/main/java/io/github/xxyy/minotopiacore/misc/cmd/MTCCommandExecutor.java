@@ -15,11 +15,8 @@ public abstract class MTCCommandExecutor extends XYCCommandExecutor implements C
         CacheHelper.registerCache(this);
     }
 
-    /**
-     * Please DO NOT OVERRIDE.
-     */
     @Override
-    public boolean preCatch(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
+    public final boolean preCatch(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         if (LaterMessageHelper.hasMessages(senderName)) {
             LaterMessageHelper.sendMessages(sender);
         }

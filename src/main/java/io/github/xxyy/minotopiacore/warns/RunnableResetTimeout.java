@@ -1,7 +1,7 @@
 package io.github.xxyy.minotopiacore.warns;
 
 
-public class RunnableResetTimeout implements Runnable {
+public final class RunnableResetTimeout implements Runnable {
 	public String plrName = null;
 	public RunnableResetTimeout(String plrName){ this.plrName = plrName; }
 	@Override

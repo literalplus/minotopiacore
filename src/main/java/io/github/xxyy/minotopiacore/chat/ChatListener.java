@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 
-public class ChatListener implements Listener {
+public final class ChatListener implements Listener {
 
     private final MTC plugin;
 	Map<String,String> lastMessages = new HashMap<>();

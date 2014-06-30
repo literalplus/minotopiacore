@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 @SuppressWarnings("all") // This is neither currently used nor supported - Keeping it anyways for historic purposes or so
-public class TeamBattle {
+public final class TeamBattle {
     private static TeamBattle instance;
     private final List<Player> playersBlue = new ArrayList<>();
     private final List<Player> playersRed = new ArrayList<>();

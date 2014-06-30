@@ -11,14 +11,13 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.Random;
 
-public class LightningListener implements Listener {
-	/**
-	 * public void onLightningStrike(LightningStrikeEvent e)
-	 * Catches LightningStrikes and turns hit cows to Mooshrooms at a 50% chance, names them
-	 * "§6Salted", adds Speed 10, makes them adult, sets their Name Tag visible,
-	 * gives them full health, stops them from despawning and allows them to breathe underwater for 42,000 ticks.
-	 * @param e
-	 */
+/**
+ * Catches LightningStrikes and turns hit cows to Mooshrooms at a 50% chance, names them
+ * "§6Salted", adds speed 10, makes them adult, sets their Name Tag visible,
+ * gives them full health, stops them from despawning and allows them to breathe underwater for 42,000 ticks.
+ */
+public final class LightningListener implements Listener {
+
 	@EventHandler
 	public void onLightningStrike(LightningStrikeEvent e){
 		//System.out.println("Lightning!");

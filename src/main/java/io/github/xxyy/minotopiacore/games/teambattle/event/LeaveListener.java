@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 
-public class LeaveListener implements Listener {
+public final class LeaveListener implements Listener {
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerKicked(PlayerKickEvent e){
 		if(TeamBattle.instance().isPlayerInQueue(e.getPlayer())){

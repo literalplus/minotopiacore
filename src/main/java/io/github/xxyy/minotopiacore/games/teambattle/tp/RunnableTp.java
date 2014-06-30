@@ -1,16 +1,15 @@
 package io.github.xxyy.minotopiacore.games.teambattle.tp;
 
 import io.github.xxyy.minotopiacore.MTC;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class RunnableTp implements Runnable {
+
+public final class RunnableTp implements Runnable {
 
 	public List<Player> plrs;
 	public List<Location> locs;

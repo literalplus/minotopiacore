@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class RunnableCheckInvsForFull implements Runnable, FullCheckHelper.FullCheckExecutor {
+public final class RunnableCheckInvsForFull implements Runnable, FullCheckHelper.FullCheckExecutor {
     public static final int CHECKS_PER_JOB = 35;
     private final StopWatch watch = new StopWatch();
     private final List<Integer> checkedFullIds = new ArrayList<>();

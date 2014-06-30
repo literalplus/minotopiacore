@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 
-public class MinecartPortalListener implements Listener {
+public final class MinecartPortalListener implements Listener {
 	@EventHandler
 	public void onPortal(EntityPortalEvent e){
 		if(e.getEntityType() == EntityType.MINECART_CHEST || e.getEntityType() == EntityType.MINECART_FURNACE || e.getEntityType() == EntityType.MINECART_HOPPER){

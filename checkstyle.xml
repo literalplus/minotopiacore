@@ -1,256 +1,285 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-  <module name="FileLength">
-    <property name="severity" value="warning" QAPlugSeverity="major" />
-    <property name="max" value="2000" />
-    <property name="fileExtensions" value="java" />
-  </module>
-  <module name="FileTabCharacter">
-    <property name="severity" value="info" QAPlugSeverity="info" />
-  </module>
-  <module name="RegexpMultiline">
-    <property name="severity" value="warning" QAPlugSeverity="minor" />
-    <property name="message" value="TODO item found" />
-    <property name="minimum" value="0" />
-    <property name="maximum" value="0" />
-    <property name="format" value="TODO" />
-    <property name="ignoreCase" value="true" />
-  </module>
-  <module name="TreeWalker">
-    <property name="tabWidth" value="1" />
-    <module name="AnonInnerLength">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
+    <module name="FileLength">
+        <property name="severity" value="warning"/>
+        <property name="max" value="2000"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+    <module name="LineLength">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="WhiteSpaceAround">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="WhiteSpaceAfter">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="WhiteSpaceBefore">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="FinalParameters">
+        <property name="severity" value="ignore"/>
+    </module>
+    <module name="OperatorWrap">
+        <property name="tokens" value="BAND, BOR, BSR, BXOR, COLON, DIV, EQUAL, GE, GT, LAND, LE, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR"/>
+        <property name="option" value="eol"/>
+    </module>
+    <module name="FileTabCharacter">
+        <property name="severity" value="info"/>
+    </module>
+    <module name="RegexpMultiline">
+        <property name="severity" value="warning"/>
+        <property name="message" value="TODO item found"/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="format" value="TODO"/>
+        <property name="ignoreCase" value="true"/>
+    </module>
+    <module name="TreeWalker">
+        <property name="tabWidth" value="1"/>
+        <module name="AnonInnerLength">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ArrayTypeStyle">
+            <property name="severity" value="info"/>
+            <property name="javaStyle" value="true"/>
+        </module>
+        <module name="BooleanExpressionComplexity">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ClassFanOutComplexity">
+            <property name="severity" value="warning"/>
+            <property name="max" value="20"/>
+        </module>
+        <module name="ConstantName">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="CovariantEquals">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="CyclomaticComplexity">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="DeclarationOrder">
+            <property name="severity" value="info"/>
+            <property name="ignoreConstructors" value="false"/>
+            <property name="ignoreMethods" value="false"/>
+            <property name="ignoreModifiers" value="false"/>
+        </module>
+        <module name="DefaultComesLast">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="DesignForExtension">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="EmptyBlock">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="EmptyStatement">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="EqualsAvoidNull">
+            <property name="severity" value="warning"/>
+            <property name="ignoreEqualsIgnoreCase" value="false"/>
+        </module>
+        <module name="EqualsHashCode">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="FinalClass">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="GenericWhitespace">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="HiddenField">
+            <property name="severity" value="warning"/>
+            <property name="ignoreAbstractMethods" value="true"/>
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
+        <module name="HideUtilityClassConstructor">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="IllegalCatch">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="IllegalImport">
+            <property name="severity" value="warning"/>
+            <property name="illegalPkgs" value="sun.*,net.minecraft.*"/>
+        </module>
+        <module name="IllegalInstantiation">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="IllegalThrows">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="InnerAssignment">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="InnerTypeLast">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="InterfaceIsType">
+            <property name="severity" value="warning"/>
+            <property name="allowMarkerInterfaces" value="false"/>
+        </module>
+        <module name="JavadocMethod">
+            <property name="severity" value="info"/>
+            <property name="allowMissingParamTags" value="false"/>
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <property name="allowUndeclaredRTE" value="true"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowMissingJavadoc" value="true"/>
+            <property name="allowMissingThrowsTags" value="false"/>
+        </module>
+        <module name="JavadocType">
+            <property name="severity" value="warning"/>
+            <property name="allowUnknownTags" value="false"/>
+            <property name="allowMissingParamTags" value="false"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="JavadocStyle">
+            <property name="severity" value="info"/>
+            <property name="excludeScope" value="private"/>
+            <property name="excludeScope" value="protected"/>
+        </module>
+        <module name="LeftCurly">
+            <property name="severity" value="info"/>
+            <property name="option" value="eol"/>
+        </module>
+        <module name="LocalFinalVariableName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="LocalVariableName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MagicNumber">
+            <property name="severity" value="info"/>
+            <property name="ignoreNumbers" value="1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,0.0,-1.0,-2.0,42.0,1337.0"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
+            <property name="ignoreAnnotation" value="true"/>
+        </module>
+        <module name="MemberName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MethodCount">
+            <property name="severity" value="warning"/>
+            <property name="maxTotal" value="100"/>
+            <property name="maxPrivate" value="100"/>
+            <property name="maxPackage" value="100"/>
+            <property name="maxProtected" value="100"/>
+            <property name="maxPublic" value="100"/>
+        </module>
+        <module name="MethodLength">
+            <property name="severity" value="warning"/>
+            <property name="countEmpty" value="false"/>
+        </module>
+        <module name="MethodName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MethodTypeParameterName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MissingDeprecated">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="MissingOverride">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ModifiedControlVariable">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ModifierOrder">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="MultipleStringLiterals">
+            <property name="severity" value="warning"/>
+            <property name="allowedDuplicates" value="5"/>
+        </module>
+        <module name="MultipleVariableDeclarations">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="NeedBraces">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="NestedForDepth">
+            <property name="severity" value="warning"/>
+            <property name="max" value="2"/>
+        </module>
+        <module name="NoFinalizer">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="OneStatementPerLine">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="PackageDeclaration">
+            <property name="severity" value="warning"/>
+            <property name="ignoreDirectoryName" value="false"/>
+        </module>
+        <module name="PackageName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ParameterAssignment">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ParameterName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ParameterNumber">
+            <property name="severity" value="warning"/>
+            <property name="max" value="6"/>
+        </module>
+        <module name="RedundantImport">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="RedundantModifier">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="RedundantThrows">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="SimplifyBooleanExpression">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="SimplifyBooleanReturn">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="StaticVariableName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="StringLiteralEquality">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="SuperClone">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="SuperFinalize">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="TodoComment">
+            <property name="severity" value="info"/>
+            <property name="tokens" value="TODO,FIXME,REFACTOR"/>
+        </module>
+        <module name="TypeName">
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="UnnecessaryParentheses">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="UnusedImports">
+            <property name="severity" value="info"/>
+            <property name="processJavadoc" value="false"/>
+        </module>
+        <module name="VisibilityModifier">
+            <property name="severity" value="warning"/>
+        </module>
     </module>
-    <module name="ArrayTypeStyle">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="javaStyle" value="true" />
-    </module>
-    <module name="BooleanExpressionComplexity">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="ClassFanOutComplexity">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="max" value="20" />
-    </module>
-    <module name="ConstantName">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="CovariantEquals">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="CyclomaticComplexity">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="DeclarationOrder">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="ignoreConstructors" value="false" />
-      <property name="ignoreMethods" value="false" />
-      <property name="ignoreModifiers" value="false" />
-    </module>
-    <module name="DefaultComesLast">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="DesignForExtension">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="EmptyBlock">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="EmptyStatement">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="EqualsAvoidNull">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="ignoreEqualsIgnoreCase" value="false" />
-    </module>
-    <module name="EqualsHashCode">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="FinalClass">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="GenericWhitespace">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="HiddenField">
-      <property name="severity" value="warning" QAPlugSeverity="minor" />
-      <property name="ignoreAbstractMethods" value="true" />
-      <property name="ignoreConstructorParameter" value="true" />
-      <property name="ignoreSetter" value="true" />
-    </module>
-    <module name="HideUtilityClassConstructor">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="IllegalCatch">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="IllegalImport">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="illegalPkgs" value="sun.*,net.minecraft.*" />
-    </module>
-    <module name="IllegalInstantiation">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="IllegalThrows">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="InnerAssignment">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="InnerTypeLast">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="InterfaceIsType">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="allowMarkerInterfaces" value="false" />
-    </module>
-    <module name="JavadocMethod">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="allowMissingParamTags" value="false" />
-      <property name="allowMissingPropertyJavadoc" value="true" />
-      <property name="allowThrowsTagsForSubclasses" value="true" />
-      <property name="allowUndeclaredRTE" value="true" />
-      <property name="allowMissingReturnTag" value="true" />
-      <property name="allowMissingJavadoc" value="true" />
-      <property name="allowMissingThrowsTags" value="false" />
-    </module>
-    <module name="JavadocType">
-      <property name="severity" value="warning" QAPlugSeverity="minor" />
-      <property name="allowUnknownTags" value="false" />
-      <property name="allowMissingParamTags" value="false" />
-    </module>
-    <module name="LeftCurly">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="option" value="eol" />
-    </module>
-    <module name="LocalFinalVariableName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="LocalVariableName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="MagicNumber">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="ignoreNumbers" value="1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,0.0,-1.0,-2.0,42.0,1337.0" />
-      <property name="ignoreHashCodeMethod" value="true" />
-      <property name="ignoreAnnotation" value="true" />
-    </module>
-    <module name="MemberName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="MethodCount">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="maxTotal" value="100" />
-      <property name="maxPrivate" value="100" />
-      <property name="maxPackage" value="100" />
-      <property name="maxProtected" value="100" />
-      <property name="maxPublic" value="100" />
-    </module>
-    <module name="MethodLength">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="countEmpty" value="false" />
-    </module>
-    <module name="MethodName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="MethodTypeParameterName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="MissingDeprecated">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="MissingOverride">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="ModifiedControlVariable">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="ModifierOrder">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="MultipleStringLiterals">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="allowedDuplicates" value="5" />
-    </module>
-    <module name="MultipleVariableDeclarations">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="NeedBraces">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="NestedForDepth">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="max" value="2" />
-    </module>
-    <module name="NoFinalizer">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="OneStatementPerLine">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="PackageDeclaration">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="ignoreDirectoryName" value="false" />
-    </module>
-    <module name="PackageName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="ParameterAssignment">
-      <property name="severity" value="warning" QAPlugSeverity="minor" />
-    </module>
-    <module name="ParameterName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="ParameterNumber">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-      <property name="max" value="6" />
-    </module>
-    <module name="RedundantImport">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="RedundantModifier">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="RedundantThrows">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="SimplifyBooleanExpression">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="SimplifyBooleanReturn">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="StaticVariableName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="StringLiteralEquality">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="SuperClone">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="SuperFinalize">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="TodoComment">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="tokens" value="TODO,FIXME,REFACTOR" />
-    </module>
-    <module name="TypeName">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-    <module name="UnnecessaryParentheses">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-    </module>
-    <module name="UnusedImports">
-      <property name="severity" value="info" QAPlugSeverity="info" />
-      <property name="processJavadoc" value="false" />
-    </module>
-    <module name="VisibilityModifier">
-      <property name="severity" value="warning" QAPlugSeverity="major" />
-    </module>
-  </module>
 </module>
 

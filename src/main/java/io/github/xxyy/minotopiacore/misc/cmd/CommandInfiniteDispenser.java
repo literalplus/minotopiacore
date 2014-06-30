@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.MetadataValueAdapter;
 
-public class CommandInfiniteDispenser extends MTCCommandExecutor {
+public final class CommandInfiniteDispenser extends MTCCommandExecutor {
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {

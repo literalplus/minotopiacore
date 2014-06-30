@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
+public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
 
     public static final int PEACE_LIST_PAGE_SIZE = 15;
 

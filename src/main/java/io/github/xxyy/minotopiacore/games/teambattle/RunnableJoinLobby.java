@@ -2,7 +2,7 @@ package io.github.xxyy.minotopiacore.games.teambattle;
 
 import org.bukkit.Bukkit;
 
-public class RunnableJoinLobby implements Runnable {
+public final class RunnableJoinLobby implements Runnable {
 	public CommandTeamBattleHelper helper;
 	
 	public RunnableJoinLobby(CommandTeamBattleHelper helper){

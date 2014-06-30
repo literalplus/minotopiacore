@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CommandFull implements CommandExecutor {
+public final class CommandFull implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

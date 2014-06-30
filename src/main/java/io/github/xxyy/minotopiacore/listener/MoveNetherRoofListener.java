@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 
-public class MoveNetherRoofListener implements Listener {
+public final class MoveNetherRoofListener implements Listener {
     private final MTC plugin;
 
     public MoveNetherRoofListener(MTC plugin) {

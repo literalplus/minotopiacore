@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class CommandGiveAll extends MTCCommandExecutor {
+public final class CommandGiveAll extends MTCCommandExecutor {
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {

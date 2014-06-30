@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandMTC extends MTCCommandExecutor {
+public final class CommandMTC extends MTCCommandExecutor {
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {

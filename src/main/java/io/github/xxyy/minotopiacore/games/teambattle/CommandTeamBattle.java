@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
-public class CommandTeamBattle implements CommandExecutor {
+public final class CommandTeamBattle implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd,String label, String[] args) {

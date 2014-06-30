@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacore.misc.AntiLogoutHandler {
+public final class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacore.misc.AntiLogoutHandler {
     private final MTC plugin;
     private final Map<String, Date> playersInAFight = new HashMap<>();
 

@@ -4,15 +4,14 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
-
-import java.util.logging.Level;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.logging.Level;
 
-public class CommandUnban implements CommandExecutor {
+
+public final class CommandUnban implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

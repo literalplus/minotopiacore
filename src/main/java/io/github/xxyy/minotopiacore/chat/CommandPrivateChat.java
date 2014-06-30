@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 
-public class CommandPrivateChat implements CommandExecutor {
+public final class CommandPrivateChat implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {

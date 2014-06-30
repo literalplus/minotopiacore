@@ -1,5 +1,10 @@
 package io.github.xxyy.minotopiacore.games.teambattle;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -7,12 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-
-public class LeaveManager {
+public final class LeaveManager {
 	private final File locationLocation = new File("plugins/MinoTopiaCore","teambattle_prevlocs.donotedit.yml");
 	public YamlConfiguration fl = YamlConfiguration.loadConfiguration(this.locationLocation);
 	private final List<String> loginUsedPlrs=new ArrayList<>();

@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import java.util.logging.Level;
 
 
-public class CommandTempban implements CommandExecutor {
+public final class CommandTempban implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

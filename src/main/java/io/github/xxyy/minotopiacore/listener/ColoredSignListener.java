@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
 
-public class ColoredSignListener implements Listener
+public final class ColoredSignListener implements Listener
 {
     @EventHandler(priority=EventPriority.LOW, ignoreCancelled=false)
     public void onSignChange(SignChangeEvent e){

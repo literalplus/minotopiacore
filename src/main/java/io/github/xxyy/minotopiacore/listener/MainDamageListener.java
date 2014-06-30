@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 
 
-public class MainDamageListener implements Listener {
+public final class MainDamageListener implements Listener {
     private static final DecimalFormat df = new DecimalFormat("#.##");
 
     static {

@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public class WorldGuardHook extends SimpleHookWrapper {
+public final class WorldGuardHook extends SimpleHookWrapper {
     private WorldGuardHookImpl unsafe;
 
     public WorldGuardHook(Plugin plugin) {

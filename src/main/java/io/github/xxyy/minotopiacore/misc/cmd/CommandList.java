@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 
-public class CommandList extends MTCCommandExecutor {
+public final class CommandList extends MTCCommandExecutor {
     
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {

@@ -10,7 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class DmgListener implements Listener {
+public final class DmgListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     @SuppressWarnings("deprecation")

@@ -13,7 +13,7 @@ import org.bukkit.metadata.MetadataValue;
 import java.util.List;
 
 
-public class MainInventoryOpenListener implements Listener {
+public final class MainInventoryOpenListener implements Listener {
     @EventHandler
     public void onInvOpen(InventoryOpenEvent evt){
         if(evt.getPlayer().isInsideVehicle()){

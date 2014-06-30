@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import java.util.List;
 
-public class AntiFreeCamListener implements Listener {
+public final class AntiFreeCamListener implements Listener {
 
     @EventHandler
     public void onInvOpenFreeCam(InventoryOpenEvent e) {

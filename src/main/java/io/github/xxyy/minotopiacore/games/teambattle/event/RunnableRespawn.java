@@ -4,7 +4,7 @@ import io.github.xxyy.minotopiacore.games.teambattle.TeamBattle;
 import org.bukkit.entity.Player;
 
 @Deprecated
-public class RunnableRespawn implements Runnable {
+public final class RunnableRespawn implements Runnable {
 
 	public Player plr;
 	public RunnableRespawn(Player plr){

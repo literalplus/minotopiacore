@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-public class CommandListWarns implements CommandExecutor {
+public final class CommandListWarns implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.list", label)) {

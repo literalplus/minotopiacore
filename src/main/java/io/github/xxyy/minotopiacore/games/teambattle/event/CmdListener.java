@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 
-public class CmdListener implements Listener {
+public final class CmdListener implements Listener {
 	@EventHandler(ignoreCancelled=true,priority=EventPriority.LOWEST)
 	public void onPlayerPreCmd(PlayerCommandPreprocessEvent e){
 		if(TeamBattle.instance() == null || !TeamBattle.instance().isPlayerInGame(e.getPlayer())) {
