@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import java.text.SimpleDateFormat;
 
 
-public class CommandBanInfo implements CommandExecutor {
+public class CommandBanInfo_ implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
