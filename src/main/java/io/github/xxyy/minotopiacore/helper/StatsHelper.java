@@ -70,7 +70,9 @@ public class StatsHelper {
         SafeSql sql = MTC.instance().ssql;
         boolean fetchKills = !StatsHelper.killMap.containsKey(plrName);
         boolean fetchDeaths = !StatsHelper.deathMap.containsKey(plrName);
-        if(!fetchKills && !fetchDeaths) return;
+        if(!fetchKills && !fetchDeaths) {
+            return;
+        }
         String rows = "kills, deaths";
         if(!fetchKills) {
             rows = "deaths";
@@ -79,7 +81,9 @@ public class StatsHelper {
         }
         ResultSet rs = sql.safelyExecuteQuery("SELECT "+rows+" FROM "+sql.dbName+".mtc_stats WHERE user_name=?", plrName);
         try {
-            if(rs == null || !rs.next()) return;
+            if(rs == null || !rs.next()) {
+                return;
+            }
             if(fetchKills){
                 StatsHelper.killMap.put(plrName, rs.getInt("kills"));
             }
@@ -157,7 +161,9 @@ public class StatsHelper {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     public static boolean hasStats(String plrName){
-        if(StatsHelper.killMap.containsKey(plrName) || StatsHelper.deathMap.containsKey(plrName)) return true;
+        if(StatsHelper.killMap.containsKey(plrName) || StatsHelper.deathMap.containsKey(plrName)) {
+            return true;
+        }
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) as cnt FROM "+sql.dbName+"."+Const.TABLE_STATS+" WHERE user_name=?", plrName);
         try {

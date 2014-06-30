@@ -28,18 +28,25 @@ public class MagicSnowballHitListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
 // this HAS to ignore if the damage was already cancelled by ClanDamage.. and MUST therefore be called afterwards...
     public void onDmg(EntityDamageByEntityEvent e) {
-        if (e.isCancelled()) return;
-        if (!e.getEntityType().equals(EntityType.PLAYER) || !e.getDamager().getType().equals(EntityType.SNOWBALL))
+        if (e.isCancelled()) {
             return;
+        }
+        if (!e.getEntityType().equals(EntityType.PLAYER) || !e.getDamager().getType().equals(EntityType.SNOWBALL)) {
+            return;
+        }
         Player plr = (Player) e.getEntity();
         Snowball ball = (Snowball) e.getDamager();
         ProjectileSource source = ball.getShooter();//le = LivingEntity
-        if (!(source instanceof Player)) return; //Snow golems
+        if (!(source instanceof Player)) {
+            return; //Snow golems
+        }
         Player plrShooter = (Player) source;
         Location hitLoc = plr.getLocation();
         e.setDamage(0);
 
-        if (!plrShooter.hasPermission("mtc.magicsnowball.hit")) return;
+        if (!plrShooter.hasPermission("mtc.magicsnowball.hit")) {
+            return;
+        }
 
         if (this.deniedPlayers.contains(plrShooter.getName())) {
             MTCHelper.sendLoc("XU-snowballwait", plrShooter, true);

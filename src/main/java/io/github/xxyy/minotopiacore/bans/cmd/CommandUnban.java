@@ -16,7 +16,9 @@ public class CommandUnban implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(!CommandHelper.checkPermAndMsg(sender, "mtc.ban.unban", label)) return true;
+		if(!CommandHelper.checkPermAndMsg(sender, "mtc.ban.unban", label)) {
+            return true;
+        }
 		if(args.length >= 1 && !args[0].equalsIgnoreCase("help")){
 			BanHelper.deleteBan(args[0].toLowerCase());
 			CommandHelper.broadcast(MTC.banChatPrefix+args[0]+"§a wurde von §6"+sender.getName()+"§a entbannt.", "mtc.ban.adminmsg");

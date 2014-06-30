@@ -24,7 +24,9 @@ public class PlayerHideInteractListener implements Listener
         Player plr = e.getPlayer();
         if(!plr.hasPermission("mtc.hideplayers") || 
                 (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) ||
-                plr.getItemInHand().getType() != Material.BLAZE_ROD) return;
+                plr.getItemInHand().getType() != Material.BLAZE_ROD) {
+            return;
+        }
         e.setCancelled(true);
         if(PlayerHideInteractListener.affectedPlayerNames.contains(plr.getName())){
             for(Player target : Bukkit.getOnlinePlayers()){

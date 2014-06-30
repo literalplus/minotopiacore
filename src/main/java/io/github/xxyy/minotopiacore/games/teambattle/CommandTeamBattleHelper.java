@@ -64,9 +64,12 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean leaveGame() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.leave", this.label + " leave"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.leave", this.label + " leave")) {
             return true;
-        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) {
+            return true;
+        }
 
         this.plr = (Player) this.sender;
         if (!TeamBattle.instance().isPlayerInGame(this.plr)) {
@@ -78,9 +81,12 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean leaveLobby() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.lobby", this.label + " lobby"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.lobby", this.label + " lobby")) {
             return true;
-        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) {
+            return true;
+        }
         this.plr = (Player) this.sender;
         if (!TeamBattle.instance().isPlayerInQueue(this.plr)) {
             this.plr.sendMessage(TeamBattle.chatPrefix + " Dieser Bug wurde entfernt. §8Das tut uns sehr leid :(");
@@ -104,8 +110,9 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean listPlayersInGame() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.list", this.label + " list"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.list", this.label + " list")) {
             return true;
+        }
 
         this.sender.sendMessage("§7}==={§l§8ˢᵖᶤᵉˡᵉʳ ᶤᵐ ˢᵖᶤᵉˡ§r§7}==={");
         String bluePlayers = TeamBattle.instance().getTeamChatColor(TeamBattleTeams.Blue);
@@ -209,15 +216,20 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean prepareJoinGame() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.join", this.label + " join"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.join", this.label + " join")) {
             return true;
-        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) {
+            return true;
+        }
         this.plr = (Player) this.sender;
         this.startLoc = this.plr.getLocation();
         this.startHealth = this.plr.getHealth();
 
         //checks
-        if (this.preChecks()) return true;
+        if (this.preChecks()) {
+            return true;
+        }
         Bukkit.getScheduler().scheduleSyncDelayedTask(MTC.instance(), new RunnableJoinBattle(this), 2 * 20L);
         this.plr.sendMessage(TeamBattle.chatPrefix + " Bewege dich 2 Sekunden nicht!");
 
@@ -225,15 +237,20 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean prepareJoinLobby() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.lobby", this.label + " lobby"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.lobby", this.label + " lobby")) {
             return true;
-        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) {
+            return true;
+        }
         this.plr = (Player) this.sender;
         this.startLoc = this.plr.getLocation();
         this.startHealth = this.plr.getHealth();
 
         //checks
-        if (this.preChecks()) return true;
+        if (this.preChecks()) {
+            return true;
+        }
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableJoinLobby(this), 2 * 20L);
         this.plr.sendMessage(TeamBattle.chatPrefix + " Bewege dich 2 Sekunden nicht!");
 
@@ -241,9 +258,12 @@ public class CommandTeamBattleHelper {
     }
 
     public boolean tpToPrevLocFromFl() {
-        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.prev", this.label + " prev"))
+        if (!CommandHelper.checkPermAndMsg(this.sender, "mtc.teambattle.member.cmd.prev", this.label + " prev")) {
             return true;
-        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(this.sender, this.label)) {
+            return true;
+        }
         this.plr = (Player) this.sender;
         if (!TeamBattle.leaveMan.doesLocExist(this.plr.getName())) {
             this.plr.sendMessage(TeamBattle.chatPrefix + " Für dich ist keine vorherige Position gespeichert.");
@@ -295,7 +315,9 @@ public class CommandTeamBattleHelper {
     }
 
     public void tryJoinLobby() {
-        if (this.doJoinLobby()) return;
+        if (this.doJoinLobby()) {
+            return;
+        }
         this.plr.sendMessage(TeamBattle.chatPrefix + " Du wurdest in die Lobby teleportiert.");
         this.plr.sendMessage(TeamBattle.chatPrefix + " Beachte die Statusschilder für den Spielstand.");
         this.plr.sendMessage(TeamBattle.chatPrefix + " Zum Verlassen tippe §3/war lobby leave§7.");

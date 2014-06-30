@@ -31,10 +31,13 @@ public class CommandFull implements CommandExecutor {
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             CommandFull.printHelpTo(sender);
             return true;
-        } else if (args[0].equalsIgnoreCase("info")) return CommandFull.interpretInfo(sender, args);
-        else if (args[0].equalsIgnoreCase("get")) return CommandFull.interpretGet(sender, args);
-        else if (args[0].equalsIgnoreCase("stats")) return CommandFull.interpretStats(sender, args);
-        else {
+        } else if (args[0].equalsIgnoreCase("info")) {
+            return CommandFull.interpretInfo(sender, args);
+        } else if (args[0].equalsIgnoreCase("get")) {
+            return CommandFull.interpretGet(sender, args);
+        } else if (args[0].equalsIgnoreCase("stats")) {
+            return CommandFull.interpretStats(sender, args);
+        } else {
             sender.sendMessage("§cUnbekannte Aktion! Hilfe:");
             CommandFull.printHelpTo(sender);
         }
@@ -109,9 +112,11 @@ public class CommandFull implements CommandExecutor {
     }
 
     private static boolean interpretInfo(CommandSender sender, String[] args) {
-        FullInfo fi = null;
+        FullInfo fi;
         if (args.length == 1) {
-            if (CommandHelper.kickConsoleFromMethod(sender, "full info (hand")) return true;
+            if (CommandHelper.kickConsoleFromMethod(sender, "full info (hand")) {
+                return true;
+            }
             Player plr = (Player) sender;
             ItemStack is = plr.getItemInHand();
             int id = (is == null || is.getType() == Material.AIR) ? -12 : FullTagHelper.getFullId(is);
@@ -126,7 +131,9 @@ public class CommandFull implements CommandExecutor {
             }
         } else {
             if (!StringUtils.isNumeric(args[1])) //                sender.sendMessage("§cDas ist keine Zahl!");
+            {
                 return CommandFull.interpretUserInfo(sender, args);
+            }
             int id = Integer.parseInt(args[1]);
             fi = FullInfo.getById(id);
             if (fi.id < 0) {
@@ -151,7 +158,9 @@ public class CommandFull implements CommandExecutor {
     }
 
     private static boolean interpretStats(CommandSender sender, String[] args) {
-        if (args.length == 1) return CommandFull.printStatsHelp(sender);
+        if (args.length == 1) {
+            return CommandFull.printStatsHelp(sender);
+        }
         switch (args[1]) {
             case "owner":
                 return CommandFull.interpretStatsOwner(sender, args);

@@ -40,9 +40,7 @@ public class WarnInfo {
      * @return success
      */
     public boolean flush() {
-        SafeSql sql = MTC.instance().ssql;
-        if (sql == null) //no msg
-            return false;
+        SafeSql sql = MTC.instance().getSql();
         return sql.safelyExecuteUpdate("UPDATE " + sql.dbName + ".mtc_warns SET user_name=?,warned_by_name=?" +
                         ",timestamp=" + this.timestamp + ",generic_reason=" + this.genericReasonId + ",reason=?,status=" + this.status + " WHERE id=" + this.id,
                 this.plrName, this.warnedByName, this.reason) >= 0;
@@ -75,9 +73,7 @@ public class WarnInfo {
      * @return success
      */
     public boolean nullify() {
-        SafeSql sql = MTC.instance().ssql;
-        if (sql == null) //no msg
-            return false;
+        SafeSql sql = MTC.instance().getSql();
         return sql.executeUpdate("DELETE FROM " + sql.dbName + ".mtc_warns WHERE id=" + this.id);
     }
 
@@ -99,18 +95,22 @@ public class WarnInfo {
     public static WarnInfo create(String plrName, String warnedByName, String reason, byte genericReasonId) {
         SafeSql sql = MTC.instance().ssql;
         if (sql == null) //no msg
+        {
             return new WarnInfo(-3);
+        }
         long currentTimestamp = (Calendar.getInstance().getTimeInMillis() / 1000L);/* convert to unix time */
         boolean suc = sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + ".mtc_warns SET user_name=?,warned_by_name=?" +
                         ",timestamp=" + currentTimestamp + ",generic_reason=" + genericReasonId + ",reason=?",
                 plrName, warnedByName, reason) >= 0;
-        if (!suc) return new WarnInfo(-3);
+        if (!suc) {
+            return new WarnInfo(-3);
+        }
         ResultSet rs = sql.executeQuery("SELECT LAST_INSERT_ID()");
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (1)");
             return new WarnInfo(-3);
         }
-        int id = -4;
+        int id;
         try {
             rs.next();
             id = rs.getInt(1);
@@ -130,14 +130,18 @@ public class WarnInfo {
      */
     public static WarnInfo getById(int id) {
         SafeSql sql = MTC.instance().ssql;
-        if (sql == null) return new WarnInfo(-3);
+        if (sql == null) {
+            return new WarnInfo(-3);
+        }
         ResultSet rs = sql.executeQuery("SELECT * FROM " + sql.dbName + ".mtc_warns WHERE id='" + id + "'");
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (3)");
             return new WarnInfo(-3);
         }
         try {
-            if (!rs.isBeforeFirst()) return new WarnInfo(-3);
+            if (!rs.isBeforeFirst()) {
+                return new WarnInfo(-3);
+            }
             rs.next();
             String plrName = rs.getString("user_name");
             String warnedByName = rs.getString("warned_by_name");
@@ -163,7 +167,9 @@ public class WarnInfo {
     public static List<WarnInfo> getByName(String plrName, boolean asc) {
         SafeSql sql = MTC.instance().ssql;
         if (sql == null) //no msg
+        {
             return WarnInfo.getErrorList(-3);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + ".mtc_warns WHERE user_name=? ORDER BY id " + (asc ? "ASC" : "DESC"), plrName);
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (2)");
@@ -171,7 +177,9 @@ public class WarnInfo {
         }
         List<WarnInfo> lst = new ArrayList<>();
         try {
-            if (!rs.isBeforeFirst()) return WarnInfo.getErrorList(-4);
+            if (!rs.isBeforeFirst()) {
+                return WarnInfo.getErrorList(-4);
+            }
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String warnedByName = rs.getString("warned_by_name");
@@ -210,14 +218,18 @@ public class WarnInfo {
      */
     public static WarnInfo getLastGivenByName(String warnedByName) {
         SafeSql sql = MTC.instance().ssql;
-        if (sql == null) return new WarnInfo(-3);
+        if (sql == null) {
+            return new WarnInfo(-3);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + ".mtc_warns WHERE warned_by_name=? AND status=0 ORDER BY id DESC LIMIT 1", warnedByName);
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (2)");
             return new WarnInfo(-3);
         }
         try {
-            if (!rs.isBeforeFirst()) return new WarnInfo(-3);
+            if (!rs.isBeforeFirst()) {
+                return new WarnInfo(-3);
+            }
             rs.next();
             int id = rs.getInt("id");
             String plrName = rs.getString("user_name");

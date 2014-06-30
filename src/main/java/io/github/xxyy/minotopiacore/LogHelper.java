@@ -73,7 +73,7 @@ public final class LogHelper {
     }
     
     public static void initLogs(){
-        new File(MTC.instance().getDataFolder()+"/logs/").mkdirs();
+        new File(MTC.instance().getDataFolder()+"/logs/").mkdirs(); //REFACTOR   Result of File.mkdirs() is ignored at line 76
         if(ConfigHelper.isMainLoggerEnabled()){
             try {
                 FileHandler hdlr = new FileHandler(MTC.instance().getDataFolder()+"/logs/main.log",10000000, 5, true);

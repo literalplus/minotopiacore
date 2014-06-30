@@ -52,7 +52,9 @@ public class ClanInfo {
      */
     public void flush() {
         SafeSql sql = MTC.instance().ssql;
-        if (sql == null) return;
+        if (sql == null) {
+            return;
+        }
         sql.safelyExecuteUpdate("UPDATE " + sql.dbName + "." + Const.TABLE_CLANS + " " +
                         "SET name=?, prefix=?, leader_name=?," +
                         "base_x=" + this.base.getBlockX() + "," +
@@ -68,12 +70,11 @@ public class ClanInfo {
     }
 
     public void nullify() {
-        SafeSql sql = MTC.instance().ssql;
-        for (String userName : ClanHelper.getAllMemberNames(this.id)) {
-            if (ClanHelper.memberCache.containsKey(userName)) {
-                ClanHelper.memberCache.remove(userName);
-            }
-        }
+        SafeSql sql = MTC.instance().getSql();
+        ClanHelper.getAllMemberNames(this.id).stream()
+                .filter(ClanHelper.memberCache::containsKey)
+                .forEach(ClanHelper.memberCache::remove);
+
         if (ClanHelper.cacheById.containsKey(this.id)) {//will always be in both maps
             ClanHelper.cacheById.remove(this.id);
             ClanHelper.cacheByName.remove(this.name);
@@ -115,7 +116,9 @@ public class ClanInfo {
     public static ClanInfo create(String name, String prefix, String leaderName, Location base,
                                   String motd, int money, int level, int kills, int deaths) {
         SafeSql sql = MTC.instance().getSql();
-        if (sql == null) return new ClanInfo(-2);
+        if (sql == null) {
+            return new ClanInfo(-2);
+        }
         int rows = sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + "." + Const.TABLE_CLANS + " " +
                         "SET `name`=?, `prefix`=?, `leader_name`=?,\n " +
                         "base_x=" + base.getBlockX() + ", \n" +
@@ -126,12 +129,18 @@ public class ClanInfo {
                         "base_world=?, motd=?, bank_amount=" + money + ", \n" +
                         "level=" + level + ", kills=" + kills + ", deaths=" + deaths,
                 name, prefix, leaderName, base.getWorld().getName(), motd);
-        if (rows < 1) return new ClanInfo(-3);
+        if (rows < 1) {
+            return new ClanInfo(-3);
+        }
         ResultSet rs = sql.executeQuery("SELECT LAST_INSERT_ID()"); //REFACTOR
-        if (rs == null) return new ClanInfo(-4);
+        if (rs == null) {
+            return new ClanInfo(-4);
+        }
         ClanInfo rtrn;
         try {
-            if (!rs.isBeforeFirst()) return new ClanInfo(-5);
+            if (!rs.isBeforeFirst()) {
+                return new ClanInfo(-5);
+            }
             rs.next();
             rtrn = new ClanInfo(rs.getInt(1), name, prefix, leaderName, base, motd,
                     money, level, kills, deaths);
@@ -146,12 +155,18 @@ public class ClanInfo {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected static ClanInfo getById(int id) {
-        if (id < 0) return new ClanInfo(id);
+        if (id < 0) {
+            return new ClanInfo(id);
+        }
         SafeSql sql = MTC.instance().getSql();
-        if (sql == null) return new ClanInfo(-2);
+        if (sql == null) {
+            return new ClanInfo(-2);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + "." + Const.TABLE_CLANS + " WHERE id=?", id); //REFACTOR
         try {
-            if (rs == null || !rs.isBeforeFirst()) return new ClanInfo(-3);
+            if (rs == null || !rs.isBeforeFirst()) {
+                return new ClanInfo(-3);
+            }
             rs.next();
             return new ClanInfo(rs.getInt("id"), rs.getString("name"), rs.getString("prefix"),
                     rs.getString("leader_name"),
@@ -170,10 +185,14 @@ public class ClanInfo {
 
     protected static ClanInfo getByName(String name) {
         SafeSql sql = MTC.instance().getSql();
-        if (sql == null) return new ClanInfo(-2);
+        if (sql == null) {
+            return new ClanInfo(-2);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + "." + Const.TABLE_CLANS + " WHERE name=?", name); //REFACTOR
         try {
-            if (rs == null || !rs.isBeforeFirst()) return new ClanInfo(-3);
+            if (rs == null || !rs.isBeforeFirst()) {
+                return new ClanInfo(-3);
+            }
             rs.next();
             return new ClanInfo(rs.getInt("id"), rs.getString("name"), rs.getString("prefix"),
                     rs.getString("leader_name"),
@@ -191,17 +210,25 @@ public class ClanInfo {
 
     protected static ClanInfo getByPlayerName(String plrName) {
         ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(plrName);
-        if (cmi == null) return new ClanInfo(-7);
-        if (cmi.clanId < 0) return new ClanInfo(cmi.clanId);
+        if (cmi == null) {
+            return new ClanInfo(-7);
+        }
+        if (cmi.clanId < 0) {
+            return new ClanInfo(cmi.clanId);
+        }
         return ClanHelper.getClanInfoById(cmi.clanId);
     }
 
     protected static ClanInfo getByPrefix(String prefix) {
         SafeSql sql = MTC.instance().getSql();
-        if (sql == null) return new ClanInfo(-2);
+        if (sql == null) {
+            return new ClanInfo(-2);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + "." + Const.TABLE_CLANS + " WHERE prefix=?", prefix); //REFACTOR
         try {
-            if (rs == null || !rs.isBeforeFirst()) return new ClanInfo(-3);
+            if (rs == null || !rs.isBeforeFirst()) {
+                return new ClanInfo(-3);
+            }
             rs.next();
             return new ClanInfo(rs.getInt("id"), rs.getString("name"), rs.getString("prefix"),
                     rs.getString("leader_name"),

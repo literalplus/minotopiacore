@@ -70,7 +70,9 @@ public class RunnableReloadTimer implements Runnable {
     }
     
     private static String getFormattedTime(int seconds){
-        if(seconds < 60) return "§l"+seconds+" §dSekunde"+((seconds == 1) ? "" : "n");
+        if(seconds < 60) {
+            return "§l" + seconds + " §dSekunde" + ((seconds == 1) ? "" : "n");
+        }
         int minutes = (seconds / 60);
         seconds = seconds - (60 * minutes);
         return minutes+" Minute"+((minutes == 1) ? "" : "n")+((seconds == 0) ? "" : " und "+seconds+" Sekunde"+((seconds == 1) ? "" : "n"));

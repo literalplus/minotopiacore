@@ -15,7 +15,9 @@ public class CommandBanInfo implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.info", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.info", label)) {
+            return true;
+        }
         if (args.length >= 1 && !args[0].equalsIgnoreCase("help")) {
             BanInfo bi = BanHelper.getBanInfoByPlayerName(args[0].toLowerCase());
             if (bi.id == -2) {

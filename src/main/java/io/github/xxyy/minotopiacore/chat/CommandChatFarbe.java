@@ -49,10 +49,14 @@ public class CommandChatFarbe implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.chatfarbe.change", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.chatfarbe.change", label)) {
+            return true;
+        }
 
         if (args.length == 0) {
-            if (CommandHelper.kickConsoleFromMethod(sender, label)) return true;
+            if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+                return true;
+            }
             printChatFarbeTo(sender, (Player) sender);
             return true;
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
@@ -85,7 +89,9 @@ public class CommandChatFarbe implements CommandExecutor {
             this.changeChatFarbeWMsgTo(sender, args, cf, "Chatfarbe wurde gesetzt auf:", target);
             return true;
         }
-        if (CommandHelper.kickConsoleFromMethod(sender, label)) return true;
+        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+            return true;
+        }
         String cf = "";
         for (int i = 0; i < args.length; i++) {
             cf += ((i == 0) ? "" : " ") + args[i];

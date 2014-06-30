@@ -16,7 +16,9 @@ public class CommandDeleteWarn implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.remove", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.remove", label)) {
+            return true;
+        }
         if (args.length <= 0 || args[0].equalsIgnoreCase("help")) {
             this.printHelpTo(sender);
             return true;
@@ -59,7 +61,7 @@ public class CommandDeleteWarn implements CommandExecutor {
                         this.printHelpTo(sender);
                         return true;
                     }
-                    int uid = -127;
+                    int uid;
                     try {
                         uid = Integer.parseInt(args[ctr + 1]);
                     } catch (NumberFormatException e) {

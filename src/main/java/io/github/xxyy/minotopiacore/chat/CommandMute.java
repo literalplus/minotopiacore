@@ -16,7 +16,9 @@ public class CommandMute implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,String label, String[] args) {
 		if(args.length >= 1 && !(args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("info"))){
-			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) return true;
+			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) {
+                return true;
+            }
 			Player target = Bukkit.getPlayerExact(args[0]);
 //			boolean targetOnline = (target != null && target.isOnline());
 			String reason = "";
@@ -42,7 +44,9 @@ public class CommandMute implements CommandExecutor{
             CommandHelper.broadcast(MTC.chatPrefix+"§b"+sender.getName()+"§6 hat §b"+args[0]+"§6 gemuted."+(reason.equalsIgnoreCase("") ? "" : " Grund: §7"+reason), "mtc.spy");
             return true;
 		}else if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
-			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) return true;
+			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) {
+                return true;
+            }
 			Set<String> paths = MuteHelper.getMutedPlayerPaths();
 			if(paths == null || paths.size() == 0){
 				sender.sendMessage(MTC.chatPrefix+"Es sind keine Spieler gemuted!");
@@ -91,7 +95,9 @@ public class CommandMute implements CommandExecutor{
 			}
 		}
 		else{
-			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) return true;
+			if(!CommandHelper.checkPermAndMsg(sender, "mtc.mute", label)) {
+                return true;
+            }
 			sender.sendMessage("§cUnbekannte Aktion. Verwendung:");
 			sender.sendMessage("§b/mute <Spieler> [Grund] §6Mutet/Entmutet einen Spieler, Grund ist optional");
 			sender.sendMessage("§b/mute info <Spieler> §6Zeigt Muteinformationen zu einem Spieler");

@@ -18,19 +18,25 @@ public class CommandRandom extends MTCCommandExecutor
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args)
     {
-        if(!CommandHelper.checkPermAndMsg(sender, "mtc.random", label)) return true;
+        if(!CommandHelper.checkPermAndMsg(sender, "mtc.random", label)) {
+            return true;
+        }
 
         Player[] plrs = Bukkit.getOnlinePlayers();
 
         if(args.length > 0){
             switch(args[0].toLowerCase()){
             case "-p":
-                if(args.length < 2) return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
+                if(args.length < 2) {
+                    return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
+                }
                 Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableAnnounceChoice(args[1]),
                         MTC.instance().getConfig().getLong("random.tickdelay", 100));
                 return true;
             case "-m":
-                if(args.length < 2) return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
+                if(args.length < 2) {
+                    return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
+                }
                 List<Player> newPlrs = Lists.newArrayList();
                 for(Player target : plrs){
                     if(target.hasPermission(args[1])){
@@ -44,7 +50,9 @@ public class CommandRandom extends MTCCommandExecutor
             }
         }
 
-        if(plrs == null || plrs.length == 0) return MTCHelper.sendLoc("XU-nordmplrs", sender, true);
+        if(plrs == null || plrs.length == 0) {
+            return MTCHelper.sendLoc("XU-nordmplrs", sender, true);
+        }
         Player chosenOne = plrs[RandomUtils.nextInt(plrs.length)];
 
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableAnnounceChoice(chosenOne.getName()),

@@ -33,7 +33,9 @@ public final class WarnHelper { //REFACTOR
 
     public static void checkWarnNumberAndDoStuff(String victimName, CommandSender culprit, int warnCount, byte warnsAdded) {
         Player victim = Bukkit.getPlayerExact(victimName); //REFACTOR
-        if (victim == null || !victim.isOnline()) return;
+        if (victim == null || !victim.isOnline()) {
+            return;
+        }
         if (warnCount >= 10) {
             Bukkit.broadcastMessage(MTC.warnChatPrefix + "§cDer Spieler §e" + victimName + "§c hat §o" + warnCount + "§c Warns erreicht und wurde deswegen" +
                     " §lpermanent§c gebannt.");
@@ -72,7 +74,9 @@ public final class WarnHelper { //REFACTOR
     public static int getWarnCountByPlayerName(String plrName) {
         SafeSql sql = MTC.instance().ssql;
         if (sql == null) //no msg
+        {
             return -1;
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS num FROM " + sql.dbName + ".mtc_warns WHERE user_name=? AND status=0", plrName);
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (3)");
@@ -91,7 +95,9 @@ public final class WarnHelper { //REFACTOR
     public static int getWarnCountGivenByPlayerName(String plrName) {
         SafeSql sql = MTC.instance().ssql;
         if (sql == null) //no msg
+        {
             return -1;
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS num FROM " + sql.dbName + ".mtc_warns WHERE warned_by_name=?", plrName);
         if (rs == null) {
             System.out.println("§4[MTC] rs == null -> db down? (3)");
@@ -108,7 +114,9 @@ public final class WarnHelper { //REFACTOR
     }
 
     public static List<WarnInfo> getWarnsByPlayerName(String plrName, boolean asc) {
-        if (WarnHelper.getWarnCountByPlayerName(plrName) <= 0) return WarnInfo.getErrorList(-4);
+        if (WarnHelper.getWarnCountByPlayerName(plrName) <= 0) {
+            return WarnInfo.getErrorList(-4);
+        }
         return WarnInfo.getByName(plrName, asc);
     }
 }

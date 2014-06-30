@@ -13,7 +13,6 @@ public class AntiInfPotionListener implements Listener {
 	  	if (item.getAmount() > 64){
 		    item.setAmount(64);
 		    e.getItemDrop().setItemStack(item);
-		    return;
 	  	}
 	}
 }

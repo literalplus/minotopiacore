@@ -22,7 +22,9 @@ public class CommandBan implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.permanent", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.permanent", label)) {
+            return true;
+        }
         if (args.length >= 2 && !args[0].equalsIgnoreCase("help")) {
             Player plr = Bukkit.getPlayerExact(args[0]);
             if (plr == null) {

@@ -17,18 +17,24 @@ public class LeaveListener implements Listener {
 			LeaveListener.doKickFromLobby(e.getPlayer());
 			return;
 		}
-		if(!TeamBattle.instance().isPlayerInGame(e.getPlayer())) return;
+		if(!TeamBattle.instance().isPlayerInGame(e.getPlayer())) {
+            return;
+        }
 		System.out.println("Player was kicked while in TeamBattle. Leaving..");
 		LeaveListener.doKick(e.getPlayer());
 	}
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerLeave(PlayerQuitEvent e){
-		if(TeamBattle.instance() == null) return;
+		if(TeamBattle.instance() == null) {
+            return;
+        }
 		if(TeamBattle.instance().isPlayerInQueue(e.getPlayer())){
 			LeaveListener.doKickFromLobby(e.getPlayer());
 			return;
 		}
-		if(!TeamBattle.instance().isPlayerInGame(e.getPlayer())) return;
+		if(!TeamBattle.instance().isPlayerInGame(e.getPlayer())) {
+            return;
+        }
 		System.out.println("Player did not leave TeamBattle. Leaving..");
 		LeaveListener.doKick(e.getPlayer());
 	}

@@ -62,7 +62,9 @@ public class PeaceInfo {
     }
 
     public static PeaceInfo get(String plrName) {
-        if (PeaceInfo.cache.containsKey(plrName)) return PeaceInfo.cache.get(plrName);
+        if (PeaceInfo.cache.containsKey(plrName)) {
+            return PeaceInfo.cache.get(plrName);
+        }
         PeaceInfo rtrn = PeaceInfo.fetch(plrName);
         PeaceInfo.cache.put(plrName, rtrn);
         return rtrn;
@@ -71,10 +73,9 @@ public class PeaceInfo {
     public static boolean hasRequest(String checkName, String targetName) {
         SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT EXISTS( SELECT 1 FROM mtc_peace_requests WHERE sender_name=? AND receiver_name=?)", //REFACTOR
-                checkName, targetName);
+                checkName, targetName); //REFACTOR
         try {
-            if (rs == null || !rs.next()) return false;
-            return rs.getBoolean(1);
+            return rs != null && rs.next() && rs.getBoolean(1);
         } catch (SQLException e) {
             sql.formatAndPrintException(e, "");
             return false;
@@ -99,9 +100,13 @@ public class PeaceInfo {
     private static PeaceInfo fetch(String plrName) {
         SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT peace_players FROM mtc_peace WHERE player_name=?", plrName);
-        if (rs == null) return new PeaceInfo(-2, plrName);
+        if (rs == null) {
+            return new PeaceInfo(-2, plrName);
+        }
         try {
-            if (!rs.next()) return new PeaceInfo(-4, plrName);
+            if (!rs.next()) {
+                return new PeaceInfo(-4, plrName);
+            }
             return new PeaceInfo(plrName, rs.getString("peace_players"));
         } catch (SQLException e) {
             e.printStackTrace();

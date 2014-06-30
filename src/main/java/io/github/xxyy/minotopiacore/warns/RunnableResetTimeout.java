@@ -6,7 +6,9 @@ public class RunnableResetTimeout implements Runnable {
 	public RunnableResetTimeout(String plrName){ this.plrName = plrName; }
 	@Override
 	public void run() {
-		if(plrName == null) return;
+		if(plrName == null) {
+            return;
+        }
 		WarnHelper.playerTimeouts.remove(plrName);
 	}
 

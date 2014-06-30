@@ -54,7 +54,9 @@ public class PrivateChat { //REFACTOR
             recs += ((PrivateChat.isActiveChat(rec, this)) ? "§a" : "§c") + rec.getName() + ((i == (this.recipients.size() - 1)) ? "" : "§6,");
             i++;
         }
-        if (recs.isEmpty()) return "leer";
+        if (recs.isEmpty()) {
+            return "leer";
+        }
         return recs;
     }
 
@@ -63,7 +65,9 @@ public class PrivateChat { //REFACTOR
     }
 
     public void sendMessage(String msg) {
-        if (this.activeRecipients.size() == 0) return;
+        if (this.activeRecipients.size() == 0) {
+            return;
+        }
         for (Player plr : this.activeRecipients) {
             plr.sendMessage(msg);
         }
@@ -75,7 +79,9 @@ public class PrivateChat { //REFACTOR
     }
 
     public static PrivateChat getActiveChat(Player plr) {
-        if (!PrivateChat.activeChats.containsKey(plr)) return null;
+        if (!PrivateChat.activeChats.containsKey(plr)) {
+            return null;
+        }
         return PrivateChat.activeChats.get(plr);
     }
 
@@ -84,13 +90,17 @@ public class PrivateChat { //REFACTOR
     }
 
     public static boolean isInAnyPChat(Player plr) {
-        if (!PrivateChat.activeChats.containsKey(plr)) return false;
+        if (!PrivateChat.activeChats.containsKey(plr)) {
+            return false;
+        }
         PrivateChat pc = PrivateChat.activeChats.get(plr);
         return pc != null;
     }
 
     public static void tryRemoveChatFromP(Player plr, PrivateChat pc) {
-        if (!PrivateChat.isInAnyPChat(plr)) return;
+        if (!PrivateChat.isInAnyPChat(plr)) {
+            return;
+        }
         List<PrivateChat> lst = PrivateChat.recChats.get(plr);
         lst.remove(pc);
         pc.recipients.remove(plr);
@@ -116,7 +126,9 @@ public class PrivateChat { //REFACTOR
     }
 
     public static String updateActiveChatWMsg(Player plr, PrivateChat pc) {
-        if (!pc.recipients.contains(plr)) return "Du wurdest nicht in diesen Chat eingeladen!";
+        if (!pc.recipients.contains(plr)) {
+            return "Du wurdest nicht in diesen Chat eingeladen!";
+        }
         if (!PrivateChat.activeChats.containsKey(plr)) {
             PrivateChat.activeChats.put(plr, pc);
             if (!pc.activeRecipients.contains(plr)) {

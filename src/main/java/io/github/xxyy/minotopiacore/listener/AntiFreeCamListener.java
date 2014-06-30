@@ -1,7 +1,6 @@
 package io.github.xxyy.minotopiacore.listener;
 
 import io.github.xxyy.minotopiacore.MTC;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
@@ -21,7 +20,7 @@ public class AntiFreeCamListener implements Listener {
         List<Block> lineOfSight = he.getLineOfSight(null, 50); //perfectionists!
         for (int i = 0; i < lineOfSight.size(); i++) {
             if (lineOfSight.get(i).getType() == Material.BEDROCK) {
-                Player plr = Bukkit.getPlayerExact(e.getPlayer().getName());
+                Player plr = (Player) e.getPlayer(); //Bukkit.getPlayerExact(e.getPlayer().getName()); TODO Find out wtf this was for
                 if (plr == null) {
                     e.setCancelled(true);
                     return;

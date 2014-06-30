@@ -23,7 +23,9 @@ public class CommandWarn implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.warn", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.warn", label)) {
+            return true;
+        }
         if (args.length < 2 || args[0].equalsIgnoreCase("help")) {
             sender.sendMessage("§c/warn <Spieler> [Anzahl] <Grund>");
             return true;

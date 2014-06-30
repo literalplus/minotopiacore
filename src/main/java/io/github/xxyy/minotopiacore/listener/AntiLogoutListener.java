@@ -42,7 +42,9 @@ public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacor
     @EventHandler(priority=EventPriority.NORMAL)
     public void onTp(PlayerTeleportEvent e){
         if(!isFighting(e.getPlayer().getName()) ||
-                e.getCause() != TeleportCause.ENDER_PEARL) return;
+                e.getCause() != TeleportCause.ENDER_PEARL) {
+            return;
+        }
         MTCHelper.sendLoc("XU-fighttp", e.getPlayer(), true);
         e.setCancelled(true);
     }
@@ -50,7 +52,9 @@ public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacor
     @Override
     public boolean isFighting(String plrName){
         Date fightStart = playersInAFight.get(plrName);
-        if(fightStart == null) return false;
+        if(fightStart == null) {
+            return false;
+        }
         if(fightStart.before(Calendar.getInstance().getTime())){
             playersInAFight.remove(plrName);
             return false;
@@ -59,7 +63,9 @@ public class AntiLogoutListener implements Listener, io.github.xxyy.minotopiacor
     }
     
     public boolean punishIfInAnyFight(Player plr){
-        if(!plugin.getWorldGuardHook().isPvP(plr.getLocation())) return false;
+        if(!plugin.getWorldGuardHook().isPvP(plr.getLocation())) {
+            return false;
+        }
         if(isFighting(plr.getName())){
             for(ItemStack stk : plr.getInventory().getArmorContents()){
                 if(stk == null || stk.getType() == Material.AIR)

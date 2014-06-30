@@ -97,12 +97,18 @@ public class CommandTeam extends MTCCommandExecutor {
         @SuppressWarnings("RedundantIfStatement")
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             TeamMember that = (TeamMember) o;
 
-            if (!uuid.equals(that.uuid)) return false;
+            if (!uuid.equals(that.uuid)) {
+                return false;
+            }
 
             return true;
         }
@@ -166,13 +172,21 @@ public class CommandTeam extends MTCCommandExecutor {
         @SuppressWarnings("RedundantIfStatement")
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
 
             TeamGroup teamGroup = (TeamGroup) o;
 
-            if (!name.equals(teamGroup.name)) return false;
-            if (!prefix.equals(teamGroup.prefix)) return false;
+            if (!name.equals(teamGroup.name)) {
+                return false;
+            }
+            if (!prefix.equals(teamGroup.prefix)) {
+                return false;
+            }
 
             return true;
         }

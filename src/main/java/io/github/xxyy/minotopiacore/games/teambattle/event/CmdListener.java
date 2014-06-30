@@ -14,7 +14,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class CmdListener implements Listener {
 	@EventHandler(ignoreCancelled=true,priority=EventPriority.LOWEST)
 	public void onPlayerPreCmd(PlayerCommandPreprocessEvent e){
-		if(TeamBattle.instance() == null || !TeamBattle.instance().isPlayerInGame(e.getPlayer())) return;
+		if(TeamBattle.instance() == null || !TeamBattle.instance().isPlayerInGame(e.getPlayer())) {
+            return;
+        }
 		if(e.getMessage().startsWith("/login")) { afterLogin(e.getPlayer()); return;}
 		if(e.getMessage().startsWith("/war ") || e.getMessage().startsWith("/wa ")){return;}
 		if(checkPermAndMsg(e.getPlayer())){
@@ -26,9 +28,8 @@ public class CmdListener implements Listener {
 	}
 	
 	public boolean checkPermAndMsg(Player plr){
-		if(plr.hasPermission("mtc.teambattle.admin.execute.other")) return true;
-		return false;
-	}
+        return plr.hasPermission("mtc.teambattle.admin.execute.other");
+    }
 	
 	public void afterLogin(Player plr){
 		if(TeamBattle.instance().isPlayerInGame(plr) || TeamBattle.leaveMan.hasPlayerUsedLogin(plr.getName())){

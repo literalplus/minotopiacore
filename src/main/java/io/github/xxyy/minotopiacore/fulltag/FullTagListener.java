@@ -28,13 +28,18 @@ import org.bukkit.inventory.ItemStack;
 public class FullTagListener implements Listener {
     @EventHandler(priority=EventPriority.LOWEST)
     public void onCombust(EntityCombustEvent e){
-        if(!e.getEntityType().equals(EntityType.DROPPED_ITEM)) return;
+        if(!e.getEntityType().equals(EntityType.DROPPED_ITEM)) {
+            return;
+        }
         Item item = ((Item)e.getEntity());
         int id = FullTagHelper.getFullId(item.getItemStack());
-        if(id < 0) return;
+        if(id < 0) {
+            return;
+        }
         FullInfo fi = FullInfo.getById(id);
-        if(fi.id < 0)
-         return;
+        if(fi.id < 0) {
+            return;
+        }
         fi.nullify();
         LogHelper.getFullLogger().warning("Full died & deleted. loc="+MTCHelper.locToShortString(item.getLocation())+",fi="+fi);
     }
@@ -54,7 +59,9 @@ public class FullTagListener implements Listener {
         ItemStack is = e.getItemDrop().getItemStack();
         String plrName = e.getPlayer().getName();
         int id = FullTagHelper.getFullId(is);
-        if(id < 0) return;//no full
+        if(id < 0) {
+            return;//no full
+        }
         FullInfo fi = FullInfo.getById(id);
         if(FullTagListener.doLogic(id, fi, null, plrName, "drop_at_"+MTCHelper.locToShortString(e.getPlayer().getLocation())+"_by_"+plrName,e.getPlayer().getLocation())){
             e.getItemDrop().remove();
@@ -71,7 +78,9 @@ public class FullTagListener implements Listener {
             return;
         case CLONE_STACK:
             int id = FullTagHelper.getFullId(e.getCurrentItem());
-            if(id < 0) return;
+            if(id < 0) {
+                return;
+            }
             e.setCancelled(true);
             if(who instanceof Player) {
                 ((Player)who).sendMessage(MTC.chatPrefix+"§cFulls werden nicht dupliziert!");
@@ -87,7 +96,9 @@ public class FullTagListener implements Listener {
         case RESULT:
             return;
         default:
-            if(inv.getType() == InventoryType.CREATIVE || inv.getType() == InventoryType.PLAYER) return;
+            if(inv.getType() == InventoryType.CREATIVE || inv.getType() == InventoryType.PLAYER) {
+                return;
+            }
             if(FullTagListener.doLogic(e,inv,"action_"+e.getAction()+"_"+e.getSlotType().name()+"_open_"
                     +inv.getType()+"_at_"+MTCHelper.locToShortString(who.getLocation())+"_by_"+who.getName())){
                 if(e.getCursor() != null) {
@@ -109,7 +120,9 @@ public class FullTagListener implements Listener {
         ItemStack is = e.getItem().getItemStack();
         String plrName = e.getPlayer().getName();
         int id = FullTagHelper.getFullId(is);
-        if(id < 0) return;//no full
+        if(id < 0) {
+            return;//no full
+        }
         FullInfo fi = FullInfo.getById(id);
         if(FullTagListener.doLogic(id, fi, null, plrName, "pickup_at_"+MTCHelper.locToShortString(e.getPlayer().getLocation())+"_by_"+plrName,e.getPlayer().getLocation())){
             e.getPlayer().sendMessage("§cDieses Fullteil ist unbekannt. Daher wurde es entfernt. §eFür Beschwerden notiere dir unbedingt die aktuelle Uhrzeit.");
@@ -128,7 +141,9 @@ public class FullTagListener implements Listener {
             LogHelper.getFullLogger().severe("!!! CAUGHT UNKOWN FULL ID="+id+" AT "+plrName+" AT "+loc.toString()+" !!!");
             return ConfigHelper.getRemoveUnknownFulls();
         }
-        if(fi.id < 0) return false;
+        if(fi.id < 0) {
+            return false;
+        }
         fi.lastseen = (Calendar.getInstance().getTimeInMillis() / 1000);
         fi.lastCode = action;
         if(inv != null) { fi.inEnderchest = inv.getType() == InventoryType.ENDER_CHEST; }
@@ -150,7 +165,9 @@ public class FullTagListener implements Listener {
      */
     public static boolean doLogic(ItemStack is, Inventory inv, String plrName, String action, Location loc){
         int id = FullTagHelper.getFullId(is);
-      if(id < 0) return false;
+      if(id < 0) {
+          return false;
+      }
       if(is.getAmount() > 1){
           is.setAmount(1);
           LogHelper.getFullLogger().info("Set amount to 1 at plr: "+plrName);

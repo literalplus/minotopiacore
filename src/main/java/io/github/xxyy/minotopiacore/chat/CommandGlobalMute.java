@@ -14,7 +14,9 @@ public class CommandGlobalMute implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
-		if(!CommandHelper.checkPermAndMsg(sender, "mtc.globalmute.toggle", label)) return true;
+		if(!CommandHelper.checkPermAndMsg(sender, "mtc.globalmute.toggle", label)) {
+            return true;
+        }
 		ChatHelper.isGlobalMute = !ChatHelper.isGlobalMute;
 		String msg = MTC.chatPrefix+"GlobalMute wurde "+((ChatHelper.isGlobalMute) ? "" : "de")+"aktiviert!";
 		String reason = "";

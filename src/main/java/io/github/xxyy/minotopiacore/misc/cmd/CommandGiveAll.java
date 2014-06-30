@@ -18,7 +18,7 @@ public class CommandGiveAll extends MTCCommandExecutor {
         if (!CommandHelper.checkPermAndMsg(sender, "mtc.giveall", label)) {
             return true;
         }
-        ItemStack finalStack = null;
+        ItemStack finalStack;
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("hand")) {
                 CommandHelper.kickConsoleFromMethod(sender, label + " hand");

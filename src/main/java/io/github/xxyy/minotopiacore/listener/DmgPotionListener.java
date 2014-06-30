@@ -10,7 +10,9 @@ import org.bukkit.potion.PotionEffectType;
 public class DmgPotionListener implements Listener{
 	@EventHandler
 	public void onDmg(EntityDamageByEntityEvent e){
-		if(e.getDamager().getType() != EntityType.SPLASH_POTION) return;
+		if(e.getDamager().getType() != EntityType.SPLASH_POTION) {
+            return;
+        }
 		ThrownPotion pot = (ThrownPotion)e.getDamager();
         pot.getEffects().stream()
                 .filter(eff -> eff.getType().equals(PotionEffectType.HARM))

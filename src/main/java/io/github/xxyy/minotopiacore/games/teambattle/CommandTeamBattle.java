@@ -13,7 +13,9 @@ public class CommandTeamBattle implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd,String label, String[] args) {
-		if(!MTCHelper.isEnabledAndMsg(".command.war", sender)) return true;
+		if(!MTCHelper.isEnabledAndMsg(".command.war", sender)) {
+            return true;
+        }
 		if(args.length == 0){
 			HelpManager.tryPrintHelp("war", sender, label, "", label+" help");
 		}else if(args.length == 1){//join, leave
@@ -42,8 +44,9 @@ public class CommandTeamBattle implements CommandExecutor {
 					HelpManager.tryPrintHelp("war", sender, label, args[1], label+" help");
 					break;
 				case "lobby":
-					if(args[1].equalsIgnoreCase("leave")||args[1].equalsIgnoreCase("l"))
-						return (new CommandTeamBattleHelper(sender,args,label)).leaveLobby();
+					if(args[1].equalsIgnoreCase("leave")||args[1].equalsIgnoreCase("l")) {
+                        return (new CommandTeamBattleHelper(sender, args, label)).leaveLobby();
+                    }
                 return (new CommandTeamBattleHelper(sender,args,label)).prepareJoinLobby();
 				case "prev":
 					if(!(sender instanceof Player))

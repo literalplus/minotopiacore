@@ -28,11 +28,13 @@ public class MTCHelper { //FIXME wtf is this
     /**
      * CS == Comma Seperate
      * @param col An Iterable to seperate
-     * @return
+     * @return String representing the passed argument.
      */
-    public static String CSCollection(Iterable<? extends Object> col){
-        Iterator<? extends Object> i = col.iterator();
-        if(!i.hasNext()) return "{empty}";
+    public static String CSCollection(Iterable<?> col){
+        Iterator<?> i = col.iterator();
+        if(!i.hasNext()) {
+            return "{empty}";
+        }
         String rtrn = i.next().toString()+"";
         while(i.hasNext()){
             rtrn += "," + i
@@ -48,7 +50,9 @@ public class MTCHelper { //FIXME wtf is this
      */
     public static String CSCollectionShort(Iterable<? extends ToShortStringable> col){
         Iterator<? extends ToShortStringable> i = col.iterator();
-        if(!i.hasNext()) return "{empty}";
+        if(!i.hasNext()) {
+            return "{empty}";
+        }
         String rtrn= " ► " + i.next().toShortString() + "\n";
         while(i.hasNext()){
             rtrn += " ► " + i.next().toShortString() + "\n";
@@ -216,7 +220,7 @@ public class MTCHelper { //FIXME wtf is this
 	public static boolean isEnabled(String path){
 		//System.out.println(MTCMain.instance().getConfig().getBoolean("enable"+path,true));
 		String str = MTC.instance().getConfig().getString("enable"+path);
-		boolean value=true;
+		boolean value;
 		try{
 			value = Boolean.parseBoolean(str);
 		}catch(Exception e){
@@ -236,7 +240,7 @@ public class MTCHelper { //FIXME wtf is this
      */
     public static boolean isEnabledAndMsg(String path,CommandSender sender){
         String str = MTC.instance().getConfig().getString("enable"+path);
-        boolean value=true;
+        boolean value;
         try{
             value = Boolean.parseBoolean(str);
         }catch(Exception e){
@@ -269,7 +273,7 @@ public class MTCHelper { //FIXME wtf is this
      * @see LangHelper#localiseString(String, String, String)
      */
     public static String loc(String key,CommandSender sender, boolean sendMTCPrefix){
-        return LangHelper.localiseString(key, sender.getName(), MTC.instance().getName());
+        return loc(key, sender.getName(), sendMTCPrefix);
     }
     
     /**
@@ -348,7 +352,9 @@ public class MTCHelper { //FIXME wtf is this
     }
     
     public static boolean sendLocOrSaveArgs(String key, CommandSender sender, String type, int type2, boolean sendMTCPrefix, Object... args){
-        if((!(sender instanceof Player) || ((Player)sender).isOnline())) return MTCHelper.sendLocArgs(key, sender, sendMTCPrefix, args);
+        if((!(sender instanceof Player) || ((Player)sender).isOnline())) {
+            return MTCHelper.sendLocArgs(key, sender, sendMTCPrefix, args);
+        }
         String msg = MTCHelper.locArgs(key, "CONSOLE", sendMTCPrefix, args);
         LaterMessageHelper.addMessage(sender.getName(), type, type2, msg, true, sendMTCPrefix);
         return true;
@@ -356,7 +362,9 @@ public class MTCHelper { //FIXME wtf is this
     
     public static boolean sendLocOrSaveArgs(String key, String plrName, String type, int type2, boolean sendMTCPrefix, Object... args){
         Player plr = Bukkit.getPlayerExact(plrName);
-        if(plr != null && plr.isOnline()) return MTCHelper.sendLocArgs(key, plr, sendMTCPrefix, args);
+        if(plr != null && plr.isOnline()) {
+            return MTCHelper.sendLocArgs(key, plr, sendMTCPrefix, args);
+        }
         String msg = MTCHelper.locArgs(key, plrName, sendMTCPrefix, args);
         LaterMessageHelper.addMessage(plrName, type, type2, msg, true, sendMTCPrefix);
         return true;

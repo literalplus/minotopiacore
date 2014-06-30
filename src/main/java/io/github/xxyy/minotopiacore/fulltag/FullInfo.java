@@ -56,12 +56,17 @@ public class FullInfo implements ToShortStringable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof FullInfo)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof FullInfo)) {
+            return false;
+        }
         FullInfo other = (FullInfo) obj;
-        if (this.id != other.id) return false;
-        return true;
+        return this.id == other.id;
     }
 
     public void flush() {
@@ -143,7 +148,9 @@ public class FullInfo implements ToShortStringable {
     }
 
     public static FullInfo getById(int id) {
-        if (id < 0) return new FullInfo(-11);
+        if (id < 0) {
+            return new FullInfo(-11);
+        }
         SafeSql sql = MTC.instance().getSql();
         if (sql == null) {
             System.out.println("Tried to get FullInfo by id before reload was complete!");
@@ -155,7 +162,9 @@ public class FullInfo implements ToShortStringable {
             return new FullInfo(-3);
         }
         try {
-            if (!rs.isBeforeFirst()) return new FullInfo(-10);
+            if (!rs.isBeforeFirst()) {
+                return new FullInfo(-10);
+            }
             rs.next();
             return new FullInfo(id, rs.getString("sender_name"), rs.getString("receiver_name"), rs.getLong("timestamp"),
                     rs.getString("comment"), rs.getBoolean("thorns"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"),

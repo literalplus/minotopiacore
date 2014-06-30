@@ -40,8 +40,11 @@ public final class BanHelper {
     public static BanInfo getBanInfoByPlayerName(String plrName) {
         if (BanHelper.banCache.containsKey(plrName)) {
             BanInfo bi = BanHelper.banCache.get(plrName);
-            if (bi == null) return BanInfo.getByName(plrName);
-            else if (bi.id < 0) return BanInfo.getByName(plrName);
+            if (bi == null) {
+                return BanInfo.getByName(plrName);
+            } else if (bi.id < 0) {
+                return BanInfo.getByName(plrName);
+            }
             return bi;
         }
         BanInfo bi = BanInfo.getByName(plrName);
@@ -70,7 +73,9 @@ public final class BanHelper {
      * @return long
      */
     public static long getMillisFromRelativeString(String str) {
-        if (str.length() == 0) return Calendar.getInstance().getTimeInMillis();
+        if (str.length() == 0) {
+            return Calendar.getInstance().getTimeInMillis();
+        }
         long secondsToAdd = 0;
         String currNum = "";
         for (byte i = 0; i < str.length(); i++) {
@@ -142,8 +147,9 @@ public final class BanHelper {
                 }
                 secondsToAdd += num * 31536000L;
                 currNum = "";
-            } else
+            } else {
                 return -2;
+            }
         }//end for
         if (!currNum.isEmpty()) {
             int num;

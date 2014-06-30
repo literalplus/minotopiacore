@@ -3,6 +3,12 @@ package io.github.xxyy.minotopiacore.chat;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.LogHelper;
 import io.github.xxyy.minotopiacore.MTC;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,20 +17,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 
 public class CommandPrivateChat implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
-		if(!CommandHelper.checkPermAndMsg(sender, "mtc.privatechat", label)) return true;
-		if(CommandHelper.kickConsoleFromMethod(sender, label)) return true;
+		if(!CommandHelper.checkPermAndMsg(sender, "mtc.privatechat", label)) {
+            return true;
+        }
+		if(CommandHelper.kickConsoleFromMethod(sender, label)) {
+            return true;
+        }
 		Player plr = (Player)sender;
 		if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
 			this.printHelpTo(plr,label);
@@ -34,7 +37,7 @@ public class CommandPrivateChat implements CommandExecutor {
 				if(args.length >= 2){
 					int i = 1;
 					while(i < args.length){
-						int j = 0;
+						int j;
 						try {
 							j = Integer.parseInt(args[i]);
 						} catch (NumberFormatException e) {
@@ -83,7 +86,7 @@ public class CommandPrivateChat implements CommandExecutor {
 				plr.sendMessage(MTC.chatPrefix+"Du chattest jetzt wieder global!");
 				return true;
 			}
-			int i = 0;
+			int i;
 			try {
 				i = Integer.parseInt(args[1]);
 			} catch (NumberFormatException e) {
@@ -121,7 +124,9 @@ public class CommandPrivateChat implements CommandExecutor {
 				plr.sendMessage(((PrivateChat.isActiveChat(plr, pc)) ? "§a" : "§6")+"["+pc.chatId+"]§b: "+pc.getFormattedPlayerListAsString());
 			}
 		}else if(args.length >= 2 && args[0].equalsIgnoreCase("add")){
-			if(!CommandHelper.checkPermAndMsg(sender, "mtc.chat.add", label)) return true;
+			if(!CommandHelper.checkPermAndMsg(sender, "mtc.chat.add", label)) {
+                return true;
+            }
 			
 			Player target = Bukkit.getPlayerExact(args[1]);
 			if(target == null){

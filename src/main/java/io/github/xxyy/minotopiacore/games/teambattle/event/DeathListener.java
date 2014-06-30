@@ -13,12 +13,22 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class DeathListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(EntityDeathEvent e){
-		if(e.getEntityType() != EntityType.PLAYER) return;
+		if(e.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 		Player plr = (Player)e.getEntity();
-		if(plr.getKiller() == null) return;
-		if(plr.getKiller().getType() != EntityType.PLAYER) return;
-		if(!TeamBattle.instance().isPlayerInGame(plr.getKiller())) return;
-		if(!TeamBattle.instance().isPlayerInGame(plr)) return;
+		if(plr.getKiller() == null) {
+            return;
+        }
+		if(plr.getKiller().getType() != EntityType.PLAYER) {
+            return;
+        }
+		if(!TeamBattle.instance().isPlayerInGame(plr.getKiller())) {
+            return;
+        }
+		if(!TeamBattle.instance().isPlayerInGame(plr)) {
+            return;
+        }
 		TeamBattle.instance().addTeamPoint(TeamBattle.instance().invertTeam(TeamBattle.instance().getPlayerTeam(plr)));
 		TeamBattle.instance().notifyPlayersKill(plr, plr.getKiller());
 		e.setDroppedExp(0);

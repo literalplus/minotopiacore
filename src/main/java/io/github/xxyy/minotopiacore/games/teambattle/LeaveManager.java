@@ -52,7 +52,9 @@ public class LeaveManager {
 	}
 	
 	public String getWorldName(String playerName){
-		if(!this.doesLocExist(playerName)) return "world";
+		if(!this.doesLocExist(playerName)) {
+            return "world";
+        }
 		return this.fl.getString("locations."+playerName+".loc.worldName","world");
 	}
 	

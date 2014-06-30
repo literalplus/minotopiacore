@@ -42,10 +42,14 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         int rows = sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" SET " +
         		"user_name=?,clan_id="+clanId, userName);
-        if(rows < 1) return new InvitationInfo(-202);
+        if(rows < 1) {
+            return new InvitationInfo(-202);
+        }
         ResultSet rs = sql.executeQuery("SELECT LAST_INSERT_ID()");
         try {
-            if(rs == null || !rs.isBeforeFirst()) return new InvitationInfo(-203);
+            if(rs == null || !rs.isBeforeFirst()) {
+                return new InvitationInfo(-203);
+            }
             rs.next();
             InvitationInfo.invStringCache.remove(userName);
             return new InvitationInfo(rs.getInt(1), userName, clanId);
@@ -62,7 +66,9 @@ public class InvitationInfo {
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=?", userName);
         Set<InvitationInfo> set = new HashSet<>();
         try {
-            if(rs == null || !rs.isBeforeFirst()) return set;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return set;
+            }
             while(rs.next()) {
                 set.add(new InvitationInfo(rs.getInt("id"), rs.getString("user_name"), rs.getInt("clan_id")));
             }
@@ -75,7 +81,9 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=? AND clan_id="+clanId, userName);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return new InvitationInfo(-203);
+            if(rs == null || !rs.isBeforeFirst()) {
+                return new InvitationInfo(-203);
+            }
             rs.next();
             return new InvitationInfo(rs.getInt("id"), rs.getString("user_name"), rs.getInt("clan_id"));
         } catch (SQLException e) {
@@ -90,7 +98,9 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS cnt FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=?", plrName);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return 0;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return 0;
+            }
             rs.next();
             return rs.getInt("cnt");
         } catch (SQLException e) {
@@ -103,7 +113,9 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS cnt FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=? AND clan_id="+clanId, plrName);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return 0;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return 0;
+            }
             rs.next();
             return rs.getInt("cnt");
         } catch (SQLException e) {
@@ -121,7 +133,9 @@ public class InvitationInfo {
      * @return fullInfo
      */
     public static String getInvitationString(String plrName, boolean cryIfNone){
-        if(InvitationInfo.invStringCache.containsKey(plrName)) return InvitationInfo.invStringCache.get(plrName);//do it twice, safe a SQL query.
+        if(InvitationInfo.invStringCache.containsKey(plrName)) {
+            return InvitationInfo.invStringCache.get(plrName);//do it twice, safe a SQL query.
+        }
         return InvitationInfo.getInvitationString(plrName, InvitationInfo.getByName(plrName), cryIfNone);
     }
     
@@ -133,9 +147,13 @@ public class InvitationInfo {
      * @return fullInfo
      */
     public static String getInvitationString(String plrName, Set<InvitationInfo> set, boolean cryIfNone){
-        if(InvitationInfo.invStringCache.containsKey(plrName)) return InvitationInfo.invStringCache.get(plrName);
-        if(set == null || set.isEmpty()) return (cryIfNone) ?
-                MTCHelper.loc("XC-noinvs", plrName, true) : null;
+        if(InvitationInfo.invStringCache.containsKey(plrName)) {
+            return InvitationInfo.invStringCache.get(plrName);
+        }
+        if(set == null || set.isEmpty()) {
+            return (cryIfNone) ?
+                    MTCHelper.loc("XC-noinvs", plrName, true) : null;
+        }
         String rtrn = StringUtils.rightPad("§3║", 38, '▒')+"║\n";
         for(InvitationInfo ii : set){
             ClanInfo ci = ClanHelper.getClanInfoById(ii.clanId);
@@ -155,7 +173,9 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS cnt FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=?", userName);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return false;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return false;
+            }
             rs.next();
             return rs.getInt("cnt") > 0;//checks if there are any invitations <-- 
         } catch (SQLException e) {
@@ -167,7 +187,9 @@ public class InvitationInfo {
         SafeSql sql = MTC.instance().ssql;
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS cnt FROM "+sql.dbName+"."+Const.TABLE_CLAN_INVITATIONS+" WHERE user_name=? AND clan_id="+clanId, userName);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return false;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return false;
+            }
             rs.next();
             return rs.getInt("cnt") > 0;//checks if there are any invitations <-- 
         } catch (SQLException e) {

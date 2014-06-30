@@ -14,8 +14,12 @@ public class CommandCmdSpy implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmdspy", label)) return true;
-        if (CommandHelper.kickConsoleFromMethod(sender, label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmdspy", label)) {
+            return true;
+        }
+        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+            return true;
+        }
 
         Player plr = (Player) sender;
 
@@ -53,7 +57,9 @@ public class CommandCmdSpy implements CommandExecutor {
             } else {
                 sender.sendMessage(MTC.chatPrefix + "CommandSpy deaktiviert!");
             }
-        } else return this.printHelpTo(sender);
+        } else {
+            return this.printHelpTo(sender);
+        }
 
         return true;
     }

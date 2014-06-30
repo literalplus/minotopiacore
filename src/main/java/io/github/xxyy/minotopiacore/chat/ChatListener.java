@@ -105,7 +105,9 @@ public class ChatListener implements Listener {
     			}else{
         			if(isClanChat){
         				e.setCancelled(true);
-        				if(!ClanPermission.hasAndMessage(plr, ClanPermission.USECHAT)) return;
+        				if(!ClanPermission.hasAndMessage(plr, ClanPermission.USECHAT)) {
+                            return;
+                        }
         				ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(plrName, cmi.getRank()),
         				        ClanHelper.parseChatMessage(finalMsg, cmi));
         				MTCChatHelper.sendClanSpyMsg(plrName+": "+e.getMessage(),ci.prefix);

@@ -108,6 +108,7 @@ public class PexHookImpl {
 
         @Override
         public List<PexHook.User> getUsers() {
+            //noinspection Convert2MethodRef
             return parent.getUsers().stream()
                     .map(puser -> new UserImpl(puser)) //constructor ref is broken in j8u5 for some reason
                     .filter(UserImpl::isValid)

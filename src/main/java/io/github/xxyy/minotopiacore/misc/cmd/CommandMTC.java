@@ -126,7 +126,7 @@ public class CommandMTC extends MTCCommandExecutor {
                         sender.sendMessage("§3/" + label + " sign <line#> <text>§7 <-- Benutzung");
                         return true;
                     }
-                    int line = 0;
+                    int line;
                     try {
                         line = Integer.parseInt(args[1]);
                     } catch (NumberFormatException e) {
@@ -189,7 +189,7 @@ public class CommandMTC extends MTCCommandExecutor {
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.rstlng", label)) {
                         return true;
                     }
-                    Map<String, YamlConfiguration> map = new HashMap<>();
+                    Map<String, YamlConfiguration> map = new HashMap<>(); //TODO Contents of collection map are updated, but never queried at line 192
                     for (String lang : MTC.instance().getShippedLocales()) {
                         String dir = "plugins/" + MTC.instance().getName() + "/lang/";
                         String fl = lang + ".lng.yml";
@@ -199,7 +199,7 @@ public class CommandMTC extends MTCCommandExecutor {
                             map.put(lang, YamlConfiguration.loadConfiguration(destFl));
                         } else {
                             try {
-                                destDir.mkdirs();
+                                destDir.mkdirs(); //REFACTOR Result of method call ignored
                                 destFl.createNewFile();
                                 try (FileOutputStream out = new FileOutputStream(destFl);
                                      InputStream in = MTC.instance().getResource("xyc_lang/" + lang + ".lng.yml")) {

@@ -15,7 +15,9 @@ public class CommandChatClear implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,String label, String[] args) {
-		if(!CommandHelper.checkPermAndMsg(sender, "mtc.chatclear", label)) return true;
+		if(!CommandHelper.checkPermAndMsg(sender, "mtc.chatclear", label)) {
+            return true;
+        }
 		for(Player plr:Bukkit.getOnlinePlayers()){
 			if(plr.hasPermission("mtc.chatclear.exempt")){
 				plr.sendMessage(String.format(LangHelper.localiseString("XU-ccex", plr.getName(), MTC.instance().getName()),sender.getName()));

@@ -23,7 +23,9 @@ public final class TeamBattleSign { //REFACTOR class name
 	 * @return If something is invalid and the task should be stopped, return false.
 	 */
 	public static boolean updateSign(){
-		if(!enabled) return false;
+		if(!enabled) {
+            return false;
+        }
 		Block blk = signLocation.getWorld().getBlockAt(signLocation);
 		if(!(blk.getType() == Material.WALL_SIGN) && !(blk.getType() == Material.SIGN_POST)){
 			System.out.println("Das TeamBattle-InfoSchild ist kein Schild! /wa setsign");
@@ -42,7 +44,9 @@ public final class TeamBattleSign { //REFACTOR class name
 	public static void getSignLoc(){
 		boolean enabld=TeamBattle.instance().cfg.getBoolean("options.sign.enabled",true);
 		TeamBattleSign.enabled=enabld;
-		if(!enabld) return;
+		if(!enabld) {
+            return;
+        }
 		int secs = TeamBattle.instance().cfg.getInt("options.sign.updateEveryXSeconds",5);
 		int x=TeamBattle.instance().cfg.getInt("options.sign.x",0);
 		int y=TeamBattle.instance().cfg.getInt("options.sign.y",0);
@@ -52,7 +56,9 @@ public final class TeamBattleSign { //REFACTOR class name
 		updateSign();
 		
 		//auto-update
-		if(secs <= 0) return;
+		if(secs <= 0) {
+            return;
+        }
 		TeamBattleSign.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(MTC.instance(), new Runnable(){
 			private boolean continueRunning=true;
 			@Override

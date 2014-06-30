@@ -16,7 +16,9 @@ import java.util.List;
 public class CommandListWarns implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.list", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.warns.list", label)) {
+            return true;
+        }
         if (args.length == 0) {
             listWarnsOfTo(sender, sender.getName());
             return true;
@@ -40,8 +42,11 @@ public class CommandListWarns implements CommandExecutor {
         String bannedMsg = "§6gebannt? §anein";
         if (BanHelper.isBanned(targetName)) {
             BanInfo bi = BanHelper.getBanInfoByPlayerName(targetName);
-            if (bi.id < 0) bannedMsg = "§cgebannt, Fehler: " + bi.id;
-            else bannedMsg = "§cgebannt: §b" + bi.reason + "§7 Mehr Info: /baninfo " + targetName;
+            if (bi.id < 0) {
+                bannedMsg = "§cgebannt, Fehler: " + bi.id;
+            } else {
+                bannedMsg = "§cgebannt: §b" + bi.reason + "§7 Mehr Info: /baninfo " + targetName;
+            }
         }
         sender.sendMessage(bannedMsg);
         List<WarnInfo> warns = WarnHelper.getWarnsByPlayerName(targetName, true);

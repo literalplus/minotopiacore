@@ -26,7 +26,9 @@ public class InfiniteDispenseListener implements Listener {
     @EventHandler
     public void onHopper(InventoryMoveItemEvent evt) {
         InventoryHolder hldr = evt.getInitiator().getHolder();
-        if (!(hldr instanceof BlockState)) return;
+        if (!(hldr instanceof BlockState)) {
+            return;
+        }
         BlockState blkState = (BlockState) hldr;
         List<MetadataValue> metaData = blkState.getMetadata("mtc.infinite");
         metaData.stream()

@@ -25,7 +25,9 @@ public class CommandBReload extends MTCCommandExecutor {
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.breload", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.breload", label)) {
+            return true;
+        }
         // TODO provide reasons. generic reasons. random messages.
         if (args.length >= 1 && args[0].equalsIgnoreCase("veto")) {
             if (CommandBReload.taskId < 0) {

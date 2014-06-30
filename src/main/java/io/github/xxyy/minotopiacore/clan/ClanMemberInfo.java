@@ -76,7 +76,9 @@ public class ClanMemberInfo {
         SafeSql sql = MTC.instance().getSql();
         int rows = sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + "." + Const.TABLE_CLAN_MEMBERS + " SET " +
                 "user_name=?, clan_id=" + clanId + ", user_rank=" + userRankId + ",user_permissions='" + StringUtils.leftPad(Integer.toBinaryString(userPermissions), 21, '0') + "'", plrName);
-        if (rows > 0) return new ClanMemberInfo(plrName, clanId, userRankId, userPermissions);
+        if (rows > 0) {
+            return new ClanMemberInfo(plrName, clanId, userRankId, userPermissions);
+        }
         return new ClanMemberInfo(-104);
     }
 
@@ -135,11 +137,17 @@ public class ClanMemberInfo {
 
     protected static ClanMemberInfo getByPlayerName(String plrName) {
         SafeSql sql = MTC.instance().getSql();
-        if (sql == null) return new ClanMemberInfo(-111);
+        if (sql == null) {
+            return new ClanMemberInfo(-111);
+        }
         ResultSet rs = sql.safelyExecuteQuery("SELECT * FROM " + sql.dbName + "." + Const.TABLE_CLAN_MEMBERS + " WHERE user_name=?", plrName); //REFACTOR
-        if (rs == null) return new ClanMemberInfo(-101);
+        if (rs == null) {
+            return new ClanMemberInfo(-101);
+        }
         try {
-            if (!rs.next()) return new ClanMemberInfo(-102);
+            if (!rs.next()) {
+                return new ClanMemberInfo(-102);
+            }
             String permStr = rs.getString("user_permissions");
             int intPerms;
             if (StringUtils.isNumeric(permStr)) {

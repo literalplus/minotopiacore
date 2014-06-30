@@ -29,37 +29,72 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-        if(args.length == 0 || args[0].equalsIgnoreCase("help")) return CommandClan.printHelpTo(sender, label, (args.length >= 2) ? args[1] : "1");
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
+            return CommandClan.printHelpTo(sender, label, (args.length >= 2) ? args[1] : "1");
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if(args[0].equalsIgnoreCase("create")){
-            if(CommandHelper.kickConsoleFromMethod(sender, label+" create")) return true;
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.create", label)) return true;
-            if(args.length < 3) return MTCHelper.sendLoc("XC-createusage", sender, true);
-            if(args[1].length() > 20) return MTCHelper.sendLoc("XC-namelength", sender, true);
-            if(args[2].length() > 5 || args[2].length() < 1) return MTCHelper.sendLoc("XC-prefixlength", sender, true);
-            if(ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-inclan", sender, true);
-            if(ClanHelper.getClanInfoByName(args[1]).id > 0) return MTCHelper.sendLoc("XC-nameexists", sender, true);
-            if(ClanHelper.getClanInfoByPrefix(args[2]).id > 0) return MTCHelper.sendLoc("XC-prefixexists", sender, true);
-            if(args[1].matches("(.*)[^a-zA-Z0-9äöüÄÖÜß²³_\\-]+(.*)")) return MTCHelper.sendLocArgs("XC-invalidchars", sender, true, "Clannamen");
-            if(args[2].matches("(.*)[^a-zA-Z0-9äöüÄÖÜß²³_\\-]+(.*)")) return MTCHelper.sendLocArgs("XC-invalidchars", sender, true, "Clanprefix");
+            if(CommandHelper.kickConsoleFromMethod(sender, label+" create")) {
+                return true;
+            }
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.create", label)) {
+                return true;
+            }
+            if(args.length < 3) {
+                return MTCHelper.sendLoc("XC-createusage", sender, true);
+            }
+            if(args[1].length() > 20) {
+                return MTCHelper.sendLoc("XC-namelength", sender, true);
+            }
+            if(args[2].length() > 5 || args[2].length() < 1) {
+                return MTCHelper.sendLoc("XC-prefixlength", sender, true);
+            }
+            if(ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-inclan", sender, true);
+            }
+            if(ClanHelper.getClanInfoByName(args[1]).id > 0) {
+                return MTCHelper.sendLoc("XC-nameexists", sender, true);
+            }
+            if(ClanHelper.getClanInfoByPrefix(args[2]).id > 0) {
+                return MTCHelper.sendLoc("XC-prefixexists", sender, true);
+            }
+            if(args[1].matches("(.*)[^a-zA-Z0-9äöüÄÖÜß²³_\\-]+(.*)")) {
+                return MTCHelper.sendLocArgs("XC-invalidchars", sender, true, "Clannamen");
+            }
+            if(args[2].matches("(.*)[^a-zA-Z0-9äöüÄÖÜß²³_\\-]+(.*)")) {
+                return MTCHelper.sendLocArgs("XC-invalidchars", sender, true, "Clanprefix");
+            }
             //Now to the logic! Yay!
             ClanInfo ci = ClanInfo.create(args[1], args[2], (Player)sender);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cierror", sender, true, ci.id);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cierror", sender, true, ci.id);
+            }
             ClanHelper.cacheById.put(ci.id, ci);
             ClanHelper.cacheByName.put(ci.name, ci);
             ClanMemberInfo cmi = ClanMemberInfo.create(senderName, ci.id, (short) 3, ClanPermission.LEADER_PERMISSIONS);
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmierror", sender, true, cmi.clanId);
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmierror", sender, true, cmi.clanId);
+            }
             ClanHelper.memberCache.put(senderName, cmi);
             return MTCHelper.sendLocArgs("XC-created", sender, true, MTC.codeChatCol);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("remove")){
-            if(CommandHelper.kickConsoleFromMethod(sender, label+" remove")) return true;
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.remove", label)) return true;
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REMOVE)) return true;
+            if(CommandHelper.kickConsoleFromMethod(sender, label+" remove")) {
+                return true;
+            }
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.remove", label)) {
+                return true;
+            }
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REMOVE)) {
+                return true;
+            }
             if(args.length >= 2 && args[1].equalsIgnoreCase("sure")){
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-                if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                if(ci.id < 0) {
+                    return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                }
                 plugin.getVaultHook().depositPlayer((Player) sender, ci.money);
                 ClanHelper.broadcastOrSave(ClanHelper.getClanInfoByPlayerName(senderName).id, MTCHelper.locArgs("XC-removedbroadcast",senderName, false, senderName),1,true);
                 ci.nullify();
@@ -74,11 +109,19 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             return MTCHelper.sendLoc("XC-removewarning", sender, false);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("leave")){
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.leave", label)) return true;
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(ClanHelper.isLeader(senderName)) return MTCHelper.sendLoc("XC-leaderleave", sender, true);
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.leave", label)) {
+                return true;
+            }
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(ClanHelper.isLeader(senderName)) {
+                return MTCHelper.sendLoc("XC-leaderleave", sender, true);
+            }
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(senderName);
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            }
             cmi.nullify();
             ClanHelper.memberNamesCache.remove(cmi.clanId);//ghost mebers
 //            ClanHelper.broadcast(cmi.clanId, "XC-leavebroadcast");
@@ -98,17 +141,35 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             return MTCHelper.sendLoc("XC-leave", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("kick")){
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.kick", label)) return true;
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.KICK)) return true;
-            if(args.length < 2) return MTCHelper.sendLoc("XC-kickusage", sender, true);
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.kick", label)) {
+                return true;
+            }
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.KICK)) {
+                return true;
+            }
+            if(args.length < 2) {
+                return MTCHelper.sendLoc("XC-kickusage", sender, true);
+            }
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(args[1]);
-            if(cmi.clanId == -102) return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
-            if(ClanPermission.has(cmi, ClanPermission.IGNOREKICK)) return MTCHelper.sendLoc("XC-ignorekick", sender, true);
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            if(cmi.clanId == -102) {
+                return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
+            }
+            if(ClanPermission.has(cmi, ClanPermission.IGNOREKICK)) {
+                return MTCHelper.sendLoc("XC-ignorekick", sender, true);
+            }
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
-            if(ci.id != cmi.clanId) return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
+            if(ci.id < 0) {
+                return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
+            }
+            if(ci.id != cmi.clanId) {
+                return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
+            }
             ClanHelper.broadcastOrSave(cmi.clanId, MTCHelper.locArgs("XC-kickbroadcast", "CONSOLE", false, senderName, MTC.codeChatCol, MTC.priChatCol, args[1]), 2, true);
             cmi.nullify();
             ClanHelper.memberNamesCache.remove(cmi.clanId);//ghost members
@@ -127,19 +188,41 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             return true;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("invite")){
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.invite", label)) return true;
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.INVITE)) return true;
-            if(args.length < 2) return MTCHelper.sendLoc("XC-inviteusage", sender, true);
-            if(senderName.equalsIgnoreCase(args[1])) return MTCHelper.sendLoc("XC-inviteself", sender, true);
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.invite", label)) {
+                return true;
+            }
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.INVITE)) {
+                return true;
+            }
+            if(args.length < 2) {
+                return MTCHelper.sendLoc("XC-inviteusage", sender, true);
+            }
+            if(senderName.equalsIgnoreCase(args[1])) {
+                return MTCHelper.sendLoc("XC-inviteself", sender, true);
+            }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
-            if(ClanHelper.getMemberInfoByPlayerName(args[1]).clanId == ci.id) return MTCHelper.sendLoc("XC-inviteyourclan", sender, true);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
+            if(ClanHelper.getMemberInfoByPlayerName(args[1]).clanId == ci.id) {
+                return MTCHelper.sendLoc("XC-inviteyourclan", sender, true);
+            }
             int memCnt = ClanHelper.getMemberNum(ci.id);
-            if(!sender.hasPermission("mtc.clan.moremembers") && memCnt >= ConfigHelper.getClanMaxUsers()) return MTCHelper.sendLocArgs("XC-userlimit", sender, true, ConfigHelper.getClanMaxUsers(), MTC.codeChatCol, MTC.priChatCol);
-            if(!sender.hasPermission("mtc.ignore") && memCnt >= ConfigHelper.getClanMaxUsersExtended()) return MTCHelper.sendLocArgs("XC-userlimit", sender, true, ConfigHelper.getClanMaxUsersExtended(), MTC.codeChatCol, MTC.priChatCol);
-            if(InvitationInfo.getInvitationCount(args[1]) > 4) return MTCHelper.sendLoc("XC-invlimitexceeded", sender, true);
-            if(InvitationInfo.hasInvitationFrom(ci.id, args[1])) return MTCHelper.sendLocArgs("XC-alreadyinvited", sender, true, args[1], MTC.codeChatCol, MTC.priChatCol);
+            if(!sender.hasPermission("mtc.clan.moremembers") && memCnt >= ConfigHelper.getClanMaxUsers()) {
+                return MTCHelper.sendLocArgs("XC-userlimit", sender, true, ConfigHelper.getClanMaxUsers(), MTC.codeChatCol, MTC.priChatCol);
+            }
+            if(!sender.hasPermission("mtc.ignore") && memCnt >= ConfigHelper.getClanMaxUsersExtended()) {
+                return MTCHelper.sendLocArgs("XC-userlimit", sender, true, ConfigHelper.getClanMaxUsersExtended(), MTC.codeChatCol, MTC.priChatCol);
+            }
+            if(InvitationInfo.getInvitationCount(args[1]) > 4) {
+                return MTCHelper.sendLoc("XC-invlimitexceeded", sender, true);
+            }
+            if(InvitationInfo.hasInvitationFrom(ci.id, args[1])) {
+                return MTCHelper.sendLocArgs("XC-alreadyinvited", sender, true, args[1], MTC.codeChatCol, MTC.priChatCol);
+            }
             Player plr = Bukkit.getPlayerExact(args[1]);
 //            boolean online = true;
 //            if(plr == null || !plr.isOnline()) {
@@ -154,42 +237,75 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             return true;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("invitations")){
-            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.invitations", label)) return true;
-            if(!InvitationInfo.hasInvitation(senderName)) return MTCHelper.sendLoc("XC-noinvs", sender, true);
+            if(!CommandHelper.checkPermAndMsg(sender, "mtc.clan.invitations", label)) {
+                return true;
+            }
+            if(!InvitationInfo.hasInvitation(senderName)) {
+                return MTCHelper.sendLoc("XC-noinvs", sender, true);
+            }
             String str = InvitationInfo.getInvitationString(sender.getName(), false);
             if(str != null) {
                 CommandHelper.msg(str, sender);
             }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return true;//a
-            if(ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLocArgs("XC-noteinclan", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
+            if(ci.id < 0) {
+                return true;//a
+            }
+            if(ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLocArgs("XC-noteinclan", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
+            }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("ignore")){
-            if(args.length < 2) return MTCHelper.sendLoc("XC-ignoreusage", sender, true);
-            if(!StringUtils.isNumeric(args[1])) return MTCHelper.sendLocArgs("XC-nan", sender, true, args[1]);
+            if(args.length < 2) {
+                return MTCHelper.sendLoc("XC-ignoreusage", sender, true);
+            }
+            if(!StringUtils.isNumeric(args[1])) {
+                return MTCHelper.sendLocArgs("XC-nan", sender, true, args[1]);
+            }
             ClanInfo ci = ClanHelper.getClanInfoById(Integer.parseInt(args[1]));//No exception handling needed because it's already checked :P
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
             InvitationInfo ii = InvitationInfo.getByNameAndClan(senderName,ci.id);
-            if(ii.id == -203) return MTCHelper.sendLocArgs("XC-notinvited", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
-            if(ii.id < 0) return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            if(ii.id == -203) {
+                return MTCHelper.sendLocArgs("XC-notinvited", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
+            }
+            if(ii.id < 0) {
+                return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            }
             ii.nullify();
             return MTCHelper.sendLoc("XC-ignored", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("join")){
-            if(ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-inclan", sender, true);
-            if(args.length < 2) return MTCHelper.sendLoc("XC-joinusage", sender, true);
-            if(!StringUtils.isNumeric(args[1])) return MTCHelper.sendLocArgs("XC-nan", sender, true, args[1]);
+            if(ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-inclan", sender, true);
+            }
+            if(args.length < 2) {
+                return MTCHelper.sendLoc("XC-joinusage", sender, true);
+            }
+            if(!StringUtils.isNumeric(args[1])) {
+                return MTCHelper.sendLocArgs("XC-nan", sender, true, args[1]);
+            }
             ClanInfo ci = ClanHelper.getClanInfoById(Integer.parseInt(args[1]));//No exception handling needed because it's already checked :P
-            if(ci.id == -3) return MTCHelper.sendLoc("XC-invalidclan", sender, true);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            if(ci.id == -3) {
+                return MTCHelper.sendLoc("XC-invalidclan", sender, true);
+            }
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
             InvitationInfo ii = InvitationInfo.getByNameAndClan(senderName,ci.id);
             if(ii.id == -203){
-                if(!sender.hasPermission("mtc.ignore"))
+                if(!sender.hasPermission("mtc.ignore")) {
                     return MTCHelper.sendLocArgs("XC-notinvited", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
+                }
             }
-            else if(ii.id < 0) return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            else if(ii.id < 0) {
+                return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            }
             ClanMemberInfo cmi = ClanMemberInfo.create(senderName, ci.id, (short) 0, ClanPermission.MEMBER_PERMISSIONS);
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            }
             ClanHelper.broadcastOrSave(ci.id, MTCHelper.locArgs("XC-joinbroadcast", "CONSOLE", false,
                     senderName, MTC.codeChatCol, MTC.priChatCol), 4, true);
             ClanHelper.cacheById.remove(ci.id);//safety
@@ -201,30 +317,50 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             return MTCHelper.sendLocArgs("XC-joined", sender, true, ci.name, MTC.codeChatCol, MTC.priChatCol);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("base")){
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(CommandHelper.kickConsoleFromMethod(sender, label+" base")) return true;
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.TPBASE)) return true;
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(CommandHelper.kickConsoleFromMethod(sender, label+" base")) {
+                return true;
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.TPBASE)) {
+                return true;
+            }
             Player plr = (Player)sender;
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
             Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableTpClanBase(plr, plr.getLocation(), plr.getHealth(), ci.id),40);
             return MTCHelper.sendLoc("XC-preparetp", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("setbase")){
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.SETBASE)) return true;
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.SETBASE)) {
+                return true;
+            }
 //            if(!ClanHelper.isLeader(senderName)) return MTCHelper.sendLoc("XC-notleader", sender, true);
-            if(CommandHelper.kickConsoleFromMethod(sender, label+" setbase")) return true;
+            if(CommandHelper.kickConsoleFromMethod(sender, label+" setbase")) {
+                return true;
+            }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
+            if(ci.id < 0) {
+                return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
+            }
             ci.base = ((Player)sender).getLocation();
             ci.flush();
             ClanHelper.broadcast(ci.id, "XC-setbasebroadcast", true, senderName, MTC.codeChatCol, MTC.priChatCol);
             return MTCHelper.sendLoc("XC-setbase", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("chat")){
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.USECHAT)) return true;
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.USECHAT)) {
+                return true;
+            }
             if(args.length == 1){
                 if(ClanHelper.inClanChatNames.contains(senderName)) {
                     ClanHelper.inClanChatNames.remove(senderName);
@@ -234,7 +370,9 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
                 return MTCHelper.sendLoc("XC-toggledchat", sender, true);
             }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(senderName);
             String msg = args[1];
             if(args.length > 2){
@@ -242,20 +380,34 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
                     msg += " "+args[i];
                 }
             }
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+            }
             ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(senderName, cmi.getRank()),
                     ClanHelper.parseChatMessage(msg, cmi));
             MTCChatHelper.sendClanSpyMsg(senderName+": "+msg,ci.prefix);
             LogHelper.getClanChatLogger().log(Level.INFO, "[C-"+ci.prefix+"="+ci.name+"]"+senderName+": "+msg);
         }else if(args[0].equalsIgnoreCase("revoke")){
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
-            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REVOKE)) return true;
-            if(args.length < 2) return MTCHelper.sendLoc("XC-revokeusage", sender, true);
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
+            if(!ClanPermission.hasAndMessage(sender, ClanPermission.REVOKE)) {
+                return true;
+            }
+            if(args.length < 2) {
+                return MTCHelper.sendLoc("XC-revokeusage", sender, true);
+            }
             ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-            if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            if(ci.id < 0) {
+                return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+            }
             InvitationInfo ii = InvitationInfo.getByNameAndClan(args[1], ci.id);
-            if(ii.id == -203) return MTCHelper.sendLocArgs("XC-notinvited2", sender, true, args[1], MTC.codeChatCol, MTC.priChatCol, args[1]);
-            if(ii.id < 0) return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            if(ii.id == -203) {
+                return MTCHelper.sendLocArgs("XC-notinvited2", sender, true, args[1], MTC.codeChatCol, MTC.priChatCol, args[1]);
+            }
+            if(ii.id < 0) {
+                return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, ii.id, InvitationInfo.class.getName());
+            }
             ii.nullify();
             ClanHelper.broadcast(ci.id, "XC-revokedbroadcast", true, senderName, MTC.codeChatCol, MTC.priChatCol, args[1],'’');
             Player plr = Bukkit.getPlayerExact(args[1]);
@@ -269,17 +421,33 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("setrank")){
-            if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            if(!ClanHelper.isInAnyClan(senderName)) {
+                return MTCHelper.sendLoc("XC-notinclan", sender, true);
+            }
             ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(senderName);
-            if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, cmi.clanId);
-            if(!ClanPermission.hasAndMessage(cmi, ClanPermission.SETRANK, sender)) return true;
-            if(args.length < 3 || args[1].equalsIgnoreCase("help")) return MTCHelper.sendLoc("XC-setrankhelp", sender, false);
+            if(cmi.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-gensqlerr", sender, true, cmi.clanId);
+            }
+            if(!ClanPermission.hasAndMessage(cmi, ClanPermission.SETRANK, sender)) {
+                return true;
+            }
+            if(args.length < 3 || args[1].equalsIgnoreCase("help")) {
+                return MTCHelper.sendLoc("XC-setrankhelp", sender, false);
+            }
             ClanMemberInfo cmiTarget = ClanHelper.getMemberInfoByPlayerName(args[1]);
-            if(cmiTarget.clanId != cmi.clanId || cmiTarget.clanId == -102) return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
-            if(cmiTarget.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true,cmiTarget.clanId);
+            if(cmiTarget.clanId != cmi.clanId || cmiTarget.clanId == -102) {
+                return MTCHelper.sendLoc("XC-notinyourclan", sender, true);
+            }
+            if(cmiTarget.clanId < 0) {
+                return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmiTarget.clanId);
+            }
             int rankId = ClanMemberInfo.getRankIdFromString(args[2]);
-            if(rankId < 0) return MTCHelper.sendLoc("XC-invalidrank", sender, true);
-            if(rankId >= cmi.userRankId && !sender.hasPermission("mtc.clana.override")) return MTCHelper.sendLoc("XC-sethigherrank", sender, true);
+            if(rankId < 0) {
+                return MTCHelper.sendLoc("XC-invalidrank", sender, true);
+            }
+            if(rankId >= cmi.userRankId && !sender.hasPermission("mtc.clana.override")) {
+                return MTCHelper.sendLoc("XC-sethigherrank", sender, true);
+            }
             cmiTarget.userRankId = rankId;
             cmiTarget.userPermissions = ClanPermission.getDefaultPermissionsByRank(cmiTarget.getRank());
             cmiTarget.flush();
@@ -297,83 +465,128 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("info")){
             if(args.length < 2){
-                if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
+                if(!ClanHelper.isInAnyClan(senderName)) {
+                    return MTCHelper.sendLoc("XC-notinclan", sender, true);
+                }
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
                 return ClanHelper.printClanInfoTo(sender, ci);
             }
-            if(args[1].equalsIgnoreCase("help")) return MTCHelper.sendLoc("XC-infohelp", sender, false);
+            if(args[1].equalsIgnoreCase("help")) {
+                return MTCHelper.sendLoc("XC-infohelp", sender, false);
+            }
             if(args.length >= 3 && args[1].equalsIgnoreCase("player")){
                 ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(args[2]);
-                if(cmi.clanId == -102) return MTCHelper.sendLoc("XC-plrnotinclan", sender, true);
-                if(cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+                if(cmi.clanId == -102) {
+                    return MTCHelper.sendLoc("XC-plrnotinclan", sender, true);
+                }
+                if(cmi.clanId < 0) {
+                    return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+                }
                 ClanInfo ci = ClanHelper.getClanInfoById(cmi.clanId);
-                if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                if(ci.id < 0) {
+                    return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                }
                 return ClanHelper.printClanInfoTo(sender, ci);
             }
             if(!args[1].isEmpty() && StringUtils.isNumeric(args[1])){
                 ClanInfo ci = ClanHelper.getClanInfoById(Integer.parseInt(args[1]));
-                if(ci.id > 0) return ClanHelper.printClanInfoTo(sender, ci);
+                if(ci.id > 0) {
+                    return ClanHelper.printClanInfoTo(sender, ci);
+                }
             }
             ClanInfo ci2 = ClanHelper.getClanInfoByPrefix(args[1]);
-            if(ci2.id > 0) return ClanHelper.printClanInfoTo(sender, ci2);
+            if(ci2.id > 0) {
+                return ClanHelper.printClanInfoTo(sender, ci2);
+            }
             ClanInfo ci3 = ClanHelper.getClanInfoByName(args[1]);
-            if(ci3.id > 0) return ClanHelper.printClanInfoTo(sender, ci3);
+            if(ci3.id > 0) {
+                return ClanHelper.printClanInfoTo(sender, ci3);
+            }
             return MTCHelper.sendLoc("XC-404", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("members")){
             if(args.length < 2){
-                if(!ClanHelper.isInAnyClan(senderName)) return MTCHelper.sendLoc("XC-notinclan", sender, true);
+                if(!ClanHelper.isInAnyClan(senderName)) {
+                    return MTCHelper.sendLoc("XC-notinclan", sender, true);
+                }
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(senderName);
-                if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                if(ci.id < 0) {
+                    return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+                }
                 return ClanHelper.printOwnClanMembersTo(sender, ci);
             }
             if(args.length >= 3 && args[1].equalsIgnoreCase("player")){
-                if(!ClanHelper.isInAnyClan(args[2])) return MTCHelper.sendLoc("XC-plrnotinclan", sender, true);
+                if(!ClanHelper.isInAnyClan(args[2])) {
+                    return MTCHelper.sendLoc("XC-plrnotinclan", sender, true);
+                }
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(args[2]);
-                if(ci.id < 0) return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
+                if(ci.id < 0) {
+                    return MTCHelper.sendLoc("XC-cifetcherr", sender, true);
+                }
                 return ClanHelper.printClanMembersTo(sender, ci);
             }
             if(!args[1].isEmpty() && StringUtils.isNumeric(args[1])){
                 ClanInfo ci = ClanHelper.getClanInfoById(Integer.parseInt(args[1]));
-                if(ci.id > 0) return ClanHelper.printClanMembersTo(sender, ci);
+                if(ci.id > 0) {
+                    return ClanHelper.printClanMembersTo(sender, ci);
+                }
             }
             ClanInfo ci = ClanHelper.getClanInfoByPrefix(ChatColor.translateAlternateColorCodes('&', args[1]));
-            if(ci.id > 0) return ClanHelper.printClanMembersTo(sender, ci);
+            if(ci.id > 0) {
+                return ClanHelper.printClanMembersTo(sender, ci);
+            }
             ClanInfo ci2 = ClanHelper.getClanInfoByName(args[1]);
-            if(ci2.id > 0) return ClanHelper.printClanMembersTo(sender, ci2);
+            if(ci2.id > 0) {
+                return ClanHelper.printClanMembersTo(sender, ci2);
+            }
             return MTCHelper.sendLoc("XC-404", sender, true);
         }
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("permission")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("search")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("setsearch")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("bank")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("level")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("top")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("tutorial")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("reset")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("setmotd")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("request")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("options")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("chest")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("alliance")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("enemy")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if(args[0].equalsIgnoreCase("war")) return MTCHelper.sendLoc("XC-nyi", sender, true);
-        else{
+        else if(args[0].equalsIgnoreCase("permission")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("search")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("setsearch")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("bank")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("level")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("top")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("tutorial")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("reset")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("setmotd")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("request")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("options")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("chest")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("alliance")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("enemy")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        }/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else if(args[0].equalsIgnoreCase("war")) {
+            return MTCHelper.sendLoc("XC-nyi", sender, true);
+        } else{
             MTCHelper.sendLoc("XC-wrongusage", sender, true);
             CommandClan.printHelpTo(sender, label, "1");
         }

@@ -28,7 +28,8 @@ public class PexHook extends SimpleHookWrapper {
             return new ArrayList<>();
         }
 
-        return Hooks.Unsafe.safeCall(unsafe::getGroupList, new ArrayList<PexHook.Group>(), null);
+        //noinspection Convert2Diamond
+        return Hooks.Unsafe.safeCall(unsafe::getGroupList, new ArrayList<PexHook.Group>(), null); //diamond inference causes IDEA to track a compile error
     }
 
     @Override

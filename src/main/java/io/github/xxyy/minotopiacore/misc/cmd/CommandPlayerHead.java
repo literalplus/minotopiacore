@@ -13,24 +13,23 @@ public class CommandPlayerHead implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
-		if(!MTCHelper.isEnabledAndMsg(".command.playerhead.command", sender)) return true;
+		if(!MTCHelper.isEnabledAndMsg(".command.playerhead.command", sender)) {
+            return true;
+        }
 		//permissions handeled in Manager
 		if(args.length > 0){
 			switch(args[0]){
 			case "get":
 				PlayerHeadManager phm = new PlayerHeadManager(args,label);
 				phm.getHead(sender);
-				phm = null;
 				break;
 			case "set":
 				PlayerHeadManager phm1 = new PlayerHeadManager(args,label);
 				phm1.setHead(sender);
-				phm1 = null;
 				break;
 			case "getall":
 				PlayerHeadManager phm2 = new PlayerHeadManager(args,label);
 				phm2.getAllHead(sender);
-				phm2 = null;
 				break;
 			default:
 				sender.sendMessage("§8Unbekannte Aktion. Versuche §3get§8 oder §3set§8.");

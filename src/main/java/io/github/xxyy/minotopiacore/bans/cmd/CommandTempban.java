@@ -21,7 +21,9 @@ public class CommandTempban implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.temporary", label)) return true;
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.ban.temporary", label)) {
+            return true;
+        }
         if (args.length >= 3 && !args[0].equalsIgnoreCase("help")) {
             Player plr = Bukkit.getPlayerExact(args[0]);
             if (plr == null) {

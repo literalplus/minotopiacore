@@ -20,7 +20,9 @@ public class RunnableTpClanBase implements Runnable {
 
     @Override
     public void run() {
-        if (this.plr == null || !this.plr.isOnline()) return;
+        if (this.plr == null || !this.plr.isOnline()) {
+            return;
+        }
         Location pos = this.plr.getLocation();
         if (this.firstPos.getBlockX() != pos.getBlockX() || this.firstPos.getBlockZ() != pos.getBlockZ()) {
             MTCHelper.sendLoc("XC-moved", this.plr, true);
@@ -53,7 +55,6 @@ public class RunnableTpClanBase implements Runnable {
         }
         this.plr.teleport(ci.base);
         MTCHelper.sendLoc("XC-tped", this.plr, true);
-        return;
     }
 
 }

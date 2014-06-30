@@ -49,7 +49,9 @@ public final class FullTagHelper {
         }
         try {
             List<Integer> lst = new ArrayList<>();
-            if (!rs.isBeforeFirst()) return null;
+            if (!rs.isBeforeFirst()) {
+                return null;
+            }
             while (rs.next()) {
                 lst.add(rs.getInt("cnt"));
             }
@@ -73,7 +75,9 @@ public final class FullTagHelper {
      */
     public static Object getFull(boolean thorns, byte partId, boolean ignoreItemType, CommandSender sender, String recName, String comment) {
         ItemStack is = FullTagHelper.getStackByPartId(partId);
-        if (is == null) return "Dieser Full-Typ (" + partId + ") ist unbekannt!";
+        if (is == null) {
+            return "Dieser Full-Typ (" + partId + ") ist unbekannt!";
+        }
         for (Enchantment enchantment : Enchantment.values()) {
             if ((thorns || !enchantment.equals(Enchantment.THORNS))
                     && (ignoreItemType || enchantment.canEnchantItem(is))) {
@@ -81,7 +85,9 @@ public final class FullTagHelper {
             }
         }
         FullInfo fi = FullTagHelper.registerFull(is, sender, recName, comment, thorns, partId);
-        if (fi.id < 0) return "Das Item konnte nicht registriert werden! Fehler: " + fi.id;
+        if (fi.id < 0) {
+            return "Das Item konnte nicht registriert werden! Fehler: " + fi.id;
+        }
         ItemMeta meta = is.getItemMeta();
         List<String> lore = meta.getLore();
         if (lore == null) {
@@ -95,14 +101,22 @@ public final class FullTagHelper {
     }
 
     public static int getFullId(ItemStack is) {
-        if (is == null) return -6;
-        if (!is.hasItemMeta()) return -5;
+        if (is == null) {
+            return -6;
+        }
+        if (!is.hasItemMeta()) {
+            return -5;
+        }
         List<String> lore = is.getItemMeta().getLore();
-        if (lore == null) return -3;
+        if (lore == null) {
+            return -3;
+        }
         for (String str : lore) {
             if (str.startsWith(Const.fullLorePrefix)) {
                 str = str.replaceFirst(Const.fullLorePrefix, "");
-                if (!StringUtils.isNumeric(str)) return -2;
+                if (!StringUtils.isNumeric(str)) {
+                    return -2;
+                }
                 return Integer.parseInt(str);
             }
         }
@@ -117,9 +131,13 @@ public final class FullTagHelper {
         }
         List<FullInfo> lst = new ArrayList<>();
         ResultSet rs = sql.safelyExecuteQuery("SELECT id FROM " + sql.dbName + ".mtc_fulls WHERE " + row + " = ?", plrName);
-        if (rs == null) return null;
+        if (rs == null) {
+            return null;
+        }
         try {
-            if (!rs.isBeforeFirst()) return lst;
+            if (!rs.isBeforeFirst()) {
+                return lst;
+            }
             while (rs.next()) {
                 lst.add(FullInfo.getById(rs.getInt("id")));
             }
@@ -140,7 +158,9 @@ public final class FullTagHelper {
         Map<Integer, Integer> map = new HashMap<>();
         int sum = 0;
         try {
-            if (rs == null || !rs.isBeforeFirst()) return null;
+            if (rs == null || !rs.isBeforeFirst()) {
+                return null;
+            }
             while (rs.next()) {
                 int sth = rs.getInt("cnt");
                 sum += sth;
@@ -174,7 +194,9 @@ public final class FullTagHelper {
         }
         try {
             Map<String, Integer> map = new HashMap<>();
-            if (!rs.isBeforeFirst()) return null;
+            if (!rs.isBeforeFirst()) {
+                return null;
+            }
             while (rs.next()) {
                 map.put(rs.getString("col"), rs.getInt("cnt"));
             }
@@ -204,9 +226,13 @@ public final class FullTagHelper {
 
     public static boolean isFull(ItemStack is) {
         List<String> lore = is.getItemMeta().getLore();
-        if (lore == null) return false;
+        if (lore == null) {
+            return false;
+        }
         for (String str : lore) {
-            if (str.startsWith(Const.fullLorePrefix)) return true;
+            if (str.startsWith(Const.fullLorePrefix)) {
+                return true;
+            }
         }
         return false;
     }
@@ -238,8 +264,9 @@ public final class FullTagHelper {
     }
 
     public static boolean tryGiveFull(boolean thorns, byte partId, boolean ignoreItemType, CommandSender sender, String recName, String comment, Inventory inv) {
-        if (inv.firstEmpty() == -1)
+        if (inv.firstEmpty() == -1) {
             return FullTagHelper.scheduleFullForLater(thorns, partId, ignoreItemType, sender, recName, comment, inv);
+        }
         Object obj = FullTagHelper.getFull(thorns, partId, ignoreItemType, sender, recName, comment);
         if (obj == null) {
             obj = "Das Objekt ist NULL!";
@@ -250,8 +277,6 @@ public final class FullTagHelper {
         }
         ItemStack is = (ItemStack) obj;
         Map<Integer, ItemStack> map = inv.addItem(is);
-        if (!map.isEmpty())
-            return FullTagHelper.scheduleFullForLater(thorns, partId, ignoreItemType, sender, recName, comment, inv);
-        return true;
+        return map.isEmpty() || FullTagHelper.scheduleFullForLater(thorns, partId, ignoreItemType, sender, recName, comment, inv);
     }
 }

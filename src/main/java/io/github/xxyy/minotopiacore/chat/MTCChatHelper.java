@@ -20,14 +20,16 @@ import java.util.logging.Level;
 public class MTCChatHelper extends ChatHelper {
     public static Map<String, String> cfCache = new HashMap<>();
     public static List<String> spies = new ArrayList<>();
-    public static List<String> cmdSpies = Collections.synchronizedList(new ArrayList<String>());
-    public static Map<String, String> indCmdSpies = new HashMap<>();//individual...CMD->PLRNAME who registered
-    public static Map<String, String> plrCmdSpies = new HashMap<>();//for a single player....PLRNAME->PLRNAME who registered
-    public static final String spyPrefix = "§7§o[§8§oSpy§7§o]";
+    public static List<String> cmdSpies = Collections.synchronizedList(new ArrayList<>());
+//    public static Map<String, String> indCmdSpies = new HashMap<>();//individual...CMD->PLRNAME who registered
+//    public static Map<String, String> plrCmdSpies = new HashMap<>();//for a single player....PLRNAME->PLRNAME who registered
+//    public static final String spyPrefix = "§7§o[§8§oSpy§7§o]";
     public static volatile Map<Integer, PrivateChat> directChats = new HashMap<>();
 
     public static void clearPrivateChats() {
-        if (MTCChatHelper.directChats.size() <= 0) return;
+        if (MTCChatHelper.directChats.size() <= 0) {
+            return;
+        }
         for (Integer pcId : MTCChatHelper.directChats.keySet()) {
             PrivateChat pc = MTCChatHelper.directChats.get(pcId);
             MTCChatHelper.directChats.remove(pcId);
@@ -46,7 +48,9 @@ public class MTCChatHelper extends ChatHelper {
         }
         ResultSet rs = sql.safelyExecuteQuery("SELECT chatfarbe FROM " + sql.dbName + ".mts_chatfarbe WHERE user_name=?", plrName);
         try {
-            if (rs == null || !rs.isBeforeFirst()) return defaultCol;
+            if (rs == null || !rs.isBeforeFirst()) {
+                return defaultCol;
+            }
             rs.next();
             return rs.getString("chatfarbe");
         } catch (SQLException e) {
@@ -56,8 +60,9 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static String getFinalChatColorByCSender(CommandSender sender) {
-        if (MTCChatHelper.cfCache.containsKey(sender.getName()))
+        if (MTCChatHelper.cfCache.containsKey(sender.getName())) {
             return MTCChatHelper.cfCache.get(sender.getName());
+        }
         String color = MTCChatHelper.getDbChatColorByPlayer(sender.getName());
         color = MTCChatHelper.parseChatColByCSenderAndPerms(sender, color);
         MTCChatHelper.cfCache.put(sender.getName(), color);
@@ -65,8 +70,9 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static String getFinalChatColorByNameIgnorePerms(String plrName) {
-        if (MTCChatHelper.cfCache.containsKey(plrName))
+        if (MTCChatHelper.cfCache.containsKey(plrName)) {
             return MTCChatHelper.cfCache.get(plrName);
+        }
         String color = MTCChatHelper.getDbChatColorByPlayer(plrName);
         OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
         if (plr == null || !plr.isOnline()) {
@@ -94,7 +100,9 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static String parseChatColByCSenderAndPerms(CommandSender sender, String color) {
-        if (!sender.hasPermission("mtc.chatfarbe.use")) return "§f";
+        if (!sender.hasPermission("mtc.chatfarbe.use")) {
+            return "§f";
+        }
         if (!sender.hasPermission("mtc.chatfarbe.special")) {
             color = MTCChatHelper.convertDefaultChatColors(color);
         } else {
@@ -111,13 +119,17 @@ public class MTCChatHelper extends ChatHelper {
         } else {
             color = ChatColor.translateAlternateColorCodes('&', color);
         }
-        if (plr != null && !plr.hasPermission("mtc.chatfarbe.use")) return "§f";
+        if (plr != null && !plr.hasPermission("mtc.chatfarbe.use")) {
+            return "§f";
+        }
         color = MTCChatHelper.replaceSpecialWords(color);
         return color;
     }
 
     public static void sendClanSpyMsg(String msg, String clnName) {
-        if (MTCChatHelper.spies.size() == 0) return;
+        if (MTCChatHelper.spies.size() == 0) {
+            return;
+        }
         for (String plrName : MTCChatHelper.spies) {
             OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
             if (!plr.isOnline()) {
@@ -130,7 +142,9 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static void sendCommandSpyMsg(String msg) {
-        if (MTCChatHelper.cmdSpies.size() == 0) return;
+        if (MTCChatHelper.cmdSpies.size() == 0) {
+            return;
+        }
         for (String plrName : MTCChatHelper.cmdSpies) {
             OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
             if (!plr.isOnline()) {
@@ -168,15 +182,18 @@ public class MTCChatHelper extends ChatHelper {
         String finalMsg = "§d[P]" + clanTag + "§7" + senderName + ":§f " + msg;
         PrivateChat pc = PrivateChat.getActiveChat(sender);
         LogHelper.getPrivChatLogger().log(Level.INFO, "[P-" + pc.chatId + "]" + senderName + ": " + msg);
-        if (pc.activeRecipients.isEmpty() || pc.activeRecipients.size() == 1)
+        if (pc.activeRecipients.isEmpty() || pc.activeRecipients.size() == 1) {
             return "Niemand hört dich. Spieler einladen? §b/chat add <Spieler>";
+        }
         pc.sendMessage(finalMsg);
         MTCChatHelper.sendSpyMsg("§d[P-" + pc.chatId + "]§7" + senderName + ": §o" + msg);
         return null;
     }
 
     public static void sendSpyMsg(String msg) {
-        if (MTCChatHelper.spies.size() == 0) return;
+        if (MTCChatHelper.spies.size() == 0) {
+            return;
+        }
         for (String plrName : MTCChatHelper.spies) {
             OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
             if (!plr.isOnline()) {

@@ -35,7 +35,9 @@ public class MainDamageListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     // event should be cancelled before by i.e. WorldGuard
     public void onHit(EntityDamageByEntityEvent e) {
-        if (e.isCancelled() || e.getEntityType() != EntityType.PLAYER) return;
+        if (e.isCancelled() || e.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
         Player plrDamager;
         boolean message = true;
         Player plr = (Player) e.getEntity();
@@ -48,13 +50,17 @@ public class MainDamageListener implements Listener {
             case SNOWBALL:
             case SPLASH_POTION:
                 ProjectileSource source = ((Projectile) e.getDamager()).getShooter();
-                if (source == null || !(source instanceof Player)) return;
+                if (source == null || !(source instanceof Player)) {
+                    return;
+                }
                 plrDamager = (Player) source;
                 break;
             case WOLF:
                 Wolf wolf = (Wolf) e.getDamager();
                 AnimalTamer tmr = wolf.getOwner();
-                if (!(tmr instanceof Player)) return;
+                if (!(tmr instanceof Player)) {
+                    return;
+                }
                 plrDamager = (Player) tmr;
                 message = false;
                 break;

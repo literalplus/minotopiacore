@@ -90,9 +90,13 @@ public enum ClanPermission {
      */
     public static boolean hasAndMessage(CommandSender sender, ClanPermission perm) {
         String senderName = sender.getName();
-        if (!ClanHelper.isInAnyClan(senderName)) return false;
+        if (!ClanHelper.isInAnyClan(senderName)) {
+            return false;
+        }
         ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(senderName);
-        if (cmi.clanId < 0) return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+        if (cmi.clanId < 0) {
+            return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
+        }
         return hasAndMessage(cmi, perm, sender);
     }
 

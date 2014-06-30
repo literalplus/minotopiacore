@@ -48,7 +48,9 @@ public final class LaterMessageHelper {
      * @param type2
      */
     public static void removeType(String senderName, String type, int type2){
-        if(!LaterMessageHelper.storage.contains(senderName)) return;
+        if(!LaterMessageHelper.storage.contains(senderName)) {
+            return;
+        }
         boolean anyLeft = false;
         int i = 0;
         while(LaterMessageHelper.storage.contains(senderName+"."+i)){
@@ -78,10 +80,14 @@ public final class LaterMessageHelper {
      */
     public static boolean sendMessages(CommandSender sender){
         String senderName = sender.getName();
-        if(!LaterMessageHelper.storage.contains(senderName)) return false;
+        if(!LaterMessageHelper.storage.contains(senderName)) {
+            return false;
+        }
         int i = 0; 
         boolean anyLeft = false;
-        if(!LaterMessageHelper.storage.contains(senderName+"."+i)) return false;
+        if(!LaterMessageHelper.storage.contains(senderName+"."+i)) {
+            return false;
+        }
         while(LaterMessageHelper.storage.contains(senderName+"."+i)){
             MTCHelper.sendLoc(LaterMessageHelper.storage.getString(senderName+"."+i+".message","XU-undefined"), sender, LaterMessageHelper.storage.getBoolean(senderName+"."+i+".prefix",true));
             if(LaterMessageHelper.storage.getBoolean(senderName+"."+i+".deleteonfirstread",false)){

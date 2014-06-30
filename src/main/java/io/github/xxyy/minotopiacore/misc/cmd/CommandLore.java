@@ -14,7 +14,9 @@ public class CommandLore implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
-		if(!MTCHelper.isEnabledAndMsg(".command.lore", sender)) return true;
+		if(!MTCHelper.isEnabledAndMsg(".command.lore", sender)) {
+            return true;
+        }
 		if(args.length == 0){
 			if(!(sender instanceof Player)){
 				sender.sendMessage("Das Kommando /"+label+" kann nur von einem Spieler benutzt werden!");

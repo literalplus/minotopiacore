@@ -34,7 +34,9 @@ public class LightningListener implements Listener {
 				cow.addPotionEffect(new PotionEffect(PotionEffectType.HEAL,20*10,10),true);
 				cow.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,20*10,20),true);
 				int rand=(new Random()).nextInt(2);
-				if(rand != 0) return;//50% chance
+				if(rand != 0) {
+                    return;//50% chance
+                }
 				Location loc = item.getLocation();
 				MushroomCow moo = item.getWorld().spawn(loc, MushroomCow.class);
 				moo.setFireTicks(0);

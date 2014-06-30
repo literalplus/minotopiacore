@@ -55,9 +55,13 @@ public final class ClanHelper { //REFACTOR
      * @param msg message; Will be localised!
      */
     public static void broadcast(int clanId, String msg, boolean sendMTCPrefix){
-        if(clanId < 0) return;
+        if(clanId < 0) {
+            return;
+        }
         Set<Player> set = ClanHelper.getAllMembers(clanId);
-        if(set == null||set.isEmpty()) return;
+        if(set == null||set.isEmpty()) {
+            return;
+        }
         for(Player plr : set){
             if(plr == null || !plr.isOnline()) {
                 continue;
@@ -75,9 +79,13 @@ public final class ClanHelper { //REFACTOR
      * @param args Arguments. See: {@link String#format(String, Object...)}
      */
     public static void broadcast(int clanId, String msg, boolean sendMTCPrefix, Object... args){
-        if(clanId < 0) return;
+        if(clanId < 0) {
+            return;
+        }
         Set<Player> set = ClanHelper.getAllMembers(clanId);
-        if(set == null||set.isEmpty()) return;
+        if(set == null||set.isEmpty()) {
+            return;
+        }
         for(Player plr : set){
             if(plr == null || !plr.isOnline()) {
                 continue;
@@ -95,9 +103,13 @@ public final class ClanHelper { //REFACTOR
      * @param sendMTCPrefix Prepends {@link MTC#chatPrefix}
      */ //TODO: TypeIDs should be an enum
     public static void broadcastOrSave(int clanId, String msg, int typeId, boolean sendMTCPrefix){
-        if(clanId < 0) return;
+        if(clanId < 0) {
+            return;
+        }
         Set<Player> set = ClanHelper.getAllMembers(clanId);
-        if(set == null || set.isEmpty()) return;
+        if(set == null || set.isEmpty()) {
+            return;
+        }
         for(Player plr : set){
             if(plr == null) {
                 continue;
@@ -128,13 +140,16 @@ public final class ClanHelper { //REFACTOR
     }
     
     public static Set<String> getAllMemberNames(int id){
-        if(ClanHelper.memberNamesCache.containsKey(id))
+        if(ClanHelper.memberNamesCache.containsKey(id)) {
             return ClanHelper.memberNamesCache.get(id);
+        }
         SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT user_name FROM "+sql.dbName+"."+Const.TABLE_CLAN_MEMBERS+" WHERE clan_id=?", id);
         Set<String> rtrn = new HashSet<>();
         try {
-            if(rs == null || !rs.isBeforeFirst()) return rtrn;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return rtrn;
+            }
             while(rs.next()){
                 rtrn.add(rs.getString("user_name"));
             }
@@ -158,7 +173,9 @@ public final class ClanHelper { //REFACTOR
         ResultSet rs = sql.safelyExecuteQuery("SELECT user_name FROM "+sql.dbName+"."+Const.TABLE_CLAN_MEMBERS+" WHERE clan_id=?", id);
         Set<Player> rtrn = new HashSet<>();
         try {
-            if(rs == null || !rs.isBeforeFirst()) return rtrn;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return rtrn;
+            }
             while(rs.next()){
                 rtrn.add(Bukkit.getPlayerExact(rs.getString("user_name")));
             }
@@ -171,7 +188,9 @@ public final class ClanHelper { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////
     
     public static ClanInfo getClanInfoById(int id){
-        if(ClanHelper.cacheById.containsKey(id)) return ClanHelper.cacheById.get(id);
+        if(ClanHelper.cacheById.containsKey(id)) {
+            return ClanHelper.cacheById.get(id);
+        }
         ClanInfo rtrn = ClanInfo.getById(id);
         ClanHelper.cacheById.put(id, rtrn);
         ClanHelper.cacheByName.put(rtrn.name, rtrn);
@@ -179,7 +198,9 @@ public final class ClanHelper { //REFACTOR
     }
     
     public static ClanInfo getClanInfoByName(String name){
-        if(ClanHelper.cacheByName.containsKey(name)) return ClanHelper.cacheByName.get(name);
+        if(ClanHelper.cacheByName.containsKey(name)) {
+            return ClanHelper.cacheByName.get(name);
+        }
         ClanInfo rtrn = ClanInfo.getByName(name);
         ClanHelper.cacheByName.put(name, rtrn);
         ClanHelper.cacheById.put(rtrn.id, rtrn);
@@ -187,7 +208,9 @@ public final class ClanHelper { //REFACTOR
     }
     
     public static ClanInfo getClanInfoByPlayerName(String plrName){
-        if(ClanHelper.playerClanCache.containsKey(plrName)) return ClanHelper.playerClanCache.get(plrName);
+        if(ClanHelper.playerClanCache.containsKey(plrName)) {
+            return ClanHelper.playerClanCache.get(plrName);
+        }
         return ClanInfo.getByPlayerName(plrName);
     }
     
@@ -206,14 +229,18 @@ public final class ClanHelper { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////
 
     public static double getKD(int kills, int deaths){
-        if(deaths == 0) return kills;
+        if(deaths == 0) {
+            return kills;
+        }
         return ((double)kills)/((double)deaths);
     }
     
     /////////////////////////////////////////////////////////////////////////////////
     
     public static ClanMemberInfo getMemberInfoByPlayerName(String plrName){
-        if(ClanHelper.memberCache.containsKey(plrName)) return ClanHelper.memberCache.get(plrName);
+        if(ClanHelper.memberCache.containsKey(plrName)) {
+            return ClanHelper.memberCache.get(plrName);
+        }
         ClanMemberInfo rtrn = ClanMemberInfo.getByPlayerName(plrName);
         ClanHelper.memberCache.put(plrName, rtrn);
         return rtrn;
@@ -225,7 +252,9 @@ public final class ClanHelper { //REFACTOR
         SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT COUNT(*) AS cnt FROM "+sql.dbName+"."+Const.TABLE_CLAN_MEMBERS+" WHERE clan_id=?", clanId);
         try {
-            if(rs == null || !rs.isBeforeFirst()) return -1;
+            if(rs == null || !rs.isBeforeFirst()) {
+                return -1;
+            }
             rs.next();
             return rs.getInt("cnt");
         } catch (SQLException e) {
@@ -241,7 +270,9 @@ public final class ClanHelper { //REFACTOR
         ResultSet rs = sql.safelyExecuteQuery("SELECT user_name FROM "+sql.dbName+"."+Const.TABLE_CLAN_MEMBERS+" WHERE clan_id=?", id);
         StringBuilder sb = new StringBuilder();
         try {
-            if(rs == null || !rs.next()) return MTCHelper.loc("XC-membersempty", true);
+            if(rs == null || !rs.next()) {
+                return MTCHelper.loc("XC-membersempty", true);
+            }
             sb.append(ClanHelper.getPlayerString(rs.getString("user_name")));
             while(rs.next()){
                 sb.append("§7,").append(ClanHelper.getPlayerString(rs.getString("user_name")));
@@ -273,7 +304,9 @@ public final class ClanHelper { //REFACTOR
     
     public static String getPlayerString(String plrName){
         Player plr = Bukkit.getPlayerExact(plrName);
-        if(plr == null) return MTCHelper.locArgs("XC-membersoff", "CONSOLE", false, plrName);
+        if(plr == null) {
+            return MTCHelper.locArgs("XC-membersoff", "CONSOLE", false, plrName);
+        }
         return MTCHelper.locArgs("XC-memberson", "CONSOLE", false, plrName);
     }
     
@@ -281,7 +314,9 @@ public final class ClanHelper { //REFACTOR
 
     public static String getPrefix(String plrName){
         ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plrName);
-        if(ci.id > 0) return ClanHelper.getFormattedPrefix(ci);
+        if(ci.id > 0) {
+            return ClanHelper.getFormattedPrefix(ci);
+        }
         return "";
     }
     
@@ -317,7 +352,9 @@ public final class ClanHelper { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////
     
     public static boolean isLeader(String plrName){
-        if(!ClanHelper.isInAnyClan(plrName)) return false;
+        if(!ClanHelper.isInAnyClan(plrName)) {
+            return false;
+        }
         ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(plrName);
         return cmi.clanId >= 0 && cmi.getRank().equals(ClanRank.LEADER);
     }
@@ -337,7 +374,9 @@ public final class ClanHelper { //REFACTOR
     /////////////////////////////////////////////////////////////////////////////////   
     
     public static boolean printClanInfoTo(CommandSender sender, ClanInfo ci){
-        if(ci.id < 0) return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+        if(ci.id < 0) {
+            return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
+        }
         MTCHelper.sendLocArgs("XC-infoformat", sender, false, ci.name, ClanHelper.getFormattedPrefix(ci),
                 ci.leaderName, ci.money, ci.kills, ci.deaths, ClanHelper.getKD(ci.kills, ci.deaths),
                 ClanHelper.getMemberNum(ci.id), ci.level);

@@ -38,8 +38,6 @@ public final class FullCheckHelper {
             return FullCheckResult.IGNORE;
         }
 
-        Location loc = plrHolder.getLocation();
-
         if (stack.getAmount() > 1) {
             return registerViolation(FullCheckResult.STACKED, null, plrHolder);
         }

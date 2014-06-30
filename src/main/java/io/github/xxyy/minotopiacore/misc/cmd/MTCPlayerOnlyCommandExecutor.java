@@ -15,7 +15,9 @@ public abstract class MTCPlayerOnlyCommandExecutor extends MTCCommandExecutor
     @Override
     public final boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args)
     {
-        if(CommandHelper.kickConsoleFromMethod(sender, label)) return true;
+        if(CommandHelper.kickConsoleFromMethod(sender, label)) {
+            return true;
+        }
         Player plr = (Player)sender;
         return this.catchCommand(plr, senderName, cmd, label, args);
     }

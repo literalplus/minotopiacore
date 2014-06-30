@@ -16,9 +16,13 @@ public class MoveNetherRoofListener implements Listener {
 
     @EventHandler
     public void onNetherMove(PlayerMoveEvent e) {
-        if (!e.getTo().getWorld().getEnvironment().equals(Environment.NETHER)) return;
+        if (!e.getTo().getWorld().getEnvironment().equals(Environment.NETHER)) {
+            return;
+        }
         if (e.getTo().getBlockY() > 125) {
-            if (e.getPlayer().hasPermission("mtc.ignore")) return;
+            if (e.getPlayer().hasPermission("mtc.ignore")) {
+                return;
+            }
             e.getPlayer().sendMessage("§c[MTC] §eDu darfst nicht über das Netherdach :)");
             e.getPlayer().sendMessage("§c[MTC] §eViel Spaß beim Spawn.");
             e.getPlayer().sendMessage("§c[MTC] §eDeine Koordinaten: §c" + e.getPlayer().getLocation().toString());
