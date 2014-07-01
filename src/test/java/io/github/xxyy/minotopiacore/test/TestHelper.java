@@ -1,14 +1,15 @@
 package io.github.xxyy.minotopiacore.test;
 
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.mockito.Mockito;
 
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestHelper {
     private TestHelper() {
@@ -32,5 +33,19 @@ public class TestHelper {
         when(plr.getUniqueId()).thenReturn(uuid);
         when(plr.getName()).thenReturn(name);
         return plr;
+    }
+
+    public static CommandSender printlnSender(CommandSender sender) {
+        CommandSender rtrn = spy(sender);
+        Mockito.doAnswer((invocation) -> {System.out.println(invocation.getArguments()[0]); return null;})
+                .when(rtrn).sendMessage(any(String.class));
+        return rtrn;
+    }
+
+    public static CommandSender loggerSender(CommandSender sender, Logger logger) {
+        CommandSender rtrn = spy(sender);
+        Mockito.doAnswer((invocation) -> {logger.info((String) invocation.getArguments()[0]); return null;})
+                .when(rtrn).sendMessage(any(String.class));
+        return rtrn;
     }
 }
