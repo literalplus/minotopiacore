@@ -23,7 +23,7 @@ public class TestHelper {
         when(server.getBukkitVersion()).thenReturn("fuk of bukite");
         when(server.getVersion()).thenReturn("infinity");
         when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
-        when(server.getConsoleSender()).thenAnswer(invocation -> mock(ConsoleCommandSender.class));
+        when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), server.getLogger()));
 
         return server;
     }
