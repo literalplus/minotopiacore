@@ -66,13 +66,16 @@ public final class FullTagHelper {
      * Gets a fully enchanted ItemStack.
      *
      * @param thorns         Add Thorns?
-     * @param partId
-     * @param ignoreItemType
+     * @param partId         ID of the requested part.
+     * @param ignoreItemType Whether to add enchantments that cannnot normally be added to given item type.
      * @param sender         Who gives it away?
      * @param recName       Who receives it?
      * @param comment        Additional comment
      * @return Will return error message (String) OR ItemStack.
+     *
+     * @deprecated This method returns an Object, thus violating OOP principles.
      */
+    @Deprecated
     public static Object getFull(boolean thorns, byte partId, boolean ignoreItemType, CommandSender sender, String recName, String comment) {
         ItemStack is = FullTagHelper.getStackByPartId(partId);
         if (is == null) {
@@ -93,8 +96,8 @@ public final class FullTagHelper {
         if (lore == null) {
             lore = new ArrayList<>();
         }
-        lore.add(Const.fullLorePrefix + fi.id);
-        lore.add(Const.fullOwnerLorePrefix + fi.receiverName);
+        lore.add(Const.FULL_LORE_PREFIX + fi.id);
+        lore.add(Const.FULL_OWNER_LORE_PREFIX + fi.receiverName);
         meta.setLore(lore);
         is.setItemMeta(meta);
         return is;
@@ -112,8 +115,8 @@ public final class FullTagHelper {
             return -3;
         }
         for (String str : lore) {
-            if (str.startsWith(Const.fullLorePrefix)) {
-                str = str.replaceFirst(Const.fullLorePrefix, "");
+            if (str.startsWith(Const.FULL_LORE_PREFIX)) {
+                str = str.replaceFirst(Const.FULL_LORE_PREFIX, "");
                 if (!StringUtils.isNumeric(str)) {
                     return -2;
                 }
@@ -230,7 +233,7 @@ public final class FullTagHelper {
             return false;
         }
         for (String str : lore) {
-            if (str.startsWith(Const.fullLorePrefix)) {
+            if (str.startsWith(Const.FULL_LORE_PREFIX)) {
                 return true;
             }
         }

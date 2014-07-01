@@ -14,8 +14,8 @@ public final class RunnableRespawn implements Runnable {
 	@Override
 	public void run() {
 		TeamBattle.instance().tpPlayerToTeamSpawn(plr);
-		plr.sendMessage(TeamBattle.chatPrefix+" Du bist gestorben. Dein Team hat §3"+TeamBattle.instance().getTeamPoints(TeamBattle.instance().getPlayerTeam(plr))+" §7Punkte.");
-		plr.sendMessage(TeamBattle.chatPrefix+" Das andere Team hat §3"+TeamBattle.instance().getTeamPoints(TeamBattle.instance().invertTeam(TeamBattle.instance().getPlayerTeam(plr)))+" §7Punkte.");
+		plr.sendMessage(TeamBattle.CHAT_PREFIX +" Du bist gestorben. Dein Team hat §3"+TeamBattle.instance().getTeamPoints(TeamBattle.instance().getPlayerTeam(plr))+" §7Punkte.");
+		plr.sendMessage(TeamBattle.CHAT_PREFIX +" Das andere Team hat §3"+TeamBattle.instance().getTeamPoints(TeamBattle.instance().invertTeam(TeamBattle.instance().getPlayerTeam(plr)))+" §7Punkte.");
 		TeamBattle.instance().giveKitToPlayer(plr);
 	}
 

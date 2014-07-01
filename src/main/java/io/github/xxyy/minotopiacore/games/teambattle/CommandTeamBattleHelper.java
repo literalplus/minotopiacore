@@ -37,26 +37,26 @@ public final class CommandTeamBattleHelper {
 
     public void doLeaveGame() {
         if (!TeamBattle.instance().tpPlayerToPrevLocation(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du konntest leider nicht zu deiner vorherigen Position teleportiert werden.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Das tut uns sehr leid. Du wirst jetzt zum Spawn teleportiert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest leider nicht zu deiner vorherigen Position teleportiert werden.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Das tut uns sehr leid. Du wirst jetzt zum Spawn teleportiert.");
             this.plr.teleport(this.plr.getWorld().getSpawnLocation());
             return;
         }
         CommandHelper.clearInv(this.plr);
         TeamBattle.instance().removePlayerFromGame(this.plr);
 
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Du hast das Spiel verlassen.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du hast das Spiel verlassen.");
     }
 
     public void doTpPrev() {
         Location loc = TeamBattle.leaveMan.getLocFromName(this.plr.getName());
         if (!this.plr.teleport(loc)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du konntest leider nicht tpt werden :(");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Koordinaten: " + loc.toString());
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest leider nicht tpt werden :(");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Koordinaten: " + loc.toString());
             return;
         }
         TeamBattle.leaveMan.clearLocation(this.plr.getName());
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Du wurdest teleportiert.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du wurdest teleportiert.");
     }
 
     public String formatError(String desc, String errCode) {
@@ -73,7 +73,7 @@ public final class CommandTeamBattleHelper {
 
         this.plr = (Player) this.sender;
         if (!TeamBattle.instance().isPlayerInGame(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du bist nicht im Spiel, daher kannst du dieses auch nicht verlassen!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du bist nicht im Spiel, daher kannst du dieses auch nicht verlassen!");
             return true;
         }
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableLeaveBattle(this), 10);
@@ -89,22 +89,22 @@ public final class CommandTeamBattleHelper {
         }
         this.plr = (Player) this.sender;
         if (!TeamBattle.instance().isPlayerInQueue(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Dieser Bug wurde entfernt. §8Das tut uns sehr leid :(");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Dieser Bug wurde entfernt. §8Das tut uns sehr leid :(");
             return true;
         }
         /*if (!*/TeamBattle.instance().removePlayerFromLobby(this.plr);/*) {
-            //plr.sendMessage(TeamBattle.chatPrefix+" Du konntest nicht aus der Warteliste entfernt werden.");
+            //plr.sendMessage(TeamBattle.CHAT_PREFIX+" Du konntest nicht aus der Warteliste entfernt werden.");
             //return true;
             //REMOVED BECAUSE OF /war lobby -> Players not always in queue
         }*/
         if (!TeamBattle.instance().tpPlayerToPrevLocation(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du konntest leider nicht zu deiner vorherigen Position teleportiert werden.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Das tut uns sehr leid. Du wirst jetzt zum Spawn teleportiert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest leider nicht zu deiner vorherigen Position teleportiert werden.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Das tut uns sehr leid. Du wirst jetzt zum Spawn teleportiert.");
             this.plr.teleport(this.plr.getWorld().getSpawnLocation());
             return true;
         }
 
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Du hast die Lobby verlassen.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du hast die Lobby verlassen.");
 
         return true;
     }
@@ -131,40 +131,40 @@ public final class CommandTeamBattleHelper {
 
     public boolean lobbyPreChecks() {
         if (TeamBattle.instance().isPlayerInGame(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du bist im Spiel!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du bist im Spiel!");
             return true;
         }
         if (TeamBattle.instance().isPlayerInQueue(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du bist bereits in der Lobby.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du bist bereits in der Lobby.");
             return true;
         }
         if (!CommandHelper.isInventoryEmpty(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Dein Inventar muss leer sein.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Dein Inventar muss leer sein.");
             return true;
         }
         if (this.plr.isFlying()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst die Lobby nicht betreten, während du fliegst. §8Lösung: Aufhören zu fliegen!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst die Lobby nicht betreten, während du fliegst. §8Lösung: Aufhören zu fliegen!");
             return true;
         }
         if (this.plr.isSleeping()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst die Lobby nicht betreten, während du schläfst.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst die Lobby nicht betreten, während du schläfst.");
             return true;
         }
         if (this.plr.getFoodLevel() != 20) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du musst vollgefressen sein!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du musst vollgefressen sein!");
             return true;
         }
         if (this.plr.getFireTicks() > 0) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst die Lobby nicht betreten, während du brennst.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst die Lobby nicht betreten, während du brennst.");
             return true;
         }
         if (this.plr.getGameMode() != GameMode.SURVIVAL) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst die Lobby nur betreten, wenn dein Gamemode §3ＳＵＲＶＩＶＡＬ§7 ist.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Dein Gamemode wurde für dich auf §3ＳＵＲＶＩＶＡＬ§7 geändert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst die Lobby nur betreten, wenn dein Gamemode §3ＳＵＲＶＩＶＡＬ§7 ist.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Dein Gamemode wurde für dich auf §3ＳＵＲＶＩＶＡＬ§7 geändert.");
             this.plr.setGameMode(GameMode.SURVIVAL);
         }
         if (this.plr.getRemainingAir() != this.plr.getMaximumAir()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Entscheide dich: Lobby oder Baden, aber nicht beides gleichzeitig! §8Lösung: Geh aus dem Wasser.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Entscheide dich: Lobby oder Baden, aber nicht beides gleichzeitig! §8Lösung: Geh aus dem Wasser.");
             return true;
         }
         return false;
@@ -172,44 +172,44 @@ public final class CommandTeamBattleHelper {
 
     public boolean preChecks() {
         if (TeamBattle.instance().isPlayerInGame(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du bist schon im Spiel!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du bist schon im Spiel!");
             return true;
         }
         if (TeamBattle.instance().isPlayerInQueue(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Verlasse zuerst die Lobby! §3/war lobby leave");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Verlasse zuerst die Lobby! §3/war lobby leave");
             return true;
         }
         if (this.plr.getActivePotionEffects().size() != 0) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst keinem Spiel beitreten, während du Trankeffekten ausgesetzt bist. §8Lösung: Milch trinken oder Effekte abwarten.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst keinem Spiel beitreten, während du Trankeffekten ausgesetzt bist. §8Lösung: Milch trinken oder Effekte abwarten.");
             return true;
         }
         if (!CommandHelper.isInventoryEmpty(this.plr)) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Dein Inventar muss leer sein.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Dein Inventar muss leer sein.");
             return true;
         }
         if (this.plr.isFlying()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst das Spiel nicht betreten, während du fliegst.§8Lösung: Aufhören zu fliegen!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst das Spiel nicht betreten, während du fliegst.§8Lösung: Aufhören zu fliegen!");
             return true;
         }
         if (this.plr.isSleeping()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst das Spiel nicht betreten, während du schläfst. §8Lösung: Bett verlassen.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst das Spiel nicht betreten, während du schläfst. §8Lösung: Bett verlassen.");
             return true;
         }
         if (this.plr.getFoodLevel() != 20) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du musst vollgefressen sein!");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du musst vollgefressen sein!");
             return true;
         }
         if (this.plr.getFireTicks() > 0) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst das Spiel nicht betreten, während du brennst. §8Lösung: Spring ins kalte Wasser oder warte, bis du nicht mehr brennst.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst das Spiel nicht betreten, während du brennst. §8Lösung: Spring ins kalte Wasser oder warte, bis du nicht mehr brennst.");
             return true;
         }
         if (this.plr.getGameMode() != GameMode.SURVIVAL) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Du kannst das Spiel nur betreten, wenn dein Gamemode §3ＳＵＲＶＩＶＡＬ§7 ist.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Dein Gamemode wurde für dich auf §3ＳＵＲＶＩＶＡＬ§7 geändert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du kannst das Spiel nur betreten, wenn dein Gamemode §3ＳＵＲＶＩＶＡＬ§7 ist.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Dein Gamemode wurde für dich auf §3ＳＵＲＶＩＶＡＬ§7 geändert.");
             this.plr.setGameMode(GameMode.SURVIVAL);
         }
         if (this.plr.getRemainingAir() != this.plr.getMaximumAir()) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Entscheide dich: §3/" + this.label + "§7 oder Baden, aber nicht beides gleichzeitig! §8Lösung: Geh aus dem Wasser.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Entscheide dich: §3/" + this.label + "§7 oder Baden, aber nicht beides gleichzeitig! §8Lösung: Geh aus dem Wasser.");
             return true;
         }
         return false;
@@ -231,7 +231,7 @@ public final class CommandTeamBattleHelper {
             return true;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(MTC.instance(), new RunnableJoinBattle(this), 2 * 20L);
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Bewege dich 2 Sekunden nicht!");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Bewege dich 2 Sekunden nicht!");
 
         return true;
     }
@@ -252,7 +252,7 @@ public final class CommandTeamBattleHelper {
             return true;
         }
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableJoinLobby(this), 2 * 20L);
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Bewege dich 2 Sekunden nicht!");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Bewege dich 2 Sekunden nicht!");
 
         return true;
     }
@@ -266,7 +266,7 @@ public final class CommandTeamBattleHelper {
         }
         this.plr = (Player) this.sender;
         if (!TeamBattle.leaveMan.doesLocExist(this.plr.getName())) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Für dich ist keine vorherige Position gespeichert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Für dich ist keine vorherige Position gespeichert.");
             return true;
         }
 
@@ -275,7 +275,7 @@ public final class CommandTeamBattleHelper {
 
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableTpToPrevLoc(this), 2 * 20);
 
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Bitte warte 2 Sekunden...");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Bitte warte 2 Sekunden...");
 
         return true;
     }
@@ -286,14 +286,14 @@ public final class CommandTeamBattleHelper {
         this.plr.setHealth(this.plr.getMaxHealth());
 
         if (TeamBattle.instance().getAllPlayers().size() >= TeamBattle.maxPlayers) {
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Die Arena ist derzeit voll.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Die Arena ist derzeit voll.");
             if (this.doJoinLobby()) {
-                this.plr.sendMessage(TeamBattle.chatPrefix + " Du konntest auch nicht in die Lobby teleportiert werden.");
-                this.plr.sendMessage(TeamBattle.chatPrefix + " Versuche es später erneut oder tippe §3/" + this.label + " lobby§7.");
+                this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest auch nicht in die Lobby teleportiert werden.");
+                this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Versuche es später erneut oder tippe §3/" + this.label + " lobby§7.");
             }
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Sobald ein Platz frei wird, wirst du teleportiert.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Warte bitte solange in der Lobby.");
-            this.plr.sendMessage(TeamBattle.chatPrefix + " Um die Lobby zu verlassen, tippe §3/" + this.label + " lobby l§7.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Sobald ein Platz frei wird, wirst du teleportiert.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Warte bitte solange in der Lobby.");
+            this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Um die Lobby zu verlassen, tippe §3/" + this.label + " lobby l§7.");
             TeamBattle.instance().addPlayerToLobby(this.plr);
             return;
         }
@@ -318,9 +318,9 @@ public final class CommandTeamBattleHelper {
         if (this.doJoinLobby()) {
             return;
         }
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Du wurdest in die Lobby teleportiert.");
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Beachte die Statusschilder für den Spielstand.");
-        this.plr.sendMessage(TeamBattle.chatPrefix + " Zum Verlassen tippe §3/war lobby leave§7.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du wurdest in die Lobby teleportiert.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Beachte die Statusschilder für den Spielstand.");
+        this.plr.sendMessage(TeamBattle.CHAT_PREFIX + " Zum Verlassen tippe §3/war lobby leave§7.");
 
     }
 }

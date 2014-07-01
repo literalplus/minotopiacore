@@ -35,7 +35,7 @@ public final class CommandTeamBattle implements CommandExecutor {
 				case "prev":
 					return helper.tpToPrevLocFromFl();
 				default:
-					sender.sendMessage(TeamBattle.chatPrefix+" Unbekannte Aktion. Hilfe:");
+					sender.sendMessage(TeamBattle.CHAT_PREFIX +" Unbekannte Aktion. Hilfe:");
 					HelpManager.tryPrintHelp("war", sender, label, "", label+" help");
 			}
 		}else if(args.length == 2){//setspawn (red|blue) setkit (red|blue)
@@ -55,14 +55,14 @@ public final class CommandTeamBattle implements CommandExecutor {
                     }
 					if(args[1].equalsIgnoreCase("clear")){
 						TeamBattle.leaveMan.clearLocation(sender.getName());
-						sender.sendMessage(TeamBattle.chatPrefix+" Deine vorherige Position wurde gel§scht.");
+						sender.sendMessage(TeamBattle.CHAT_PREFIX +" Deine vorherige Position wurde gel§scht.");
 					}
 					break;
 				default:
 					HelpManager.tryPrintHelp("war", sender, label, "", label+" help");
 			}
 		}else{//unknown lenght
-			sender.sendMessage(TeamBattle.chatPrefix+" Unbekannte Aktion. Hilfe:");
+			sender.sendMessage(TeamBattle.CHAT_PREFIX +" Unbekannte Aktion. Hilfe:");
 			HelpManager.tryPrintHelp("war", sender, label, "", label+" help");
 		}
 		return true;

@@ -358,7 +358,7 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
 
     @Override
     public String[] getShippedLocales() {
-        return Const.shippedLanguages;
+        return Const.SHIPPED_LANGUAGES;
     }
 
     @Override

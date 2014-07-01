@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PeaceInfo {
-    public static final ConcurrentHashMap<String, PeaceInfo> cache = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, PeaceInfo> CACHE = new ConcurrentHashMap<>();
 
     public String plrName;
     public List<String> peacedPlrs = null;
@@ -31,15 +31,14 @@ public class PeaceInfo {
     }
 
     private PeaceInfo(String plrName, String peacedPlrs) {
-        this.plrName = plrName;
-        this.peacedPlrs = new ArrayList<>(Arrays.asList(peacedPlrs.split(",")));//returned list is fixed-size
+        this(plrName, new ArrayList<>(Arrays.asList(peacedPlrs.split(",")))); //returned list is fixed-size
     }
 
     public void create() {
         MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace SET player_name=?, peace_players=?",
                 this.plrName, CommandHelper.CSCollection(this.peacedPlrs, ""));
         this.errCode = 2;
-        PeaceInfo.cache.put(this.plrName, this);
+        PeaceInfo.CACHE.put(this.plrName, this);
     }
 
     public void flush() {
@@ -53,20 +52,20 @@ public class PeaceInfo {
         }
         MTC.instance().getSql().safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?",
                 CommandHelper.CSCollection(this.peacedPlrs, ""), this.plrName);
-        PeaceInfo.cache.put(this.plrName, this);
+        PeaceInfo.CACHE.put(this.plrName, this);
     }
 
     public void nullify() {
         MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
-        PeaceInfo.cache.remove(this.plrName);
+        PeaceInfo.CACHE.remove(this.plrName);
     }
 
     public static PeaceInfo get(String plrName) {
-        if (PeaceInfo.cache.containsKey(plrName)) {
-            return PeaceInfo.cache.get(plrName);
+        if (PeaceInfo.CACHE.containsKey(plrName)) {
+            return PeaceInfo.CACHE.get(plrName);
         }
         PeaceInfo rtrn = PeaceInfo.fetch(plrName);
-        PeaceInfo.cache.put(plrName, rtrn);
+        PeaceInfo.CACHE.put(plrName, rtrn);
         return rtrn;
     }
 

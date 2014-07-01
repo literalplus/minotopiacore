@@ -20,10 +20,10 @@ import java.util.Calendar;
 
 
 public final class MainDamageListener implements Listener {
-    private static final DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 
     static {
-        MainDamageListener.df.setRoundingMode(RoundingMode.HALF_UP);
+        MainDamageListener.DECIMAL_FORMAT.setRoundingMode(RoundingMode.HALF_UP);
     }
 
     private final MTC plugin;
@@ -79,7 +79,7 @@ public final class MainDamageListener implements Listener {
             if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
                 if (message) {
                     MTCHelper.sendLocArgs("XU-peacehit", plrDamager, true, clnPrefix,
-                            plr.getName(), MainDamageListener.df.format(plr.getHealth() / 2.0F), "❤");
+                            plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
                 }
                 MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
                 return;
@@ -87,7 +87,7 @@ public final class MainDamageListener implements Listener {
             //this happens if the players can hit each other
             plugin.getLogoutHandler().setFighting(plr, plrDamager, cal); //ANTILOGOUT
             MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clnPrefix,
-                    plr.getName(), MainDamageListener.df.format(plr.getHealth() / 2.0F), "❤");
+                    plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
             return;
         }
         //this happens if the players are in the same clan.

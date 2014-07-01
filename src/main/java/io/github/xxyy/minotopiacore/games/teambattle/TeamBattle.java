@@ -35,8 +35,8 @@ public final class TeamBattle {
     private Location spawnBlue;
     private Location spawnRed;
     private Location lobby;
-    public static final String chatPrefix = "§aтᴇᴀмвᴀттʟᴇ§7";
-    public final String reloadTpMsg = TeamBattle.chatPrefix + " Du wurdest wegen einem Reload zu deiner vorherigen Position teleportiert.";
+    public static final String CHAT_PREFIX = "§aтᴇᴀмвᴀттʟᴇ§7";
+    public final String reloadTpMsg = TeamBattle.CHAT_PREFIX + " Du wurdest wegen einem Reload zu deiner vorherigen Position teleportiert.";
     public static int maxPointDifferenceForBetterKit = 5;//very short name
     public boolean isGameEndInProgress = false; //to prevent kills when game ends -> kit
 
@@ -96,13 +96,13 @@ public final class TeamBattle {
         plr.setHealth(plr.getMaxHealth());
 
         if (!this.addPlayerToGame(plr)) {
-            plr.sendMessage(TeamBattle.chatPrefix + " Du konntest dem Spiel nicht hinzugefügt werden.");
+            plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest dem Spiel nicht hinzugefügt werden.");
             return;
         }
         if (!this.tpPlayerToTeamSpawn(plr)) {
             this.removePlayerFromGame(plr);
             this.tpPlayerToPrevLocation(plr);
-            plr.sendMessage(TeamBattle.chatPrefix + " Du konntest nicht in die Arena teleportiert werden.");
+            plr.sendMessage(TeamBattle.CHAT_PREFIX + " Du konntest nicht in die Arena teleportiert werden.");
             return;
         }
 
@@ -181,8 +181,8 @@ public final class TeamBattle {
 
         if (this.playersBlue.size() <= 0) {
             this.resetPoints();
-            Bukkit.broadcastMessage(TeamBattle.chatPrefix + " §7Das Team " + this.getChatTeamName(TeamBattleTeams.Blue) + " §7hat den §3/war§7 aufgegeben!");
-            Bukkit.broadcastMessage(TeamBattle.chatPrefix + " §8/ＷＡＲ ＪＯＩＮ");
+            Bukkit.broadcastMessage(TeamBattle.CHAT_PREFIX + " §7Das Team " + this.getChatTeamName(TeamBattleTeams.Blue) + " §7hat den §3/war§7 aufgegeben!");
+            Bukkit.broadcastMessage(TeamBattle.CHAT_PREFIX + " §8/ＷＡＲ ＪＯＩＮ");
             this.isBetterKit = false;
             this.betterKitTeam = TeamBattleTeams.None;
             List<Player> plrs = this.getAllPlayers();
@@ -192,8 +192,8 @@ public final class TeamBattle {
             }
         } else if (this.playersRed.size() <= 0) {
             this.resetPoints();
-            Bukkit.broadcastMessage(TeamBattle.chatPrefix + " §7Das Team " + this.getChatTeamName(TeamBattleTeams.Red) + " §7hat den §3/war§7 aufgegeben!");
-            Bukkit.broadcastMessage(TeamBattle.chatPrefix + " §8/ＷＡＲ ＪＯＩＮ");
+            Bukkit.broadcastMessage(TeamBattle.CHAT_PREFIX + " §7Das Team " + this.getChatTeamName(TeamBattleTeams.Red) + " §7hat den §3/war§7 aufgegeben!");
+            Bukkit.broadcastMessage(TeamBattle.CHAT_PREFIX + " §8/ＷＡＲ ＪＯＩＮ");
             this.isBetterKit = false;
             this.betterKitTeam = TeamBattleTeams.None;
             List<Player> plrs = this.getAllPlayers();
@@ -228,7 +228,7 @@ public final class TeamBattle {
         this.resetPoints();
         this.tpAllPlayersToPrevLoc(false);
         this.notifyPlayersGameEnd();
-        Bukkit.broadcastMessage(TeamBattle.chatPrefix + " §8Das Team " + this.getChatTeamName(winner) + "§8 hat bei §3/war§8 gewonnen!");
+        Bukkit.broadcastMessage(TeamBattle.CHAT_PREFIX + " §8Das Team " + this.getChatTeamName(winner) + "§8 hat bei §3/war§8 gewonnen!");
         this.addAllLobbyPlayersToGame();
         //CommandHelper.clearInvList(plrs);
         this.isGameEndInProgress = false;
@@ -504,7 +504,7 @@ public final class TeamBattle {
         } else if (this.isRed(team)) {
             plrs = this.playersRed;
         } else return;
-        //String msg=TeamBattle.chatPrefix+" Das andere Team hat mehr als §3"+TeamBattle.betterKitPoints+"§6 Punkte. Daher hat dein Team ein besseres Kit erhalten.";
+        //String msg=TeamBattle.CHAT_PREFIX+" Das andere Team hat mehr als §3"+TeamBattle.betterKitPoints+"§6 Punkte. Daher hat dein Team ein besseres Kit erhalten.";
         for (int i = 0; i < plrs.size(); i++) {
             Player p = plrs.get(i);
             CommandHelper.clearInv(p);
@@ -593,7 +593,7 @@ public final class TeamBattle {
      */
     public void notifyPlayersBetterKit(TeamBattleTeams team) {
         List<Player> plrs = this.getAllPlayers();
-        String msg = TeamBattle.chatPrefix + " Das Team " + this.getChatTeamName(team) + "§8 hat ein besseres Kit bekommen.";
+        String msg = TeamBattle.CHAT_PREFIX + " Das Team " + this.getChatTeamName(team) + "§8 hat ein besseres Kit bekommen.";
         for (int i = 0; i < plrs.size(); i++) {
             Player plr = plrs.get(i);
             plr.sendMessage(msg);
@@ -608,11 +608,11 @@ public final class TeamBattle {
         String redMsg;
         String blueMsg;
         if (isBlueWinner) {
-            blueMsg = TeamBattle.chatPrefix + "§b Wir haben gewonnen, gut gemacht!";
-            redMsg = TeamBattle.chatPrefix + "§b Beim nächsten Mal schaffen wir das!";
+            blueMsg = TeamBattle.CHAT_PREFIX + "§b Wir haben gewonnen, gut gemacht!";
+            redMsg = TeamBattle.CHAT_PREFIX + "§b Beim nächsten Mal schaffen wir das!";
         } else {
-            blueMsg = TeamBattle.chatPrefix + "§b Beim nächsten Mal schaffen wir das!";
-            redMsg = TeamBattle.chatPrefix + "§b Wir haben gewonnen, gut gemacht!";
+            blueMsg = TeamBattle.CHAT_PREFIX + "§b Beim nächsten Mal schaffen wir das!";
+            redMsg = TeamBattle.CHAT_PREFIX + "§b Wir haben gewonnen, gut gemacht!";
         }
         for (int i = 0; i < this.playersBlue.size(); i++) {
             this.playersBlue.get(i).sendMessage(blueMsg);
@@ -626,10 +626,10 @@ public final class TeamBattle {
         if (!this.isPlayerInGame(who)) return;
         TeamBattleTeams team = this.getPlayerTeam(who);
         for (int i = 0; i < this.playersBlue.size(); i++) {
-            this.playersBlue.get(i).sendMessage(TeamBattle.chatPrefix + " " + this.getTeamChatColor(team) + who.getName() + "§7 hat das Spiel " + ((joins) ? "betreten" : "verlassen"));
+            this.playersBlue.get(i).sendMessage(TeamBattle.CHAT_PREFIX + " " + this.getTeamChatColor(team) + who.getName() + "§7 hat das Spiel " + ((joins) ? "betreten" : "verlassen"));
         }
         for (int i = 0; i < this.playersRed.size(); i++) {
-            this.playersRed.get(i).sendMessage(TeamBattle.chatPrefix + " " + this.getTeamChatColor(team) + who.getName() + "§7 hat das Spiel " + ((joins) ? "betreten" : "verlassen"));
+            this.playersRed.get(i).sendMessage(TeamBattle.CHAT_PREFIX + " " + this.getTeamChatColor(team) + who.getName() + "§7 hat das Spiel " + ((joins) ? "betreten" : "verlassen"));
         }
     }
 
@@ -645,10 +645,10 @@ public final class TeamBattle {
         String chatColKiller = this.getPlayerChatColor(killer);
         String chatColTarget = this.getPlayerChatColor(target);
         for (int i = 0; i < this.playersBlue.size(); i++) {
-            this.playersBlue.get(i).sendMessage(TeamBattle.chatPrefix + " " + chatColKiller + killer.getName() + "§7 hat " + chatColTarget + target.getName() + "§7 umgebracht!");
+            this.playersBlue.get(i).sendMessage(TeamBattle.CHAT_PREFIX + " " + chatColKiller + killer.getName() + "§7 hat " + chatColTarget + target.getName() + "§7 umgebracht!");
         }
         for (int i = 0; i < this.playersRed.size(); i++) {
-            this.playersRed.get(i).sendMessage(TeamBattle.chatPrefix + " " + chatColKiller + killer.getName() + "§7 hat " + chatColTarget + target.getName() + "§7 umgebracht!");
+            this.playersRed.get(i).sendMessage(TeamBattle.CHAT_PREFIX + " " + chatColKiller + killer.getName() + "§7 hat " + chatColTarget + target.getName() + "§7 umgebracht!");
         }
     }
 
@@ -679,7 +679,7 @@ public final class TeamBattle {
             this.cfg.load(this.configLocation);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
-            CommandHelper.sendMessageToOpsAndConsole(TeamBattle.chatPrefix + "WARNING: Could not reload config!");
+            CommandHelper.sendMessageToOpsAndConsole(TeamBattle.CHAT_PREFIX + "WARNING: Could not reload config!");
         }
         this.fetchConfigValues();
     }

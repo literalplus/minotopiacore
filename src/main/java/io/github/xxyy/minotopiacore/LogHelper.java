@@ -15,61 +15,55 @@ public final class LogHelper {
 
     }
 
-    private static final Logger mainLogger = Logger.getLogger("MTC");
-    private static final Logger cmdLogger = Logger.getLogger("MTC.CMD");
-    private static final Logger badCmdLogger = Logger.getLogger("MTC.BCMD");
-    private static final Logger chatLogger = Logger.getLogger("MTC.CHAT");
-    private static final Logger clanChatLogger = Logger.getLogger("MTC.CCHAT");
-    private static final Logger privChatLogger = Logger.getLogger("MTC.PCHAT");
-    private static final Logger banLogger = Logger.getLogger("MTC.BANS");
-    private static final Logger warnLogger = Logger.getLogger("MTC.WARNS");
-    private static final Logger fullLogger = Logger.getLogger("MTC.FULLS");
+    private static final Logger MAIN_LOGGER = Logger.getLogger("MTC");
+    private static final Logger BAD_CMD_LOGGER = Logger.getLogger("MTC.BCMD");
+    private static final Logger CHAT_LOGGER = Logger.getLogger("MTC.CHAT");
+    private static final Logger CLAN_CHAT_LOGGER = Logger.getLogger("MTC.CCHAT");
+    private static final Logger PRIV_CHAT_LOGGER = Logger.getLogger("MTC.PCHAT");
+    private static final Logger BAN_LOGGER = Logger.getLogger("MTC.BANS");
+    private static final Logger WARN_LOGGER = Logger.getLogger("MTC.WARNS");
+    private static final Logger FULL_LOGGER = Logger.getLogger("MTC.FULLS");
     public static void flushAll(){
-        LogHelper.flush(LogHelper.mainLogger);
-        LogHelper.flush(LogHelper.cmdLogger);
-        LogHelper.flush(LogHelper.badCmdLogger);
-        LogHelper.flush(LogHelper.chatLogger);
-        LogHelper.flush(LogHelper.clanChatLogger);
-        LogHelper.flush(LogHelper.privChatLogger);
-        LogHelper.flush(LogHelper.banLogger);
-        LogHelper.flush(LogHelper.warnLogger);
-        LogHelper.flush(LogHelper.fullLogger);
+        LogHelper.flush(LogHelper.MAIN_LOGGER);
+        LogHelper.flush(LogHelper.BAD_CMD_LOGGER);
+        LogHelper.flush(LogHelper.CHAT_LOGGER);
+        LogHelper.flush(LogHelper.CLAN_CHAT_LOGGER);
+        LogHelper.flush(LogHelper.PRIV_CHAT_LOGGER);
+        LogHelper.flush(LogHelper.BAN_LOGGER);
+        LogHelper.flush(LogHelper.WARN_LOGGER);
+        LogHelper.flush(LogHelper.FULL_LOGGER);
     }
 
     public static Logger getBadCmdLogger() {
-        return LogHelper.badCmdLogger;
+        return LogHelper.BAD_CMD_LOGGER;
     }
 
     public static Logger getBanLogger() {
-        return LogHelper.banLogger;
+        return LogHelper.BAN_LOGGER;
     }
 
     public static Logger getChatLogger() {
-        return LogHelper.chatLogger;
+        return LogHelper.CHAT_LOGGER;
     }
 
     public static Logger getClanChatLogger() {
-        return LogHelper.clanChatLogger;
-    }
-
-    public static Logger getCmdLogger() {
-        return LogHelper.cmdLogger;
+        return LogHelper.CLAN_CHAT_LOGGER;
     }
 
     public static Logger getFullLogger() {
-        return LogHelper.fullLogger;
+        return LogHelper.FULL_LOGGER;
     }
 
     public static Logger getMainLogger() {
-        return LogHelper.mainLogger;
+        return LogHelper.MAIN_LOGGER;
     }
 
     public static Logger getPrivChatLogger() {
-        return LogHelper.privChatLogger;
+        return LogHelper.PRIV_CHAT_LOGGER;
     }
 
     public static Logger getWarnLogger() {
-        return LogHelper.warnLogger;
+        return LogHelper.WARN_LOGGER;
     }
     
     public static void initLogs(){
@@ -84,40 +78,38 @@ public final class LogHelper {
                 hdlr2.setLevel(Level.WARNING);
                 hdlr2.setFormatter(new XYCFormatter(MTC.instance(), "Main Log.", true));
                 hdlr2.setEncoding("UTF-8");
-//                LogHelper.mainLogger.removeHandler(LogHelper.mainLogger.getHandlers()[0]);
-                LogHelper.mainLogger.addHandler(hdlr);
-                LogHelper.mainLogger.addHandler(hdlr2);
-                LogHelper.mainLogger.setLevel(Level.FINEST);
+//                LogHelper.MAIN_LOGGER.removeHandler(LogHelper.MAIN_LOGGER.getHandlers()[0]);
+                LogHelper.MAIN_LOGGER.addHandler(hdlr);
+                LogHelper.MAIN_LOGGER.addHandler(hdlr2);
+                LogHelper.MAIN_LOGGER.setLevel(Level.FINEST);
             } catch (SecurityException | IOException e) {
                 e.printStackTrace();
                 System.out.println(">>MTC exception when tryin to initialize cmd loggerz.");
             }
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.cmds",false)){
-            LogHelper.tryInitLogger(LogHelper.cmdLogger, MTC.instance().getDataFolder()+"/logs/commands.log","CmdLogger",true);
-            LogHelper.tryInitLogger(LogHelper.badCmdLogger,MTC.instance().getDataFolder()+"/logs/badcmds.log","BadCmdLogger",true);
+            LogHelper.tryInitLogger(LogHelper.BAD_CMD_LOGGER,MTC.instance().getDataFolder()+"/logs/badcmds.log","BadCmdLogger",true);
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.chat",true)){
-            LogHelper.tryInitLogger(LogHelper.chatLogger,MTC.instance().getDataFolder()+"/logs/chat.log","ChatLogger",true);
-            LogHelper.tryInitLogger(LogHelper.clanChatLogger,MTC.instance().getDataFolder()+"/logs/clanchat.log","ClanChatLogger",true);
-            LogHelper.tryInitLogger(LogHelper.privChatLogger,MTC.instance().getDataFolder()+"/logs/privatechats.log","PrivChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.CHAT_LOGGER,MTC.instance().getDataFolder()+"/logs/chat.log","ChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.CLAN_CHAT_LOGGER,MTC.instance().getDataFolder()+"/logs/clanchat.log","ClanChatLogger",true);
+            LogHelper.tryInitLogger(LogHelper.PRIV_CHAT_LOGGER,MTC.instance().getDataFolder()+"/logs/privatechats.log","PrivChatLogger",true);
         }
         if(MTC.instance().getConfig().getBoolean("enable.log.bansNwarns",true)){
-            LogHelper.tryInitLogger(LogHelper.warnLogger,MTC.instance().getDataFolder()+"/logs/warns.log","WarnLogger",true);
-            LogHelper.tryInitLogger(LogHelper.banLogger,MTC.instance().getDataFolder()+"/logs/bans.log","BanLogger",true);
+            LogHelper.tryInitLogger(LogHelper.WARN_LOGGER,MTC.instance().getDataFolder()+"/logs/warns.log","WarnLogger",true);
+            LogHelper.tryInitLogger(LogHelper.BAN_LOGGER,MTC.instance().getDataFolder()+"/logs/bans.log","BanLogger",true);
         }
         if(ConfigHelper.isFullLogEnabled()){
-            LogHelper.tryInitLogger(LogHelper.fullLogger, MTC.instance().getDataFolder()+"/logs/fulls.log","FullLogger",true);
+            LogHelper.tryInitLogger(LogHelper.FULL_LOGGER, MTC.instance().getDataFolder()+"/logs/fulls.log","FullLogger",true);
         }
-        LogHelper.mainLogger.setUseParentHandlers(false);
-        LogHelper.cmdLogger.setUseParentHandlers(false);
-        LogHelper.badCmdLogger.setUseParentHandlers(false);
-        LogHelper.chatLogger.setUseParentHandlers(false);
-        LogHelper.clanChatLogger.setUseParentHandlers(false);
-        LogHelper.privChatLogger.setUseParentHandlers(false);
-        LogHelper.banLogger.setUseParentHandlers(false);
-        LogHelper.warnLogger.setUseParentHandlers(false);
-        LogHelper.fullLogger.setUseParentHandlers(false);
+        LogHelper.MAIN_LOGGER.setUseParentHandlers(false);
+        LogHelper.BAD_CMD_LOGGER.setUseParentHandlers(false);
+        LogHelper.CHAT_LOGGER.setUseParentHandlers(false);
+        LogHelper.CLAN_CHAT_LOGGER.setUseParentHandlers(false);
+        LogHelper.PRIV_CHAT_LOGGER.setUseParentHandlers(false);
+        LogHelper.BAN_LOGGER.setUseParentHandlers(false);
+        LogHelper.WARN_LOGGER.setUseParentHandlers(false);
+        LogHelper.FULL_LOGGER.setUseParentHandlers(false);
     }
     
     private static void flush(Logger lgr){
@@ -135,7 +127,7 @@ public final class LogHelper {
         lgr.addHandler(hdlr);
         lgr.setLevel(Level.FINEST);
         if(setParent) {
-            lgr.setParent(LogHelper.mainLogger);
+            lgr.setParent(LogHelper.MAIN_LOGGER);
         }
     }
     

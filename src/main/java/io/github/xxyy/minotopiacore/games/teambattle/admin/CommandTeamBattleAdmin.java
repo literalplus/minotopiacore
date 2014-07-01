@@ -56,7 +56,7 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                         return true;
                     }
                     TeamBattle.instance().setKit((Player) sender);
-                    sender.sendMessage(TeamBattle.chatPrefix + " Kit gesetzt.");
+                    sender.sendMessage(TeamBattle.CHAT_PREFIX + " Kit gesetzt.");
                     return true;
                 case "setbkit":
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.teambattle.admin.cmd.setbkit", label + " setkit")) {
@@ -67,7 +67,7 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                         return true;
                     }
                     TeamBattle.instance().setBetterKit((Player) sender);
-                    sender.sendMessage(TeamBattle.chatPrefix + " Besseres Kit gesetzt.");
+                    sender.sendMessage(TeamBattle.CHAT_PREFIX + " Besseres Kit gesetzt.");
                     return true;
                 case "setsign":
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.teambattle.admin.cmd.setsign", label + " setsign")) {
@@ -104,7 +104,7 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                         return true;
                     }
                     TeamBattle.instance().setLobbySpawn((Player) sender);
-                    sender.sendMessage(TeamBattle.chatPrefix + " Lobbyspawn gesetzt.");
+                    sender.sendMessage(TeamBattle.CHAT_PREFIX + " Lobbyspawn gesetzt.");
                     return true;
                 default:
                     HelpManager.tryPrintHelp("waradmin", sender, label, "", "xyu help wa");
@@ -131,7 +131,7 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                             }
                         }
                         TeamBattle.instance().setTeamSpawn(team, (Player) sender);
-                        sender.sendMessage(TeamBattle.chatPrefix + " Spawn des Teams §3'" + args[1] + "'§7 gesetzt.");
+                        sender.sendMessage(TeamBattle.CHAT_PREFIX + " Spawn des Teams §3'" + args[1] + "'§7 gesetzt.");
                         return true;
                     case "wingame":
                         if (!CommandHelper.checkPermAndMsg(sender, "mtc.teambattle.admin.cmd.wingame", label + " wingame")) {
@@ -162,16 +162,16 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                                     continue;
                                 }
                                 helper.tryJoinGame();
-                                item.sendMessage(TeamBattle.chatPrefix + " §3" + sender.getName() + " §8hat dich dem TeamBattle hinzugefügt.");
+                                item.sendMessage(TeamBattle.CHAT_PREFIX + " §3" + sender.getName() + " §8hat dich dem TeamBattle hinzugefügt.");
                             }
-                            sender.sendMessage(TeamBattle.chatPrefix + " Alle Spieler wurden ins TeamBattle teleportiert.");
+                            sender.sendMessage(TeamBattle.CHAT_PREFIX + " Alle Spieler wurden ins TeamBattle teleportiert.");
                             return true;
                         }
                         Player item = Bukkit.getPlayer(args[1]);
                         CommandTeamBattleHelper helper = new CommandTeamBattleHelper(item, args, label);
                         helper.plr = item;
                         helper.tryJoinGame();
-                        item.sendMessage(TeamBattle.chatPrefix + " §3" + sender.getName() + " §6hat dich dem TeamBattle hinzugefügt.");
+                        item.sendMessage(TeamBattle.CHAT_PREFIX + " §3" + sender.getName() + " §6hat dich dem TeamBattle hinzugefügt.");
                         return true;
                     case "kick":
                         if (!CommandHelper.checkPermAndMsg(sender, "mtc.teambattle.admin.cmd.kick", label + " kick")) {
@@ -185,16 +185,16 @@ public final class CommandTeamBattleAdmin implements CommandExecutor {
                                     continue;
                                 }
                                 helper1.leaveGame();
-                                p.sendMessage(TeamBattle.chatPrefix + " §3" + sender.getName() + " §6hat dich aus dem TeamBattle entfernt.");
+                                p.sendMessage(TeamBattle.CHAT_PREFIX + " §3" + sender.getName() + " §6hat dich aus dem TeamBattle entfernt.");
                             }
-                            sender.sendMessage(TeamBattle.chatPrefix + " Alle Spieler wurden aus dem TeamBattle entfernt.");
+                            sender.sendMessage(TeamBattle.CHAT_PREFIX + " Alle Spieler wurden aus dem TeamBattle entfernt.");
                             return true;
                         }
                         Player p = Bukkit.getPlayer(args[1]);
                         CommandTeamBattleHelper helper1 = new CommandTeamBattleHelper(p, args, label);
                         helper1.plr = p;
                         helper1.leaveGame();
-                        p.sendMessage(TeamBattle.chatPrefix + " §3" + sender.getName() + " §6hat dich aus dem TeamBattle entfernt.");
+                        p.sendMessage(TeamBattle.CHAT_PREFIX + " §3" + sender.getName() + " §6hat dich aus dem TeamBattle entfernt.");
                         sender.sendMessage("§3" + p.getName() + " §6wurde aus dem TeamBattle entfernt.");
                         return true;
                     case "addpoint":

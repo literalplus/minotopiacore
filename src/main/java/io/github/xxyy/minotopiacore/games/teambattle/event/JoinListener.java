@@ -14,8 +14,8 @@ public final class JoinListener implements Listener {
 		if(!TeamBattle.leaveMan.doesLocExist(e.getPlayer().getName())) {
             return;
         }
-		e.getPlayer().sendMessage(TeamBattle.chatPrefix+" Deine vorherige Position wurde gespeichert.");
-		e.getPlayer().sendMessage(TeamBattle.chatPrefix+"Zurück? §3/war prev");
-		e.getPlayer().sendMessage(TeamBattle.chatPrefix+" Nicht mehr anzeigen? §3/war prev clear");
+		e.getPlayer().sendMessage(TeamBattle.CHAT_PREFIX +" Deine vorherige Position wurde gespeichert.");
+		e.getPlayer().sendMessage(TeamBattle.CHAT_PREFIX +"Zurück? §3/war prev");
+		e.getPlayer().sendMessage(TeamBattle.CHAT_PREFIX +" Nicht mehr anzeigen? §3/war prev clear");
 	}
 }

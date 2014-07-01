@@ -19,8 +19,8 @@ import java.util.List;
 
 public final class CommandBReload extends MTCCommandExecutor {
 
-    private static final List<Integer> seconds = new ArrayList<>();
-    private static final List<Long> delays = new ArrayList<>();
+    private static final List<Integer> SECONDS = new ArrayList<>();
+    private static final List<Long> DELAYS = new ArrayList<>();
     public static int taskId = -2;
 
     @Override
@@ -38,11 +38,11 @@ public final class CommandBReload extends MTCCommandExecutor {
             Command.broadcastCommandMessage(sender, "§cCancelled Reload!");
             Bukkit.broadcastMessage(MTC.chatPrefix + "§cReload abgebrochen!");
             CommandBReload.taskId = -3;
-            CommandBReload.seconds.clear();
-            CommandBReload.delays.clear();
+            CommandBReload.SECONDS.clear();
+            CommandBReload.DELAYS.clear();
             return true;
         }
-        if (!CommandBReload.seconds.isEmpty() || !CommandBReload.delays.isEmpty()) {
+        if (!CommandBReload.SECONDS.isEmpty() || !CommandBReload.DELAYS.isEmpty()) {
             sender.sendMessage("§cEin Reload wurde bereits gestartet. §eAbbrechen: /breload veto");
             return true;
         }
@@ -63,22 +63,22 @@ public final class CommandBReload extends MTCCommandExecutor {
                 sender.sendMessage("§cDas kann jetzt aber nicht negativ oder null sein!");
                 return true;
             }
-            CommandBReload.seconds.add(secCount);
+            CommandBReload.SECONDS.add(secCount);
             CommandBReload.schedule(15, secCount - 15);
         }
         if (secCount == 0) {
-            CommandBReload.seconds.add(15);
+            CommandBReload.SECONDS.add(15);
         } else {
             minuteAdd += 100;
         }
-        CommandBReload.seconds.addAll(Arrays.asList(10, 5, 4, 3, 2, 1, 0));
-        CommandBReload.delays.addAll(Arrays.asList(minuteAdd + 100, 100L,
+        CommandBReload.SECONDS.addAll(Arrays.asList(10, 5, 4, 3, 2, 1, 0));
+        CommandBReload.DELAYS.addAll(Arrays.asList(minuteAdd + 100, 100L,
                 20L, 20L, 20L, 20L, 20L));
 
-        RunnableReloadTimer.delays = CommandBReload.delays;
-        RunnableReloadTimer.iDelays = CommandBReload.delays.iterator();
-        RunnableReloadTimer.seconds = CommandBReload.seconds;
-        RunnableReloadTimer.iSeconds = CommandBReload.seconds.iterator();
+        RunnableReloadTimer.delays = CommandBReload.DELAYS;
+        RunnableReloadTimer.iDelays = CommandBReload.DELAYS.iterator();
+        RunnableReloadTimer.seconds = CommandBReload.SECONDS;
+        RunnableReloadTimer.iSeconds = CommandBReload.SECONDS.iterator();
         CommandBReload.taskId = sched.runTaskLater(MTC.instance(), new RunnableReloadTimer(sender), 10).getTaskId();//message order
 
         Calendar cal = Calendar.getInstance();
@@ -89,7 +89,7 @@ public final class CommandBReload extends MTCCommandExecutor {
     }
 
     private static void schedule(int second, long delay) {
-        CommandBReload.seconds.add(second);
-        CommandBReload.delays.add(delay);
+        CommandBReload.SECONDS.add(second);
+        CommandBReload.DELAYS.add(delay);
     }
 }
