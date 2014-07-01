@@ -50,7 +50,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     }
 
     @Override
-    public boolean subscribable() {
+    public boolean canSubscribe() {
         return false;
     }
 }

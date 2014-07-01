@@ -21,20 +21,22 @@ public interface CommandSpyFilter {
      */
     boolean matches(String command, Player sender);
 
-    default boolean subscribable() {
+    default boolean canSubscribe() {
         return true;
     }
 
     /**
      * Notifies this filter's subscribers if this filter matches given arguments.
+     *
      * @param command Command to be matched, without preceding slash.
-     * @param sender Who executed that command
+     * @param sender  Who executed that command
+     * @return Whether a notification was sent to this filter's subscribers
      */
     boolean notifyOnMatch(String command, Player sender);
 
     /**
      * @return A modifiable Collection of this filter's subscribers
-     */
+     */ //REFACTOR: Exposing internal representation? Is this bad maybe?
     Collection<UUID> getSubscribers();
 
     default String niceRepresentation() {

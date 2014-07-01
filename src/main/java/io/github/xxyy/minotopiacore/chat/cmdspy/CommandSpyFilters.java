@@ -1,10 +1,16 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,7 +29,7 @@ public final class CommandSpyFilters {
             return "(global) all";
         }
     };
-    private static Set<CommandSpyFilter> activeFilters = new HashSet<>(Arrays.asList(ALL_FILTER));
+    private static Set<CommandSpyFilter> activeFilters = Sets.newHashSet(ALL_FILTER);
 
     private CommandSpyFilters() {
 
@@ -38,9 +44,20 @@ public final class CommandSpyFilters {
     }
 
     public static void removeDeadFilters() {
-        activeFilters.removeAll(activeFilters.stream()
+        Set<CommandSpyFilter> filters = ImmutableSet.copyOf(getActiveFilters());
+
+        filters.stream() //Remove offline subscribers for more accurate results
+                .forEach(CommandSpyFilters::removeOfflineSubscribers);
+
+        filters.stream() //Needs the source to be a copy or will throw CME
                 .filter(f -> f.getSubscribers().isEmpty())
-                .collect(Collectors.toList()));
+                .forEach(getActiveFilters()::remove);
+    }
+
+    public static void removeOfflineSubscribers(CommandSpyFilter filter) {
+        ImmutableList.copyOf(filter.getSubscribers()).stream()
+                .filter(id -> Bukkit.getPlayer(id) == null)
+                .forEach(filter.getSubscribers()::remove);
     }
 
     public static Stream<CommandSpyFilter> getSubscribedFilters(UUID subscriberId) {
@@ -50,7 +67,7 @@ public final class CommandSpyFilters {
 
     public static long unsubscribeFromAll(UUID subscriberId) {
         long rtrn = activeFilters.stream()
-                .filter(filter -> filter.subscribable() && filter.getSubscribers().remove(subscriberId))
+                .filter(filter -> filter.canSubscribe() && filter.getSubscribers().remove(subscriberId))
                 .count();
 
         removeDeadFilters();
