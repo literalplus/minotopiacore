@@ -35,23 +35,33 @@ public final class CommandSpyFilters {
 
     }
 
+    /**
+     * Gets an unmodifiable Set of active filters.
+     * Use the {@link #registerFilter(CommandSpyFilter)} and {@link #unregisterFilter(CommandSpyFilter)} methods to add and remove filters.
+     *
+     * @return Unmodifiable Set containing registered filters.
+     */
     public static Set<CommandSpyFilter> getActiveFilters() {
-        return activeFilters;
+        return ImmutableSet.copyOf(activeFilters);
     }
 
     public static void registerFilter(CommandSpyFilter filter) {
         activeFilters.add(filter);
     }
 
+    public static void unregisterFilter(CommandSpyFilter filter) {
+        activeFilters.remove(filter);
+    }
+
     public static void removeDeadFilters() {
-        Set<CommandSpyFilter> filters = ImmutableSet.copyOf(getActiveFilters());
+        Set<CommandSpyFilter> filters = getActiveFilters();
 
         filters.stream() //Remove offline subscribers for more accurate results
                 .forEach(CommandSpyFilters::removeOfflineSubscribers);
 
         filters.stream() //Needs the source to be a copy or will throw CME
                 .filter(f -> f.getSubscribers().isEmpty())
-                .forEach(getActiveFilters()::remove);
+                .forEach(CommandSpyFilters::unregisterFilter);
     }
 
     public static void removeOfflineSubscribers(CommandSpyFilter filter) {
@@ -76,18 +86,17 @@ public final class CommandSpyFilters {
     }
 
     public static boolean toggleSubscribedAndRegister(CommandSpyFilter filter, Player spy) {
-        if(!filter.getSubscribers().remove(spy.getUniqueId())) {
-            filter.getSubscribers().add(spy.getUniqueId());
-        } else {
+        if (filter.getSubscribers().remove(spy.getUniqueId())) {
             removeDeadFilters();
+        } else {
+            filter.getSubscribers().add(spy.getUniqueId());
+            registerFilter(filter);
         }
-
-        registerFilter(filter);
 
         return filter.getSubscribers().contains(spy.getUniqueId());
     }
 
-    public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could eb generified more - see instanceof
+    public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could be generified more - see instanceof
         return toggleSubscribedAndRegister(activeFilters.stream()
                 .filter(f -> f instanceof PlayerCommandSpyFilter && ((PlayerCommandSpyFilter) f).getTarget().equals(targetId))
                 .findAny()

@@ -14,10 +14,6 @@ import java.util.UUID;
 public class PlayerCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     private final UUID target;
 
-    public PlayerCommandSpyFilter(String notificationFormat, Player target) {
-        this(notificationFormat, target.getUniqueId());
-    }
-
     public PlayerCommandSpyFilter(String notificationFormat, UUID target) {
         super(notificationFormat, (cmd, plr) -> target.equals(plr.getUniqueId()));
         this.target = target;
@@ -37,7 +33,7 @@ public class PlayerCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     public Player getPlayer() {
         Player player = Bukkit.getPlayer(target);
         if (player == null) { //REFACTOR Is this coupling to hard?
-            CommandSpyFilters.getActiveFilters().remove(this);
+            CommandSpyFilters.unregisterFilter(this);
         }
         return player;
     }

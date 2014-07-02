@@ -18,12 +18,8 @@ import java.util.logging.Level;
 
 
 public class MTCChatHelper extends ChatHelper {
-    public static Map<String, String> cfCache = new HashMap<>();
-    public static List<String> spies = new ArrayList<>();
-    public static List<String> cmdSpies = Collections.synchronizedList(new ArrayList<>());
-//    public static Map<String, String> indCmdSpies = new HashMap<>();//individual...CMD->PLRNAME who registered
-//    public static Map<String, String> plrCmdSpies = new HashMap<>();//for a single player....PLRNAME->PLRNAME who registered
-//    public static final String spyPrefix = "§7§o[§8§oSpy§7§o]";
+    public static Map<String, String> cfCache = new HashMap<>(); //chatfarbe cache
+    public static List<String> spies = new ArrayList<>(); // /mtc spy
     public static volatile Map<Integer, PrivateChat> directChats = new HashMap<>();
 
     public static void clearPrivateChats() {
@@ -40,7 +36,7 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static String getDbChatColorByPlayer(String plrName) {
-        SafeSql sql = MTC.instance().ssql;
+        SafeSql sql = MTC.instance().getSql();
         String defaultCol = MTC.instance().getConfig().getString("chat.farbe.default", "§f");
         if (sql == null) {
             System.err.println("[MTC] Tried to fetch player chat color before reload was complete!");
@@ -85,7 +81,7 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static boolean hasChatColor(String plrName) {
-        SafeSql sql = MTC.instance().ssql;
+        SafeSql sql = MTC.instance().getSql();
         if (sql == null) {
             System.err.println("[MTC] Tried to ask if player chat color was set before reload was complete!");
             return false;
@@ -141,20 +137,6 @@ public class MTCChatHelper extends ChatHelper {
         }
     }
 
-    public static void sendCommandSpyMsg(String msg) {
-        if (MTCChatHelper.cmdSpies.size() == 0) {
-            return;
-        }
-        for (String plrName : MTCChatHelper.cmdSpies) {
-            OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
-            if (!plr.isOnline()) {
-                MTCChatHelper.cmdSpies.remove(plr.getName());
-                continue;
-            }
-            ((Player) plr).sendMessage(msg);
-        }
-    }
-
     public static void sendMessage(String msg, Player sender) {
         sendMessage(msg, sender, Arrays.asList(Bukkit.getOnlinePlayers()));
     }
@@ -195,7 +177,7 @@ public class MTCChatHelper extends ChatHelper {
             return;
         }
         for (String plrName : MTCChatHelper.spies) {
-            OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName);
+            OfflinePlayer plr = Bukkit.getOfflinePlayer(plrName); //REFACTOR
             if (!plr.isOnline()) {
                 MTCChatHelper.spies.remove(plr.getName());
                 continue;
@@ -205,7 +187,7 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static void setChatColorByName(String plrName, String newChatColor) {
-        SafeSql sql = MTC.instance().ssql;
+        SafeSql sql = MTC.instance().getSql();
         if (MTCChatHelper.hasChatColor(plrName)) {
             sql.safelyExecuteUpdate("UPDATE " + sql.dbName + ".mts_chatfarbe SET chatfarbe=? WHERE user_name=?", newChatColor, plrName);
         } else {

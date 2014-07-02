@@ -17,13 +17,10 @@ public class ConfigHelper {
     private static short adDetectionLevel;
     private static boolean adDetectionReplacePointLikeChars;
     private static int SpeedOnJoinPotency;
-    private static List<String> badCmds;
     private static String tabListAllowedColors;
     private static boolean cmdSpyEnabled;
     private static boolean prohibitCmdsInBoats;
     private static boolean enableTablist;
-    private static boolean noobProtection;
-    private static int noobProtectionDuration;
     private static boolean fullLogEnabled;
     private static boolean fullTagEnabled;
     private static boolean mainLoggerEnabled;
@@ -35,8 +32,6 @@ public class ConfigHelper {
     private static List<Integer> anvilAllowedItems;
     private static boolean clanEnabled;
     private static boolean statsEnabled;
-    private static Map<String, String> teamMap;//name -> prefix
-    private static final LinkedList<String> teamGroupsInOrder = new LinkedList<>();
     private static int clanMaxUsers;
     private static int clanMaxUsersExtended;
     private static boolean chatUseClan;
@@ -67,10 +62,6 @@ public class ConfigHelper {
         return ConfigHelper.anvilAllowedItems;
     }
 
-    public static List<String> getBadCmds() {
-        return ConfigHelper.badCmds;
-    }
-
     public static boolean getChatUseClan() {
         return ConfigHelper.chatUseClan;
     }
@@ -96,10 +87,6 @@ public class ConfigHelper {
 
     public static ItemStack getItemOnJoin() {
         return ConfigHelper.itemOnJoin;
-    }
-
-    public static int getNoobProtectionDuration() {
-        return ConfigHelper.noobProtectionDuration;
     }
 
     public static boolean getRemoveUnknownFulls() {
@@ -135,14 +122,6 @@ public class ConfigHelper {
 
     public static String getTabListAllowedColors() {
         return ConfigHelper.tabListAllowedColors;
-    }
-
-    public static LinkedList<String> getTeamGroupsInOrder() {
-        return ConfigHelper.teamGroupsInOrder;
-    }
-
-    public static Map<String, String> getTeamMap() {
-        return ConfigHelper.teamMap;
     }
 
     public static List<String> getVehicleAllowedCmds() {
@@ -222,10 +201,6 @@ public class ConfigHelper {
 
     public static boolean isMainLoggerEnabled() {
         return ConfigHelper.mainLoggerEnabled;
-    }
-
-    public static boolean isNoobProtection() {
-        return ConfigHelper.noobProtection;
     }
 
     public static boolean isPeaceEnabled() {
@@ -410,8 +385,6 @@ public class ConfigHelper {
         ConfigHelper.cmdSpyEnabled = cfg.getBoolean("enable.cmdspy", true);
         ConfigHelper.prohibitCmdsInBoats = cfg.getBoolean("enable.fixes.boatCmds", true);
         ConfigHelper.enableTablist = cfg.getBoolean("enable.tablist", true);
-        ConfigHelper.noobProtection = cfg.getBoolean("enable.noobprotection", true);
-        ConfigHelper.noobProtectionDuration = cfg.getInt("noobprotection.durationInMinutes", 20);
         ConfigHelper.fullLogEnabled = cfg.getBoolean("enable.log.fulls", true);
         ConfigHelper.fullTagEnabled = cfg.getBoolean("enable.fulltag", true);
         ConfigHelper.mainLoggerEnabled = cfg.getBoolean("enable.log.main", true);
@@ -448,7 +421,7 @@ public class ConfigHelper {
                 .map(str -> CommandSpyFilters.stringFilter(str,
                                 (pats) -> new BadCommandSpyFilter(pats, LogHelper.getBadCmdLogger()))
                 )
-                .forEach(CommandSpyFilters.getActiveFilters()::add);
+                .forEach(CommandSpyFilters::registerFilter);
     }
 
     private static void initPotionProps(FileConfiguration cfg) {//4, 9, 15
