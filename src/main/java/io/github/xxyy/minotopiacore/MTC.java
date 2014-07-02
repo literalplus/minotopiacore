@@ -135,7 +135,7 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
         for (Player plr : Bukkit.getOnlinePlayers()) {
             final ItemStack itemOnCursor = plr.getItemOnCursor();
             if (itemOnCursor != null) {
-                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @{0}: {1}", new Object[] {plr.getName(), itemOnCursor});
+                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @{0}: {1}", new Object[]{plr.getName(), itemOnCursor});
                 plr.setItemOnCursor(null);
             }
             plr.closeInventory();
@@ -193,17 +193,17 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
         if (ConfigHelper.isEnableScB()) {
             String mode = ConfigHelper.getScBMode();
             switch (mode) {
-            case "PVP":
-                this.pvpMode = true;
-                this.cycle = false;
-                break;
-            case "TM":
-                this.pvpMode = false;
-                this.cycle = false;
-                break;
-            case "ALL":
-            default:
-                this.cycle = true;
+                case "PVP":
+                    this.pvpMode = true;
+                    this.cycle = false;
+                    break;
+                case "TM":
+                    this.pvpMode = false;
+                    this.cycle = false;
+                    break;
+                case "ALL":
+                default:
+                    this.cycle = true;
             }
 
             MTC.tMconsts = new SqlConsts2();
@@ -315,7 +315,7 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
             pm.registerEvents(new ChatListener(this), this);
             Bukkit.getConsoleSender().sendMessage("§8[MTC] CHAT enabled!");
         }
-        if (ConfigHelper.isEnableTablist() || ConfigHelper.isNoobProtection() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
+        if (ConfigHelper.isEnableTablist() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {
             pm.registerEvents(new MainJoinListener(), this);
         }
