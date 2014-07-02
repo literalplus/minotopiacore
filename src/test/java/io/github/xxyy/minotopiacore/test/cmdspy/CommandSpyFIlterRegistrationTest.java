@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -79,7 +80,9 @@ public class CommandSpyFilterRegistrationTest {
     public void getSubscribedFiltersTest() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
         when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
-        when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId, offlineId));
+        Collection<UUID> subscribersList = Lists.newArrayList(targetId, offlineId); //Need this so that writes persist and tests pass
+        when(filter.getSubscribers()).thenReturn(subscribersList);
+        when(filter.canSubscribe()).thenReturn(true);
 
         CommandSpyFilters.registerFilter(filter);
         Assert.assertTrue("Filter registration failed!", CommandSpyFilters.getActiveFilters().contains(filter));
@@ -87,5 +90,22 @@ public class CommandSpyFilterRegistrationTest {
         CommandSpyFilters.removeOfflineSubscribers(filter);
         Assert.assertTrue("Online UUID illegally removed!", filter.getSubscribers().contains(targetId));
         Assert.assertFalse("Offline UUID illegally persisted!", filter.getSubscribers().contains(offlineId));
+
+        CommandSpyFilters.unsubscribeFromAll(targetId);
+        Assert.assertFalse("Unsubscription failed!", filter.getSubscribers().contains(targetId));
+    }
+
+    @Test
+    public void unsubscribeFromAllTest() {
+        CommandSpyFilter filter = mock(CommandSpyFilter.class);
+        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
+        when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId));
+        when(filter.canSubscribe()).thenReturn(true);
+
+        CommandSpyFilters.registerFilter(filter);
+        Assert.assertTrue("Filter registration failed!", CommandSpyFilters.getActiveFilters().contains(filter));
+
+        CommandSpyFilters.unsubscribeFromAll(targetId);
+        Assert.assertFalse("Unsubscription failed!", filter.getSubscribers().contains(targetId));
     }
 }
