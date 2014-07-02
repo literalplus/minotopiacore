@@ -1,5 +1,6 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,7 +30,7 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     }
 
     protected Stream<Player> getOnlineSubscriberStream() {
-        return subscribers.stream()
+        return ImmutableList.copyOf(subscribers).stream() //Using the original would cause a CME
                 .map(this::getPlayerIfPresent)
                 .filter(p -> p != null);
     }
