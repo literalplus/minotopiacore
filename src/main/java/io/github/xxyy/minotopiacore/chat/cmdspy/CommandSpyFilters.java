@@ -23,13 +23,13 @@ import java.util.stream.Stream;
  * @since 19.6.14
  */
 public final class CommandSpyFilters {
-    public static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{}: §o/{}", (cmd, plr) -> true) {
+    private static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{}: §o/{}", (cmd, plr) -> true) {
         @Override
         public String niceRepresentation() {
             return "(global) all";
         }
     };
-    private static Set<CommandSpyFilter> activeFilters = Sets.newHashSet(ALL_FILTER);
+    private static Set<CommandSpyFilter> activeFilters = Sets.newHashSet();
 
     private CommandSpyFilters() {
 
@@ -94,6 +94,10 @@ public final class CommandSpyFilters {
         }
 
         return filter.getSubscribers().contains(spy.getUniqueId());
+    }
+
+    public static boolean toggleGlobalFilter(Player spy) {
+        return toggleSubscribedAndRegister(ALL_FILTER, spy);
     }
 
     public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could be generified more - see instanceof
