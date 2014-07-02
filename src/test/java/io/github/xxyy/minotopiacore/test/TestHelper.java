@@ -6,6 +6,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -24,6 +25,9 @@ public class TestHelper {
         when(server.getVersion()).thenReturn("infinity");
         when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
         when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), server.getLogger()));
+        when(server.getPlayer(any(UUID.class))).then(id -> Arrays.asList(server.getOnlinePlayers()).stream()
+                .filter(plr -> plr.getUniqueId().equals(id.getArguments()[0]))
+                .findAny().orElse(null));
 
         return server;
     }
