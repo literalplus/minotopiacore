@@ -23,45 +23,60 @@ public class CommandCmdSpy implements CommandExecutor {
 
         Player plr = (Player) sender;
 
-        if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
-            return this.printHelpTo(sender);
-        } else if (args.length >= 2 && args[0].equalsIgnoreCase("-i")) {
-            sender.sendMessage(MTC.chatPrefix + "CommandSpy -i " +
-                    enabledString(CommandSpyFilters.toggleStringFilter(StringHelper.varArgsString(args, 1, false), plr)) +
-                    "!");
-        } else if (args.length >= 2 && args[0].equalsIgnoreCase("-p")) {
-            @SuppressWarnings("deprecation")
-            Player target = Bukkit.getPlayerExact(args[1]); //Intended!
-            if (target == null) {
-                sender.sendMessage(MTC.chatPrefix + "Sorry, dieser Spieler ist nicht online :/");
-            } else {
-                sender.sendMessage(MTC.chatPrefix + "CommandSpy -p " +
-                        enabledString(CommandSpyFilters.togglePlayerFilter(target.getUniqueId(), plr)) +
-                        "!");
+        if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
+            if (args.length > 1) { //If we have enough args, check sub-commands that require an argument
+                switch (args[0].toLowerCase()) {
+                    case "-i": //Target is a command
+                        sender.sendMessage(MTC.chatPrefix + "CommandSpy -i " +
+                                enabledString(
+                                        CommandSpyFilters.toggleStringFilter(
+                                                StringHelper.varArgsString(args, 1, false), plr
+                                        )) +
+                                "!");
+                        return true;
+                    case "-p": //Target is a player
+                        @SuppressWarnings("deprecation")
+                        Player target = Bukkit.getPlayerExact(args[1]); //Intended!
+                        if (target == null) {
+                            sender.sendMessage(MTC.chatPrefix + "Sorry, dieser Spieler ist nicht online :/");
+                        } else {
+                            sender.sendMessage(MTC.chatPrefix + "CommandSpy -p " +
+                                    enabledString(
+                                            CommandSpyFilters.togglePlayerFilter(
+                                                    target.getUniqueId(), plr
+                                            )) +
+                                    "!");
+                        }
+                        return true;
+                } //So we haven't matched any of the sub-commands requiring arguments.
             }
-        } else if (args.length >= 2 && args[0].equalsIgnoreCase("-l")) {
-            int filterAmount = CommandSpyFilters.getSubscribedFilters(plr.getUniqueId())
-                    .mapToInt(filter -> {
-                        plr.sendMessage(filter.niceRepresentation());
-                        return 1;
-                    }).sum();
+            //Well, we still have those without!
+            switch (args[0].toLowerCase()) {
+                case "-c": //Clear all filters (that can be cleared)
+                    CommandSpyFilters.unsubscribeFromAll(plr.getUniqueId());
+                    sender.sendMessage(MTC.chatPrefix + "Alle Filter deaktiviert!");
+                    return true;
+                case "-l": //List filters
+                    int filterAmount = CommandSpyFilters.getSubscribedFilters(plr.getUniqueId())
+                            .mapToInt(filter -> {
+                                plr.sendMessage(filter.niceRepresentation()); //This is where they get the info about the filter
+                                return 1;
+                            }).sum();
 
-            sender.sendMessage(MTC.chatPrefix + "Du hast " + filterAmount + " Filter abonniert.");
-        } else if (args.length >= 1 && args[0].equalsIgnoreCase("-c")) {
-            CommandSpyFilters.unsubscribeFromAll(plr.getUniqueId());
-            sender.sendMessage(MTC.chatPrefix + "Alle Filter deaktiviert!");
-        } else if (args.length == 0) {
-            if (!CommandSpyFilters.ALL_FILTER.getSubscribers().remove(plr.getUniqueId())) {
-                CommandSpyFilters.ALL_FILTER.getSubscribers().add(plr.getUniqueId());
-                sender.sendMessage(MTC.chatPrefix + "CommandSpy aktiviert!");
-            } else {
-                sender.sendMessage(MTC.chatPrefix + "CommandSpy deaktiviert!");
+                    sender.sendMessage(MTC.chatPrefix + "Du hast " + (filterAmount == 0 ? "keine" : filterAmount) + " Filter abonniert.");
+                    return true;
+                case "-a": //Target all commands
+                    sender.sendMessage(MTC.chatPrefix + "CommandSpy -a " +
+                            enabledString(
+                                    CommandSpyFilters.toggleGlobalFilter(
+                                            plr
+                                    )) +
+                            "!");
+                    return true;
             }
-        } else {
-            return this.printHelpTo(sender);
         }
 
-        return true;
+        return this.printHelpTo(sender);
     }
 
     public String enabledString(boolean enabled) {
@@ -69,12 +84,12 @@ public class CommandCmdSpy implements CommandExecutor {
     }
 
     public boolean printHelpTo(CommandSender sender) {
-        sender.sendMessage("§e/cmdspy §6Aktiviert CommandSpy.");
+        sender.sendMessage("§e/cmdspy -a §6Aktiviert CommandSpy für alle Befehle.");
         sender.sendMessage("§e/cmdspy -i <CMD> §6Aktiviert CommandSpy für einen einzelnen Befehl.");
         sender.sendMessage("§e/cmdspy -p <SPIELER> §6Aktiviert CommandSpy für einen bestimmten Spieler.");
         sender.sendMessage("§e/cmdspy -c §6Deaktiviert CommandSpy");
         sender.sendMessage("§e/cmdspy -l §6Zeigt alle aktivierten Filter an.");
-        sender.sendMessage("§c-i akzeptiert Befehle ohne Slash. Beginne das Argument mit !r, um es als regulären Ausdruck zu verwenden.");
+        sender.sendMessage("§c-i akzeptiert (nur) Befehle ohne Slash. Beginne das Argument mit !r, um es als regulären Ausdruck zu verwenden.");
         return true;
     }
 }
