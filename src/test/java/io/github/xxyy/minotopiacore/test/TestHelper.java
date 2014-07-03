@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("UnusedDeclaration")
 public class TestHelper {
     private TestHelper() {
 
