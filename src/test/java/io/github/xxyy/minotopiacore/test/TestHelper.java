@@ -1,5 +1,6 @@
 package io.github.xxyy.minotopiacore.test;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -18,16 +19,21 @@ public class TestHelper {
     }
 
     public static Server mockServer() {
-        Server server = mock(Server.class);
+        Server server = Bukkit.getServer();
 
-        when(server.getName()).thenReturn("Spagt");
-        when(server.getBukkitVersion()).thenReturn("fuk of bukite");
-        when(server.getVersion()).thenReturn("infinity");
-        when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
-        when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), server.getLogger()));
-        when(server.getPlayer(any(UUID.class))).then(id -> Arrays.asList(server.getOnlinePlayers()).stream()
-                .filter(plr -> plr.getUniqueId().equals(id.getArguments()[0]))
-                .findAny().orElse(null));
+        if (server == null) {
+            server = mock(Server.class);
+            when(server.getName()).thenReturn("Spagt");
+            when(server.getBukkitVersion()).thenReturn("fuk of bukite");
+            when(server.getVersion()).thenReturn("infinity");
+            when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
+            when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), Bukkit.getServer().getLogger()));
+            when(server.getPlayer(any(UUID.class))).then(id -> Arrays.asList(Bukkit.getServer().getOnlinePlayers()).stream()
+                    .filter(plr -> plr.getUniqueId().equals(id.getArguments()[0]))
+                    .findAny().orElse(null));
+
+            Bukkit.setServer(server);
+        }
 
         return server;
     }
@@ -40,16 +46,28 @@ public class TestHelper {
     }
 
     public static CommandSender printlnSender(CommandSender sender) {
-        CommandSender rtrn = spy(sender);
-        Mockito.doAnswer((invocation) -> {System.out.println(invocation.getArguments()[0]); return null;})
-                .when(rtrn).sendMessage(any(String.class));
-        return rtrn;
+        if (!Mockito.mockingDetails(sender).isMock()) {
+            sender = spy(sender);
+        }
+
+        Mockito.doAnswer((invocation) -> {
+            System.out.println(invocation.getArguments()[0]);
+            return null;
+        }).when(sender).sendMessage(any(String.class));
+
+        return sender;
     }
 
     public static CommandSender loggerSender(CommandSender sender, Logger logger) {
-        CommandSender rtrn = spy(sender);
-        Mockito.doAnswer((invocation) -> {logger.info((String) invocation.getArguments()[0]); return null;})
-                .when(rtrn).sendMessage(any(String.class));
-        return rtrn;
+        if (!Mockito.mockingDetails(sender).isMock()) {
+            sender = spy(sender);
+        }
+
+        Mockito.doAnswer((invocation) -> {
+            logger.info((String) invocation.getArguments()[0]);
+            return null;
+        }).when(sender).sendMessage(any(String.class));
+
+        return sender;
     }
 }

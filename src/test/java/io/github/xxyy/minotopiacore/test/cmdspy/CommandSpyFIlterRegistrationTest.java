@@ -5,16 +5,16 @@ import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilter;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.minotopiacore.test.TestHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the registration of CommandSpy filters.
@@ -22,15 +22,12 @@ import static org.mockito.Mockito.when;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2.7.14
  */
+@PrepareForTest(Bukkit.class)
 public class CommandSpyFilterRegistrationTest {
+    private static final Server SERVER = TestHelper.mockServer();
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
     private Player[] playersWithTarget = new Player[]{TestHelper.mockPlayer(targetId, "test")};
-
-    @BeforeClass
-    public static void registerServer() {
-        Bukkit.setServer(TestHelper.mockServer());
-    }
 
     @Test
     public void removeDeadFiltersTest1() {
