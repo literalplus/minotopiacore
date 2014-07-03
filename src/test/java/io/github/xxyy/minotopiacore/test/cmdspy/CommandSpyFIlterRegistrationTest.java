@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
  * @since 2.7.14
  */
 @PrepareForTest(Bukkit.class)
-public class CommandSpyFilterRegistrationTest {
+public class CommandSpyFilterRegistrationTest_ {
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
     private Player[] playersWithTarget = new Player[]{TestHelper.mockPlayer(targetId, "test")};
