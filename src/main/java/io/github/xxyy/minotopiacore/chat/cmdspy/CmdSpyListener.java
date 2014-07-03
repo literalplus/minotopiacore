@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
  * @since 20.6.14
  */
 public class CmdSpyListener implements Listener {
-    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR, ignoreCancelled = false)
     public void onCmdSpy(PlayerCommandPreprocessEvent evt) {
         String cmd = evt.getMessage().substring(1, evt.getMessage().length());
 
