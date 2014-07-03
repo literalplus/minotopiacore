@@ -5,7 +5,6 @@ import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilter;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.minotopiacore.test.TestHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.*;
  */
 @PrepareForTest(Bukkit.class)
 public class CommandSpyFilterRegistrationTest {
-    private static final Server SERVER = TestHelper.mockServer();
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
     private Player[] playersWithTarget = new Player[]{TestHelper.mockPlayer(targetId, "test")};
