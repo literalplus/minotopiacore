@@ -2,6 +2,7 @@ package io.github.xxyy.minotopiacore.test.cmdspy;
 
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilter;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
+import io.github.xxyy.minotopiacore.chat.cmdspy.RegExCommandSpyFilter;
 import io.github.xxyy.minotopiacore.test.TestHelper;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -74,7 +75,8 @@ public class CommandSpyFilterTest {
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String regex = "(.+?)woa\\1";
-        CommandSpyFilter stringFilter = CommandSpyFilters.stringFilter("!r"+regex);
+        CommandSpyFilter stringFilter = CommandSpyFilters.stringFilter("!r" + regex);
+        Assert.assertTrue(stringFilter instanceof RegExCommandSpyFilter);
 
         String matching = " something woa something ";
         String notMatching = "something that contains woa but doesn't even match";

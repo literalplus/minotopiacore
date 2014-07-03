@@ -7,6 +7,7 @@ import io.github.xxyy.minotopiacore.test.TestHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
@@ -26,6 +27,11 @@ public class CommandSpyFilterRegistrationTest {
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
     private Player[] playersWithTarget = new Player[]{TestHelper.mockPlayer(targetId, "test")};
+
+    @BeforeClass
+    public static void init() {
+        TestHelper.mockServer();
+    }
 
     @Test
     public void removeDeadFiltersTest1() {
