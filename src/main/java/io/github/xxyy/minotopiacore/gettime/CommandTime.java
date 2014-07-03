@@ -28,7 +28,7 @@ public final class CommandTime implements CommandExecutor {
         if (CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.gtime.time", "Die RL-Serverzeit anzeigen")) {
             sender.sendMessage(ChatColor.GOLD + "Aktuelle RL-Serverzeit: " + ChatColor.BLUE + (new SimpleDateFormat("HH:mm:ss")).format(Calendar.getInstance().getTime()));
         }
-        if (!label.equalsIgnoreCase("gd") && !label.equalsIgnoreCase("getdate") && CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.gtime.date", "Das Serverdatum anzeigen")) {
+        if (!"gd".equalsIgnoreCase(label) && !"getdate".equalsIgnoreCase(label) && CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.gtime.date", "Das Serverdatum anzeigen")) {
             sender.sendMessage(ChatColor.GOLD + "Aktuelles Serverdatum: " + ChatColor.BLUE + (new SimpleDateFormat("dd.MM.yyyy")).format(Calendar.getInstance().getTime()));
         }
         sender.sendMessage(ChatColor.GOLD + "============={§7Serverzeit" + ChatColor.RESET + ChatColor.GOLD + "}=============");
