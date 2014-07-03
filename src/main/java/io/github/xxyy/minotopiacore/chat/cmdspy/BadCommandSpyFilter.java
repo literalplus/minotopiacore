@@ -41,7 +41,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
 
     @Override
     public String niceRepresentation() {
-        return MessageFormat.format("(global) {0}@/{1}/",
+        return MessageFormat.format("(global) {0}@/{1}/ig",
                 super.niceRepresentation(),
                 CommandHelper.CSCollection(getPatterns().stream()
                         .map(Pattern::pattern)
