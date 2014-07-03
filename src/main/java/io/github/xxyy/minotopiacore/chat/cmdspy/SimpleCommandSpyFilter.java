@@ -11,11 +11,9 @@ import java.util.function.BiPredicate;
  * @since 19.6.14
  */
 public abstract class SimpleCommandSpyFilter implements CommandSpyFilter {
-    private final String notificationFormat;
     private final BiPredicate<String, Player> predicate;
 
-    public SimpleCommandSpyFilter(String notificationFormat, BiPredicate<String, Player> predicate) {
-        this.notificationFormat = notificationFormat;
+    public SimpleCommandSpyFilter(BiPredicate<String, Player> predicate) {
         this.predicate = predicate;
     }
 
@@ -24,7 +22,4 @@ public abstract class SimpleCommandSpyFilter implements CommandSpyFilter {
         return predicate.test(command, sender);
     }
 
-    protected String getNotificationFormat() {
-        return notificationFormat;
-    }
 }

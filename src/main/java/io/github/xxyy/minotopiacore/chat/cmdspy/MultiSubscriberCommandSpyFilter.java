@@ -1,5 +1,6 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -9,14 +10,18 @@ import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 /**
+ * A CommandSpyFilter impl that allows for multiple subscribers and keeps them internally as a set of their UUIDs.
+ *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19.6.14
  */
 public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     private final Set<UUID> subscribers = new HashSet<>();
+    private final String notificationFormat;
 
     public MultiSubscriberCommandSpyFilter(String notificationFormat, BiPredicate<String, Player> predicate) {
-        super(notificationFormat, predicate);
+        super(predicate);
+        this.notificationFormat = notificationFormat;
     }
 
     public void notifySubscribers(String command, Player sender) {
@@ -25,7 +30,7 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     }
 
     protected Stream<Player> getOnlineSubscriberStream() {
-        return subscribers.stream()
+        return ImmutableList.copyOf(subscribers).stream() //Using the original would cause a CME
                 .map(this::getPlayerIfPresent)
                 .filter(p -> p != null);
     }
@@ -53,5 +58,9 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
             subscribers.remove(uuid);
         }
         return rtrn;
+    }
+
+    protected String getNotificationFormat() {
+        return notificationFormat;
     }
 }

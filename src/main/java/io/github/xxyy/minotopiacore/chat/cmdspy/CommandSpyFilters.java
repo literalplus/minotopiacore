@@ -1,10 +1,16 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,30 +23,51 @@ import java.util.stream.Stream;
  * @since 19.6.14
  */
 public final class CommandSpyFilters {
-    public static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{}: §o/{}", (cmd, plr) -> true) {
+    private static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{}: §o/{}", (cmd, plr) -> true) {
         @Override
         public String niceRepresentation() {
             return "(global) all";
         }
     };
-    private static Set<CommandSpyFilter> activeFilters = new HashSet<>(Arrays.asList(ALL_FILTER));
+    private static Set<CommandSpyFilter> activeFilters = Sets.newHashSet();
 
     private CommandSpyFilters() {
 
     }
 
+    /**
+     * Gets an unmodifiable Set of active filters.
+     * Use the {@link #registerFilter(CommandSpyFilter)} and {@link #unregisterFilter(CommandSpyFilter)} methods to add and remove filters.
+     *
+     * @return Unmodifiable Set containing registered filters.
+     */
     public static Set<CommandSpyFilter> getActiveFilters() {
-        return activeFilters;
+        return ImmutableSet.copyOf(activeFilters);
     }
 
     public static void registerFilter(CommandSpyFilter filter) {
         activeFilters.add(filter);
     }
 
+    public static void unregisterFilter(CommandSpyFilter filter) {
+        activeFilters.remove(filter);
+    }
+
     public static void removeDeadFilters() {
-        activeFilters.removeAll(activeFilters.stream()
+        Set<CommandSpyFilter> filters = getActiveFilters();
+
+        filters.stream() //Remove offline subscribers for more accurate results
+                .forEach(CommandSpyFilters::removeOfflineSubscribers);
+
+        filters.stream() //Needs the source to be a copy or will throw CME
                 .filter(f -> f.getSubscribers().isEmpty())
-                .collect(Collectors.toList()));
+                .forEach(CommandSpyFilters::unregisterFilter);
+    }
+
+    public static void removeOfflineSubscribers(CommandSpyFilter filter) {
+        ImmutableList.copyOf(filter.getSubscribers()).stream()
+                .filter(id -> Bukkit.getPlayer(id) == null)
+                .forEach(filter.getSubscribers()::remove);
     }
 
     public static Stream<CommandSpyFilter> getSubscribedFilters(UUID subscriberId) {
@@ -50,7 +77,7 @@ public final class CommandSpyFilters {
 
     public static long unsubscribeFromAll(UUID subscriberId) {
         long rtrn = activeFilters.stream()
-                .filter(filter -> filter.subscribable() && filter.getSubscribers().remove(subscriberId))
+                .filter(filter -> filter.canSubscribe() && filter.getSubscribers().remove(subscriberId))
                 .count();
 
         removeDeadFilters();
@@ -59,18 +86,21 @@ public final class CommandSpyFilters {
     }
 
     public static boolean toggleSubscribedAndRegister(CommandSpyFilter filter, Player spy) {
-        if(!filter.getSubscribers().remove(spy.getUniqueId())) {
-            filter.getSubscribers().add(spy.getUniqueId());
-        } else {
+        if (filter.getSubscribers().remove(spy.getUniqueId())) {
             removeDeadFilters();
+        } else {
+            filter.getSubscribers().add(spy.getUniqueId());
+            registerFilter(filter);
         }
-
-        registerFilter(filter);
 
         return filter.getSubscribers().contains(spy.getUniqueId());
     }
 
-    public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could eb generified more - see instanceof
+    public static boolean toggleGlobalFilter(Player spy) {
+        return toggleSubscribedAndRegister(ALL_FILTER, spy);
+    }
+
+    public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could be generified more - see instanceof
         return toggleSubscribedAndRegister(activeFilters.stream()
                 .filter(f -> f instanceof PlayerCommandSpyFilter && ((PlayerCommandSpyFilter) f).getTarget().equals(targetId))
                 .findAny()
