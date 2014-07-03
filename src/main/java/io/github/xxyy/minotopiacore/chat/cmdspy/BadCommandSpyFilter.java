@@ -1,10 +1,8 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
-import io.github.xxyy.common.util.CommandHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,12 +39,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
 
     @Override
     public String niceRepresentation() {
-        return MessageFormat.format("(global) {0}@/{1}/ig",
-                super.niceRepresentation(),
-                CommandHelper.CSCollection(getPatterns().stream()
-                        .map(Pattern::pattern)
-                        .collect(Collectors.toList()))
-        );
+        return "(global) " + super.niceRepresentation();
     }
 
     @Override

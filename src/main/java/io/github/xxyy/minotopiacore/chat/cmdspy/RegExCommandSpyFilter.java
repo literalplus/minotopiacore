@@ -1,11 +1,13 @@
 package io.github.xxyy.minotopiacore.chat.cmdspy;
 
+import io.github.xxyy.common.util.CommandHelper;
 import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Handles commandspy messages with regex.
@@ -56,5 +58,15 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
 
     public List<Pattern> getPatterns() {
         return patterns;
+    }
+
+    @Override
+    public String niceRepresentation() {
+        return MessageFormat.format("{0} -> /{1}/ig",
+                super.niceRepresentation(),
+                CommandHelper.CSCollection(getPatterns().stream()
+                        .map(Pattern::pattern)
+                        .collect(Collectors.toList()))
+        );
     }
 }
