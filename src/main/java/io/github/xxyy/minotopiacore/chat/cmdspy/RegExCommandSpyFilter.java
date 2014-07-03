@@ -21,7 +21,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     }
 
     public RegExCommandSpyFilter(String notificationFormat, List<Pattern> patterns) {
-        super(notificationFormat, (cmd, plr) -> patterns.stream().anyMatch(pat -> pat.matcher(cmd).find()));
+        super(notificationFormat, (cmd, plr) -> patterns.stream().anyMatch(pat -> pat.matcher(cmd).find(0)));
         this.patterns = patterns;
     }
 
