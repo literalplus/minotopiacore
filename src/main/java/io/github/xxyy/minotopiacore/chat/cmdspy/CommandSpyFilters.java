@@ -115,7 +115,7 @@ public final class CommandSpyFilters {
     }
 
     public static CommandSpyFilter playerFilter(UUID targetId) {
-        return new MultiSubscriberCommandSpyFilter("§e[CmdSpy]§7{}: §o/{}", (cmd, plr) -> plr.getUniqueId().equals(targetId));
+        return new PlayerCommandSpyFilter("§e[CmdSpy]§7{}: §o/{}", targetId);
     }
 
     protected static CommandSpyFilter regexFilter(Stream<Pattern> patterns) {
