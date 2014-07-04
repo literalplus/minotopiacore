@@ -73,6 +73,11 @@ public class CommandCmdSpy implements CommandExecutor {
                                     )) +
                             "!");
                     return true;
+                case "--regex-help":
+                    sender.sendMessage("§eDu kannst bei -i reguläre Ausdrücke verwenden, wenn du vor dem Input §6!r§e verwendest. " +
+                            "(§6/cmdspy -i !r[Deine RegEx]§e) Die RegEx wird eingeschlossen in §6([Deine RegEx])\\s*§e und die erste Capturing Group " +
+                            "wird dem Benutzer angezeigt. Um dein eigenes Output zu definieren, verwende ?: vor der RegEx.");
+                    return true;
             }
         }
 
@@ -89,7 +94,8 @@ public class CommandCmdSpy implements CommandExecutor {
         sender.sendMessage("§e/cmdspy -p <SPIELER> §6Aktiviert CommandSpy für einen bestimmten Spieler.");
         sender.sendMessage("§e/cmdspy -c §6Deaktiviert CommandSpy");
         sender.sendMessage("§e/cmdspy -l §6Zeigt alle aktivierten Filter an.");
-        sender.sendMessage("§c-i akzeptiert (nur) Befehle ohne Slash. Beginne das Argument mit !r, um es als regulären Ausdruck zu verwenden.");
+        sender.sendMessage("§e/cmdspy --regex-help §6Verwendung von RegEx");
+        sender.sendMessage("§c-i akzeptiert (nur) Befehle ohne Slash.");
         return true;
     }
 }

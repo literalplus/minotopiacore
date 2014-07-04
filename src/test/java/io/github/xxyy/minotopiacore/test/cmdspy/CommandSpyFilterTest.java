@@ -74,15 +74,16 @@ public class CommandSpyFilterTest {
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
-        String regex = "(.+?)woa\\1";
+        String regex = "(.+?)woa\\2";
+        String rawRegex = "("+regex+")\\s*";
         CommandSpyFilter stringFilter = CommandSpyFilters.stringFilter("!r" + regex);
         Assert.assertTrue(stringFilter instanceof RegExCommandSpyFilter);
 
         String matching = " something woa something ";
         String notMatching = "something that contains woa but doesn't even match";
 
-        Assert.assertTrue(matching.matches(regex));
-        Assert.assertFalse(notMatching.matches(regex));
+        Assert.assertTrue(matching.matches(rawRegex));
+        Assert.assertFalse(notMatching.matches(rawRegex));
 
         Assert.assertTrue("RegEx filter didn't match target!",
                 stringFilter.matches(matching, fakeSpy));
