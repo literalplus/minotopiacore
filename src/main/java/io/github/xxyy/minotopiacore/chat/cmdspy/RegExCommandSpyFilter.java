@@ -33,7 +33,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
             Matcher matcher = pattern.matcher(command);
 
             if (matcher.find()) {
-                String message = MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7"));
+                String message = MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7 "));
 
                 getOnlineSubscriberStream()
                         .forEach(plr -> plr.sendMessage(message));
