@@ -35,7 +35,7 @@ public class CommandSpyFilterTest {
                 .findAny().get();
 
         Assert.assertTrue("Global filter didn't match!",
-                globalFilter.matches("any-command I enter should match this filter, even then it's as long as this öne?!öäüß", fakeSpy));
+                globalFilter.matches("/any-command I enter should match this filter, even then it's as long as this öne?!öäüß", fakeSpy)); //additional slashes shouldn't matter
     }
 
     @Test
