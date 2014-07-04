@@ -36,15 +36,22 @@ import java.util.Map;
 
 public final class CommandMTC extends MTCCommandExecutor {
 
+    private final MTC plugin;
+
+    public CommandMTC(MTC plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-        if (!MTCHelper.isEnabledAndMsg(".command.mtc", sender)) {
+        if (!MTCHelper.isEnabledAndMsg(".command.mtc", sender, plugin)) {
             return true;
         }
         if (args.length == 0) {
             if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.credits", label)) {
                 return true;
             }
+
             sender.sendMessage("§eMinoTopiaCore AKA MTC AKA MTS AKA XyUtil by xxyy98. http://bit.ly/_xy");
             sender.sendMessage("§9Version " + MTC.PLUGIN_VERSION.toString() + ")");
             sender.sendMessage("§3Hilfe? /" + label + " help | Kommandos? /help minotopiacore");
@@ -78,8 +85,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
                     CommandHelper.sendImportantActionMessage(sender, "Reloading MTC..");
-                    Bukkit.getPluginManager().disablePlugin(MTC.instance());
-                    Bukkit.getPluginManager().enablePlugin(MTC.instance());
+                    Bukkit.getPluginManager().disablePlugin(plugin);
+                    Bukkit.getPluginManager().enablePlugin(plugin);
                     CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC!");
                     return true;
                 case "fm":
@@ -191,8 +198,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
                     Map<String, YamlConfiguration> map = new HashMap<>(); //TODO Contents of collection map are updated, but never queried at line 192
-                    for (String lang : MTC.instance().getShippedLocales()) {
-                        String dir = "plugins/" + MTC.instance().getName() + "/lang/";
+                    for (String lang : plugin.getShippedLocales()) {
+                        String dir = "plugins/" + plugin.getName() + "/lang/";
                         String fl = lang + ".lng.yml";
                         File destFl = new File(dir + fl);
                         File destDir = new File(dir);
@@ -203,7 +210,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                                 destDir.mkdirs(); //REFACTOR Result of method call ignored
                                 destFl.createNewFile();
                                 try (FileOutputStream out = new FileOutputStream(destFl);
-                                     InputStream in = MTC.instance().getResource("xyc_lang/" + lang + ".lng.yml")) {
+                                     InputStream in = plugin.getResource("xyc_lang/" + lang + ".lng.yml")) {
                                     int read;
                                     while ((read = in.read()) != -1) {
                                         out.write(read);
@@ -226,8 +233,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                     BanHelper.banCache = new HashMap<>();
                     MTCChatHelper.cfCache = new HashMap<>();
                     ClanHelper.clearCache();
-                    MTC.instance().getXLoginHook().resetSpawnLocation();
-                    MTC.instance().getServer().getPluginManager().callEvent(new ClearCacheEvent());
+                    plugin.getXLoginHook().resetSpawnLocation();
+                    plugin.getServer().getPluginManager().callEvent(new ClearCacheEvent());
                     CacheHelper.clearCaches();
                     sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
                     return true;
@@ -285,8 +292,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                     }
                 }
 
-                MTC.instance().getConfig().set(args[2], value);
-                MTC.instance().saveConfig();
+                plugin.getConfig().set(args[2], value);
+                plugin.saveConfig();
                 sender.sendMessage("§7Konfigurationswert §3" + args[2] + "§7 gesetzt auf: §3" + value + ".");
                 CommandHelper.sendImportantActionMessage(sender, "Set Config Value §3" + args[2] + "§a§o to §3" + value);
                 break;
@@ -300,7 +307,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                 sender.sendMessage("§7Der Wert §3" + args[2] + "§7 ist im Moment gesetzt auf: §3" + fetchedValue + "§e.");
                 break;
             case "reload":
-                MTC.instance().reloadConfig();
+                plugin.reloadConfig();
                 CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC config.");
                 break;
             default:
