@@ -27,8 +27,9 @@ import java.util.regex.Pattern;
 public final class ChatListener implements Listener {
 
     private final MTC plugin;
-	Map<String,String> lastMessages = new HashMap<>();
-	Map<String,Boolean> plrAdCounts = new HashMap<>();
+
+	private Map<String,String> lastMessages = new HashMap<>();
+//	private Map<String,Boolean> plrAdCounts = new HashMap<>();
 
     public ChatListener(MTC plugin) {
         this.plugin = plugin;
@@ -80,7 +81,7 @@ public final class ChatListener implements Listener {
 				plr.sendMessage(MTC.chatPrefix+"Du hast den Werbefilter ignoriert. Na toll!");
 			}else{
 				e.setCancelled(true);
-				plr.sendMessage(MTC.chatPrefix+"§cWerbung ist ein Armutszeugnis. §aBitte höre damit auf :)");
+				plr.sendMessage(MTC.chatPrefix+"§cWerbung ist ein Armutszeugnis.");
 				CommandHelper.broadcast(MTC.chatPrefix+"Der Spieler §b"+plrName+"§6 hat den Werbefilter ausgelöst:","mtc.adinfo");
 				CommandHelper.broadcast(MTC.chatPrefix+"§b   "+finalMsg,"mtc.adinfo");
 				return;

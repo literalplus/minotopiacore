@@ -12,12 +12,12 @@ import java.util.Map;
 
 
 public final class BanHelper {
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    public static Map<String, BanInfo> banCache = new HashMap<>();
+
     private BanHelper() {
 
     }
-
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    public static Map<String, BanInfo> banCache = new HashMap<>();
 
     public static void broadcastBanChatMsg(BanInfo bi) {
         String timeString = "§lpermanent";

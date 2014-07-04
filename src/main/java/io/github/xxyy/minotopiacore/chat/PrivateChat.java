@@ -9,16 +9,16 @@ import java.util.logging.Level;
 
 
 public class PrivateChat { //REFACTOR
+    public static int currentId = 0;
+    public static Map<Player, List<PrivateChat>> recChats = new HashMap<>();
+    public static Map<Player, List<PrivateChat>> invitedChats = new HashMap<>();
+    public static Map<Player, PrivateChat> activeChats = new HashMap<>();
+
     public int chatId = 0;
     public List<Player> recipients = new ArrayList<>();
     public Player leader;
     public List<Player> activeRecipients = new ArrayList<>();
     public String topic = "";
-
-    public static int currentId = 0;
-    public static Map<Player, List<PrivateChat>> recChats = new HashMap<>();
-    public static Map<Player, List<PrivateChat>> invitedChats = new HashMap<>();
-    public static Map<Player, PrivateChat> activeChats = new HashMap<>();
 
     public PrivateChat(Player leader, List<Player> recipients) {
         this.leader = leader;

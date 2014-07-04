@@ -9,13 +9,13 @@ import java.io.IOException;
 
 
 public final class LaterMessageHelper {
+    public static final File STORAGE_FILE = new File("plugins/"+MTC.instance().getName()+"/laterMessages.stor.yml");
+    public static YamlConfiguration STORAGE_YAML = YamlConfiguration.loadConfiguration(LaterMessageHelper.STORAGE_FILE);
+
     private LaterMessageHelper() {
 
     }
 
-    public static final File STORAGE_FILE = new File("plugins/"+MTC.instance().getName()+"/laterMessages.stor.yml");
-    public static YamlConfiguration STORAGE_YAML = YamlConfiguration.loadConfiguration(LaterMessageHelper.STORAGE_FILE);
-    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     public static void addMessage(String senderName, String type, int type2, String msg, boolean delOnFirstRead, boolean sendMTCPrefix){

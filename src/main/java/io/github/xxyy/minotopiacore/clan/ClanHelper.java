@@ -35,18 +35,19 @@ import java.util.*;
 
 
 public final class ClanHelper { //REFACTOR
-    private ClanHelper() {
 
-    }
-
-    public static Map<Integer, ClanInfo> cacheById = new HashMap<>();
+    public static Map<Integer, ClanInfo> cacheById = new HashMap<>(); //TODO uuids
     public static Map<String, ClanInfo> cacheByName = new HashMap<>();
     public static Map<String, ClanMemberInfo> memberCache = new HashMap<>();
     public static Map<String, ClanInfo> playerClanCache = new HashMap<>();
     public static Map<Integer, Set<String>> memberNamesCache = new HashMap<>();//key is clan id
     public static List<String> inClanChatNames = new ArrayList<>();
     //there is no cache by player because if a player logged off there would be ghost objects, etc.
-    
+
+    private ClanHelper() {
+
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     
     /**

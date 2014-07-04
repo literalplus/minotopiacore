@@ -11,9 +11,6 @@ import java.util.logging.Logger;
 
 
 public final class LogHelper {
-    private LogHelper() {
-
-    }
 
     private static final Logger MAIN_LOGGER = Logger.getLogger("MTC");
     private static final Logger BAD_CMD_LOGGER = Logger.getLogger("MTC.BCMD");
@@ -23,6 +20,11 @@ public final class LogHelper {
     private static final Logger BAN_LOGGER = Logger.getLogger("MTC.BANS");
     private static final Logger WARN_LOGGER = Logger.getLogger("MTC.WARNS");
     private static final Logger FULL_LOGGER = Logger.getLogger("MTC.FULLS");
+
+    private LogHelper() {
+
+    }
+
     public static void flushAll(){
         LogHelper.flush(LogHelper.MAIN_LOGGER);
         LogHelper.flush(LogHelper.BAD_CMD_LOGGER);

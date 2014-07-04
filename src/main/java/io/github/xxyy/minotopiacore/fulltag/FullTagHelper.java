@@ -26,11 +26,12 @@ import java.util.logging.Level;
 
 
 public final class FullTagHelper {
+    public static Map<Integer, Material> parts = new HashMap<>(); //TODO enum
+
     private FullTagHelper() {
 
     }
 
-    public static Map<Integer, Material> parts = new HashMap<>();
 
     /**
      * on success, there will be two ints in the list (first one is TRUE, second FALSE)

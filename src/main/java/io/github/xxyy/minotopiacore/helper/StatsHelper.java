@@ -16,16 +16,16 @@ import java.util.Map.Entry;
 
 
 public class StatsHelper {
+    public static final Map<String, Integer> killMap = new HashMap<>();
+    public static final Map<String, Integer> deathMap = new HashMap<>();
+
+    public static final Map<String, Integer> killQueue = new HashMap<>();
+    public static final Map<String, Integer> deathQueue = new HashMap<>();
+
     private StatsHelper() {
 
     }
 
-    public static Map<String, Integer> killMap = new HashMap<>();
-    public static Map<String, Integer> deathMap = new HashMap<>();
-    
-    public static Map<String, Integer> killQueue = new HashMap<>();
-    public static Map<String, Integer> deathQueue = new HashMap<>();
-    
     public static void cacheModification(String plrName, boolean isKill){
         if(isKill){
             if(StatsHelper.killQueue.containsKey(plrName)){

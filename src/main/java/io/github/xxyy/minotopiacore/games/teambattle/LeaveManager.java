@@ -14,9 +14,10 @@ import java.util.List;
 
 public final class LeaveManager {
 	private final File locationLocation = new File("plugins/MinoTopiaCore","teambattle_prevlocs.donotedit.yml");
-	public YamlConfiguration fl = YamlConfiguration.loadConfiguration(this.locationLocation);
 	private final List<String> loginUsedPlrs=new ArrayList<>();
-	
+
+	public YamlConfiguration fl = YamlConfiguration.loadConfiguration(this.locationLocation);
+
 	public LeaveManager(){}
 	
 	public void addPlayerToLoginUsed(String playerName){

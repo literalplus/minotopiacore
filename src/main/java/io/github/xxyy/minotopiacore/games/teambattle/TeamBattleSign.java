@@ -10,13 +10,15 @@ import org.bukkit.block.Sign;
 
 
 public final class TeamBattleSign { //REFACTOR class name
-    private TeamBattleSign() {
-
-    }
 
 	public static Location signLocation;
 	public static boolean enabled=false;
 	public static int taskId=-1;
+
+    private TeamBattleSign() {
+
+    }
+
 	/**
 	 * public static boolean updateSign()
 	 * Updates the sign.

@@ -18,9 +18,18 @@ import java.util.Map;
 
 public final class SBHelper {
 
-    private final MTC plugin;
+    private static final String QUERY_BOTH =
+            "SELECT mtc_stats.kills AS killz, mtc_stats.deaths AS deathz, ni176987_1_DB.balance AS money FROM mtc_stats "
+            + "INNER JOIN ni176987_1_DB ON mtc_stats.user_name=ni176987_1_DB.username WHERE mtc_stats.user_name = ?";
+    private static final String QUERY_MONEY = "SELECT balance AS money FROM ni176987_1_DB WHERE username=?";
+    private static final String QUERY_STATS = "SELECT kills AS killz, deaths AS deathz FROM mtc_stats WHERE user_name=?";
 
+    private final MTC plugin;
     private final Runnable updateTask = new RunnableUpdateBoards();
+    private final Map<String, Scoreboard> pBoardCache = new HashMap<>();
+
+    private boolean selectMoney = true;
+    private boolean selectStats = true;
 
     public SBHelper(MTC plugin) {
         this.plugin = plugin;
@@ -28,15 +37,6 @@ public final class SBHelper {
         selectMoney = plugin.getVaultHook().isEconomyHooked();
         selectStats = !ConfigHelper.isStatsEnabled();
     }
-
-    private final Map<String, Scoreboard> pBoardCache = new HashMap<>();
-    private boolean selectMoney = true;
-    private boolean selectStats = true;
-    private static final String QUERY_BOTH =
-            "SELECT mtc_stats.kills AS killz, mtc_stats.deaths AS deathz, ni176987_1_DB.balance AS money FROM mtc_stats "
-            + "INNER JOIN ni176987_1_DB ON mtc_stats.user_name=ni176987_1_DB.username WHERE mtc_stats.user_name = ?";
-    private static final String QUERY_MONEY = "SELECT balance AS money FROM ni176987_1_DB WHERE username=?";
-    private static final String QUERY_STATS = "SELECT kills AS killz, deaths AS deathz FROM mtc_stats WHERE user_name=?";
 
     public String getPVPQuery(boolean fetchStats, boolean fetchMoney) {
         if (fetchStats && fetchMoney) {

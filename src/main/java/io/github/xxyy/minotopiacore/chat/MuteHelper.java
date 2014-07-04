@@ -9,12 +9,13 @@ import java.util.Calendar;
 import java.util.Set;
 
 public final class MuteHelper {
-    private MuteHelper() {
-
-    }
 
     public static final File MUTE_CFG_FILE = new File("plugins/MinoTopiaCore", "mute.lst.yml");
     public static final YamlConfiguration MUTE_CFG = YamlConfiguration.loadConfiguration(MUTE_CFG_FILE);
+
+    private MuteHelper() {
+
+    }
 
     public static boolean isPlayerMuted(String plrName) {
         return MUTE_CFG.contains("muted." + plrName);

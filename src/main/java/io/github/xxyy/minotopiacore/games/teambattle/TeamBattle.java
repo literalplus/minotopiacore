@@ -20,30 +20,34 @@ import java.util.logging.Level;
 
 @SuppressWarnings("all") // This is neither currently used nor supported - Keeping it anyways for historic purposes or so
 public final class TeamBattle {
+    public static final String CHAT_PREFIX = "§aтᴇᴀмвᴀттʟᴇ§7";
+    public final String reloadTpMsg = TeamBattle.CHAT_PREFIX + " Du wurdest wegen einem Reload zu deiner vorherigen Position teleportiert.";
+
     private static TeamBattle instance;
-    private final List<Player> playersBlue = new ArrayList<>();
-    private final List<Player> playersRed = new ArrayList<>();
-    private final List<Player> playersLobby = new ArrayList<>();
-    private int pointsBlue = 0; //wins after 50 points, 1point/kill
-    private int pointsRed = 0;
+    public static LeaveManager leaveMan = new LeaveManager();
+
     public static int winPoints = 20;
     public static int betterKitPoints = 10;
     public static int maxPlayers = 16;
+    public static int maxPointDifferenceForBetterKit = 5;//very short name
+
+    private final List<Player> playersBlue = new ArrayList<>();
+    private final List<Player> playersRed = new ArrayList<>();
+    private final List<Player> playersLobby = new ArrayList<>();
     private final File configLocation = new File("plugins/MinoTopiaCore", "teambattle.cfg.yml");
-    public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.configLocation);
     private final Map<Player, Location> prevLocations = new HashMap<>();
+
+    private int pointsBlue = 0; //wins after 50 points, 1point/kill
+    private int pointsRed = 0;
+    public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.configLocation);
     private Location spawnBlue;
     private Location spawnRed;
     private Location lobby;
-    public static final String CHAT_PREFIX = "§aтᴇᴀмвᴀттʟᴇ§7";
-    public final String reloadTpMsg = TeamBattle.CHAT_PREFIX + " Du wurdest wegen einem Reload zu deiner vorherigen Position teleportiert.";
-    public static int maxPointDifferenceForBetterKit = 5;//very short name
     public boolean isGameEndInProgress = false; //to prevent kills when game ends -> kit
 
     public boolean isBetterKit = false;//if a team has more than 10p
     public TeamBattleTeams betterKitTeam = TeamBattleTeams.None;
 
-    public static LeaveManager leaveMan = new LeaveManager();
 
     /**
      * public TeamBattle()

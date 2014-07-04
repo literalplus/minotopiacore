@@ -66,9 +66,11 @@ import java.util.logging.Level;
 
 public final class MTC extends SqlXyPlugin implements XyLocalizable {
 
-    private static MTC instance;
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
-    private boolean showDisableMsg = true;
+    public static SqlConsts2 tMconsts; //TODO
+    public static int speedOnJoinPotency = -1; //TODO <--
+
+    private static MTC instance;
 
     public static String priChatCol = "§6";
     public static String codeChatCol = "§3";
@@ -77,10 +79,7 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
     public static String warnChatPrefix = "§6[§bMTS§6] ";
 
     public SafeSql ssql2 = null; //TODO
-    public static SqlConsts2 tMconsts; //TODO
     public TeamBattle tb; //TODO
-
-    public static int speedOnJoinPotency = -1; //TODO <--
 
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
@@ -93,6 +92,8 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
     private WorldGuardHook worldGuardHook;
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
+
+    private boolean showDisableMsg = true;
 
     @Override
     public void reloadConfig() {

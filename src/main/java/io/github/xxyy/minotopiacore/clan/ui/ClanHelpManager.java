@@ -10,10 +10,12 @@ import java.util.Map;
 
 
 public final class ClanHelpManager {
+
+    public static Map<String, ClanHelpManager> helpMans = new HashMap<>();
+
     public String helpPageTitle;
     public String[] cmdDescLines;
     public Map<String, String> subCmds;
-    public static Map<String, ClanHelpManager> helpMans = new HashMap<>();
 
     public ClanHelpManager(String cmdName, String[] cmdDescLines, Map<String, String> subCmds) {
         this.helpPageTitle = cmdName;

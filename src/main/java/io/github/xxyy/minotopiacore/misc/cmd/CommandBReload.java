@@ -19,9 +19,10 @@ import java.util.List;
 
 public final class CommandBReload extends MTCCommandExecutor {
 
+    public static int taskId = -2;
+
     private static final List<Integer> SECONDS = new ArrayList<>();
     private static final List<Long> DELAYS = new ArrayList<>();
-    public static int taskId = -2;
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
