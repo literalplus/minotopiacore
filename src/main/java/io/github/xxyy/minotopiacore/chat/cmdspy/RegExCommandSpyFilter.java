@@ -19,7 +19,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     private final List<Pattern> patterns;
 
     public RegExCommandSpyFilter(List<Pattern> patterns) {
-        this("§9[CmdSpy]§7{}: §o/{}", patterns);
+        this("§9[CmdSpy]§7{0}: §o/{1}", patterns);
     }
 
     public RegExCommandSpyFilter(String notificationFormat, List<Pattern> patterns) {

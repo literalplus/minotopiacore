@@ -20,7 +20,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     private final Logger logger;
 
     public BadCommandSpyFilter(Stream<Pattern> patterns, Logger logger) {
-        super("§4[CmdSpy] §c{}: §7§o/{}", patterns.collect(Collectors.toList()));
+        super("§4[CmdSpy] §c{0}: §7§o/{1}", patterns.collect(Collectors.toList()));
         this.logger = logger;
     }
 

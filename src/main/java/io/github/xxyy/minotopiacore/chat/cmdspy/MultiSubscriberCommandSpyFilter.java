@@ -21,6 +21,7 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
 
     public MultiSubscriberCommandSpyFilter(String notificationFormat, BiPredicate<String, Player> predicate) {
         super(predicate);
+        MessageFormat.format(notificationFormat, "testPlayerName", "cmdspy"); //Throw exception immediately if pattern is invalid -> tests :)
         this.notificationFormat = notificationFormat;
     }
 

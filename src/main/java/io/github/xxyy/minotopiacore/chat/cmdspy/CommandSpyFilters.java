@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * @since 19.6.14
  */
 public final class CommandSpyFilters {
-    private static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{}: §o/{}", (cmd, plr) -> true) {
+    private static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{0}: §o/{1}", (cmd, plr) -> true) {
         @Override
         public String niceRepresentation() {
             return "(global) all";
@@ -115,7 +115,7 @@ public final class CommandSpyFilters {
     }
 
     public static CommandSpyFilter playerFilter(UUID targetId) {
-        return new PlayerCommandSpyFilter("§e[CmdSpy]§7{}: §o/{}", targetId);
+        return new PlayerCommandSpyFilter("§e[CmdSpy]§7{0}: §o/{1}", targetId);
     }
 
     protected static CommandSpyFilter regexFilter(Stream<Pattern> patterns) {
