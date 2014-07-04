@@ -254,15 +254,7 @@ public class MTCHelper { //FIXME wtf is this
      * @see #isEnabled(String)
      */
     public static boolean isEnabledAndMsg(String path, CommandSender sender, MTC instance) {
-        String str = instance.getConfig().getString("enable" + path);
-
-        boolean value;
-        try {
-            value = Boolean.parseBoolean(str);
-        } catch (Exception e) {
-            instance.getLogger().info("Notice: Config Value " + path + " is not a boolean! Please check this and convert it to a boolean.");
-            return true;
-        }
+        boolean value = instance.getConfig().getBoolean("enable" + path);
 
         if (!value) {
             sender.sendMessage("§cDiese Funktion ist in der Config deaktiviert! (" + path + ")");
