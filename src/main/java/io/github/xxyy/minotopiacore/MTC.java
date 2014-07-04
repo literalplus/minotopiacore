@@ -64,7 +64,7 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.logging.Level;
 
-public final class MTC extends SqlXyPlugin implements XyLocalizable {
+public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
     public static SqlConsts2 tMconsts; //TODO
