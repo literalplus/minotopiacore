@@ -44,7 +44,7 @@ public class YamlParseTest {
         }).when(fakeLogger).log(eq(Level.SEVERE), contains("Cannot load "), any(Throwable.class));
 
         //noinspection ConstantConditions
-        for (File langFile : dir.listFiles()) { //FIXME We need a way to know if this failed....This shitty method only logs and ignores :/
+        for (File langFile : dir.listFiles()) {
             YamlConfiguration.loadConfiguration(langFile);
         }
     }
