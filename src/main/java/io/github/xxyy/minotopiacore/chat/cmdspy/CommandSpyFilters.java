@@ -127,7 +127,7 @@ public final class CommandSpyFilters {
     }
 
     public static CommandSpyFilter stringFilter(String input, Function<Stream<Pattern>, CommandSpyFilter> filterBuilder) {
-        Function<String, Pattern> patternBuilder = (str) -> Pattern.compile(str + "\\s*", Pattern.CASE_INSENSITIVE);
+        Function<String, Pattern> patternBuilder = (str) -> Pattern.compile("(" + str + ")\\s*", Pattern.CASE_INSENSITIVE);
 
         if (input.startsWith("!r")) {
             return filterBuilder.apply(Stream.of(

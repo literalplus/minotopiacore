@@ -47,9 +47,9 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     public boolean hasCommandName(String commandName) {
         String regex;
         if(commandName.startsWith("!r")) {
-            regex = commandName.replaceFirst("!r\\s*", "").concat("\\s*");
+            regex = "(" + commandName.replaceFirst("!r\\s*", "").concat(")\\s*");
         } else {
-            regex = Pattern.quote(commandName).concat("\\s*");
+            regex = "(" + Pattern.quote(commandName).concat(")\\s*");
         }
 
         return patterns.stream()
@@ -62,7 +62,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
 
     @Override
     public String niceRepresentation() {
-        return MessageFormat.format("{0} -> /{1}/ig",
+        return MessageFormat.format("{0} -> / {1} /ig",
                 super.niceRepresentation(),
                 CommandHelper.CSCollection(getPatterns().stream()
                         .map(Pattern::pattern)
