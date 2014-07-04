@@ -24,7 +24,7 @@ public class MTCHelper { //FIXME wtf is this
         SafeSql sql = MTC.instance().ssql;
         sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+".mtc_violations SET code=?,violator=?,timestamp=NOW(),info=?", code, violator, info);
     }
-    
+
     /**
      * CS == Comma Seperate
      * @param col An Iterable to seperate
@@ -42,7 +42,7 @@ public class MTCHelper { //FIXME wtf is this
         }
         return rtrn;
     }
-    
+
     /**
      * CS == Comma Seperate
      * @param col An Iterable to seperate
@@ -59,7 +59,7 @@ public class MTCHelper { //FIXME wtf is this
         }
         return rtrn;
     }
-    
+
 	public static <T> Set<T> emptySet(T t){
         Set<T> set = new HashSet<>();
         set.add(t);
@@ -85,7 +85,7 @@ public class MTCHelper { //FIXME wtf is this
 	    short linesToDraw = (short) (maxLength * factor);//factor can not be > 1
 	    return StringUtils.rightPad(StringUtils.rightPad("[", linesToDraw, '█'),maxLength, '▒') + "]" + StringUtils.leftPad(((short) (factor * 100)) + "%", 3 , '0');
 	}
-	
+
 	/**
 	 * initialize help system.
 	 *
@@ -207,7 +207,7 @@ public class MTCHelper { //FIXME wtf is this
         ClanHelpManager.helpMans.put("clan", helpClan);
         ClanHelpManager.helpMans.put("xclan", helpClan);
     }
-    	
+
 	/**
 	 * public static boolean isEnabled(String path)
 	 * Checks if a part of MTC is enabled in config.
@@ -229,7 +229,7 @@ public class MTCHelper { //FIXME wtf is this
 		}
 		return value;
 	}
-    
+
     /**
      * Checks if a part of MTC is enabled in config.
      * Example: isEnabledAndMsg(".command.AA") checks if the command AA is enabled.
@@ -238,21 +238,39 @@ public class MTCHelper { //FIXME wtf is this
      * @return boolean
      * @see #isEnabled(String)
      */
-    public static boolean isEnabledAndMsg(String path,CommandSender sender){
-        String str = MTC.instance().getConfig().getString("enable"+path);
+    public static boolean isEnabledAndMsg(String path, CommandSender sender) {
+        return isEnabledAndMsg(path, sender, MTC.instance());
+    }
+
+    /**
+     * Checks if a part of MTC is enabled in config.
+     * Example: isEnabledAndMsg(".command.AA") checks if the command AA is enabled.
+     * Example: isEnabledAndMSg("") checks if MTC is enabled.
+     *
+     * @param path     Path in config (Will be prefixed with 'enable')
+     * @param sender   CommandSender to send message to
+     * @param instance MTC plugin instance to check
+     * @return boolean
+     * @see #isEnabled(String)
+     */
+    public static boolean isEnabledAndMsg(String path, CommandSender sender, MTC instance) {
+        String str = instance.getConfig().getString("enable" + path);
+
         boolean value;
-        try{
+        try {
             value = Boolean.parseBoolean(str);
-        }catch(Exception e){
-            System.out.println("Notice: Config Value "+path+" is not a boolean! Please check this and convert it to a boolean.");
+        } catch (Exception e) {
+            instance.getLogger().info("Notice: Config Value " + path + " is not a boolean! Please check this and convert it to a boolean.");
             return true;
         }
-        if(!value) {
-            sender.sendMessage("§cDiese Funktionalität ist in der Config deaktiviert! ("+path+")");
+
+        if (!value) {
+            sender.sendMessage("§cDiese Funktion ist in der Config deaktiviert! (" + path + ")");
         }
+
         return value;
     }
-    
+
     /**
      * Localize a String for default language
      * @param key localization key
@@ -263,7 +281,7 @@ public class MTCHelper { //FIXME wtf is this
     public static String loc(String key, boolean sendMTCPrefix){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, "CONSOLE", MTC.instance().getName());
     }
-    
+
     /**
      * Localize a String for sender's language
      * @param key localization key
@@ -275,7 +293,7 @@ public class MTCHelper { //FIXME wtf is this
     public static String loc(String key,CommandSender sender, boolean sendMTCPrefix){
         return loc(key, sender.getName(), sendMTCPrefix);
     }
-    
+
     /**
      * Localize a String for sender's language
      * @param key localization key
@@ -287,7 +305,7 @@ public class MTCHelper { //FIXME wtf is this
     public static String loc(String key,String senderName, boolean sendMTCPrefix){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, senderName, MTC.instance().getName());
     }
-    
+
     /**
      * Localize a String for sender's language
      * @param key localization key
@@ -300,13 +318,13 @@ public class MTCHelper { //FIXME wtf is this
     public static String locArgs(String key,String senderName, boolean sendMTCPrefix, Object... args){
         return ((sendMTCPrefix) ? MTC.chatPrefix : "")+String.format(LangHelper.localiseString(key, senderName, MTC.instance().getName()),args);
     }
-    
+
     public static String locToShortString(Location loc){
         return "{Loc|wrld:"+loc.getWorld().getName()+"|x"+loc.getBlockX()+"|y"+loc.getBlockY()+"|z"+loc.getBlockZ()+"}";
     }
-    
+
     /**
-     * Sends a message to sender without those ugly 
+     * Sends a message to sender without those ugly
      * spaces on the beginning of each line.
      * @param msg Message to be sent, preferably multi-line (use /n)
      * @param sender Receiver of the message
@@ -319,7 +337,7 @@ public class MTCHelper { //FIXME wtf is this
         }
         return true;
     }
-    
+
     /**
      * Localize a String for sender's language
      *  and send it to them.
@@ -334,7 +352,7 @@ public class MTCHelper { //FIXME wtf is this
         CommandHelper.msg(((sendMTCPrefix) ? MTC.chatPrefix : "")+LangHelper.localiseString(key, sender.getName(), MTC.instance().getName()),sender);
         return true;
     }
-    
+
     /**
      * Localize a String for sender's language
      *  and send it to them, with arguemnts replaced.
@@ -350,7 +368,7 @@ public class MTCHelper { //FIXME wtf is this
         CommandHelper.msg(((sendMTCPrefix) ? MTC.chatPrefix : "")+String.format(LangHelper.localiseString(key, sender.getName(), MTC.instance().getName()),args),sender);
         return true;
     }
-    
+
     public static boolean sendLocOrSaveArgs(String key, CommandSender sender, String type, int type2, boolean sendMTCPrefix, Object... args){
         if((!(sender instanceof Player) || ((Player)sender).isOnline())) {
             return MTCHelper.sendLocArgs(key, sender, sendMTCPrefix, args);
@@ -359,7 +377,7 @@ public class MTCHelper { //FIXME wtf is this
         LaterMessageHelper.addMessage(sender.getName(), type, type2, msg, true, sendMTCPrefix);
         return true;
     }
-    
+
     public static boolean sendLocOrSaveArgs(String key, String plrName, String type, int type2, boolean sendMTCPrefix, Object... args){
         Player plr = Bukkit.getPlayerExact(plrName);
         if(plr != null && plr.isOnline()) {
