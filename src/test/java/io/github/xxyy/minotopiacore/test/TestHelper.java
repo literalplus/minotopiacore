@@ -24,15 +24,20 @@ public class TestHelper {
 
         if (server == null) {
             server = mock(Server.class);
-            when(server.getName()).thenReturn("Spagt");
-            when(server.getBukkitVersion()).thenReturn("fuk of bukite");
-            when(server.getVersion()).thenReturn("infinity");
-            when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
-            when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), Bukkit.getServer().getLogger()));
-            when(server.getPlayer(any(UUID.class))).then(id -> Arrays.asList(Bukkit.getServer().getOnlinePlayers()).stream()
-                    .filter(plr -> plr.getUniqueId().equals(id.getArguments()[0]))
-                    .findAny().orElse(null));
+        } else {
+            reset(server);
+        }
 
+        when(server.getName()).thenReturn("Spagt");
+        when(server.getBukkitVersion()).thenReturn("fuk of bukite");
+        when(server.getVersion()).thenReturn("infinity");
+        when(server.getLogger()).thenReturn(Logger.getLogger(Server.class.getName()));
+        when(server.getConsoleSender()).thenAnswer(invocation -> loggerSender(mock(ConsoleCommandSender.class), Bukkit.getServer().getLogger()));
+        when(server.getPlayer(any(UUID.class))).then(id -> Arrays.asList(Bukkit.getServer().getOnlinePlayers()).stream()
+                .filter(plr -> plr.getUniqueId().equals(id.getArguments()[0]))
+                .findAny().orElse(null));
+
+        if(Bukkit.getServer() == null) {
             Bukkit.setServer(server);
         }
 
