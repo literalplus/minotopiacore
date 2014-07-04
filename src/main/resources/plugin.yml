@@ -52,14 +52,6 @@ commands:
     description: "MTC Mute. Mehr Info: /<command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [mtcmute,mtsmute,mmute]
-  falldown:
-    description: "Falldown...Ein Spiel von MinoTopia... Mehr! /<command> help"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [fd, fdown, falld]
-  falldownadmin:
-    description: "Falldown admin tools.. /<command> help"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [fda, fa, falldowna, fdadmin]
   ban:
     description: "Bannt einen Spieler."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
@@ -116,7 +108,7 @@ commands:
     description: "Zaehlt alle Spieler."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
   giveall:
-    description: "Gibt allen Sspielern ein Item."
+    description: "Gibt allen Spielern ein Item."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [ga, mtcgiveall]
   breload:
@@ -134,7 +126,3 @@ commands:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
-  mtccfg:
-    description: Manages MTC config.
-    usage: Won`t tell.
-    aliases: [mtcc, mtcconfig, xyucfg]

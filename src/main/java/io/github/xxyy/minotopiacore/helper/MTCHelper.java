@@ -90,7 +90,7 @@ public class MTCHelper { //FIXME wtf is this
 	 * initialize help system.
 	 *
 	 */
-	public static void initHelp(){
+	public static void initHelp(){ //TODO this should automatically load everything from MTCCommandExecutor objects
         HelpManager.helpMans = new HashMap<>();
         //LORE
         Map<String,String> loreMap=new HashMap<>();
@@ -110,7 +110,7 @@ public class MTCHelper { //FIXME wtf is this
         HelpManager helpTime=new HelpManager("GetTime-Hilfe",
                 new String[]{"Zeigt die aktuelle (RL-)Serverzeit und das heutige Datum an."},
                 timeMap);
-        HelpManager.helpMans.put("gtime", helpTime);
+        HelpManager.helpMans.put("gtime", helpTime); //TODO get aliases automagically
         HelpManager.helpMans.put("gt", helpTime);
         HelpManager.helpMans.put("gettime", helpTime);
         HelpManager.helpMans.put("getdate", helpTime);
@@ -125,7 +125,7 @@ public class MTCHelper { //FIXME wtf is this
         mainMap.put("dline [line]", "Editiert das Schild, das du anschaust. (Löscht Zeile)");
         mainMap.put("ci", "Leert dein Inventar (INKLUSIVE Rüstung!)");
         mainMap.put("config get [Option]", "Zeigt eine Option aus der Config an.");
-        mainMap.put("config set [Option] [Wert]", "Schreibt eine Option in die Config");
+        mainMap.put("config set [Option] [Wert]", "Schreibt eine Option in die Config. (Akzeptierte Typen: String, boolean)");
         mainMap.put("config reload", "Lädt die Config neu.");
         mainMap.put("rne [neuer Name]", "Setzt den Namen des Entitys in deiner Nähe.");
         mainMap.put("motd [neue lokale MotD]", "Setzt die lokale MotD. (NICHT BungeeCord!)");

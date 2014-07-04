@@ -248,7 +248,6 @@ public final class MTC extends SqlXyPlugin implements XyLocalizable {
         this.getCommand("gtime").setExecutor(new CommandTime());
         this.getCommand("lore").setExecutor(new CommandLore());
         this.getCommand("mtc").setExecutor(new CommandMTC());
-        this.getCommand("mtccfg").setExecutor(new CommandMTCConfig());
         this.getCommand("cmdspy").setExecutor(new CommandCmdSpy());
         this.getCommand("playerhead").setExecutor(new CommandPlayerHead());
         this.getCommand("giveall").setExecutor(new CommandGiveAll());

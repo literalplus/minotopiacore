@@ -11,6 +11,7 @@ import io.github.xxyy.minotopiacore.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import io.github.xxyy.minotopiacore.misc.CacheHelper;
 import io.github.xxyy.minotopiacore.misc.ClearCacheEvent;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -237,16 +238,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                     (new RunnableCronjob5Minutes(true)).run();
                     sender.sendMessage(MTC.chatPrefix + "Forced Cronjob (5m)!");
                     return true;
-                case "ietmonjoin":
-                    if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc", label)
-                            || CommandHelper.kickConsoleFromMethod(sender, label)) {
-                        return true;
-                    }
-
-                    MTC.instance().getConfig().set("itemonjoin", ((Player) sender).getItemInHand());
-                    MTC.instance().saveConfig();
-                    sender.sendMessage(MTC.chatPrefix + "itemonjoin gesetzt.");
-                    return true;
+                case "config":
+                    return this.handleConfigAction(sender, args, label);
                 default:
                     sender.sendMessage("§cUnbekannte Aktion.");
             }
@@ -264,6 +257,56 @@ public final class CommandMTC extends MTCCommandExecutor {
             }
         }
 
+        return true;
+    }
+
+    private boolean handleConfigAction(CommandSender sender, String[] args, String label) {
+        String action = args.length > 1 ? args[1] : "help";
+
+        if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.config." + args[1], label + " " + args[1])) {
+            return true;
+        }
+
+        switch (action) {
+            case "set": //mtc config set WHAT VAL
+                if (args.length < 4) {
+                    sender.sendMessage("§8Invalide Argumente für /" + label + " config set. Hilfe:");
+                    HelpManager.tryPrintHelp("mtc", sender, label, "", "mtc help mtc");
+                    return true;
+                }
+                final String strValue = args[3];
+                Object value = strValue;
+
+                if (StringUtils.isNumeric(strValue)) {
+                    value = Integer.parseInt(strValue);
+                } else {
+                    if (strValue.equalsIgnoreCase("true") || strValue.equalsIgnoreCase("false")) {
+                        value = Boolean.parseBoolean(strValue);
+                    }
+                }
+
+                MTC.instance().getConfig().set(args[2], value);
+                MTC.instance().saveConfig();
+                sender.sendMessage("§7Konfigurationswert §3" + args[2] + "§7 gesetzt auf: §3" + value + ".");
+                CommandHelper.sendImportantActionMessage(sender, "Set Config Value §3" + args[2] + "§a§o to §3" + value);
+                break;
+            case "get": //mtc config get WHAT
+                if (args.length < 3) {
+                    sender.sendMessage("§7Invalide Argumente für §3/" + label + " config get§7. Hilfe:");
+                    HelpManager.tryPrintHelp("mtc", sender, label, "", "mtc help mtc");
+                    return true;
+                }
+                final String fetchedValue = String.valueOf(MTC.instance().getConfig().get(args[2]));
+                sender.sendMessage("§7Der Wert §3" + args[2] + "§7 ist im Moment gesetzt auf: §3" + fetchedValue + "§e.");
+                break;
+            case "reload":
+                MTC.instance().reloadConfig();
+                CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC config.");
+                break;
+            default:
+                sender.sendMessage("§8Unbekannte Aktion config " + args[1] + ". Hilfe:");
+                HelpManager.tryPrintHelp("mtc", sender, label, "", "mtc help mtc");
+        }
         return true;
     }
 }
