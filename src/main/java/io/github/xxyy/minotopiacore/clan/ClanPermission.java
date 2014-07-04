@@ -76,7 +76,7 @@ public enum ClanPermission {
 
     public static boolean hasAndMessage(ClanMemberInfo cmi, ClanPermission perm, CommandSender sender) {
         return (has(cmi, perm) || (sender.hasPermission("mtc.clana.override"))) //this expr is whether the user has permission - (has clan perm | has override)
-                && MTCHelper.sendLocArgs("XC-noperm", sender, true, perm.toString(), MTC.codeChatCol); //This always returns true (true && true -> true/false && true -> false)
+                || !MTCHelper.sendLocArgs("XC-noperm", sender, true, perm.toString(), MTC.codeChatCol); //This always returns true (true && true -> true/false && true -> false)
     }
 
     /**
