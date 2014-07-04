@@ -54,7 +54,7 @@ public class CommandSpyFilterTest {
     }
 
     @Test
-    public void testTextFilter() {
+     public void testTextFilter() {
         Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
@@ -66,6 +66,17 @@ public class CommandSpyFilterTest {
                 stringFilter.matches(targetString, fakeSpy));
         Assert.assertFalse("String filter matched wrong message",
                 stringFilter.matches("Some random message", fakeSpy));
+    }
+
+    @Test
+    public void testToggleTextFilter() {
+        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
+        CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
+
+        String targetString = "inert string";
+        Assert.assertTrue("Couldn't add target to new string filter", CommandSpyFilters.toggleStringFilter(targetString, fakeSpy));
+        Assert.assertFalse("String filter wasn't removed on second toggle!", CommandSpyFilters.toggleStringFilter(targetString, fakeSpy));
     }
 
     @Test
@@ -89,5 +100,16 @@ public class CommandSpyFilterTest {
                 stringFilter.matches(matching, fakeSpy));
         Assert.assertFalse("RegEx filter matched wrong message",
                 stringFilter.matches(notMatching, fakeSpy));
+    }
+
+    @Test
+    public void testToggleRegExFilter() {
+        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
+        CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
+
+        String targetString = "!r(.+?)woa\\2";
+        Assert.assertTrue("Couldn't add target to new RegEx filter", CommandSpyFilters.toggleStringFilter(targetString, fakeSpy));
+        Assert.assertFalse("RegEx filter wasn't removed on second toggle!", CommandSpyFilters.toggleStringFilter(targetString, fakeSpy));
     }
 }

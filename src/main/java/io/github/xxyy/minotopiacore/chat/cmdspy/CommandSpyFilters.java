@@ -127,13 +127,17 @@ public final class CommandSpyFilters {
     }
 
     public static CommandSpyFilter stringFilter(String input, Function<Stream<Pattern>, CommandSpyFilter> filterBuilder) {
+        return filterBuilder.apply(getStringFilterPatterns(input));
+    }
+
+    public static Stream<Pattern> getStringFilterPatterns(String input) {
         Function<String, Pattern> regExPatternBuilder = (str) -> Pattern.compile("(" + str + ")\\s*", Pattern.CASE_INSENSITIVE);
         Function<String, Pattern> stringPatternBuilder = (str) -> Pattern.compile("(^" + str + ")\\s*", Pattern.CASE_INSENSITIVE);
 
         if (input.startsWith("!r")) {
-            return filterBuilder.apply(Stream.of(
+            return Stream.of(
                     regExPatternBuilder.apply(input.replaceFirst("!r\\s*", "")) //Build a filter for the regex, removing the leading !r and any following whitespace.
-            ));
+            );
         } else {
             PluginCommand foundCommand = Bukkit.getPluginCommand(input);
             List<String> commandsToMatch = new LinkedList<>();
@@ -143,9 +147,9 @@ public final class CommandSpyFilters {
                 commandsToMatch.addAll(foundCommand.getAliases());
             }
 
-            return filterBuilder.apply(commandsToMatch.stream()
+            return commandsToMatch.stream()
                     .map(Pattern::quote)
-                    .map(stringPatternBuilder));
+                    .map(stringPatternBuilder);
         }
     }
 }

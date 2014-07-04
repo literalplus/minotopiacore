@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 /**
  * Handles commandspy messages with regex.
  *
-* @author <a href="http://xxyy.github.io/">xxyy</a>
-* @since 20.6.14
-*/
+ * @author <a href="http://xxyy.github.io/">xxyy</a>
+ * @since 20.6.14
+ */
 public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     private final List<Pattern> patterns;
 
@@ -45,15 +45,11 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     }
 
     public boolean hasCommandName(String commandName) {
-        String regex;
-        if(commandName.startsWith("!r")) {
-            regex = "(" + commandName.replaceFirst("!r\\s*", "").concat(")\\s*");
-        } else {
-            regex = "(" + Pattern.quote(commandName).concat(")\\s*");
-        }
-
-        return patterns.stream()
-                .anyMatch(pat -> pat.pattern().equalsIgnoreCase(regex));
+        return CommandSpyFilters.getStringFilterPatterns(commandName)
+                .anyMatch( //Any of the found patterns
+                        pat -> patterns.stream(). //has a equal pattern in the known patterns.
+                                anyMatch(exPat -> exPat.pattern().equalsIgnoreCase(pat.pattern()))
+                );
     }
 
     public List<Pattern> getPatterns() {
