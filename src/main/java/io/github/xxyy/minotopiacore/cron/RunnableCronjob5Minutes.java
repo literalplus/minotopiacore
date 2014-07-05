@@ -10,6 +10,7 @@ import io.github.xxyy.minotopiacore.MTC;
 import io.github.xxyy.minotopiacore.bans.BanHelper;
 import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
 import io.github.xxyy.minotopiacore.chat.PrivateChat;
+import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.minotopiacore.helper.StatsHelper;
@@ -66,6 +67,9 @@ public class RunnableCronjob5Minutes implements Runnable {
                             .forEach(chat::removeRecipient);
                 }
             }
+
+            //Remove dead CommandSpy filters
+            CommandSpyFilters.removeDeadFilters();
 
             //actual msg
             CommandHelper.broadcast(MTC.chatPrefix + "[Cron-5M] Welt gespeichert! §7§o{" + (new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime())) + "}", "mtc.saveallmsg");
