@@ -1,6 +1,7 @@
 package io.github.xxyy.minotopiacore.test.cmdspy;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilter;
 import io.github.xxyy.minotopiacore.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.minotopiacore.test.TestHelper;
@@ -38,6 +39,7 @@ public class CommandSpyFilterRegistrationTest {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
         when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList());
+        when(filter.canSubscribe()).thenReturn(true);
 
         CommandSpyFilters.registerFilter(filter);
         Assert.assertTrue("Filter registration failed!", CommandSpyFilters.getActiveFilters().contains(filter));
@@ -47,10 +49,11 @@ public class CommandSpyFilterRegistrationTest {
     }
 
     @Test
-    public void removeDeadFiltersTest2() {
+     public void removeDeadFiltersTest2() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
         when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId, offlineId));
+        when(filter.canSubscribe()).thenReturn(true);
 
         CommandSpyFilters.registerFilter(filter);
         Assert.assertTrue("Filter registration failed!", CommandSpyFilters.getActiveFilters().contains(filter));
@@ -61,6 +64,20 @@ public class CommandSpyFilterRegistrationTest {
         when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
         CommandSpyFilters.removeDeadFilters();
         Assert.assertFalse("Dead filter illegally persisted!", CommandSpyFilters.getActiveFilters().contains(filter));
+    }
+
+    @Test
+    public void removeDeadFiltersTest3() {
+        CommandSpyFilter filter = mock(CommandSpyFilter.class);
+        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
+        when(filter.getSubscribers()).thenReturn(Sets.newHashSet());
+        when(filter.canSubscribe()).thenReturn(false);
+
+        CommandSpyFilters.registerFilter(filter);
+        Assert.assertTrue("Filter registration failed!", CommandSpyFilters.getActiveFilters().contains(filter));
+
+        CommandSpyFilters.removeDeadFilters();
+        Assert.assertTrue("Permanent filter (aka. canSubscribe() -> false) illegally removed!", CommandSpyFilters.getActiveFilters().contains(filter));
     }
 
     @Test

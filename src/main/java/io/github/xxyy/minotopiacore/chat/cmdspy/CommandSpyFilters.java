@@ -53,6 +53,10 @@ public final class CommandSpyFilters {
         activeFilters.remove(filter);
     }
 
+    /**
+     * This removes dead filters. Dead filters are filters that do not have any subscribers (online).
+     * This method ignores filters whose {@link CommandSpyFilter#canSubscribe()} method returns FALSE.
+     */
     public static void removeDeadFilters() {
         Set<CommandSpyFilter> filters = getActiveFilters().stream()
                 .filter(CommandSpyFilter::canSubscribe)
