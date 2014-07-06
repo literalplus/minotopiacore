@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.stream.Stream;
+
 
 public class CommandCmdSpy implements CommandExecutor {
 
@@ -57,14 +59,9 @@ public class CommandCmdSpy implements CommandExecutor {
                     sender.sendMessage(MTC.chatPrefix + "Alle Filter deaktiviert!");
                     return true;
                 case "-l": //List filters
-                    int filterAmount = CommandSpyFilters.getSubscribedFilters(plr.getUniqueId())
-                            .mapToInt(filter -> {
-                                plr.sendMessage(filter.niceRepresentation()); //This is where they get the info about the filter
-                                return 1;
-                            }).sum();
-
-                    sender.sendMessage(MTC.chatPrefix + "Du hast " + (filterAmount == 0 ? "keine" : filterAmount) + " Filter abonniert.");
-                    return true;
+                    return printFilters(sender, CommandSpyFilters.getSubscribedFilters(plr.getUniqueId()));
+                case "-la":
+                    return printFilters(sender, CommandSpyFilters.getActiveFilters().stream());
                 case "-a": //Target all commands
                     sender.sendMessage(MTC.chatPrefix + "CommandSpy -a " +
                             enabledString(
@@ -82,6 +79,17 @@ public class CommandCmdSpy implements CommandExecutor {
         }
 
         return this.printHelpTo(sender);
+    }
+
+    private boolean printFilters(CommandSender sender, Stream<CommandSpyFilter> filters) {
+        int filterAmount = filters
+                .mapToInt(filter -> {
+                    sender.sendMessage(filter.niceRepresentation()); //This is where they get the info about the filter
+                    return 1;
+                }).sum();
+
+        sender.sendMessage(MTC.chatPrefix + "Du hast " + (filterAmount == 0 ? "keine" : filterAmount) + " Filter abonniert.");
+        return true;
     }
 
     public String enabledString(boolean enabled) {
