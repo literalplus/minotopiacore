@@ -54,7 +54,9 @@ public final class CommandSpyFilters {
     }
 
     public static void removeDeadFilters() {
-        Set<CommandSpyFilter> filters = getActiveFilters();
+        Set<CommandSpyFilter> filters = getActiveFilters().stream()
+                .filter(CommandSpyFilter::canSubscribe)
+                .collect(Collectors.toSet());
 
         filters.stream() //Remove offline subscribers for more accurate results
                 .forEach(CommandSpyFilters::removeOfflineSubscribers);
