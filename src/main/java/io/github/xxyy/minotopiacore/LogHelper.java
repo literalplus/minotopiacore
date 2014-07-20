@@ -123,6 +123,7 @@ public final class LogHelper {
     private static void initLogger(Logger lgr, String fileName, String loggerName, boolean setParent) throws Exception{
         FileHandler hdlr = new FileHandler(fileName);
         hdlr.setLevel(Level.FINEST);
+        hdlr.set
         hdlr.setFormatter(new XYCFormatter(MTC.instance(), loggerName, false));
         hdlr.setEncoding("UTF-8");
 //        lgr.removeHandler(lgr.getHandlers()[0]);
