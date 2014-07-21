@@ -164,6 +164,7 @@ public final class ChatListener implements Listener {
         e.setFormat("MTC WAZ HEAR");
         e.setCancelled(true);
         finalMsg = finalMsg.replace("❢g", "");
+        finalMsg = finalMsg.replace(".#", "#");
         if (ConfigHelper.isWorldSpecificChat()) {
             World world = plr.getWorld();
             String worldPrefix = (world.getName().equals("world")) ? "" : ("§6[§a§l" + world.getName() + "§6] ".replaceAll("a", "SG"));
