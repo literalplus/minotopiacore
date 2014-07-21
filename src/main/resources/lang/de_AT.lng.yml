@@ -197,3 +197,8 @@ lang:
   XU-randomplr: '&9Es wird ein zuf&auml;lliger Spieler ausgew&auml;hlt....'
   XU-chosenone: '&b%s &9ist der/die Auserw&auml;hlte!'
   XU-chosenone2: '&9Der/die Auserw&auml;hlte ist offline gegangen. =('
+  whois1: |
+    &6UUID: &e%s &6Name: &e%s
+    &6Leben: %s
+    &6Hunger: &e%d&6/20 &6S&auml;ttigung: &e%d
+    &6Gamemode: &e%s
