@@ -40,7 +40,11 @@ public final class CommandDeleteWarn implements CommandExecutor {
                     unknownReason = false;
                     ctr++;
                     continue;
-                } else if (arg.equalsIgnoreCase("-r")) {//overrides
+                } else if (arg.equalsIgnoreCase("-r")) {
+                    if (!sender.hasPermission("mtc.warns.remove.any")) {
+                        sender.sendMessage(MTC.warnChatPrefix + "§cDu darfst keine Markierungen löschen!");
+                        return true;
+                    }
                     forceRemove = false;
                     unknownReason = false;
                     resetFlag = true;
@@ -48,6 +52,10 @@ public final class CommandDeleteWarn implements CommandExecutor {
                     continue;
                 }
                 if (arg.equalsIgnoreCase("-u")) {
+                    if (!sender.hasPermission("mtc.warns.remove.any")) {
+                        sender.sendMessage(MTC.warnChatPrefix + "§cDu darfst Warns nicht als unbekannt markieren!");
+                        return true;
+                    }
                     if (forceRemove) {
                         ctr++;
                         continue;
@@ -88,6 +96,10 @@ public final class CommandDeleteWarn implements CommandExecutor {
                     sender.sendMessage(MTC.warnChatPrefix + "§aWarn §e" + uid + "§a erfolgrich entfernt.");
                     return true;
                 } else if (arg.equalsIgnoreCase("-l")) {
+                    if (!sender.hasPermission("mtc.warns.remove.own")) {
+                        sender.sendMessage(MTC.warnChatPrefix + "§cDu darfst keine Warns löschen!");
+                        return true;
+                    }
                     WarnInfo wi = WarnInfo.getLastGivenByName(sender.getName());
                     if (wi.id < 0) {
                         sender.sendMessage(MTC.warnChatPrefix + "Fehler: " + wi.id);
