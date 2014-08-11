@@ -1,8 +1,5 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.helper.MTCHelper;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.minotopiacore.MTC;
+import io.github.xxyy.minotopiacore.helper.MTCHelper;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
 
@@ -75,7 +76,7 @@ public final class CommandGiveAll extends MTCCommandExecutor {
             }
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-giveallbroadcast", senderName, false, CommandGiveAll.getISString(finalStack)));
             for (Player plr : Bukkit.getOnlinePlayers()) {
-                plr.getInventory().addItem(finalStack);
+                plr.getInventory().addItem(finalStack.clone());
             }
             CommandHelper.broadcast(MTCHelper.locArgs("XU-givealladmin", senderName, false, senderName), "mtc.ignore");
         } else {
