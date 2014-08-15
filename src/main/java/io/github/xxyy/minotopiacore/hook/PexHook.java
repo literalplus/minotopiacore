@@ -1,9 +1,10 @@
 package io.github.xxyy.minotopiacore.hook;
 
-import io.github.xxyy.minotopiacore.hook.impl.PexHookImpl;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
+import io.github.xxyy.minotopiacore.hook.impl.PexHookImpl;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -24,17 +25,16 @@ public class PexHook extends SimpleHookWrapper {
 
     public List<PexHook.Group> getGroupList() {
         if(!isActive()) {
-            this.getPlugin().getLogger().info("Could not find Pemissionsex groups because not active!"); //hehe
-            return new ArrayList<>();
+            this.getPlugin().getLogger().info("Could not find PermissionsEx groups because not active!");
+            return ImmutableList.of();
         }
 
-        //noinspection Convert2Diamond
-        return Hooks.Unsafe.safeCall(unsafe::getGroupList, new ArrayList<PexHook.Group>(), null); //diamond inference causes IDEA to track a compile error
+        return unsafe.getGroupList();
     }
 
     @Override
     public boolean isActive() {
-        return unsafe != null && unsafe.isActive();
+        return unsafe != null && unsafe.isHooked();
     }
 
     public static interface User {

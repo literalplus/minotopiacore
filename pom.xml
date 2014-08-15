@@ -4,7 +4,7 @@
 
     <groupId>io.github.xxyy</groupId>
     <artifactId>minotopiacore</artifactId>
-    <version>1.5</version>
+    <version>1.5.1</version>
     <packaging>jar</packaging>
 
     <name>MinoTopia Core</name>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>io.github.xxyy</groupId>
             <artifactId>common</artifactId>
-            <version>3-SNAPSHOT</version>
+            <version>2.5.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.tehkode</groupId>

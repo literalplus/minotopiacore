@@ -1,9 +1,10 @@
 package io.github.xxyy.minotopiacore.hook;
 
-import io.github.xxyy.minotopiacore.hook.impl.VaultHookImpl;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
+
+import io.github.xxyy.minotopiacore.hook.impl.VaultHookImpl;
 
 /**
  * Helps interfacing with Vault.
@@ -21,7 +22,7 @@ public class VaultHook extends SimpleHookWrapper {
     }
 
     public boolean assureHasAccount(OfflinePlayer offlinePlayer) {
-        return isEconomyHooked() && Hooks.Unsafe.safeCall(unsafe::assureHasAccount, offlinePlayer, false, null);
+        return isEconomyHooked() && unsafe.assureHasAccount(offlinePlayer);
     }
 
     public double getBalance(OfflinePlayer offlinePlayer) {
@@ -29,11 +30,11 @@ public class VaultHook extends SimpleHookWrapper {
             throw new IllegalStateException("Economy not hooked!");
         }
 
-        return Hooks.Unsafe.safeCall(unsafe::getBalance, offlinePlayer, 0D, null);
+        return unsafe.getBalance(offlinePlayer);
     }
 
     public String getPlayerPrefix(OfflinePlayer offlinePlayer) {
-        return isChatHooked() ? Hooks.Unsafe.safeCall(unsafe::getPlayerPrefix, offlinePlayer, "§c§o[ERR]", null) : "§c[ERR]";
+        return isChatHooked() ? unsafe.getPlayerPrefix(offlinePlayer) : "§c[ERR]";
     }
 
     public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double amount) { //FIXME Will throw CNFE if no Vault loaded - shade?

@@ -1,10 +1,15 @@
 package io.github.xxyy.minotopiacore.hook.impl;
 
-import io.github.xxyy.minotopiacore.hook.PexHook;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.Validate;
 import ru.tehkode.permissions.PermissionGroup;
+import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+
+import io.github.xxyy.lib.intellij_annotations.Nullable;
+import io.github.xxyy.minotopiacore.hook.HookWrapper;
+import io.github.xxyy.minotopiacore.hook.Hooks;
+import io.github.xxyy.minotopiacore.hook.PexHook;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,30 +21,45 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public class PexHookImpl {
+public class PexHookImpl implements Hook {
+    @Nullable
+    private PermissionManager permissionManager;
+    private PexHook wrapper;
 
-    private final PexHook wrapper;
+    @Override
+    public boolean isHooked() {
+        return wrapper != null && permissionManager != null;
+    }
 
-    public PexHookImpl(PexHook wrapper) {
-        this.wrapper = wrapper;
+    @Override
+    public boolean canHook(HookWrapper wrapper) {
+        return wrapper instanceof PexHook && Hooks.isPluginLoaded(wrapper, "PermissionsEx");
+    }
+
+    @Override
+    @SuppressWarnings("ConstantConditions") //We're checking anyways lol
+    public void hook(HookWrapper wrapper) {
+        Validate.isTrue(wrapper instanceof PexHook, "incompatible hook wrapper!");
+        this.wrapper = (PexHook) wrapper;
+        this.permissionManager = Hooks.setupProvider(PermissionManager.class, wrapper.getPlugin());
     }
 
     public List<PexHook.Group> getGroupList() {
-        return PermissionsEx.getPermissionManager().getGroupList().stream()
+        if(permissionManager == null) {
+            return ImmutableList.of();
+        }
+
+        return permissionManager.getGroupList().stream()
                 .map(GroupImpl::new)
                 .collect(Collectors.toList());
     }
 
-    public boolean isActive() {
-        return PermissionsEx.isAvailable();
-    }
-
     public class UserImpl implements PexHook.User {
-        private final PermissionUser parent;
+        private final PermissionUser handle;
         private UUID uniqueId; //Can't be final because Java thinks that UUID#fromString() can throw an IAE after the value has been assigned ._.
 
         public UserImpl(PermissionUser user) {
-            this.parent = user;
+            this.handle = user;
 
             try {
                 this.uniqueId = UUID.fromString(user.getIdentifier());
@@ -49,18 +69,18 @@ public class PexHookImpl {
             }
         }
 
-        public PermissionUser getParent() {
-            return parent;
+        public PermissionUser getHandle() {
+            return handle;
         }
 
         @Override
         public String getName() {
-            return parent.getName();
+            return handle.getName();
         }
 
         @Override
         public String getIdentifier() {
-            return parent.getIdentifier();
+            return handle.getIdentifier();
         }
 
         @Override
@@ -76,40 +96,40 @@ public class PexHookImpl {
     }
 
     public class GroupImpl implements PexHook.Group {
-        private final PermissionGroup parent;
+        private final PermissionGroup handle;
 
         public GroupImpl(PermissionGroup group) {
-            this.parent = group;
+            this.handle = group;
         }
 
-        public PermissionGroup getParent() {
-            return parent;
+        public PermissionGroup getHandle() {
+            return handle;
         }
 
         @Override
         public String getName() {
-            return parent.getName();
+            return handle.getName();
         }
 
         @Override
         public String getPrefix() {
-            return parent.getPrefix();
+            return handle.getPrefix();
         }
 
         @Override
         public int getOptionInteger(String optionName, String world, int defaultValue) {
-            return parent.getOptionInteger(optionName, world, defaultValue);
+            return handle.getOptionInteger(optionName, world, defaultValue);
         }
 
         @Override
         public boolean getOptionBoolean(String optionName, String world, boolean defaultValue) {
-            return parent.getOptionBoolean(optionName, world, defaultValue);
+            return handle.getOptionBoolean(optionName, world, defaultValue);
         }
 
         @Override
         public List<PexHook.User> getUsers() {
             //noinspection Convert2MethodRef
-            return parent.getUsers().stream()
+            return handle.getUsers().stream()
                     .map(puser -> new UserImpl(puser)) //constructor ref is broken in j8u5 for some reason
                     .filter(UserImpl::isValid)
                     .collect(Collectors.toList());

@@ -1,13 +1,13 @@
 package io.github.xxyy.minotopiacore.misc.cmd;
 
-import io.github.xxyy.common.HelpManager;
-import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import io.github.xxyy.minotopiacore.misc.LoreManager;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import io.github.xxyy.minotopiacore.misc.LoreManager;
 
 
 public final class CommandLore implements CommandExecutor{

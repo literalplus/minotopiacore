@@ -1,5 +1,14 @@
 package io.github.xxyy.minotopiacore.chat;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+
 import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.minotopiacore.ConfigHelper;
@@ -9,14 +18,6 @@ import io.github.xxyy.minotopiacore.clan.ClanHelper;
 import io.github.xxyy.minotopiacore.clan.ClanInfo;
 import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
 import io.github.xxyy.minotopiacore.clan.ClanPermission;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -156,7 +157,7 @@ public final class ChatListener implements Listener {
                 plr.sendMessage(MTC.chatPrefix + "CAPS-Autodetection ignoriert.");
             } else {
                 finalMsg = finalMsg.toLowerCase();
-                plr.sendMessage(MTC.chatPrefix + "Bitte nicht alles grossschreiben :)");
+                plr.sendMessage(MTC.chatPrefix + "Bitte nicht alles großschreiben :)");
             }
         }
 

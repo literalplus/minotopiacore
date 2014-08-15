@@ -1,9 +1,10 @@
 package io.github.xxyy.minotopiacore.hook;
 
-import io.github.xxyy.minotopiacore.hook.impl.XLoginHookImpl;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import io.github.xxyy.minotopiacore.hook.impl.XLoginHookImpl;
 
 import java.util.UUID;
 
@@ -22,12 +23,12 @@ public class XLoginHook extends SimpleHookWrapper {
         unsafe = Hooks.tryHook(this);
     }
 
-    public boolean isAuthenticated(Player plr) {
+    public boolean isAuthenticated(Player plr) throws IllegalStateException {
         return isAuthenticated(plr.getUniqueId());
     }
 
-    public boolean isAuthenticated(UUID uuid) {
-        return isActive() && Hooks.Unsafe.safeCall(unsafe::isAuthenticated, uuid, true, null);
+    public boolean isAuthenticated(UUID uuid) throws IllegalStateException {
+        return isActive() && isAuthenticated(uuid);
     }
 
     public Location getSpawnLocation() {
@@ -35,17 +36,17 @@ public class XLoginHook extends SimpleHookWrapper {
             return null;
         }
 
-        return Hooks.Unsafe.safeCall(unsafe::getSpawnLocation, null, null);
+        return unsafe.getSpawnLocation();
     }
 
     public void resetSpawnLocation() {
         if(isActive()) {
-            Hooks.Unsafe.safeCall(unsafe::resetSpawnLocation, null);
+            unsafe.resetSpawnLocation();
         }
     }
 
     @Override
     public boolean isActive() {
-        return unsafe != null;
+        return unsafe != null && unsafe.isHooked();
     }
 }

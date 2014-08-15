@@ -1,11 +1,5 @@
 package io.github.xxyy.minotopiacore.games.teambattle.admin;
 
-import io.github.xxyy.common.HelpManager;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.minotopiacore.games.teambattle.CommandTeamBattleHelper;
-import io.github.xxyy.minotopiacore.games.teambattle.TeamBattle;
-import io.github.xxyy.minotopiacore.games.teambattle.TeamBattleSign;
-import io.github.xxyy.minotopiacore.games.teambattle.TeamBattleTeams;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +7,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.minotopiacore.games.teambattle.CommandTeamBattleHelper;
+import io.github.xxyy.minotopiacore.games.teambattle.TeamBattle;
+import io.github.xxyy.minotopiacore.games.teambattle.TeamBattleSign;
+import io.github.xxyy.minotopiacore.games.teambattle.TeamBattleTeams;
 
 import java.util.List;
 

@@ -1,10 +1,12 @@
 package io.github.xxyy.minotopiacore.hook.impl;
 
-import io.github.xxyy.minotopiacore.hook.XLoginHook;
-import io.github.xxyy.xlogin.common.PreferencesHolder;
-import io.github.xxyy.xlogin.common.api.SpawnLocationHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
+import io.github.xxyy.minotopiacore.hook.HookWrapper;
+import io.github.xxyy.minotopiacore.hook.Hooks;
+import io.github.xxyy.xlogin.common.PreferencesHolder;
+import io.github.xxyy.xlogin.common.api.SpawnLocationHolder;
 
 import java.util.UUID;
 
@@ -14,11 +16,24 @@ import java.util.UUID;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public final class XLoginHookImpl {
+public final class XLoginHookImpl implements Hook {
     private Location spawnLocation = null;
+    private boolean hooked = false;
 
-    public XLoginHookImpl(XLoginHook wrapper) {
+    @Override
+    public boolean canHook(HookWrapper wrapper) {
+        return Hooks.isPluginLoaded(wrapper, "xLogin_Spigot");
+    }
 
+    @Override
+    public void hook(HookWrapper wrapper) {
+        wrapper.getPlugin().getLogger().info("Hooked xLogin using " + PreferencesHolder.getConsumer().getClass().getName() + "!"); //Ensures that the class is loaded
+        hooked = true;
+    }
+
+    @Override
+    public boolean isHooked() {
+        return hooked;
     }
 
     public boolean isAuthenticated(UUID uuid) {
@@ -26,7 +41,7 @@ public final class XLoginHookImpl {
     }
 
     public Location getSpawnLocation() {
-        if(spawnLocation == null) {
+        if (spawnLocation == null) {
             spawnLocation = new Location(Bukkit.getWorld(SpawnLocationHolder.getWorldName()),
                     SpawnLocationHolder.getX(),
                     SpawnLocationHolder.getY(),

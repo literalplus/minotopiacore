@@ -1,20 +1,26 @@
 package io.github.xxyy.minotopiacore.clan.ui;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.minotopiacore.ConfigHelper;
-import io.github.xxyy.minotopiacore.LogHelper;
-import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
-import io.github.xxyy.minotopiacore.clan.*;
-import io.github.xxyy.minotopiacore.helper.LaterMessageHelper;
-import io.github.xxyy.minotopiacore.helper.MTCHelper;
-import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.minotopiacore.ConfigHelper;
+import io.github.xxyy.minotopiacore.LogHelper;
+import io.github.xxyy.minotopiacore.MTC;
+import io.github.xxyy.minotopiacore.chat.MTCChatHelper;
+import io.github.xxyy.minotopiacore.clan.ClanHelper;
+import io.github.xxyy.minotopiacore.clan.ClanInfo;
+import io.github.xxyy.minotopiacore.clan.ClanMemberInfo;
+import io.github.xxyy.minotopiacore.clan.ClanPermission;
+import io.github.xxyy.minotopiacore.clan.InvitationInfo;
+import io.github.xxyy.minotopiacore.clan.RunnableTpClanBase;
+import io.github.xxyy.minotopiacore.helper.LaterMessageHelper;
+import io.github.xxyy.minotopiacore.helper.MTCHelper;
+import io.github.xxyy.minotopiacore.misc.cmd.MTCCommandExecutor;
 
 import java.util.logging.Level;
 
@@ -95,7 +101,9 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
                 if(ci.id < 0) {
                     return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
                 }
-                plugin.getVaultHook().depositPlayer((Player) sender, ci.money);
+                if(plugin.getVaultHook().isEconomyHooked()) {
+                    plugin.getVaultHook().depositPlayer((Player) sender, ci.money);
+                }
                 ClanHelper.broadcastOrSave(ClanHelper.getClanInfoByPlayerName(senderName).id, MTCHelper.locArgs("XC-removedbroadcast",senderName, false, senderName),1,true);
                 ci.nullify();
                 ClanHelper.cacheById.remove(ci.id);

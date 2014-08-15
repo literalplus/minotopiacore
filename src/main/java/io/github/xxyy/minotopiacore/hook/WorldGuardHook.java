@@ -1,8 +1,9 @@
 package io.github.xxyy.minotopiacore.hook;
 
-import io.github.xxyy.minotopiacore.hook.impl.WorldGuardHookImpl;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
+
+import io.github.xxyy.minotopiacore.hook.impl.WorldGuardHookImpl;
 
 /**
  * Hooks into WorldGuard.
@@ -21,15 +22,16 @@ public final class WorldGuardHook extends SimpleHookWrapper {
 
     /**
      * Checks whether there are any WorldGuard regions blocking PvP at the given location.
+     *
      * @param loc Location to check
      * @return FALSE if PvP is blocked at that location, TRUE if PvP is allowed or WorldGuard is not installed.
      */
-    public boolean isPvP(Location loc){
+    public boolean isPvP(Location loc) {
         return !isActive() || unsafe.isPvP(loc);
     }
 
     @Override
     public boolean isActive() {
-        return unsafe != null;
+        return unsafe != null && unsafe.isHooked();
     }
 }

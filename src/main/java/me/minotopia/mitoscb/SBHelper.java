@@ -1,15 +1,16 @@
 package me.minotopia.mitoscb;
 
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.minotopiacore.ConfigHelper;
-import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.minotopiacore.ConfigHelper;
+import io.github.xxyy.minotopiacore.MTC;
+import io.github.xxyy.minotopiacore.helper.StatsHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,12 +1,14 @@
 package io.github.xxyy.minotopiacore.hook.impl;
 
-import io.github.xxyy.minotopiacore.hook.VaultHook;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.RegisteredServiceProvider;
+
+import io.github.xxyy.minotopiacore.hook.HookWrapper;
+import io.github.xxyy.minotopiacore.hook.Hooks;
+import io.github.xxyy.minotopiacore.hook.VaultHook;
 
 /**
  * Implements unsafe parts of the Vault API.
@@ -14,19 +16,26 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 9.6.14
  */
-public final class VaultHookImpl {
-
-    private final VaultHook wrapper;
+public final class VaultHookImpl implements Hook {
     private Chat chat;
     private Economy economy;
     private Permission permission;
 
-    public VaultHookImpl(VaultHook wrapper) {
-        this.wrapper = wrapper;
+    @Override
+    public boolean canHook(HookWrapper wrapper) {
+        return wrapper instanceof VaultHook && wrapper.getPlugin().getServer().getPluginManager().getPlugin("Vault") != null;
+    }
 
-        chat = setupProvider(Chat.class);
-        economy = setupProvider(Economy.class);
-        permission = setupProvider(Permission.class);
+    @Override
+    public void hook(HookWrapper wrapper) {
+        chat = Hooks.setupProvider(Chat.class, wrapper.getPlugin());
+        economy = Hooks.setupProvider(Economy.class, wrapper.getPlugin());
+        permission = Hooks.setupProvider(Permission.class, wrapper.getPlugin());
+    }
+
+    @Override
+    public boolean isHooked() {
+        return true; //Can't really say
     }
 
     public boolean assureHasAccount(OfflinePlayer offlinePlayer) {
@@ -46,27 +55,6 @@ public final class VaultHookImpl {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private <T> T setupProvider(Class<T> providerClass) {
-        T provider = null;
-
-        try {
-            RegisteredServiceProvider<T> rsp = wrapper.getPlugin().getServer().getServicesManager().getRegistration(providerClass);
-            if(rsp == null) {
-                wrapper.getPlugin().getLogger().info("No "+providerClass.getSimpleName()+" provider found to hook into!");
-                return null;
-            }
-            provider = rsp.getProvider();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if(provider == null) {
-            wrapper.getPlugin().getLogger().warning("Failed to hook Vault "+providerClass.getSimpleName()+"!");
-        }
-
-        return provider;
-    }
 
     public Chat getChat() {
         return chat;

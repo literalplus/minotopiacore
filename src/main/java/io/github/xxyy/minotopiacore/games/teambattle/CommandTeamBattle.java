@@ -1,12 +1,12 @@
 package io.github.xxyy.minotopiacore.games.teambattle;
 
-import io.github.xxyy.common.HelpManager;
-import io.github.xxyy.minotopiacore.helper.MTCHelper;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.minotopiacore.helper.MTCHelper;
 
 
 public final class CommandTeamBattle implements CommandExecutor {
@@ -17,7 +17,7 @@ public final class CommandTeamBattle implements CommandExecutor {
             return true;
         }
 		if(args.length == 0){
-			HelpManager.tryPrintHelp("war", sender, label, "", label+" help");
+			HelpManager.tryPrintHelp("war", sender, label, "", label + " help");
 		}else if(args.length == 1){//join, leave
 			CommandTeamBattleHelper helper=new CommandTeamBattleHelper(sender,args,label);
 			switch(args[0]){

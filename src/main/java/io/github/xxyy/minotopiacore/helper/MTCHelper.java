@@ -1,12 +1,5 @@
 package io.github.xxyy.minotopiacore.helper;
 
-import io.github.xxyy.common.HelpManager;
-import io.github.xxyy.common.localisation.LangHelper;
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.ToShortStringable;
-import io.github.xxyy.minotopiacore.MTC;
-import io.github.xxyy.minotopiacore.clan.ui.ClanHelpManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +8,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import io.github.xxyy.common.localisation.LangHelper;
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.ToShortStringable;
+import io.github.xxyy.minotopiacore.MTC;
+import io.github.xxyy.minotopiacore.clan.ui.ClanHelpManager;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MTCHelper { //FIXME wtf is this
