@@ -1,8 +1,5 @@
 package io.github.xxyy.mtc.test.cmd;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.misc.cmd.CommandMTC;
-import io.github.xxyy.mtc.test.TestHelper;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,11 +7,18 @@ import org.bukkit.entity.Player;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import io.github.xxyy.common.test.util.MockHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.cmd.CommandMTC;
+
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests some testable parts of the /mtc command.
@@ -23,7 +27,7 @@ import static org.mockito.Mockito.*;
  * @since 5.7.14
  */
 public class CommandMTCTest {
-    private static final Server SERVER = TestHelper.mockServer();
+    private static final Server SERVER = MockHelper.mockServer();
     private static CommandMTC commandMTC;
     private static Player fakeSender;
     private static Command fakeCommand = mock(Command.class);
@@ -36,13 +40,13 @@ public class CommandMTCTest {
         when(mtc.getConfig()).thenReturn(cfg);
         commandMTC = new CommandMTC(mtc);
 
-        fakeSender = TestHelper.mockPlayer(UUID.randomUUID(), "sender");
+        fakeSender = MockHelper.mockPlayer(UUID.randomUUID(), "sender");
         when(fakeSender.hasPermission(any(String.class))).thenReturn(true);
     }
 
     @Test
     public void testFakeMessage() {
-        Player otherPlayer = TestHelper.mockPlayer(UUID.randomUUID(), "other");
+        Player otherPlayer = MockHelper.mockPlayer(UUID.randomUUID(), "other");
         when(otherPlayer.hasPermission(any(String.class))).thenReturn(false);
 
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSender, otherPlayer});

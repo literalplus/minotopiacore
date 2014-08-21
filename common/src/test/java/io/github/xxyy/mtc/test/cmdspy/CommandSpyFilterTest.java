@@ -1,13 +1,14 @@
 package io.github.xxyy.mtc.test.cmdspy;
 
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilter;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
-import io.github.xxyy.mtc.chat.cmdspy.RegExCommandSpyFilter;
-import io.github.xxyy.mtc.test.TestHelper;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.github.xxyy.common.test.util.MockHelper;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilter;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
+import io.github.xxyy.mtc.chat.cmdspy.RegExCommandSpyFilter;
 
 import java.util.UUID;
 
@@ -20,13 +21,13 @@ import static org.mockito.Mockito.when;
  * @since 30.6.14
  */
 public class CommandSpyFilterTest {
-    private static final Server SERVER = TestHelper.mockServer();
+    private static final Server SERVER = MockHelper.mockServer();
     private UUID targetId = UUID.randomUUID();
     private UUID otherId = UUID.randomUUID();
 
     @Test
     public void testGlobalFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
         Assert.assertTrue("Couldn't inject fake player to global filter!", CommandSpyFilters.toggleGlobalFilter(fakeSpy));
@@ -40,8 +41,8 @@ public class CommandSpyFilterTest {
 
     @Test
     public void testPlayerFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
-        Player fakeTarget = TestHelper.mockPlayer(otherId, "target"); //Need that one online or the filter will be destroyed
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
+        Player fakeTarget = MockHelper.mockPlayer(otherId, "target"); //Need that one online or the filter will be destroyed
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy, fakeTarget});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
@@ -55,7 +56,7 @@ public class CommandSpyFilterTest {
 
     @Test
      public void testTextFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
@@ -70,7 +71,7 @@ public class CommandSpyFilterTest {
 
     @Test
     public void testToggleTextFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
@@ -81,7 +82,7 @@ public class CommandSpyFilterTest {
 
     @Test
     public void testRegexFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
@@ -104,7 +105,7 @@ public class CommandSpyFilterTest {
 
     @Test
     public void testToggleRegExFilter() {
-        Player fakeSpy = TestHelper.mockPlayer(targetId, "spy");
+        Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSpy});
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 

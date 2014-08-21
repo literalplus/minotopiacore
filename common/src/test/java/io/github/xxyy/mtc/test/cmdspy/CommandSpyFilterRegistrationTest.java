@@ -2,9 +2,6 @@ package io.github.xxyy.mtc.test.cmdspy;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilter;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
-import io.github.xxyy.mtc.test.TestHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
@@ -12,10 +9,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import io.github.xxyy.common.test.util.MockHelper;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilter;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
+
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the registration of CommandSpy filters.
@@ -27,11 +29,11 @@ import static org.mockito.Mockito.*;
 public class CommandSpyFilterRegistrationTest {
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
-    private Player[] playersWithTarget = new Player[]{TestHelper.mockPlayer(targetId, "test")};
+    private Player[] playersWithTarget = new Player[]{MockHelper.mockPlayer(targetId, "test")};
 
     @BeforeClass
     public static void init() {
-        TestHelper.mockServer();
+        MockHelper.mockServer();
     }
 
     @Test
