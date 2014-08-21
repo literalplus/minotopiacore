@@ -20,6 +20,10 @@
             <groupId>io.github.xxyy.mtc</groupId>
             <artifactId>mtc-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -112,7 +116,6 @@
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>io.github.xxyy:common</include>
                             <include>io.github.xxyy.mtc:*</include>
                             <include>org.apache.commons:commons-lang3</include>
                         </includes>

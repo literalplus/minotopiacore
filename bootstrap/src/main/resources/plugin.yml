@@ -3,7 +3,8 @@ version: ${project.version}-git-${buildNumber}
 description: MinoTopiaCore - A collection of semi-essential stuff for MinoTopia.
 author: xxyy98/Literallie
 main: io.github.xxyy.mtc.MTC
-softdepend: [XYC, Vault, xLogin_Spigot, WorldGuard, Essentials]
+depend: [XYC]
+softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials]
 website: http://xxyy.github.io/
 
 
