@@ -19,6 +19,14 @@
         <connection>scm:git://git@bitbucket.org:minotopia/minotopiacore.git</connection>
     </scm>
 
+    <distributionManagement>
+        <downloadUrl>http://www.minotopia.de/ci/job/pvp~mtc/</downloadUrl>
+        <repository>
+            <id>xxyy-repo</id>
+            <url>http://repo.nowak-at.net/xxyy-private/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
