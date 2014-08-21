@@ -17,44 +17,6 @@ package io.github.xxyy.mtc;
 
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
-import io.github.xxyy.mtc.bans.cmd.CommandBanInfo;
-import io.github.xxyy.mtc.bans.cmd.CommandTempban;
-import io.github.xxyy.mtc.bans.cmd.CommandUnban;
-import io.github.xxyy.mtc.chat.ChatListener;
-import io.github.xxyy.mtc.chat.CommandChatClear;
-import io.github.xxyy.mtc.chat.CommandChatFarbe;
-import io.github.xxyy.mtc.chat.CommandGlobalMute;
-import io.github.xxyy.mtc.chat.CommandMute;
-import io.github.xxyy.mtc.chat.CommandPrivateChat;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.chat.cmdspy.CmdSpyListener;
-import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
-import io.github.xxyy.mtc.clan.ui.CommandClan;
-import io.github.xxyy.mtc.fulltag.CommandFull;
-import io.github.xxyy.mtc.fulltag.FullTagListener;
-import io.github.xxyy.mtc.games.teambattle.event.DeathListener;
-import io.github.xxyy.mtc.games.teambattle.event.DmgListener;
-import io.github.xxyy.mtc.games.teambattle.event.JoinListener;
-import io.github.xxyy.mtc.games.teambattle.event.LeaveListener;
-import io.github.xxyy.mtc.gettime.CommandTime;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.helper.StatsHelper;
-import io.github.xxyy.mtc.hook.VaultHook;
-import io.github.xxyy.mtc.hook.XLoginHook;
-import io.github.xxyy.mtc.listener.*;
-import io.github.xxyy.mtc.misc.AntiLogoutHandler;
-import io.github.xxyy.mtc.misc.cmd.CommandBReload;
-import io.github.xxyy.mtc.misc.cmd.CommandGiveAll;
-import io.github.xxyy.mtc.misc.cmd.CommandInfiniteDispenser;
-import io.github.xxyy.mtc.misc.cmd.CommandLore;
-import io.github.xxyy.mtc.misc.cmd.CommandMTC;
-import io.github.xxyy.mtc.misc.cmd.CommandPeace;
-import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
-import io.github.xxyy.mtc.misc.cmd.CommandRandom;
-import io.github.xxyy.mtc.misc.cmd.CommandTeam;
-import io.github.xxyy.mtc.warns.CommandListWarns;
-import io.github.xxyy.mtc.warns.CommandWarn;
-import io.github.xxyy.mtc.warns.CommandWarnStats;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -69,19 +31,59 @@ import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
+import io.github.xxyy.mtc.api.PlayerGameManager;
 import io.github.xxyy.mtc.bans.cmd.CommandBan;
+import io.github.xxyy.mtc.bans.cmd.CommandBanInfo;
+import io.github.xxyy.mtc.bans.cmd.CommandTempban;
+import io.github.xxyy.mtc.bans.cmd.CommandUnban;
 import io.github.xxyy.mtc.bans.listener.BanJoinListener;
+import io.github.xxyy.mtc.chat.ChatListener;
+import io.github.xxyy.mtc.chat.CommandChatClear;
+import io.github.xxyy.mtc.chat.CommandChatFarbe;
+import io.github.xxyy.mtc.chat.CommandGlobalMute;
+import io.github.xxyy.mtc.chat.CommandMute;
+import io.github.xxyy.mtc.chat.CommandPrivateChat;
+import io.github.xxyy.mtc.chat.MTCChatHelper;
+import io.github.xxyy.mtc.chat.cmdspy.CmdSpyListener;
+import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
+import io.github.xxyy.mtc.clan.ui.CommandClan;
 import io.github.xxyy.mtc.clan.ui.CommandClanAdmin;
 import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
+import io.github.xxyy.mtc.fulltag.CommandFull;
+import io.github.xxyy.mtc.fulltag.FullTagListener;
 import io.github.xxyy.mtc.games.teambattle.CommandTeamBattle;
 import io.github.xxyy.mtc.games.teambattle.TeamBattle;
 import io.github.xxyy.mtc.games.teambattle.admin.CommandTeamBattleAdmin;
 import io.github.xxyy.mtc.games.teambattle.event.CmdListener;
+import io.github.xxyy.mtc.games.teambattle.event.DeathListener;
+import io.github.xxyy.mtc.games.teambattle.event.DmgListener;
+import io.github.xxyy.mtc.games.teambattle.event.JoinListener;
+import io.github.xxyy.mtc.games.teambattle.event.LeaveListener;
 import io.github.xxyy.mtc.games.teambattle.event.RespawnListener;
+import io.github.xxyy.mtc.gettime.CommandTime;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.helper.StatsHelper;
 import io.github.xxyy.mtc.hook.PexHook;
+import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.hook.WorldGuardHook;
+import io.github.xxyy.mtc.hook.XLoginHook;
+import io.github.xxyy.mtc.listener.*;
+import io.github.xxyy.mtc.misc.AntiLogoutHandler;
+import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
+import io.github.xxyy.mtc.misc.cmd.CommandBReload;
+import io.github.xxyy.mtc.misc.cmd.CommandGiveAll;
+import io.github.xxyy.mtc.misc.cmd.CommandInfiniteDispenser;
 import io.github.xxyy.mtc.misc.cmd.CommandList;
+import io.github.xxyy.mtc.misc.cmd.CommandLore;
+import io.github.xxyy.mtc.misc.cmd.CommandMTC;
+import io.github.xxyy.mtc.misc.cmd.CommandPeace;
+import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
+import io.github.xxyy.mtc.misc.cmd.CommandRandom;
+import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.warns.CommandDeleteWarn;
+import io.github.xxyy.mtc.warns.CommandListWarns;
+import io.github.xxyy.mtc.warns.CommandWarn;
+import io.github.xxyy.mtc.warns.CommandWarnStats;
 
 import java.util.logging.Level;
 
@@ -115,6 +117,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private PexHook pexHook;
 
     private boolean showDisableMsg = true;
+    private PlayerGameManager gameManager;
 
     @Override
     public void reloadConfig() {
@@ -257,6 +260,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
         //SQL LOGGER
         this.getSql().errLogger = LogHelper.getMainLogger();
+
+        //API
+        gameManager = new PlayerGameManagerImpl(this);
 
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
@@ -434,5 +440,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     public AntiLogoutHandler getLogoutHandler() {
         return logoutHandler;
+    }
+
+    public PlayerGameManager getGameManager() {
+        return gameManager;
     }
 }

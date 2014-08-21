@@ -1,18 +1,23 @@
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.clan.ClanMemberInfo;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.PeaceInfo;
 import org.bukkit.DyeColor;
-import org.bukkit.entity.*;
+import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanMemberInfo;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.PeaceInfo;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -41,6 +46,11 @@ public final class MainDamageListener implements Listener {
         Player plrDamager;
         boolean message = true;
         Player plr = (Player) e.getEntity();
+
+        if(plugin.getGameManager().isInGame(plr.getUniqueId())) {
+            return;
+        }
+
         plr.removePotionEffect(PotionEffectType.INVISIBILITY);
         switch (e.getDamager().getType()) {
             case PLAYER:
