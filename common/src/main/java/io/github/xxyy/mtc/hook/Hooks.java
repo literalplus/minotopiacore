@@ -86,8 +86,11 @@ public final class Hooks {
     }
 
     public static boolean isPluginLoaded(HookWrapper wrapper, String pluginName) {
-        wrapper.getPlugin().getLogger().info("Plugin " + pluginName + " is required for " + wrapper.getClass().getSimpleName() + ", but couldn't be found!");
-        return wrapper.getPlugin().getServer().getPluginManager().getPlugin(pluginName) != null;
+        if (wrapper.getPlugin().getServer().getPluginManager().getPlugin(pluginName) == null) {
+            wrapper.getPlugin().getLogger().info("Plugin " + pluginName + " is required for " + wrapper.getClass().getSimpleName() + ", but couldn't be found!");
+            return false;
+        }
+        return true;
     }
 
     @Deprecated //This is um..unnecessarily complicating stuff
