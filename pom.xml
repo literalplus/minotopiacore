@@ -2,10 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.xxyy</groupId>
-    <artifactId>minotopiacore</artifactId>
-    <version>1.5.1</version>
-    <packaging>jar</packaging>
+    <groupId>io.github.xxyy.mtc</groupId>
+    <artifactId>mtc-parent</artifactId>
+    <version>1.6.0</version>
+    <modules>
+        <module>common</module>
+        <module>api</module>
+        <module>bootstrap</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>MinoTopia Core</name>
     <url>http://xxyy.github.io/</url>
@@ -16,186 +21,128 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <powermock.version>1.5.5</powermock.version>
+        <xyc.version>3.0.2.1-SNAPSHOT</xyc.version>
     </properties>
 
     <repositories>
         <repository>
-            <id>sk89q-repo</id> <!-- WorldGuard -->
+            <id>sk89q-repo</id>
+            <!-- WorldGuard -->
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>pex-repo</id> <!-- PermissionsEx -->
+            <id>pex-repo</id>
+            <!-- PermissionsEx -->
             <url>http://pex-repo.zachsthings.com/</url>
         </repository>
         <repository>
-            <id>vault-repo</id> <!-- Vault -->
+            <id>vault-repo</id>
+            <!-- Vault -->
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
         </repository>
         <repository>
-            <id>essentials-repo</id> <!-- Essentials -->
+            <id>essentials-repo</id>
+            <!-- Essentials -->
             <url>http://repo.ess3.net/content/groups/essentials</url>
         </repository>
         <repository>
-            <id>jcenter</id> <!-- PowerMock -->
+            <id>jcenter</id>
+            <!-- PowerMock -->
             <url>http://jcenter.bintray.com/</url>
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.7.9-R0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.xxyy</groupId>
-            <artifactId>common</artifactId>
-            <version>2.5.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.tehkode</groupId>
-            <artifactId>PermissionsEx</artifactId>
-            <version>1.22</version>
-        </dependency>
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>net.ess3</groupId>
-            <artifactId>Essentials</artifactId>
-            <version>2.13-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>io.github.xxyy.xlogin</groupId>
-            <artifactId>xlogin-common</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldguard</artifactId>
-            <version>5.7.3</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.12.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3</version>
-        </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.spigotmc</groupId>
+                <artifactId>spigot-api</artifactId>
+                <version>1.7.9-R0.1-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>ru.tehkode</groupId>
+                <artifactId>PermissionsEx</artifactId>
+                <version>1.22</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.milkbowl.vault</groupId>
+                <artifactId>VaultAPI</artifactId>
+                <version>1.4</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.ess3</groupId>
+                <artifactId>Essentials</artifactId>
+                <version>2.13-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.github.xxyy.xlogin</groupId>
+                <artifactId>xlogin-api</artifactId>
+                <version>2.0.1-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sk89q</groupId>
+                <artifactId>worldguard</artifactId>
+                <version>5.7.3</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.12.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.xxyy.common</groupId>
+                <artifactId>xyc-bukkit</artifactId>
+                <version>${xyc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.xxyy.common</groupId>
+                <artifactId>xyc-games</artifactId>
+                <version>${xyc.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+
+            <dependency>
+                <groupId>io.github.xxyy.mtc</groupId>
+                <artifactId>mtc-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.xxyy.mtc</groupId>
+                <artifactId>mtc-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.4</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <executions>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>true</doCheck>
-                    <doUpdate>false</doUpdate>
-                    <shortRevisionLength>7</shortRevisionLength>
-                    <timestampFormat>{0,date,yyyy.MM.dd HH:mm}</timestampFormat>
-                    <format>{1}</format>
-                    <items>
-                        <item>timestamp</item>
-                        <item>scmVersion</item>
-                    </items>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
-                <executions>
-                    <execution>
-                        <id>default-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Build>${buildNumber}@${timestamp}</Implementation-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -245,7 +192,8 @@
                     <exclusions>
                         <exclusion>
                             <groupId>com.sk89q</groupId>
-                            <artifactId>worldedit</artifactId> <!-- Classes at unexpected places -->
+                            <artifactId>worldedit</artifactId>
+                            <!-- Classes at unexpected places -->
                         </exclusion>
                         <exclusion>
                             <groupId>org.yaml</groupId>
@@ -281,7 +229,8 @@
                     <dependency>
                         <groupId>net.sf.proguard</groupId>
                         <artifactId>proguard-base</artifactId>
-                        <version>5.0-LOCAL-20140609.205220-1</version><!-- Snapshots are not being deployed to Central, proxied on Artifactory instead. -->
+                        <version>5.0-LOCAL-20140609.205220-1</version>
+                        <!-- Snapshots are not being deployed to Central, proxied on Artifactory instead. -->
                         <scope>runtime</scope>
                     </dependency>
                 </dependencies>
@@ -339,7 +288,20 @@
             </plugin>
         </plugins>
 
-        <finalName>${project.artifactId}-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
         <resources>
             <resource>

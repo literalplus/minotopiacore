@@ -1,0 +1,9 @@
+▒█▀▄▀█ ░▀░ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀█ █▀▀█ ░▀░ █▀▀█ ▒█▀▀█ █▀▀█ █▀▀█ █▀▀ 
+▒█▒█▒█ ▀█▀ █░░█ █░░█ ░▒█░░ █░░█ █░░█ ▀█▀ █▄▄█ ▒█░░░ █░░█ █▄▄▀ █▀▀ 
+▒█░░▒█ ▀▀▀ ▀░░▀ ▀▀▀▀ ░▒█░░ ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▒█▄▄█ ▀▀▀▀ ▀░▀▀ ▀▀▀ 
+Copyright (C) 2013 - 2014 xxyy98 / Philipp Nowak.
+Decompilation, redistribution or any other kind of usage without explicit written permission
+from the author is strictly prohibited and may result in legal steps being taken.
+Thanks for respecting my work.
+
+This program uses the Bukkit API but is not in any way affiliated with it and/or it's authors.
