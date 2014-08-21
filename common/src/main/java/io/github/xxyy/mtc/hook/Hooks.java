@@ -5,7 +5,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import io.github.xxyy.mtc.hook.impl.Hook;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -45,8 +44,8 @@ public final class Hooks {
         T hookInstance = null;
 
         try {
-            hookInstance = hookClass.getConstructor().newInstance(wrapper);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            hookInstance = hookClass.getConstructor().newInstance();
+        } catch (Exception e) {
             e.printStackTrace();
             wrapper.getPlugin().getLogger().warning("Could not initialise plugin hook: " + hookClass.getName());
         }
