@@ -28,7 +28,7 @@ public class XLoginHook extends SimpleHookWrapper {
     }
 
     public boolean isAuthenticated(UUID uuid) throws IllegalStateException {
-        return isActive() && isAuthenticated(uuid);
+        return isActive() && unsafe.isAuthenticated(uuid);
     }
 
     public Location getSpawnLocation() {
