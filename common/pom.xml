@@ -45,6 +45,10 @@
             <artifactId>worldguard</artifactId>
         </dependency>
         <dependency>
+            <groupId>mkremins</groupId>
+            <artifactId>fanciful</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <scope>provided</scope>

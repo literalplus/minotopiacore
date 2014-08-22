@@ -1,5 +1,7 @@
 package io.github.xxyy.mtc.module;
 
+import mkremins.fanciful.FancyMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +28,7 @@ import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class InfiniteDispenserModule extends ConfigurableMTCModule implements Listener {
     public static final String NAME = "InfiniteDispensers";
@@ -191,6 +194,21 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
                         disp2.removeMetadata(INFINITY_TAG, plugin);
                         removeDispenser(disp2.getLocation());
                         return MTCHelper.sendLoc("XU-infdispoff", sender, true);
+                    case "list":
+                        AtomicInteger i = new AtomicInteger(0);
+                        dispenserLocations.stream().forEach(loc -> {
+                            //@formatter:off
+                            new FancyMessage(loc.getBlock().getType() + " @ ")
+                                        .color(ChatColor.GOLD)
+                                    .then(loc.pretyPrint() +" [klick]")
+                                        .color(ChatColor.YELLOW)
+                                        .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
+                                        .command(loc.toTpCommand(null))
+                                    .send(plr);
+                            i.addAndGet(1);
+                            //@formatter:on
+                        });
+                        sender.sendMessage("§6"+i.get()+" §eInfiniteDispenser registriert.");
                     default:
                         break;
                 }
