@@ -32,7 +32,7 @@ public class PlayerGameManagerImpl implements PlayerGameManager {
             XyValidate.validateState(!isInGame(uuid), "Player can only be in one game at the same time!");
             playersInGames.put(uuid, plugin);
         } else {
-            XyValidate.validateState(plugin.equals(getProvidingPlugin(uuid)), "Can't remove other plugins' entries!");
+            Validate.isTrue(getProvidingPlugin(uuid) == null || plugin.equals(getProvidingPlugin(uuid)), "Can't remove other plugins' entries!");
             playersInGames.remove(uuid);
         }
     }
