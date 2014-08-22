@@ -80,6 +80,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
         }
 
         dispenserLocations.add(loc);
+        configuration.set(DATA_PATH, dispenserLocations);
         save();
     }
 
@@ -92,6 +93,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
         }
 
         dispenserLocations.remove(loc);
+        configuration.set(DATA_PATH, dispenserLocations);
         save();
     }
 
