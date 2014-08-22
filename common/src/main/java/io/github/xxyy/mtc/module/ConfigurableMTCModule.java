@@ -32,7 +32,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
         super.enable(plugin);
         configFile = new File(plugin.getDataFolder(), configFilePath);
         if (!configFile.exists()) {
-            if (!configFile.getParentFile().mkdirs()) {
+            if (!configFile.getParentFile().exists() && !configFile.getParentFile().mkdirs()) {
                 throw new IllegalStateException("Couldn't create " + getName() + " module config file's parent dirs for some reason: " + configFile.getAbsolutePath()); //Sometimes I hate Java's backwards compat
             }
             try {
