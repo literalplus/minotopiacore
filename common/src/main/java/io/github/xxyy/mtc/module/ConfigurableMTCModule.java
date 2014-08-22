@@ -31,6 +31,18 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     public void enable(MTC plugin) {
         super.enable(plugin);
         configFile = new File(plugin.getDataFolder(), configFilePath);
+        if (!configFile.exists()) {
+            if (!configFile.mkdirs()) {
+                throw new IllegalStateException("Couldn't create " + getName() + " module config file's parent dirs for some reason: " + configFile.getAbsolutePath()); //Sometimes I hate Java's backwards compat
+            }
+            try {
+                if (!configFile.createNewFile()) {
+                    throw new IOException("Couldn't create " + getName() + " module config file for some reason: " + configFile.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Caught IOException", e);
+            }
+        }
         configuration = YamlConfiguration.loadConfiguration(configFile);
 
         reloadConfig();
