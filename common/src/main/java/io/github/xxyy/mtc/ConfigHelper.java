@@ -1,16 +1,20 @@
 package io.github.xxyy.mtc;
 
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.mtc.chat.cmdspy.BadCommandSpyFilter;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.chat.cmdspy.BadCommandSpyFilter;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
+
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class ConfigHelper {

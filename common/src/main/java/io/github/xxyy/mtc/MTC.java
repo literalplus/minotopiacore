@@ -72,7 +72,6 @@ import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
 import io.github.xxyy.mtc.misc.cmd.CommandBReload;
 import io.github.xxyy.mtc.misc.cmd.CommandGiveAll;
-import io.github.xxyy.mtc.misc.cmd.CommandInfiniteDispenser;
 import io.github.xxyy.mtc.misc.cmd.CommandList;
 import io.github.xxyy.mtc.misc.cmd.CommandLore;
 import io.github.xxyy.mtc.misc.cmd.CommandMTC;
@@ -80,6 +79,8 @@ import io.github.xxyy.mtc.misc.cmd.CommandPeace;
 import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
 import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
+import io.github.xxyy.mtc.module.InfiniteDispenserModule;
+import io.github.xxyy.mtc.module.MTCModuleAdapter;
 import io.github.xxyy.mtc.warns.CommandDeleteWarn;
 import io.github.xxyy.mtc.warns.CommandListWarns;
 import io.github.xxyy.mtc.warns.CommandWarn;
@@ -123,10 +124,12 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public void reloadConfig() {
         super.reloadConfig();
         ConfigHelper.onConfigReload(this);
+        MTCModuleAdapter.forEach(m -> m.reload(this));
     }
 
     @Override
     public void disable() {
+        MTCModuleAdapter.forEach(m -> m.disable(this));
 
         //TEAMBATTLE
         if (this.tb != null) {
@@ -191,10 +194,12 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
         //CONFIG
         ConfigHelper.initMainConfig();
-//        this.motd = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("motd", "§6§lMinoTopia.me"));
 
         //COMMANDS
         registerCommands();
+
+        //MODULES
+        loadModules();
 
         //HELP
         MTCHelper.initHelp();
@@ -264,12 +269,20 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         //API
         gameManager = new PlayerGameManagerImpl(this);
 
+        MTCModuleAdapter.getInstances().stream()
+                .filter(m -> m.isEnabled(this))
+                .forEach(m -> m.enable(this));
+
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
 
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC enabled,Sir!");
         }
+    }
+
+    private void loadModules() {
+        new InfiniteDispenserModule();
     }
 
     private void registerCommands() {
@@ -315,9 +328,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         if (this.getConfig().getBoolean("enable.command.team", true)) {
             this.getCommand("team").setExecutor(new CommandTeam(this));
         }
-        if (this.getConfig().getBoolean("enable.infdisp", true)) {
-            this.getCommand("infdisp").setExecutor(new CommandInfiniteDispenser());
-        }
         this.getCommand("list").setExecutor(new CommandList());
         this.setExecAndCompleter(new CommandPeace(), "frieden");
         this.setExec(new CommandRandom(), "random");
@@ -361,7 +371,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
-        this.regEvents(pm, new InfiniteDispenseListener(), "enable.infdisp", true);
         this.regEvents(pm, new CmdSpyListener(), "enable.cmdspy", true);
         if (ConfigHelper.isClanEnabled()) {
             pm.registerEvents(new MainDamageListener(this), this);
