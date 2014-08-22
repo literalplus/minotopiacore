@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.MetadataValueAdapter;
@@ -109,7 +110,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
 
     ////////////// EVENT HANDLERS //////////////////////////////////////////////////////////////////////////////////////
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDispense(BlockDispenseEvent evt) {
         BlockState state = evt.getBlock().getState();
         List<MetadataValue> metaData = state.getMetadata(INFINITY_TAG);
@@ -118,7 +119,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
                 .forEach(val -> ((InventoryHolder) state).getInventory().addItem(evt.getItem().clone()));
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onHopper(InventoryMoveItemEvent evt) {
         InventoryHolder hldr = evt.getInitiator().getHolder();
         if (!(hldr instanceof BlockState)) {
@@ -140,6 +141,19 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
                     .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
                 evt.setCancelled(true);
                 MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInvPickup(InventoryPickupItemEvent evt) {
+        InventoryHolder holder = evt.getInventory().getHolder();
+        if (holder instanceof BlockState) {
+            BlockState state = (BlockState) holder;
+            if (state.getMetadata(INFINITY_TAG).stream()
+                    .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
+                evt.setCancelled(true);
+                evt.getItem().remove();
             }
         }
     }
