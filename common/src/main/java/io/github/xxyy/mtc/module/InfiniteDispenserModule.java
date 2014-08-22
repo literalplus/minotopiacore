@@ -6,7 +6,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,13 +47,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
     @SuppressWarnings("unchecked")
     @Override
     protected void reloadImpl() {
-        ConfigurationSection section = configuration.getConfigurationSection(DATA_PATH);
-        if (section == null) {
-            configuration.createSection(DATA_PATH);
-            dispenserLocations = new ArrayList<>();
-        } else {
-            dispenserLocations = (List<XyLocation>) configuration.getList(DATA_PATH);
-        }
+        dispenserLocations = (List<XyLocation>) configuration.getList(DATA_PATH, new ArrayList<XyLocation>());
 
         Iterator<XyLocation> it = dispenserLocations.iterator();
 
@@ -79,7 +72,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
 
     protected void addDispenser(Location input) {
         XyLocation loc;
-        if(input instanceof XyLocation) {
+        if (input instanceof XyLocation) {
             loc = (XyLocation) input;
         } else {
             loc = new XyLocation(input);
@@ -91,7 +84,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
 
     protected void removeDispenser(Location input) { //REFACTOR: un-spaghetti
         XyLocation loc;
-        if(input instanceof XyLocation) {
+        if (input instanceof XyLocation) {
             loc = (XyLocation) input;
         } else {
             loc = new XyLocation(input);
@@ -141,10 +134,10 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
     @EventHandler(ignoreCancelled = true)
     public void onInvOpen(InventoryOpenEvent evt) {
         InventoryHolder holder = evt.getInventory().getHolder();
-        if(holder instanceof BlockState){
-            BlockState state = (BlockState)holder;
-            if(state.getMetadata(INFINITY_TAG).stream()
-                .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
+        if (holder instanceof BlockState) {
+            BlockState state = (BlockState) holder;
+            if (state.getMetadata(INFINITY_TAG).stream()
+                    .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
                 evt.setCancelled(true);
                 MTCHelper.sendLoc("XC-infdispclk", (Player) evt.getPlayer(), true);
             }
