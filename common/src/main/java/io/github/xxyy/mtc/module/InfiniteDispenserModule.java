@@ -139,7 +139,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
             if (state.getMetadata(INFINITY_TAG).stream()
                     .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
                 evt.setCancelled(true);
-                MTCHelper.sendLoc("XC-infdispclk", (Player) evt.getPlayer(), true);
+                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true);
             }
         }
     }
