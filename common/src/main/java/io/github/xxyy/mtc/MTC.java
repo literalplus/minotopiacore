@@ -163,7 +163,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         for (Player plr : Bukkit.getOnlinePlayers()) {
             final ItemStack itemOnCursor = plr.getItemOnCursor();
             if (itemOnCursor != null) {
-                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @{0}: {1}", new Object[]{plr.getName(), itemOnCursor});
+                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @"+plr.getName()+": "+itemOnCursor);
                 plr.setItemOnCursor(null);
             }
             plr.closeInventory();
