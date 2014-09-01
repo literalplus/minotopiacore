@@ -1,10 +1,5 @@
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.InvitationInfo;
-import io.github.xxyy.mtc.helper.LaterMessageHelper;
-import io.github.xxyy.mtc.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +9,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.InvitationInfo;
+import io.github.xxyy.mtc.helper.LaterMessageHelper;
+import io.github.xxyy.mtc.helper.StatsHelper;
+
 import java.util.Iterator;
+import java.util.UUID;
 
 public final class MainJoinListener implements Listener {
     //TODO merge in BanJoinListener
@@ -71,10 +73,10 @@ public final class MainJoinListener implements Listener {
         }
         //playerhide
         if (MTC.instance().getConfig().getBoolean("enable.playerhide", false)) {
-            final Iterator<String> iterator = PlayerHideInteractListener.affectedPlayerNames.iterator();
+            final Iterator<UUID> iterator = PlayerHideInteractListener.affectedPlayerIds.iterator();
             while (iterator.hasNext()) {
-                final String targetName = iterator.next();
-                final Player targetPlr = Bukkit.getPlayerExact(targetName);
+                final UUID targetId = iterator.next();
+                final Player targetPlr = Bukkit.getPlayer(targetId);
                 if (targetPlr == null) {
                     iterator.remove();
                     continue;
