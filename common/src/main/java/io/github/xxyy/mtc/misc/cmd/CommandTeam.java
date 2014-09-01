@@ -1,15 +1,21 @@
 package io.github.xxyy.mtc.misc.cmd;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.hook.PexHook;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.hook.PexHook;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class CommandTeam extends MTCCommandExecutor {
@@ -54,7 +60,7 @@ public class CommandTeam extends MTCCommandExecutor {
     }
 
     @Override
-    public void clearCache() {
+    public void clearCache(boolean forced, MTC plugin) {
         this.groups.clear();
     }
 

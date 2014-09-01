@@ -1,5 +1,7 @@
 package io.github.xxyy.mtc.misc;
 
+import io.github.xxyy.mtc.MTC;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +23,12 @@ public final class CacheHelper {
         CACHES.add(cache);
     }
 
-    public static void clearCaches() {
-        CACHES.stream().forEach(Cache::clearCache);
+    public static void clearCaches(boolean forced, MTC plugin) {
+        CACHES.stream().forEach(c -> c.clearCache(forced, plugin));
     }
 
     public interface Cache {
-        default void clearCache() {
+        default void clearCache(boolean forced, MTC plugin) {
 
         }
     }
