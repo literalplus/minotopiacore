@@ -1,21 +1,21 @@
 package io.github.xxyy.mtc.cron;
 
-import io.github.xxyy.lib.com.Ostermiller.util.ArrayIterator;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.lib.com.Ostermiller.util.ArrayIterator;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.bans.BanHelper;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.PrivateChat;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.mtc.helper.StatsHelper;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -93,8 +93,6 @@ public class RunnableCronjob5Minutes implements Runnable {
                 //clear clan caches
                 ClanHelper.clearCache();
             }
-            //clear ban cache (Bungeecord!)
-            BanHelper.banCache.clear();
 
             //player stats
             if (!this.forced && ConfigHelper.isUserStatisticsEnabled()) {

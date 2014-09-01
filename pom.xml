@@ -12,7 +12,7 @@
     </modules>
     <packaging>pom</packaging>
 
-    <name>MinoTopia Core</name>
+    <name>MinoTopiaCore Parent</name>
     <url>http://xxyy.github.io/</url>
 
     <scm>

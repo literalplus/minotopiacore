@@ -8,8 +8,8 @@
         <version>1.6.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>mtc-common</artifactId>
+    <name>MinoTopiaCore Common</name>
 
     <dependencies>
         <dependency>

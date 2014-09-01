@@ -32,11 +32,6 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.mtc.api.PlayerGameManager;
-import io.github.xxyy.mtc.bans.cmd.CommandBan;
-import io.github.xxyy.mtc.bans.cmd.CommandBanInfo;
-import io.github.xxyy.mtc.bans.cmd.CommandTempban;
-import io.github.xxyy.mtc.bans.cmd.CommandUnban;
-import io.github.xxyy.mtc.bans.listener.BanJoinListener;
 import io.github.xxyy.mtc.chat.ChatListener;
 import io.github.xxyy.mtc.chat.CommandChatClear;
 import io.github.xxyy.mtc.chat.CommandChatFarbe;
@@ -81,10 +76,6 @@ import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.module.InfiniteDispenserModule;
 import io.github.xxyy.mtc.module.MTCModuleAdapter;
-import io.github.xxyy.mtc.warns.CommandDeleteWarn;
-import io.github.xxyy.mtc.warns.CommandListWarns;
-import io.github.xxyy.mtc.warns.CommandWarn;
-import io.github.xxyy.mtc.warns.CommandWarnStats;
 
 import java.util.logging.Level;
 
@@ -306,18 +297,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
         }
-        if (this.getConfig().getBoolean("enable.bans", true)) { //BANS
-            this.getCommand("ban").setExecutor(new CommandBan());
-            this.getCommand("baninfo").setExecutor(new CommandBanInfo());
-            this.getCommand("tempban").setExecutor(new CommandTempban());
-            this.getCommand("unban").setExecutor(new CommandUnban());
-        }
-        if (this.getConfig().getBoolean("enable.warns", true)) { //WARNS
-            this.getCommand("addwarn").setExecutor(new CommandWarn());
-            this.getCommand("remwarn").setExecutor(new CommandDeleteWarn());
-            this.getCommand("listwarns").setExecutor(new CommandListWarns());
-            this.getCommand("warnstats").setExecutor(new CommandWarnStats());
-        }
         if (this.getConfig().getBoolean("enable.fulltag", true)) {
             this.getCommand("full").setExecutor(new CommandFull());
         }
@@ -364,7 +343,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new MinecartPortalListener(), "enable.fixes.minecartPortal", true);
         this.regEvents(pm, new EnderPearlProjectileLaunchListener(), "enable.enderpearlListener", true);
         this.regEvents(pm, new AntiFreeCamListener(), "enable.fixes.freecam", true);
-        this.regEvents(pm, new BanJoinListener(), "enable.bans", true);
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
         this.regEvents(pm, new AntiInfPotionListener(), "enable.infPotionFix", true);
         this.regEvents(pm, new MoveNetherRoofListener(this), "enable.netherrooffix", true);

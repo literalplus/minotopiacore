@@ -19,7 +19,6 @@ import io.github.xxyy.common.misc.HelpManager;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.bans.BanHelper;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
@@ -231,7 +230,6 @@ public final class CommandMTC extends MTCCommandExecutor {
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.clearcache", label)) {
                         return true;
                     }
-                    BanHelper.banCache = new HashMap<>();
                     MTCChatHelper.cfCache = new HashMap<>();
                     ClanHelper.clearCache();
                     plugin.getXLoginHook().resetSpawnLocation();
