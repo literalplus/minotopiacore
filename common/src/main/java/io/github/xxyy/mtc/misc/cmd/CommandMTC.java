@@ -234,14 +234,14 @@ public final class CommandMTC extends MTCCommandExecutor {
                     ClanHelper.clearCache();
                     plugin.getXLoginHook().resetSpawnLocation();
                     plugin.getServer().getPluginManager().callEvent(new ClearCacheEvent());
-                    CacheHelper.clearCaches();
+                    CacheHelper.clearCaches(true, plugin);
                     sender.sendMessage(MTC.chatPrefix + "Cache geleert.");
                     return true;
                 case "forcecron":
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.forcecron", label)) {
                         return true;
                     }
-                    (new RunnableCronjob5Minutes(true)).run();
+                    (new RunnableCronjob5Minutes(true, plugin)).run();
                     sender.sendMessage(MTC.chatPrefix + "Forced Cronjob (5m)!");
                     return true;
                 case "config":

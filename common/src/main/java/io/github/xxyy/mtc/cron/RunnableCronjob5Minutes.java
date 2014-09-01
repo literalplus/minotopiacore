@@ -16,6 +16,7 @@ import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.mtc.helper.StatsHelper;
+import io.github.xxyy.mtc.misc.CacheHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,6 +29,7 @@ import java.util.Map;
  * does: save-all
  * chat swiping
  * clearing of ban cache (updates!)
+ * </p>
  *
  * @author xxyy98
  */
@@ -35,9 +37,11 @@ public class RunnableCronjob5Minutes implements Runnable {
     private static int fullInfoExCount = 0;
     private static byte cacheExCount = 0;
     private boolean forced = false;
+    private final MTC plugin;
 
-    public RunnableCronjob5Minutes(boolean forced) {
+    public RunnableCronjob5Minutes(boolean forced, MTC plugin) {
         this.forced = forced;
+        this.plugin = plugin;
     }
 
     @Override
@@ -88,6 +92,7 @@ public class RunnableCronjob5Minutes implements Runnable {
             }
 
             //clan caches
+            CacheHelper.clearCaches(forced, plugin);
             if (RunnableCronjob5Minutes.cacheExCount >= 12) {//run every hour
                 RunnableCronjob5Minutes.cacheExCount = 0;
                 //clear clan caches

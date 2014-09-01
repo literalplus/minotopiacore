@@ -1,14 +1,15 @@
 package io.github.xxyy.mtc.misc.cmd;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
-import io.github.xxyy.mtc.misc.RunnableReloadTimer;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
+import io.github.xxyy.mtc.misc.RunnableReloadTimer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public final class CommandBReload extends MTCCommandExecutor {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, ((secCount != 0) ? secCount * 60 : 30));
         Command.broadcastCommandMessage(sender, "§d§oScheduled Reload for " + (new SimpleDateFormat("HH:mm:ss")).format(cal.getTime()) + "§7§o");
-        Bukkit.getScheduler().runTask(MTC.instance(), new RunnableCronjob5Minutes(true));
+        Bukkit.getScheduler().runTask(MTC.instance(), new RunnableCronjob5Minutes(true, MTC.instance()));
         return true;
     }
 
