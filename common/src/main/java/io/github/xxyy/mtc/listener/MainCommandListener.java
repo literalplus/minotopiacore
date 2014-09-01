@@ -1,13 +1,14 @@
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
 
 
 public final class MainCommandListener implements Listener {
@@ -31,7 +32,7 @@ public final class MainCommandListener implements Listener {
             return;
         }
 
-        if (plugin.getLogoutHandler().isFighting(plrName) && !ConfigHelper.getFightAllowedCmds().contains(cmd) &&
+        if (plugin.getLogoutHandler().isFighting(e.getPlayer().getUniqueId()) && !ConfigHelper.getFightAllowedCmds().contains(cmd) &&
                 plugin.getWorldGuardHook().isPvP(e.getPlayer().getLocation())) {
             MTCHelper.sendLocArgs("XU-fightcmd", e.getPlayer(), true, CommandHelper.CSCollection(ConfigHelper.getFightAllowedCmds(), "nichts :/"));
             e.setCancelled(true);

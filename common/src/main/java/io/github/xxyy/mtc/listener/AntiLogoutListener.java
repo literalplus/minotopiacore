@@ -1,9 +1,5 @@
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,14 +12,20 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.AntiLogoutHandler;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     private final MTC plugin;
-    private final Map<String, Date> playersInAFight = new HashMap<>();
+    private final Map<UUID, Date> playersInAFight = new HashMap<>();
 
     public AntiLogoutListener(MTC plugin) {
         this.plugin = plugin;
@@ -32,7 +34,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
 
     @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent e){
-        playersInAFight.remove(e.getPlayer().getName());
+        playersInAFight.remove(e.getPlayer().getUniqueId());
     }
     
     @EventHandler(priority=EventPriority.MONITOR)
@@ -42,7 +44,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     
     @EventHandler(priority=EventPriority.NORMAL)
     public void onTp(PlayerTeleportEvent e){
-        if(!isFighting(e.getPlayer().getName()) ||
+        if(!isFighting(e.getPlayer().getUniqueId()) ||
                 e.getCause() != TeleportCause.ENDER_PEARL) {
             return;
         }
@@ -51,13 +53,13 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
     
     @Override
-    public boolean isFighting(String plrName){
-        Date fightStart = playersInAFight.get(plrName);
+    public boolean isFighting(UUID uuid){
+        Date fightStart = playersInAFight.get(uuid);
         if(fightStart == null) {
             return false;
         }
         if(fightStart.before(Calendar.getInstance().getTime())){
-            playersInAFight.remove(plrName);
+            playersInAFight.remove(uuid);
             return false;
         }
         return true;
@@ -67,7 +69,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
         if(!plugin.getWorldGuardHook().isPvP(plr.getLocation())) {
             return false;
         }
-        if(isFighting(plr.getName())){
+        if(isFighting(plr.getUniqueId())){
             for(ItemStack stk : plr.getInventory().getArmorContents()){
                 if(stk == null || stk.getType() == Material.AIR)
                 {
@@ -87,11 +89,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
         cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
         if(!plr.hasPermission("mtc.ignore"))
         {
-            setFightingInternal(plr, other.getName(), cal.getTime());
+            setFightingInternal(plr, other, cal.getTime());
         }
         if(!other.hasPermission("mtc.ignore"))
         {
-            setFightingInternal(other, plr.getName(), cal.getTime());
+            setFightingInternal(other, plr, cal.getTime());
         }
     }
 
@@ -100,12 +102,12 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
         this.playersInAFight.clear();
     }
     
-    private void setFightingInternal(final Player plr, final String otherName, final Date dt){
+    private void setFightingInternal(final Player plr, final Player other, final Date dt){
         final String plrName = plr.getName();
-        if(!playersInAFight.containsKey(plrName)){
+        if(!playersInAFight.containsKey(other.getUniqueId())){
 //            PluginAPIInterfacer.cancelAllEssTeleports(plr); //TODO why is this commented out? Should we readd this?
-            MTCHelper.sendLocArgs("XU-fightstart", plr, true, otherName);
+            MTCHelper.sendLocArgs("XU-fightstart", plr, true, other.getName());
         }
-        playersInAFight.put(plrName, dt);
+        playersInAFight.put(plr.getUniqueId(), dt);
     }
 }
