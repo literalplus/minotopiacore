@@ -1,6 +1,5 @@
 package io.github.xxyy.mtc.module.truefalse;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -126,13 +125,11 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     }
 
     private class EventListener implements Listener {
-        private static final String SECOND_BOUNDARY_LORE = "§7Right-click a block to set the 2.boundary!";
-
         @EventHandler(priority = EventPriority.LOWEST)
         public void onInteract(PlayerInteractEvent evt) {
             ItemStack item = evt.getPlayer().getItemInHand();
             if (!boundarySessions.contains(evt.getPlayer().getUniqueId()) ||
-                    evt.getAction() != Action.RIGHT_CLICK_BLOCK ||
+                    (evt.getAction() != Action.RIGHT_CLICK_BLOCK && evt.getAction() !=  Action.LEFT_CLICK_BLOCK) ||
                     item == null || item.getType() != MAGIC_WAND_MATERIAL) {
                 return;
             }
@@ -140,16 +137,13 @@ public class TrueFalseModule extends ConfigurableMTCModule {
             ItemMeta meta = item.getItemMeta();
             if (item.hasItemMeta() && meta.hasDisplayName() &&
                     meta.getDisplayName().equals(MAGIC_WAND_NAME)) {
-                if (meta.hasLore() && meta.getLore().contains(SECOND_BOUNDARY_LORE)) {
+                if (evt.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                     setSecondBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aZweiter Eckpunkt gesetzt!");
                     evt.getPlayer().setItemInHand(new ItemStack(Material.AIR));
                 } else {
                     setFirstBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aErster Eckpunkt gesetzt!");
-                    meta.setLore(Lists.newArrayList(SECOND_BOUNDARY_LORE));
-                    item.setItemMeta(meta);
-                    evt.getPlayer().setItemInHand(item.clone());
                 }
             }
         }

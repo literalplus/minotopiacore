@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.truefalse;
 
+import com.google.common.collect.Lists;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -55,7 +56,7 @@ public class CommandTrueFalse implements CommandExecutor {
                         ((Player) sender).getInventory().addItem(
                                 new ItemStackFactory(TrueFalseModule.MAGIC_WAND_MATERIAL)
                                         .displayName(TrueFalseModule.MAGIC_WAND_NAME)
-                                        .lore("§7Right-click a block to set the 1.boundary!")
+                                        .lore(Lists.newArrayList("§7Right-click a block to set the 1.boundary.", "§7Left-click a block to set the 2.boundary."))
                                         .produce()
                         );
                         module.boundarySessions.add(((Player) sender).getUniqueId());
@@ -77,7 +78,7 @@ public class CommandTrueFalse implements CommandExecutor {
                         if (module.getGame() == null) {
                             sender.sendMessage("§cEs läuft kein Spiel! Verwende §4/wf new§c!");
                             return true;
-                        } else if(!module.getGame().getState().equals(TrueFalseGame.State.TELEPORT)) {
+                        } else if (!module.getGame().getState().equals(TrueFalseGame.State.TELEPORT)) {
                             sender.sendMessage("§cDas Spiel wurde bereits gestartet!");
                             return true;
                         }
@@ -129,20 +130,20 @@ public class CommandTrueFalse implements CommandExecutor {
                         sender.sendMessage("§aFrage hinzugefügt: §e" + text);
                         return true;
                     case "remq":
-                        if(args.length < 2) {
+                        if (args.length < 2) {
                             sender.sendMessage("§cZu wenige Parameter!");
                             return true;
                         }
 
                         int index;
-                        if(!StringUtils.isNumeric(args[1])) {
+                        if (!StringUtils.isNumeric(args[1])) {
                             sender.sendMessage("§cDas zweite Argument muss eine Zahl sein!");
                             return true;
                         }
                         index = Integer.parseInt(args[1]);
 
-                        if(module.getQuestions().size() <= index) {
-                            sender.sendMessage("§eSo viele Antworten haben wir nicht! ("+ module.getQuestions()+" vorhanden)");
+                        if (module.getQuestions().size() <= index) {
+                            sender.sendMessage("§eSo viele Antworten haben wir nicht! (" + module.getQuestions() + " vorhanden)");
                             return true;
                         }
 
@@ -150,15 +151,15 @@ public class CommandTrueFalse implements CommandExecutor {
                         sender.sendMessage("§aAntwort gelöscht.");
                         return true;
                     case "listq":
-                        if(module.getQuestions().isEmpty()) {
+                        if (module.getQuestions().isEmpty()) {
                             sender.sendMessage("§eEs sind keine Fragen mehr gespeichert!");
                             return true;
                         }
 
                         int i = 0;
-                        for(TrueFalseQuestion question : module.getQuestions()) {
-                            new FancyMessage("#"+i+" ").color(ChatColor.GOLD)
-                                    .then(question.getText()+" ").color(question.getAnswer() ? ChatColor.GREEN : ChatColor.RED)
+                        for (TrueFalseQuestion question : module.getQuestions()) {
+                            new FancyMessage("#" + i + " ").color(ChatColor.GOLD)
+                                    .then(question.getText() + " ").color(question.getAnswer() ? ChatColor.GREEN : ChatColor.RED)
                                     .then("[ - ]").style(ChatColor.UNDERLINE).color(ChatColor.DARK_RED)
                                     .tooltip("/wf remq").suggest("/wf remq").send(sender);
                         }
@@ -179,7 +180,7 @@ public class CommandTrueFalse implements CommandExecutor {
         }
 
         sender.sendMessage("§9/wf join §2Betritt ein offenes W/F-Spiel");
-        if(sender.hasPermission(TrueFalseModule.ADMIN_PERMISSION)) {
+        if (sender.hasPermission(TrueFalseModule.ADMIN_PERMISSION)) {
             sender.sendMessage("§9/wf wand §2Gibt dir ein Tool, mit dem du die Ränder der zu Entfernenden Fläche markieren kannst");
             sender.sendMessage("§9/wf new §2Öffnet ein neues W/F-Spiel");
             sender.sendMessage("§9/wf start §2Startet ein neues W/F-Spiel");
