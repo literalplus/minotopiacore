@@ -33,7 +33,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     private static final String BOUNDARY_1_PATH = "boundaries.first";
     private static final String BOUNDARY_2_PATH = "boundaries.second";
     public static final String ADMIN_PERMISSION = "mtc.truefalse.admin";
-    private List<TrueFalseQuestion> questions;
+    private List<TrueFalseQuestion> questions = new ArrayList<>();
     private XyLocation firstBoundary;
     private XyLocation secondBoundary;
     private XyLocation spawn;
@@ -59,7 +59,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         spawn = (XyLocation) configuration.get(SPAWN_PATH);
         firstBoundary = (XyLocation) configuration.get(BOUNDARY_1_PATH);
         secondBoundary = (XyLocation) configuration.get(BOUNDARY_2_PATH);
-        questions = (List<TrueFalseQuestion>) configuration.getList(QUESTION_PATH);
+        questions = (List<TrueFalseQuestion>) configuration.getList(QUESTION_PATH, questions);
     }
 
     public boolean hasQuestion() {
