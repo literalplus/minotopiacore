@@ -86,7 +86,7 @@ public class TrueFalseGame {
             module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), this::abort, 15 * 20L);
             return false;
         } else {
-            Bukkit.broadcastMessage(MTCHelper.loc("XU-tfabort", false));
+            Bukkit.broadcastMessage(MTCHelper.loc("XU-tfabort2", false));
             module.setGame(null);
             return true;
         }

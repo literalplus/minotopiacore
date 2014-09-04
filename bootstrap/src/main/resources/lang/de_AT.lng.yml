@@ -220,4 +220,4 @@ lang:
   XU-tftrue: '&9[&2W&4F&9] Die Behauptung war &2wahr&9!'
   XU-tffalse: '&9[&2W&4F&9] Die Behauptung war &4falsch&9!'
   XU-tfnq: '&9[&2W&4F&9] &cKeine weiteren Fragen! &4/wf add <Frage> <Antwort>'
-  XU-tfabort: '&9[&2W&4F&9] Das Spiel wurde abgebrochen!'
+  XU-tfabort2: '&9[&2W&4F&9] Das Spiel wurde beendet!'
