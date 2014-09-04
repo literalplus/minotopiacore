@@ -77,6 +77,9 @@ public class CommandTrueFalse implements CommandExecutor {
                         if (module.getGame() == null) {
                             sender.sendMessage("§cEs läuft kein Spiel! Verwende §4/wf new§c!");
                             return true;
+                        } else if(!module.getGame().getState().equals(TrueFalseGame.State.TELEPORT)) {
+                            sender.sendMessage("§cDas Spiel wurde bereits gestartet!");
+                            return true;
                         }
 
                         module.getGame().start();

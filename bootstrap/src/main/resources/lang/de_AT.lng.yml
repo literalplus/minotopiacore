@@ -219,5 +219,5 @@ lang:
     &9[&2W&4F&9] Du hast 15 Sekunden, um dich zu entscheiden!
   XU-tftrue: '&9[&2W&4F&9] Die Behauptung war &2wahr&9!'
   XU-tffalse: '&9[&2W&4F&9] Die Behauptung war &4falsch&9!'
-  XU-tfnq: '&9[&2W&4F&9] &cKeine weiteren Fragen! &4/wf add <Frage> <Antwort>'
+  XU-tfnq: '&9[&2W&4F&9] &cKeine weiteren Fragen! &4/wf addq <ja|nein> <Farge>'
   XU-tfabort2: '&9[&2W&4F&9] Das Spiel wurde beendet!'
