@@ -1,6 +1,5 @@
 package io.github.xxyy.mtc.module.truefalse;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -148,7 +147,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
                     setFirstBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aErster Eckpunkt gesetzt!");
                     evt.getPlayer().setItemInHand(new ItemStackFactory(item)
-                            .lore(Lists.newArrayList(SECOND_BOUNDARY_LORE)).produce());
+                            .lore(SECOND_BOUNDARY_LORE).produce());
                 }
             }
         }
