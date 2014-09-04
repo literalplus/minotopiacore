@@ -87,6 +87,7 @@ public class TrueFalseGame {
             return false;
         } else {
             Bukkit.broadcastMessage(MTCHelper.loc("XU-tfabort", false));
+            module.setGame(null);
             return true;
         }
     }
