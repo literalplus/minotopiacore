@@ -187,6 +187,6 @@ public class CommandTrueFalse implements CommandExecutor {
             sender.sendMessage("§9/wf next §2Stellt die nächste Frage");
             sender.sendMessage("§9/wf spawn §2Setzt den W/F-Spawn");
         }
-        return false;
+        return true;
     }
 }
