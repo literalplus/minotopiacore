@@ -145,6 +145,8 @@ public class TrueFalseModule extends ConfigurableMTCModule {
                     setFirstBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aErster Eckpunkt gesetzt!");
                 }
+
+                evt.setCancelled(true);
             }
         }
     }
