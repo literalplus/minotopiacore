@@ -127,6 +127,7 @@ public class CommandTrueFalse implements CommandExecutor {
 
                         String text = StringHelper.varArgsString(args, 2, true);
                         module.getQuestions().add(new TrueFalseQuestion(text, answer));
+                        module.save();
                         sender.sendMessage("§aFrage hinzugefügt: §e" + text);
                         return true;
                     case "remq":
@@ -148,6 +149,7 @@ public class CommandTrueFalse implements CommandExecutor {
                         }
 
                         module.getQuestions().remove(index);
+                        module.save();
                         sender.sendMessage("§aAntwort gelöscht.");
                         return true;
                     case "listq":
