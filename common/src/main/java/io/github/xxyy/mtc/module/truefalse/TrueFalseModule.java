@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.truefalse;
 
+import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
@@ -67,7 +67,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     }
 
     public TrueFalseQuestion consumeQuestion() {
-        if(hasQuestion()) {
+        if (hasQuestion()) {
             return questions.remove(0);
         }
         return null;
@@ -127,27 +127,29 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     private class EventListener implements Listener {
         private static final String SECOND_BOUNDARY_LORE = "§7Right-click a block to set the 2.boundary!";
+
         @EventHandler(priority = EventPriority.LOWEST)
         public void onInteract(PlayerInteractEvent evt) {
-            ItemStack item = evt.getItem();
-            if(!boundarySessions.contains(evt.getPlayer().getUniqueId()) ||
+            ItemStack item = evt.getPlayer().getItemInHand();
+            if (!boundarySessions.contains(evt.getPlayer().getUniqueId()) ||
                     evt.getAction() != Action.RIGHT_CLICK_BLOCK ||
                     item == null || item.getType() != MAGIC_WAND_MATERIAL) {
                 return;
             }
 
             ItemMeta meta = item.getItemMeta();
-            if(item.hasItemMeta() && meta.hasDisplayName() &&
-                    meta.getDisplayName().equals(MAGIC_WAND_NAME)){
-                if(meta.hasLore() && meta.getLore().contains(SECOND_BOUNDARY_LORE)) {
+            if (item.hasItemMeta() && meta.hasDisplayName() &&
+                    meta.getDisplayName().equals(MAGIC_WAND_NAME)) {
+                if (meta.hasLore() && meta.getLore().contains(SECOND_BOUNDARY_LORE)) {
                     setSecondBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aZweiter Eckpunkt gesetzt!");
                     evt.getPlayer().setItemInHand(new ItemStack(Material.AIR));
                 } else {
                     setFirstBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
                     evt.getPlayer().sendMessage("§aErster Eckpunkt gesetzt!");
-                    evt.getPlayer().setItemInHand(new ItemStackFactory(item)
-                            .lore(SECOND_BOUNDARY_LORE).produce());
+                    meta.setLore(Lists.newArrayList(SECOND_BOUNDARY_LORE));
+                    item.setItemMeta(meta);
+                    evt.getPlayer().setItemInHand(item.clone());
                 }
             }
         }
