@@ -92,7 +92,7 @@ public class CommandTrueFalse implements CommandExecutor {
                         } else {
                             sender.sendMessage("§aDas Spiel wird nach dieser Frage beendet!");
                         }
-                        sender.sendMessage("§eBeachte, dasss SPieler nicht automatisch zurückteleportiert werden!");
+                        sender.sendMessage("§eBeachte, dass Spieler nicht automatisch zurückteleportiert werden!");
                         return true;
                     case "addq":
                         if (args.length < 3) {
