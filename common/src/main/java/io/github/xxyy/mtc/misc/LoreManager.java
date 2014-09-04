@@ -1,12 +1,13 @@
 package io.github.xxyy.mtc.misc;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.misc.cmd.CommandLore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.misc.cmd.CommandLore;
 
 import java.util.ArrayList;
 import java.util.List;

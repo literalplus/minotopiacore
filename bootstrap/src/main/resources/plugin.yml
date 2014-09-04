@@ -25,14 +25,6 @@ commands:
     description: "Spielerkopf-Tools. Mehr Info: /mtc help <command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [ph]
-  war:
-    description: "TeamBattle-Kommando. Mehr info: /mtc help <command>"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [krieg]
-  waradmin:
-    description: "Adminfunktionen fuer TeamBattle! Mehr Info: /mtc help <command>"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [wa,wara]
   globalmute:
     description: Aendert den Status von GlobalMute.
     usage: "/<command> nicht geladen. Ausgeschaltet?"
@@ -53,37 +45,6 @@ commands:
     description: "MTC Mute. Mehr Info: /<command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [mtcmute,mtsmute,mmute]
-  ban:
-    description: "Bannt einen Spieler."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [bann, bannen, permaban, permban, permanentban, b]
-  unban:
-    description: "Hebt den Bann eines Spielers auf."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [unban, unbann, unpermaban, unbannen, entbann, entbannen, deban, ub]
-  tempban:
-    description: "Bannt einen Spieler auf Zeit."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [tban, zeitban, zban, temporaererban, tb]
-  baninfo:
-    description: "Zeigt Informationen ueber einen Spieler an."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [iban, bani, bi]
-  addwarn:
-    description: "Fuegt einem Spieler einen (oder mehrere) Warn(s) hinzu."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [warn, aw, w, warnen]
-  removewarn:
-    description: "Loescht bestimmte Warns. Mehr Info: /<command> help"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [remwarn, rw, delwarn, dw, warnentfernen, delwarns]
-  listwarns:
-    descriptions: "Zeigt deine Warns oder die Warns eines Anderen."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [lw, warns, ws, warnungen, mywarns]
-  warnstats:
-    description: "Zeigt Statistiken fuer Warns an."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
   cmdspy:
     description: "CommandSpy."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
@@ -99,9 +60,6 @@ commands:
     description: "Clan ACP"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [ca, clana, xca]
-  xyc:
-    description: "XYC"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
   team:
     description: "Zeigt alle Teammitglieder an (Konfigurierbar!)"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
@@ -127,3 +85,7 @@ commands:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
+  wahrfalsch:
+    description: "WahrFalsch Event Minigame"
+    usage: "/<command> nicht geladen. Ausgeschaltet?"
+    aliases: [wf, tf, truefalse, dummefragen]

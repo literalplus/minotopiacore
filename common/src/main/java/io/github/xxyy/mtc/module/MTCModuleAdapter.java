@@ -57,6 +57,10 @@ public abstract class MTCModuleAdapter implements MTCModule {
         return name;
     }
 
+    public MTC getPlugin() {
+        return plugin;
+    }
+
     public static MTCModuleAdapter getInstance(String name) {
         return instances.get(name);
     }

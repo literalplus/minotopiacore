@@ -46,15 +46,6 @@ import io.github.xxyy.mtc.clan.ui.CommandClanAdmin;
 import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.mtc.fulltag.CommandFull;
 import io.github.xxyy.mtc.fulltag.FullTagListener;
-import io.github.xxyy.mtc.games.teambattle.CommandTeamBattle;
-import io.github.xxyy.mtc.games.teambattle.TeamBattle;
-import io.github.xxyy.mtc.games.teambattle.admin.CommandTeamBattleAdmin;
-import io.github.xxyy.mtc.games.teambattle.event.CmdListener;
-import io.github.xxyy.mtc.games.teambattle.event.DeathListener;
-import io.github.xxyy.mtc.games.teambattle.event.DmgListener;
-import io.github.xxyy.mtc.games.teambattle.event.JoinListener;
-import io.github.xxyy.mtc.games.teambattle.event.LeaveListener;
-import io.github.xxyy.mtc.games.teambattle.event.RespawnListener;
 import io.github.xxyy.mtc.gettime.CommandTime;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.helper.StatsHelper;
@@ -76,6 +67,7 @@ import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.module.InfiniteDispenserModule;
 import io.github.xxyy.mtc.module.MTCModuleAdapter;
+import io.github.xxyy.mtc.module.truefalse.TrueFalseModule;
 
 import java.util.logging.Level;
 
@@ -94,7 +86,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public static String warnChatPrefix = "§6[§bMTS§6] ";
 
     public SafeSql ssql2 = null; //TODO
-    public TeamBattle tb; //TODO
 
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
@@ -121,12 +112,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     @Override
     public void disable() {
         MTCModuleAdapter.forEach(m -> m.disable(this));
-
-        //TEAMBATTLE
-        if (this.tb != null) {
-            TeamBattle.instance().tpAllPlayersToPrevLoc();
-            this.tb.finish();
-        }
 
         //SQL
         if (this.ssql2 != null) {
@@ -242,11 +227,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             Bukkit.getMessenger().registerOutgoingPluginChannel(this, "mtcAPI");
         }
 
-        //TEAMBATTLE
-        if (this.getConfig().getBoolean("enable.teambattle", true)) { //TODO remove?
-            this.tb = new TeamBattle();
-        }
-
         //SERVER NAME
         this.warnBanServerSuffix = this.getConfig().getString("warnban.serversuffix", "§7§o[Unknown]");
         this.serverName = this.getConfig().getString("servername", "UNKNOWN");
@@ -274,6 +254,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     private void loadModules() {
         new InfiniteDispenserModule();
+        new TrueFalseModule();
     }
 
     private void registerCommands() {
@@ -285,10 +266,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.getCommand("giveall").setExecutor(new CommandGiveAll());
         if (this.getConfig().getBoolean("enable.command.breload", true)) {
             this.getCommand("breload").setExecutor(new CommandBReload());
-        }
-        if (this.getConfig().getBoolean("enable.teambattle", true)) {
-            this.getCommand("war").setExecutor(new CommandTeamBattle());
-            this.getCommand("waradmin").setExecutor(new CommandTeamBattleAdmin());
         }
         if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
             this.getCommand("globalmute").setExecutor(new CommandGlobalMute());
@@ -315,17 +292,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private void registerEventListeners(PluginManager pm) {
         if (this.getConfig().getBoolean("enable.misc.lighting.cow", true)) {
             pm.registerEvents(new LightningListener(), this);
-        }
-        if (this.getConfig().getBoolean("enable.teambattle", true)) {
-            pm.registerEvents(new LeaveListener(), this);
-            pm.registerEvents(new CmdListener(), this);
-            pm.registerEvents(new JoinListener(), this);
-            if (this.getConfig().getBoolean("enable.dmgevent", true)) {
-                pm.registerEvents(new DmgListener(), this);
-            } else {
-                pm.registerEvents(new DeathListener(), this);
-                pm.registerEvents(new RespawnListener(), this);
-            }
         }
         if (this.getConfig().getBoolean("enable.chat", true)) {
             pm.registerEvents(new ChatListener(this), this);

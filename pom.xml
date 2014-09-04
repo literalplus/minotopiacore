@@ -4,7 +4,7 @@
 
     <groupId>io.github.xxyy.mtc</groupId>
     <artifactId>mtc-parent</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.6.3-SNAPSHOT</version>
     <modules>
         <module>common</module>
         <module>api</module>
@@ -103,7 +103,7 @@
             <dependency>
                 <groupId>com.sk89q</groupId>
                 <artifactId>worldguard</artifactId>
-                <version>5.7.3</version>
+                <version>5.8.1-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

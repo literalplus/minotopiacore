@@ -202,3 +202,22 @@ lang:
     &6Leben: %s
     &6Hunger: &e%d&6/20 &6S&auml;ttigung: &e%d
     &6Gamemode: &e%s
+  XU-tfnew: '&9[&2W&4F&9] Tippe &6/wf join&9, um am &2Wahr&4Falsch &9teilzunehmen!'
+  XU-tfjoin: |
+    &9[&2W&4F&9] Willkommen bei &2Wahr&4Falsch&9!
+    &9[&2W&4F&9] Es werden Behauptungen gestellt, und du musst
+    &9[&2W&4F&9] entscheiden ob sie stimmen. Wenn du denkst, dass die
+    &9[&2W&4F&9] Behauptung stimmt, stelle dich auf die &2grüne&9 Fläche,
+    &9[&2W&4F&9] ansonsten auf die &4rote&9. Wenn du falsch rätst, hast du
+    &9[&2W&4F&9] verloren. &oDie Person, die als letztes noch steht, gewinnt.
+  XU-tfstart: '&9[&2W&4F&9] Das Spiel wurde gestartet!'
+  XU-tfastart: '&9[&2W&4F&9] Das Spiel hat bereits begonnen!'
+  XU-tfleave: '&9[&2W&4F&9] Du hast das Spiel verlassen!'
+  XU-tfqann: |
+    &9[&2W&4F&9] Neue Behauptung:
+    &9[&2W&4F&9] &6%s
+    &9[&2W&4F&9] Du hast 15 Sekunden, um dich zu entscheiden!
+  XU-tftrue: '&9[&2W&4F&9] Die Behauptung war &2wahr&9!'
+  XU-tffalse: '&9[&2W&4F&9] Die Behauptung war &4falsch&9!'
+  XU-tfnq: '&9[&2W&4F&9] &cKeine weiteren Fragen! &4/wf add <Frage> <Antwort>'
+  XU-tfabort: '&9[&2W&4F&9] Das Spiel wurde abgebrochen!'
