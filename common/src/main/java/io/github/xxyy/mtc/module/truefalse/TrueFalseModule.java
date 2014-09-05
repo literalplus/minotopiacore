@@ -64,6 +64,15 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         questions = (List<TrueFalseQuestion>) configuration.getList(QUESTION_PATH, questions);
     }
 
+    @Override
+    public void save() {
+        configuration.set(SPAWN_PATH, spawn);
+        configuration.set(BOUNDARY_1_PATH, firstBoundary);
+        configuration.set(BOUNDARY_2_PATH, secondBoundary);
+        configuration.set(QUESTION_PATH, questions);
+        super.save();
+    }
+
     public boolean hasQuestion() {
         return !questions.isEmpty();
     }
@@ -72,6 +81,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         if (hasQuestion()) {
             return questions.remove(0);
         }
+        save();
         return null;
     }
 
@@ -85,7 +95,6 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public void setQuestions(List<TrueFalseQuestion> questions) {
         this.questions = questions;
-        configuration.set(QUESTION_PATH, questions);
         save();
     }
 
@@ -95,7 +104,6 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public void setFirstBoundary(XyLocation firstBoundary) {
         this.firstBoundary = firstBoundary;
-        configuration.set(BOUNDARY_1_PATH, firstBoundary);
         save();
     }
 
@@ -105,13 +113,11 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public void setSecondBoundary(XyLocation secondBoundary) {
         this.secondBoundary = secondBoundary;
-        configuration.set(BOUNDARY_2_PATH, secondBoundary);
         save();
     }
 
     public void setSpawn(XyLocation spawn) {
         this.spawn = spawn;
-        configuration.set(SPAWN_PATH, spawn);
         save();
     }
 
