@@ -34,6 +34,9 @@ public class BlockReplacer {
     private final int maxX;
     private final int maxY;
     private final int maxZ;
+    private final int minX;
+    private final int minY;
+    private final int minZ;
 
     private int curX;
     private int curY;
@@ -60,9 +63,9 @@ public class BlockReplacer {
         maxY = Math.max(firstBoundary.getBlockY(), secondBoundary.getBlockY());
         maxZ = Math.max(firstBoundary.getBlockZ(), secondBoundary.getBlockZ());
 
-        curX = Math.min(firstBoundary.getBlockX(), secondBoundary.getBlockX());
-        curY = Math.min(firstBoundary.getBlockY(), secondBoundary.getBlockY());
-        curZ = Math.min(firstBoundary.getBlockZ(), secondBoundary.getBlockZ());
+        minX = curX = Math.min(firstBoundary.getBlockX(), secondBoundary.getBlockX());
+        minY = curY = Math.min(firstBoundary.getBlockY(), secondBoundary.getBlockY());
+        minZ = curZ = Math.min(firstBoundary.getBlockZ(), secondBoundary.getBlockZ());
     }
 
     public void scheduleTransform(Plugin plugin) {
@@ -108,7 +111,9 @@ public class BlockReplacer {
                             }
                         }
                     }
+                    curY = minY;
                 }
+                curZ = minZ;
             }
 
             done = true;
