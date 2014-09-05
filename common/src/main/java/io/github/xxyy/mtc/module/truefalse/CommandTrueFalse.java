@@ -177,6 +177,9 @@ public class CommandTrueFalse implements CommandExecutor {
                         module.setSpawn(new XyLocation(((Player) sender).getLocation()));
                         sender.sendMessage("§aDer Spawn wurde auf deine Position gesetzt!");
                         return true;
+                    case "debug":
+                        sender.sendMessage(module.getFirstBoundary() + ", " + module.getSecondBoundary());
+                        return true;
                 }
             }
         }

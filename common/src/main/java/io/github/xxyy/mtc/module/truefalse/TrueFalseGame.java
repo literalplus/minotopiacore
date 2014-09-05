@@ -53,13 +53,13 @@ public class TrueFalseGame {
 
     public void setQuestion(TrueFalseQuestion question) {
         Validate.isTrue(currentQuestion == null, "Cannot override question!");
-        DyeColor dyeColor = question.getAnswer() ? DyeColor.GREEN : DyeColor.RED;
+        DyeColor colorToRemove = question.getAnswer() ? DyeColor.RED : DyeColor.GREEN;
         BlockReplacer blockReplacer = new BlockReplacer(
-                b -> b.getType().equals(Material.WOOL) && ((Wool) b.getState().getData()).getColor().equals(dyeColor),
+                b -> b.getType().equals(Material.WOOL) && ((Wool) b.getState().getData()).getColor().equals(colorToRemove),
                 b -> b.setType(Material.AIR),
                 b -> {
                     b.setType(Material.WOOL);
-                    ((Wool) b.getState().getData()).setColor(dyeColor);
+                    ((Wool) b.getState().getData()).setColor(colorToRemove);
                     b.getState().update(true);
                 },
                 module.getFirstBoundary(), module.getSecondBoundary(), 2_000
@@ -68,8 +68,8 @@ public class TrueFalseGame {
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-tfqann", "CONSOLE", false, question.getText()));
 
         module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), () -> {
-            Bukkit.broadcastMessage(MTCHelper.loc("XU-tf" + (question.getAnswer() ? "true" : "false"), false));
             blockReplacer.scheduleTransform(module.getPlugin());
+            Bukkit.broadcastMessage(MTCHelper.loc("XU-tf" + (question.getAnswer() ? "true" : "false"), false));
             module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), () -> {
                 blockReplacer.scheduleRevert(module.getPlugin());
                 state = State.READY;

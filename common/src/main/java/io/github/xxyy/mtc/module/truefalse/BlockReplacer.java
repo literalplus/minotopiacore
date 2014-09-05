@@ -95,9 +95,9 @@ public class BlockReplacer {
         public void run() {
             int processed = 0;
 
-            for (; curX < maxX; curX++) {
-                for (; curZ < maxZ; curZ++) {
-                    for (; curY < maxY; curY++) {
+            for (; curX <= maxX; curX++) {
+                for (; curZ <= maxZ; curZ++) {
+                    for (; curY <= maxY; curY++) {
                         Block block = world.getBlockAt(curX, curY, curZ);
                         if (sourceFilter.test(block)) {
                             transformer.accept(block);
