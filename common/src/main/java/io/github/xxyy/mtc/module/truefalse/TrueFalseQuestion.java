@@ -2,6 +2,7 @@ package io.github.xxyy.mtc.module.truefalse;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,10 @@ import java.util.Map;
  * @since 4.9.14
  */
 public class TrueFalseQuestion implements ConfigurationSerializable {
+    static {
+        ConfigurationSerialization.registerClass(TrueFalseQuestion.class);
+    }
+
     private final String text;
     private final boolean answer;
 

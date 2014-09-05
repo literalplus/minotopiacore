@@ -1,6 +1,7 @@
 package io.github.xxyy.mtc.module.truefalse;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,6 +43,8 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public TrueFalseModule() {
         super(NAME, "modules/truefalse.conf.yml", ClearCacheBehaviour.SAVE);
+        ConfigurationSerialization.registerClass(XyLocation.class); //Ensure the class is loaded - double call doesn't hurt (https://github.com/SpigotMC/Spigot-API/blob/master/src/main/java/org/bukkit/configuration/serialization/ConfigurationSerialization.java#L218)
+        ConfigurationSerialization.registerClass(TrueFalseQuestion.class);
     }
 
     @Override
