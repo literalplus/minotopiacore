@@ -73,6 +73,7 @@ public class TrueFalseGame {
             module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), () -> {
                 blockReplacer.scheduleRevert(module.getPlugin());
                 state = State.READY;
+                currentQuestion = null;
             }, 5 * 20L);
             state = State.FINISHED;
         }, 15 * 20L);
