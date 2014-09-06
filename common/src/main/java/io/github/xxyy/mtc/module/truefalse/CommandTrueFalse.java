@@ -163,7 +163,7 @@ public class CommandTrueFalse implements CommandExecutor {
                             new FancyMessage("#" + i + " ").color(ChatColor.GOLD)
                                     .then(question.getText() + " ").color(question.getAnswer() ? ChatColor.GREEN : ChatColor.RED)
                                     .then("[ - ]").style(ChatColor.UNDERLINE).color(ChatColor.DARK_RED)
-                                    .tooltip("/wf remq").suggest("/wf remq").send(sender);
+                                    .tooltip("/wf remq " + ++i).suggest("/wf remq " + i).send(sender);
                         }
                         return true;
                     case "next":
