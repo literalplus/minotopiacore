@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.truefalse;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -10,6 +11,8 @@ import org.bukkit.material.Wool;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.helper.MTCHelper;
 
+import java.util.List;
+
 /**
  * Manages a game of true/false.
  *
@@ -17,6 +20,7 @@ import io.github.xxyy.mtc.helper.MTCHelper;
  * @since 4.9.14
  */
 public class TrueFalseGame {
+    private final List<Material> floorMaterials = Lists.newArrayList(Material.WOOL, Material.STAINED_CLAY, Material.STAINED_GLASS, Material.CARPET);
     private final TrueFalseModule module;
     private TrueFalseQuestion currentQuestion;
     private State state = State.TELEPORT;
@@ -54,8 +58,8 @@ public class TrueFalseGame {
     public void setQuestion(TrueFalseQuestion question) {
         Validate.isTrue(currentQuestion == null, "Cannot override question!");
         DyeColor colorToRemove = question.getAnswer() ? DyeColor.RED : DyeColor.GREEN;
-        BlockReplacer blockReplacer = new BlockReplacer(
-                b -> b.getType().equals(Material.WOOL) && ((Wool) b.getState().getData()).getColor().equals(colorToRemove),
+        @SuppressWarnings("deprecation") BlockReplacer blockReplacer = new BlockReplacer(
+                b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() == colorToRemove.getWoolData(),
                 b -> b.setType(Material.AIR),
                 b -> {
                     b.setType(Material.WOOL);
