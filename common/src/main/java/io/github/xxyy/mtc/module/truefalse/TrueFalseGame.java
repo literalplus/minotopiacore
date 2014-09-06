@@ -66,7 +66,7 @@ public class TrueFalseGame {
                     ((Wool) b.getState().getData()).setColor(colorToRemove);
                     b.getState().update(true);
                 },
-                module.getFirstBoundary(), module.getSecondBoundary(), 2_000
+                module.getFirstBoundary(), module.getSecondBoundary(), 200
         );
 
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-tfqann", "CONSOLE", false, question.getText()));
