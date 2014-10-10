@@ -89,3 +89,7 @@ commands:
     description: "WahrFalsch Event Minigame"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [wf, tf, truefalse, dummefragen]
+  website:
+    description: "Verwaltet deinen Websiteaccount"
+    usage: "/<command> [aktivieren|pw|deaktivieren]"
+    aliases: [hp]
