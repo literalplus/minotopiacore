@@ -45,7 +45,7 @@ final class WebsiteListener implements Listener {
             plugin.getSql().safelyExecuteUpdate("DELETE FROM " + WebsiteModule.ONLINE_TABLE_NAME +
                     " WHERE uuid=?", evt.getPlayer().getUniqueId().toString());
 
-            long newlyPlayedMinutes = ChronoUnit.SECONDS.between(
+            long newlyPlayedMinutes = ChronoUnit.MINUTES.between(
                     playerJoinTimes.getOrDefault(evt.getPlayer().getUniqueId(), Instant.now()), //Just making sure
                     Instant.now());
 
