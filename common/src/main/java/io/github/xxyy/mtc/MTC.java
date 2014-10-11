@@ -68,6 +68,7 @@ import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.module.InfiniteDispenserModule;
 import io.github.xxyy.mtc.module.MTCModuleAdapter;
 import io.github.xxyy.mtc.module.truefalse.TrueFalseModule;
+import io.github.xxyy.mtc.module.website.WebsiteModule;
 
 import java.util.logging.Level;
 
@@ -252,9 +253,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         }
     }
 
-    private void loadModules() {
+    private void loadModules() { //TODO: proper, configurable, maybe even annotation-based loading thing
         new InfiniteDispenserModule();
         new TrueFalseModule();
+        new WebsiteModule();
     }
 
     private void registerCommands() {
