@@ -36,6 +36,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
 
         listener = new WebsiteListener(plugin);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        plugin.getCommand("website").setExecutor(new CommandWebsite(this));
     }
 
     @Override
