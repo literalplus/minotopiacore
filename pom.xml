@@ -281,7 +281,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.10</version>
                 <configuration>
-                    <configLocation>${project.basedir}/checkstyle.xml</configLocation>
+                    <configLocation>${project.parent.basedir}/checkstyle.xml</configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
                 </configuration>
             </plugin>
 
