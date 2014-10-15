@@ -3,6 +3,7 @@ package io.github.xxyy.mtc.module.website;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
+import io.github.xxyy.common.util.math.NumberHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 
 import java.security.MessageDigest;
@@ -65,7 +66,7 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
         try {
             rowsAffected = module.getPlugin().getSql().safelyExecuteUpdate("UPDATE " + WebsiteModule.WEBSITE_USER_TABLE_NAME +
                             " SET pass=? WHERE name=?", //TODO: UUIDs
-                    MessageDigest.getInstance("MD5").digest(args[1].getBytes()), //TODO: Why the fuck does the website hash stuff like this? Even for a legacy pile of crap this is unacceptable
+                    NumberHelper.bytesToHex(MessageDigest.getInstance("MD5").digest(args[1].getBytes())), //TODO: Why the fuck does the website hash stuff like this? Even for a legacy pile of crap this is unacceptable TODO: Can we use PasswordHelper here?
                     plr.getName());
         } catch (NoSuchAlgorithmException e) {
             throw new AssertionError("The universe has collapsed, sorry."); //Cannot happen
