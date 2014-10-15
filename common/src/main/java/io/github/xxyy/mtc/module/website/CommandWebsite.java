@@ -30,11 +30,11 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
                 case "activate":
                 case "activ8":
                 case "aktivieren!": //For the special snowflakes who don't get that they should not include the exclamation mark when it says "use /hp aktivieren!"
-                    setAccountStatus(plr, "aktiviert! Du kannst dich jetzt einloggen!"); //activated
+                    setAccountStatus(plr, "aktiviert! Du kannst dich jetzt einloggen!", true); //activated
                     return true;
                 case "deaktivieren":
                 case "deactivate":
-                    setAccountStatus(plr, "§cde§aaktiviert!"); //deactivated
+                    setAccountStatus(plr, "§cde§aaktiviert!", false); //deactivated
                     return true;
                 case "pw":
                     return changePassword(plr, label, args);
@@ -81,9 +81,9 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
         return true;
     }
 
-    private void setAccountStatus(Player plr, String newStateDescription) {
+    private void setAccountStatus(Player plr, String newStateDescription, boolean enabled) {
         int rowsAffected = module.getPlugin().getSql().safelyExecuteUpdate("UPDATE " + WebsiteModule.WEBSITE_USER_TABLE_NAME +
-                " SET status=1 WHERE name=?", plr.getName()); //TODO: UUIDs
+                " SET status=? WHERE name=?", enabled ? 1 : 0, plr.getName()); //TODO: UUIDs
 
         if (rowsAffected == 1) {
             plr.sendMessage("§aDein Homepageaccount wurde " + newStateDescription); //Your account has been activated, you can log in now!
