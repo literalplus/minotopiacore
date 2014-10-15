@@ -64,7 +64,7 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
         int rowsAffected;
         try {
             rowsAffected = module.getPlugin().getSql().safelyExecuteUpdate("UPDATE " + WebsiteModule.WEBSITE_USER_TABLE_NAME +
-                            " SET pw=? WHERE name=?", //TODO: UUIDs
+                            " SET pass=? WHERE name=?", //TODO: UUIDs
                     MessageDigest.getInstance("MD5").digest(args[1].getBytes()), //TODO: Why the fuck does the website hash stuff like this? Even for a legacy pile of crap this is unacceptable
                     plr.getName());
         } catch (NoSuchAlgorithmException e) {
