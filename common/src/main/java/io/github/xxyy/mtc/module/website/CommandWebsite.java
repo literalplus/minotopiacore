@@ -30,11 +30,11 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
                 case "activate":
                 case "activ8":
                 case "aktivieren!": //For the special snowflakes who don't get that they should not include the exclamation mark when it says "use /hp aktivieren!"
-                    setAccountStatus(plr, "aktiviert"); //activated
+                    setAccountStatus(plr, "aktiviert! Du kannst dich jetzt einloggen!"); //activated
                     return true;
                 case "deaktivieren":
                 case "deactivate":
-                    setAccountStatus(plr, "deaktiviert"); //deactivated
+                    setAccountStatus(plr, "§cde§aaktiviert!"); //deactivated
                     return true;
                 case "pw":
                     return changePassword(plr, label, args);
@@ -86,7 +86,7 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
                 " SET status=1 WHERE name=?", plr.getName()); //TODO: UUIDs
 
         if (rowsAffected == 1) {
-            plr.sendMessage("§aDein Homepageaccount wurde " + newStateDescription + "! Du kannst dich jetzt einloggen!"); //Your account has been activated, you can log in now!
+            plr.sendMessage("§aDein Homepageaccount wurde " + newStateDescription); //Your account has been activated, you can log in now!
         } else if (rowsAffected > 1) {
             plr.sendMessage("§cFür deinen Namen gibt es mehrere Accounts! Kontaktiere bitte den Support, danke!"); //Multipel accounts for your name, contact support.
         } else { //0 or less
