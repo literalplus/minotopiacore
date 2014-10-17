@@ -36,11 +36,7 @@ final class WebsiteListener implements Listener {
             module.getPlugin().getSql().safelyExecuteUpdate("DELETE FROM " + WebsiteModule.ONLINE_TABLE_NAME +
                     " WHERE uuid=?", evt.getPlayer().getUniqueId().toString());
 
-            long newlyPlayedMinutes = module.getMinutesPlayed(evt.getPlayer().getUniqueId());
-
-            module.getPlugin().getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.PLAYTIME_TABLE_NAME +
-                            " SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
-                    evt.getPlayer().getUniqueId().toString(), newlyPlayedMinutes, newlyPlayedMinutes);
+            module.saveTimePlayed(evt.getPlayer().getUniqueId());
         });
     }
 }

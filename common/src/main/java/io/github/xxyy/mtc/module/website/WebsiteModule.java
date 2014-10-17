@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.website;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -45,6 +46,8 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
         listener = new WebsiteListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         plugin.getCommand("website").setExecutor(new CommandWebsite(this));
+
+        plugin.getServer().getOnlinePlayers().forEach(this::registerJoinTime); //Register join time for players already on the server
     }
 
     @Override
@@ -58,25 +61,51 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     @Override
     public void disable(MTC plugin) {
         HandlerList.unregisterAll(listener); //We'll get some reload functionality working for modules eventually
+
+        playerJoinTimes.keySet().forEach(this::saveTimePlayed);
     }
 
     public boolean isPasswordChangeEnabled() {
         return passwordChangeEnabled;
     }
 
+    void registerJoinTime(Player plr) { //Convenience method to allow for more readable lambdas
+        registerJoinTime(plr.getUniqueId());
+    }
+
     /**
      * Saves the join time for given UUID to the current time. This is used to count the time played.
+     *
      * @param uuid the unique id of the player who joined
      */
     void registerJoinTime(UUID uuid) {
         playerJoinTimes.put(uuid, Instant.now());
     }
 
+    /**
+     * Gets the time played in the current session for a player. If no time has been recorded for given player, 0 is returned.
+     *
+     * @param uuid the unique id of the target player
+     * @return the amount of minutes the target player has played in the current session
+     */
     long getMinutesPlayed(UUID uuid) {
         long minutesPlayed = ChronoUnit.MINUTES.between(
                 playerJoinTimes.getOrDefault(uuid, Instant.now()), //Just making sure
                 Instant.now());
         playerJoinTimes.remove(uuid);
         return minutesPlayed;
+    }
+
+    /**
+     * Writes the time played in the current session to database for given player. Note that this method is <b>blocking</b>.
+     *
+     * @param uuid the unique id of the target player whose time to save
+     */
+    void saveTimePlayed(UUID uuid) {
+        long newlyPlayedMinutes = getMinutesPlayed(uuid);
+
+        getPlugin().getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.PLAYTIME_TABLE_NAME +
+                        " SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
+                uuid.toString(), newlyPlayedMinutes, newlyPlayedMinutes);
     }
 }
