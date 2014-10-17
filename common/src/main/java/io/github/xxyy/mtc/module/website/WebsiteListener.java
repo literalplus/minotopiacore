@@ -49,8 +49,8 @@ final class WebsiteListener implements Listener {
                     playerJoinTimes.getOrDefault(evt.getPlayer().getUniqueId(), Instant.now()), //Just making sure
                     Instant.now());
 
-            plugin.getSql().safelyExecuteUpdate("INSERT INTO "+ WebsiteModule.PLAYTIME_TABLE_NAME +
-            "SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
+            plugin.getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.PLAYTIME_TABLE_NAME +
+                            " SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
                     evt.getPlayer().getUniqueId().toString(), newlyPlayedMinutes, newlyPlayedMinutes);
         });
     }
