@@ -34,7 +34,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     public void enable(MTC plugin) {
         super.enable(plugin);
 
-        listener = new WebsiteListener(plugin);
+        listener = new WebsiteListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         plugin.getCommand("website").setExecutor(new CommandWebsite(this));
     }
