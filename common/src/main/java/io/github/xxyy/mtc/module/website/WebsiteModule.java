@@ -6,6 +6,12 @@ import org.bukkit.event.Listener;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * <p>
  * Central entry point for the website module.
@@ -23,6 +29,8 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     public static final String WEBSITE_USER_TABLE_NAME = "ni176987_1_DB.hp_user"; //legacy name
     public static final String NAME = "Website";
     private static final String PASSWORD_CHANGING_PATH = "password-changing";
+
+    private final Map<UUID, Instant> playerJoinTimes = new ConcurrentHashMap<>();
     private boolean passwordChangeEnabled = true;
     private WebsiteListener listener;
 
@@ -54,5 +62,21 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
 
     public boolean isPasswordChangeEnabled() {
         return passwordChangeEnabled;
+    }
+
+    /**
+     * Saves the join time for given UUID to the current time. This is used to count the time played.
+     * @param uuid the unique id of the player who joined
+     */
+    void registerJoinTime(UUID uuid) {
+        playerJoinTimes.put(uuid, Instant.now());
+    }
+
+    long getMinutesPlayed(UUID uuid) {
+        long minutesPlayed = ChronoUnit.MINUTES.between(
+                playerJoinTimes.getOrDefault(uuid, Instant.now()), //Just making sure
+                Instant.now());
+        playerJoinTimes.remove(uuid);
+        return minutesPlayed;
     }
 }
