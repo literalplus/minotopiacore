@@ -21,21 +21,16 @@ final class WebsiteListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent evt) {
-        module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> { //Let's insert this player into the table of online players
-            module.getPlugin().getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.ONLINE_TABLE_NAME +
-                            " SET uuid=?, name=? ON DUPLICATE KEY UPDATE name=?",        //Under certain conditions, an entry might still be there - consider
-                    evt.getPlayer().getUniqueId().toString(), evt.getPlayer().getName(), //the player switching servers using BungeeCord and the other
-                    evt.getPlayer().getName());                                          //server not having executed the SQL yet or a crash.
+        module.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(module.getPlugin(), () -> {
+            module.setPlayerOnline(evt.getPlayer(), true);
             module.registerJoinTime(evt.getPlayer().getUniqueId());
-        });
+        }, 10L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent evt) {
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> { //Let's remove this player from the table of online players and save their newly acquired play time
-            module.getPlugin().getSql().safelyExecuteUpdate("DELETE FROM " + WebsiteModule.ONLINE_TABLE_NAME +
-                    " WHERE uuid=?", evt.getPlayer().getUniqueId().toString());
-
+            module.setPlayerOnline(evt.getPlayer(), false);
             module.saveTimePlayed(evt.getPlayer().getUniqueId());
         });
     }

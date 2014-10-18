@@ -108,4 +108,16 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
                         " SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
                 uuid.toString(), newlyPlayedMinutes, newlyPlayedMinutes);
     }
+
+    void setPlayerOnline(Player plr, boolean online) {
+        if(online && plr.isOnline()) {
+            getPlugin().getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.ONLINE_TABLE_NAME +
+                            " SET uuid=?, name=? ON DUPLICATE KEY UPDATE name=?", //Under certain conditions, an entry might still be there - consider
+                    plr.getUniqueId().toString(), plr.getName(),                  //the player switching servers using BungeeCord and the other
+                    plr.getName());                                               //server not having executed the SQL yet or a crash.
+        } else {
+            getPlugin().getSql().safelyExecuteUpdate("DELETE FROM " + WebsiteModule.ONLINE_TABLE_NAME +
+                    " WHERE uuid=?", plr.getUniqueId().toString());
+        }
+    }
 }
