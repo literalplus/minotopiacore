@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class WebsiteModule extends ConfigurableMTCModule implements Listener {
     public static final String ONLINE_TABLE_NAME = "ni176987_1_DB.onlineuser"; //legacy name, not my choice
-    public static final String PLAYTIME_TABLE_NAME = "mt_homepage.play_time";
+    public static final String PLAYTIME_TABLE_NAME = "mt_main.play_time";
     public static final String WEBSITE_USER_TABLE_NAME = "ni176987_1_DB.hp_user"; //legacy name
     public static final String NAME = "Website";
     private static final String PASSWORD_CHANGING_PATH = "password-changing";
