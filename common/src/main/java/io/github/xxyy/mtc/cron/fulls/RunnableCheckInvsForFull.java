@@ -1,12 +1,13 @@
 package io.github.xxyy.mtc.cron.fulls;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
 import org.apache.commons.lang3.time.StopWatch;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,9 +18,9 @@ public final class RunnableCheckInvsForFull implements Runnable, FullCheckHelper
     public static final int CHECKS_PER_JOB = 35;
     private final StopWatch watch = new StopWatch();
     private final List<Integer> checkedFullIds = new ArrayList<>();
-    private final Iterator<Player> playerIterator;
+    private final Iterator<? extends Player> playerIterator;
 
-    public RunnableCheckInvsForFull(Iterator<Player> playerIterator) {
+    public RunnableCheckInvsForFull(Iterator<? extends Player> playerIterator) {
         this.playerIterator = playerIterator;
     }
 

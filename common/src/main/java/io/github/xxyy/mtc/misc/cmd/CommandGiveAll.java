@@ -70,7 +70,7 @@ public final class CommandGiveAll extends MTCCommandExecutor {
                     }
                 }
             }
-            if (Bukkit.getOnlinePlayers().length < 1) {
+            if (Bukkit.getOnlinePlayers().size() < 1) {
                 sender.sendMessage(MTC.chatPrefix + "Es sind keine Spieler online.");
                 return true;
             }

@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.test.cmd;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,6 +12,7 @@ import io.github.xxyy.common.test.util.MockHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.cmd.CommandMTC;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
@@ -45,11 +47,12 @@ public class CommandMTCTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked") //Mockito being weird with Server#getOnlinePlayers()Ljava.util.Collection; and generics
     public void testFakeMessage() {
         Player otherPlayer = MockHelper.mockPlayer(UUID.randomUUID(), "other");
         when(otherPlayer.hasPermission(any(String.class))).thenReturn(false);
 
-        when(SERVER.getOnlinePlayers()).thenReturn(new Player[]{fakeSender, otherPlayer});
+        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(ImmutableList.of(fakeSender, otherPlayer));
         commandMTC.catchCommand(fakeSender, null, fakeCommand, "mtc", new String[]{"fm", "&6wowe"});
 
         verify(fakeSender).sendMessage(eq("§7(/mtc fm|" + fakeSender.getName() + ")§f §6wowe"));

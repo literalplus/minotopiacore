@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.lib.com.Ostermiller.util.ArrayIterator;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
@@ -88,7 +87,7 @@ public class RunnableCronjob5Minutes implements Runnable {
             int checkEvery = MTC.instance().getConfig().getInt("fulltag.checkEveryInMinutes", 20);
             if (checkEvery > 0 && (RunnableCronjob5Minutes.fullInfoExCount * 5) >= checkEvery && ConfigHelper.isFullTagEnabled()) {
                 RunnableCronjob5Minutes.fullInfoExCount = 0;
-                (new RunnableCheckInvsForFull(new ArrayIterator<>(Bukkit.getOnlinePlayers()))).run();
+                (new RunnableCheckInvsForFull(Bukkit.getOnlinePlayers().iterator())).run();
             }
 
             //clan caches
@@ -120,7 +119,7 @@ public class RunnableCronjob5Minutes implements Runnable {
 
                 if (cal.get(Calendar.HOUR_OF_DAY) > 10 && cal.get(Calendar.HOUR_OF_DAY) < 23) {
                     sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + ".mtc_userstats_day SET dayid=?, timeid=?, serverid=?, count=?",
-                            todayString, hourString, serverName, Bukkit.getOnlinePlayers().length);
+                            todayString, hourString, serverName, Bukkit.getOnlinePlayers().size());
                 }
             }
         } catch (Exception e) {//always occurs on disable

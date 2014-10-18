@@ -1,9 +1,5 @@
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -11,9 +7,18 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 
@@ -138,10 +143,10 @@ public class MTCChatHelper extends ChatHelper {
     }
 
     public static void sendMessage(String msg, Player sender) {
-        sendMessage(msg, sender, Arrays.asList(Bukkit.getOnlinePlayers()));
+        sendMessage(msg, sender, Bukkit.getOnlinePlayers());
     }
 
-    private static void sendMessage(String msg, Player sender, Collection<Player> receivers) {
+    private static void sendMessage(String msg, Player sender, Collection<? extends Player> receivers) {
         int i = 0;
         LogHelper.getChatLogger().log(Level.INFO, msg);
         for (Player plr : receivers) {

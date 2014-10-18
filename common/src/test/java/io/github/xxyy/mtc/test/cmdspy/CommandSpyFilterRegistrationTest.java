@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.test.cmdspy;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
@@ -25,11 +26,12 @@ import static org.mockito.Mockito.when;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2.7.14
  */
+@SuppressWarnings("unchecked") //Mockito being weeeeeird with Server#getOnlinePlayers()Ljava.util.Collection; and generics
 @PrepareForTest(Bukkit.class)
 public class CommandSpyFilterRegistrationTest {
     private UUID targetId = UUID.randomUUID();
     private UUID offlineId = UUID.randomUUID();
-    private Player[] playersWithTarget = new Player[]{MockHelper.mockPlayer(targetId, "test")};
+    private Collection<Player> playersWithTarget = ImmutableList.of(MockHelper.mockPlayer(targetId, "test"));
 
     @BeforeClass
     public static void init() {
@@ -39,7 +41,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
     public void removeDeadFiltersTest1() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
+        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(ImmutableList.of());
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList());
         when(filter.canSubscribe()).thenReturn(true);
 
@@ -53,7 +55,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
      public void removeDeadFiltersTest2() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
+        when((Collection<Player>) Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId, offlineId));
         when(filter.canSubscribe()).thenReturn(true);
 
@@ -63,7 +65,7 @@ public class CommandSpyFilterRegistrationTest {
         CommandSpyFilters.removeDeadFilters();
         Assert.assertTrue("Non-empty filter illegally removed!", CommandSpyFilters.getActiveFilters().contains(filter));
 
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
+        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(ImmutableList.of());
         CommandSpyFilters.removeDeadFilters();
         Assert.assertFalse("Dead filter illegally persisted!", CommandSpyFilters.getActiveFilters().contains(filter));
     }
@@ -71,7 +73,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
     public void removeDeadFiltersTest3() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(new Player[0]);
+        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(ImmutableList.of());
         when(filter.getSubscribers()).thenReturn(Sets.newHashSet());
         when(filter.canSubscribe()).thenReturn(false);
 
@@ -85,7 +87,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
     public void removeOfflineSubscribersTest() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
+        when((Collection<Player>) Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId, offlineId));
 
         CommandSpyFilters.registerFilter(filter);
@@ -99,7 +101,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
     public void getSubscribedFiltersTest() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
+        when((Collection<Player>) Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
         Collection<UUID> subscribersList = Lists.newArrayList(targetId, offlineId); //Need this so that writes persist and tests pass
         when(filter.getSubscribers()).thenReturn(subscribersList);
         when(filter.canSubscribe()).thenReturn(true);
@@ -118,7 +120,7 @@ public class CommandSpyFilterRegistrationTest {
     @Test
     public void unsubscribeFromAllTest() {
         CommandSpyFilter filter = mock(CommandSpyFilter.class);
-        when(Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
+        when((Collection<Player>) Bukkit.getServer().getOnlinePlayers()).thenReturn(playersWithTarget);
         when(filter.getSubscribers()).thenReturn(Lists.newArrayList(targetId));
         when(filter.canSubscribe()).thenReturn(true);
 

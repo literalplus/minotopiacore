@@ -1,16 +1,17 @@
 package io.github.xxyy.mtc.misc.cmd;
 
-import com.google.common.collect.Lists;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class CommandRandom extends MTCCommandExecutor {
 
@@ -20,7 +21,7 @@ public final class CommandRandom extends MTCCommandExecutor {
             return true;
         }
 
-        Player[] plrs = Bukkit.getOnlinePlayers();
+        Collection<? extends Player> plrs = new ArrayList<>(Bukkit.getOnlinePlayers());
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
@@ -35,23 +36,19 @@ public final class CommandRandom extends MTCCommandExecutor {
                     if (args.length < 2) {
                         return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
                     }
-                    List<Player> newPlrs = Lists.newArrayList();
-                    for (Player target : plrs) {
-                        if (target.hasPermission(args[1])) {
-                            newPlrs.add(target);
-                        }
-                    }
-                    plrs = newPlrs.toArray(new Player[newPlrs.size()]);
+                    plrs.removeIf(target -> !target.hasPermission(args[1]));
                     break;
                 default:
                     return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
             }
         }
 
-        if (plrs == null || plrs.length == 0) {
+        if (plrs.size() == 0) {
             return MTCHelper.sendLoc("XU-nordmplrs", sender, true);
         }
-        Player chosenOne = plrs[RandomUtils.nextInt(plrs.length)];
+        Player chosenOne = plrs.stream()
+                .skip(RandomUtils.nextInt(plrs.size()))
+                .findFirst().get();
 
         Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableAnnounceChoice(chosenOne.getName()),
                 MTC.instance().getConfig().getLong("random.tickdelay", 100));

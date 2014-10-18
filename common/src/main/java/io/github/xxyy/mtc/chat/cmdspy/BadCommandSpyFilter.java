@@ -3,7 +3,8 @@ package io.github.xxyy.mtc.chat.cmdspy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import io.github.xxyy.lib.guava17.collect.ImmutableList;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
 
     @Override
     protected Stream<Player> getOnlineSubscriberStream() {
-        return Arrays.asList(Bukkit.getOnlinePlayers())
+        return ImmutableList.copyOf(Bukkit.getOnlinePlayers())
                 .stream()
                 .filter(plr -> plr.hasPermission("mtc.cmdspy"));
     }

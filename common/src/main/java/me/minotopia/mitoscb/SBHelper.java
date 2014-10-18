@@ -14,6 +14,7 @@ import io.github.xxyy.mtc.helper.StatsHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -191,8 +192,8 @@ public final class SBHelper {
 
         @Override
         public void run() {
-            final Player[] plrs = Bukkit.getOnlinePlayers();
-            final int plrCount = plrs.length;
+            final Collection<? extends Player> plrs = Bukkit.getOnlinePlayers();
+            final int plrCount = plrs.size();
             if (plrCount < 0) {
                 return;
             }
