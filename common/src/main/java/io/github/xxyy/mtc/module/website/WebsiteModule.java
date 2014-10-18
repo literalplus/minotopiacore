@@ -47,7 +47,10 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         plugin.getCommand("website").setExecutor(new CommandWebsite(this));
 
-        plugin.getServer().getOnlinePlayers().forEach(this::registerJoinTime); //Register join time for players already on the server
+        plugin.getServer().getOnlinePlayers().forEach(p -> {
+            registerJoinTime(p);
+            setPlayerOnline(p, true);
+        }); //Register join time and online state for players already on the server
     }
 
     @Override
@@ -63,6 +66,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
         HandlerList.unregisterAll(listener); //We'll get some reload functionality working for modules eventually
 
         playerJoinTimes.keySet().forEach(this::saveTimePlayed);
+        plugin.getServer().getOnlinePlayers().forEach(p -> setPlayerOnline(p, false));
     }
 
     public boolean isPasswordChangeEnabled() {
