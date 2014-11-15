@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.quiz;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,7 +8,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
@@ -106,9 +106,9 @@ public class QuizModule extends ConfigurableMTCModule {
         @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true) //main chat listens on HIGH
         public void onChat(AsyncPlayerChatEvent evt) { //Ignores if message goes to proper clan chat or anything - probability is probably low, also the impl would cost this much: |-------| performance and complexity
             if (!evt.getMessage().startsWith("#") && hasActiveGame()) {
-                Matcher matcher = getGame().getCurrentQuestion().matcher(evt.getMessage());
+                Matcher matcher = getGame().getCurrentQuestion().matcher(ChatColor.stripColor(evt.getMessage()));
                 if (matcher.find()) {
-                    evt.setMessage(matcher.replaceFirst("§c§n\\1§7"));
+                    evt.setMessage("§7" + matcher.replaceFirst("§c§n\\1§7"));
                     getGame().reset(evt.getPlayer());
                 }
             }
@@ -119,7 +119,7 @@ public class QuizModule extends ConfigurableMTCModule {
             if (questionSessions.containsKey(evt.getPlayer().getUniqueId())) {
                 evt.setCancelled(true);
                 QuizQuestion.Builder session = questionSessions.remove(evt.getPlayer().getUniqueId());
-                session.answer(StringHelper.translateAlternateColorCodes(evt.getMessage()));
+                session.answer(ChatColor.stripColor(evt.getMessage()));
 
                 session.build(QuizModule.this);
                 evt.getPlayer().sendMessage("§9[§dQuiz§9] Frage und Antwort gespeichert!");
