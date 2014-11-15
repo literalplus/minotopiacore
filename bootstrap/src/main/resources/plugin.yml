@@ -93,3 +93,7 @@ commands:
     description: "Verwaltet deinen Websiteaccount"
     usage: "/<command> [aktivieren|pw|deaktivieren]"
     aliases: [hp]
+  quiz:
+    description: "such quiz. many quest. such difficult. wow."
+    usage: "/<command> help"
+    aliases: [qz]

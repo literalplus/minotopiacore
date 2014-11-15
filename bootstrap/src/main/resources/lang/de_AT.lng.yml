@@ -221,3 +221,11 @@ lang:
   XU-tffalse: '&9[&2W&4F&9] Die Behauptung war &4falsch&9!'
   XU-tfnq: '&9[&2W&4F&9] &cKeine weiteren Fragen! &4/wf addq <ja|nein> <Farge>'
   XU-tfabort2: '&9[&2W&4F&9] Das Spiel wurde beendet!'
+  XU-qzquestion: |
+    &6[&aQuiz&6] &d%s
+    &6[&aQuiz&6] Schreibe deine Antwort jetzt in den Chat!
+    &6[&aQuiz&6] Wer zuerst richtig antwortet, gewinnt!
+  XU-qzanswer: |
+    &6[&aQuiz&6] &o%s &6hat gewonnen! Die richtige Antwort war:
+    &6[&aQuiz&6] &d%s
+  XU-qzabort: '&6[&aQuiz&6] &cDas Quiz wure abgebrochen.'
