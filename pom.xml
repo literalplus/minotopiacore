@@ -4,7 +4,7 @@
 
     <groupId>io.github.xxyy.mtc</groupId>
     <artifactId>mtc-parent</artifactId>
-    <version>1.6.3-SNAPSHOT</version>
+    <version>1.6.4-SNAPSHOT</version>
     <modules>
         <module>common</module>
         <module>api</module>
