@@ -108,7 +108,7 @@ public class QuizModule extends ConfigurableMTCModule {
             if (!evt.getMessage().startsWith("#") && hasActiveGame()) {
                 Matcher matcher = getGame().getCurrentQuestion().matcher(evt.getMessage());
                 if (matcher.find()) {
-                    evt.setMessage(matcher.replaceFirst("§c§n\1§7"));
+                    evt.setMessage(matcher.replaceFirst("§c§n\\1§7"));
                     getGame().reset(evt.getPlayer());
                 }
             }
