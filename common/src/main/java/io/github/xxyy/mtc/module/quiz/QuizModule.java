@@ -117,6 +117,7 @@ public class QuizModule extends ConfigurableMTCModule {
         @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true) //Make sure we always catch this one
         public void onChatLow(AsyncPlayerChatEvent evt) { //Handle adding of question answers
             if (questionSessions.containsKey(evt.getPlayer().getUniqueId())) {
+                evt.setCancelled(true);
                 QuizQuestion.Builder session = questionSessions.remove(evt.getPlayer().getUniqueId());
                 session.answer(StringHelper.translateAlternateColorCodes(evt.getMessage()));
 
