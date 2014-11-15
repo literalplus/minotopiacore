@@ -87,7 +87,7 @@ class CommandQuiz implements CommandExecutor {
                             break;
                         }
 
-                        String text = StringHelper.varArgsString(args, 2, true);
+                        String text = StringHelper.varArgsString(args, 1, true);
                         module.createQuestionSession((Player) sender, text);
                         sender.sendMessage("§9Frage vorgemerkt.");
                         sender.sendMessage("§eTippe die Antwort jetzt in den Chat. (Einfach so, ja!)");
