@@ -148,14 +148,14 @@ class CommandQuiz implements CommandExecutor {
             }
         }
 
-        sender.sendMessage("§9/wf info §2Zeigt Informationen zum aktuellen Quiz.");
+        sender.sendMessage("§9/qz info §2Zeigt Informationen zum aktuellen Quiz");
         if (sender.hasPermission(QuizModule.ADMIN_PERMISSION)) {
-            sender.sendMessage("§9/wf start §2Startet ein neues Quiz mit der ersten Frage");
-            sender.sendMessage("§9/wf start <Index> §2Startet ein neues Quiz mit einer spezifischen Frage");
-            sender.sendMessage("§9/wf abort [Grund] §2Bricht das laufende Quiz ab");
-            sender.sendMessage("§9/wf addq <Frage> §2Fügt eine Frage hinzu");
-            sender.sendMessage("§9/wf remq <Index> §2Entfernt eine Frage");
-            sender.sendMessage("§9/wf listq §2Zeigt alle verfügbaren Fragen an");
+            sender.sendMessage("§9/qz start §2Startet ein neues Quiz mit der ersten Frage");
+            sender.sendMessage("§9/qz start <Index> §2Startet ein neues Quiz mit einer spezifischen Frage");
+            sender.sendMessage("§9/qz abort [Grund] §2Bricht das laufende Quiz ab");
+            sender.sendMessage("§9/qz addq <Frage> §2Fügt eine Frage hinzu");
+            sender.sendMessage("§9/qz remq <Index> §2Entfernt eine Frage");
+            sender.sendMessage("§9/qz listq §2Zeigt alle verfügbaren Fragen an");
         }
         return true;
     }
