@@ -4,7 +4,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.mtc.helper.MTCHelper;
 
 /**
@@ -16,19 +16,10 @@ import io.github.xxyy.mtc.helper.MTCHelper;
 public class QuizGame {
     private final QuizModule module;
     private QuizQuestion currentQuestion;
+    private boolean wasGlobalMute = false; //Whether global mute was enabled when the quiz was started
 
     public QuizGame(QuizModule module) {
         this.module = module;
-    }
-
-    public boolean nextQuestion() {
-        Validate.isTrue(currentQuestion == null, "Cannot override question!");
-        if (module.hasQuestion()) {
-            setQuestion(module.consumeQuestion());
-            return true;
-        }
-        CommandHelper.broadcast(MTCHelper.loc("XU-tfnq", false), QuizModule.ADMIN_PERMISSION);
-        return false;
     }
 
     public QuizQuestion getCurrentQuestion() {
@@ -46,6 +37,11 @@ public class QuizGame {
         Validate.isTrue(currentQuestion == null, "Cannot override question!");
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-qzquestion", "CONSOLE", false, question.getText()));
         currentQuestion = question;
+
+        wasGlobalMute = ChatHelper.isGlobalMute;
+        if(wasGlobalMute) {
+            ChatHelper.isGlobalMute = false;
+        }
     }
 
     public void reset(Player winner) {
@@ -53,6 +49,11 @@ public class QuizGame {
         module.getPlugin().getServer().broadcastMessage(MTCHelper.locArgs("XU-qzanswer", "CONSOLE", false,
                 winner.getName(), getCurrentQuestion().getAnswer()));
         currentQuestion = null;
+
+        if(wasGlobalMute) {
+            ChatHelper.isGlobalMute = true;
+        }
+        wasGlobalMute = false;
     }
 
     public boolean abort(String reason) {
