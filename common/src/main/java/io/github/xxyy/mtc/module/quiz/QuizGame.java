@@ -60,6 +60,12 @@ public class QuizGame {
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-qzabort", "CONSOLE", false) +
                 (reason == null ? "" : " §7Grund: " + reason));
         module.setGame(null);
+
+        if(wasGlobalMute) {
+            ChatHelper.isGlobalMute = true;
+        }
+        wasGlobalMute = false;
+
         return true;
     }
 }
