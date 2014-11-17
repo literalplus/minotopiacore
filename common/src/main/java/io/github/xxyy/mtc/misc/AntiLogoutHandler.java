@@ -14,7 +14,11 @@ import java.util.UUID;
 public interface AntiLogoutHandler {
     boolean isFighting(UUID uuid);
 
-    void setFighting(Player plr, Player other, Calendar cal);
+    default void setFighting(Player plr, Player other, Calendar cal) { //Easier construction of dummies
 
-    void clearFighters();
+    }
+
+    default void clearFighters() { //Easier construction of dummies
+
+    }
 }

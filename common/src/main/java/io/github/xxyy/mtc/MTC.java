@@ -306,7 +306,13 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             pm.registerEvents(new MainJoinListener(), this);
         }
 
-        logoutHandler = this.regEvents(pm, new AntiLogoutListener(this), "enable.antilogout", false);
+        if (this.getConfig().getBoolean("enable.antilogout", false)) {
+            AntiLogoutListener listener = new AntiLogoutListener(this);
+            pm.registerEvents(listener, this);
+            logoutHandler = listener;
+        } else {
+            logoutHandler = (id) -> false; //overrides isFighting method - I know this is dirty, suggest something better if you have it
+        }
 
         this.regEvents(pm, new LightningListener(), "enable.misc.lighting.cow", true);
         this.regEvents(pm, new DmgPotionListener(), "enable.betterdmgpotions", true);
