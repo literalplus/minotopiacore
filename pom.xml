@@ -22,7 +22,7 @@
     <distributionManagement>
         <downloadUrl>http://www.minotopia.de/ci/job/pvp~mtc/</downloadUrl>
         <repository>
-            <id>xxyy-artifactory</id>
+            <id>xxyy-repo</id>
             <url>http://server.nowak-at.net/repo/xxyy-private/</url>
         </repository>
     </distributionManagement>
