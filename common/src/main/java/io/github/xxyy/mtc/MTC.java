@@ -28,6 +28,7 @@ import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.misc.HelpManager;
 import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.sql.SqlConnectable;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
@@ -141,7 +142,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         for (Player plr : Bukkit.getOnlinePlayers()) {
             final ItemStack itemOnCursor = plr.getItemOnCursor();
             if (itemOnCursor != null) {
-                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @"+plr.getName()+": "+itemOnCursor);
+                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @" + plr.getName() + ": " + itemOnCursor);
                 plr.setItemOnCursor(null);
             }
             plr.closeInventory();
@@ -352,23 +353,28 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     }
 
     @Override
-    public String getSqlDb() {
-        return this.getConfig().getString("sql.db");
-    }
+    protected SqlConnectable getConnectable() {
+        return new SqlConnectable() {
+            @Override
+            public String getSqlDb() {
+                return getConfig().getString("sql.db");
+            }
 
-    @Override
-    public String getSqlHost() {
-        return this.getConfig().getString("sql.host");
-    }
+            @Override
+            public String getSqlHost() {
+                return getConfig().getString("sql.host");
+            }
 
-    @Override
-    public String getSqlPwd() {
-        return this.getConfig().getString("sql.password");
-    }
+            @Override
+            public String getSqlPwd() {
+                return getConfig().getString("sql.password");
+            }
 
-    @Override
-    public String getSqlUser() {
-        return this.getConfig().getString("sql.user");
+            @Override
+            public String getSqlUser() {
+                return getConfig().getString("sql.user");
+            }
+        };
     }
 
     private <T extends Listener> T regEvents(PluginManager pm, T listener, String cfgOption, boolean defaultValue) {

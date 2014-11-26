@@ -21,10 +21,6 @@
             <artifactId>mtc-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.xxyy.xlogin</groupId>
-            <artifactId>xlogin-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.github.xxyy.common</groupId>
             <artifactId>xyc-bukkit</artifactId>
         </dependency>
@@ -52,6 +48,10 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.xxyy.xlogin</groupId>
+            <artifactId>xlogin-api</artifactId>
         </dependency>
 
         <dependency>
