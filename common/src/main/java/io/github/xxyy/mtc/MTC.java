@@ -1,17 +1,8 @@
 /*
- ▒█▀▄▀█ ░▀░ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀█ █▀▀█ ░▀░ █▀▀█ ▒█▀▀█ █▀▀█ █▀▀█ █▀▀
- ▒█▒█▒█ ▀█▀ █░░█ █░░█ ░▒█░░ █░░█ █░░█ ▀█▀ █▄▄█ ▒█░░░ █░░█ █▄▄▀ █▀▀
- ▒█░░▒█ ▀▀▀ ▀░░▀ ▀▀▀▀ ░▒█░░ ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▒█▄▄█ ▀▀▀▀ ▀░▀▀ ▀▀▀
- Copyright (C) 2013 xxyy98.
- Decompilation, redistribution or usage
- without explicit written permission
- by the author are not permitted and
- may result in legal steps being
- taken.
-
- This program uses the Bukkit API but
- is not in any way affiliated with it
- and/or it's authors.
+ * Copyright (c) 2013-2014.
+ * This work is protected by international copyright laws and licensed
+ * under the license terms which can be found at src/main/resources/LICENSE.txt
+ * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 package io.github.xxyy.mtc;
 

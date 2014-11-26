@@ -1,20 +1,17 @@
 /*
-▒█▀▄▀█ ░▀░ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀█ █▀▀█ ░▀░ █▀▀█ ▒█▀▀█ █▀▀█ █▀▀█ █▀▀ 
-▒█▒█▒█ ▀█▀ █░░█ █░░█ ░▒█░░ █░░█ █░░█ ▀█▀ █▄▄█ ▒█░░░ █░░█ █▄▄▀ █▀▀ 
-▒█░░▒█ ▀▀▀ ▀░░▀ ▀▀▀▀ ░▒█░░ ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▒█▄▄█ ▀▀▀▀ ▀░▀▀ ▀▀▀ 
-Copyright (C) 2013 xxyy98. 
-Decompilation, redistribution or usage
-without explicit written permission
-by the author are not permitted and
-may result in legal steps being
-taken. 
-
-This program uses the Bukkit API but
-is not in any way affiliated with it
-and/or it's authors.
-*/
+ * Copyright (c) 2013-2014.
+ * This work is protected by international copyright laws and licensed
+ * under the license terms which can be found at src/main/resources/LICENSE.txt
+ * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
+ */
 
 package io.github.xxyy.mtc.clan;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.mtc.Const;
@@ -22,15 +19,15 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.helper.LaterMessageHelper;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public final class ClanHelper { //REFACTOR
