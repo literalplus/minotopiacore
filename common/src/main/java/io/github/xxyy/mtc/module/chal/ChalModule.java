@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Manages advent calendar module. This allows staff to place chests and players to open them exactly once at the
@@ -107,7 +108,12 @@ public class ChalModule extends ConfigurableMTCModule {
     @Override
     public void save() {
         configuration.set(LOCATIONS_PATH, locations);
-        configuration.set(USED_PATH, chestsUsed.asMap());
+        Map<String, List<String>> serializableChestsUsed = new HashMap<>();
+
+        chestsUsed.asMap().forEach((s, us) ->
+                serializableChestsUsed.put(s, us.stream().map(UUID::toString).collect(Collectors.toList())));
+
+        configuration.set(USED_PATH, serializableChestsUsed);
         super.save();
     }
 
