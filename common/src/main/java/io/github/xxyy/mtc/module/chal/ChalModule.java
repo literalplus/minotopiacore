@@ -168,7 +168,7 @@ public class ChalModule extends ConfigurableMTCModule {
             Block block = evt.getClickedBlock();
             if (block.hasMetadata(METADATA_KEY)) {
                 evt.setCancelled(true);
-                ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0);
+                ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0).value();
 
                 if (hasOpened(plr, location)) {
                     MTCHelper.sendLocArgs("XU-chaopened", plr, false, location.getDate().getDay());
@@ -189,7 +189,7 @@ public class ChalModule extends ConfigurableMTCModule {
 
             Block block = evt.getBlock();
             if (block.hasMetadata(METADATA_KEY)) {
-                ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0);
+                ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0).value();
                 removeChest(location);
                 evt.getPlayer().sendMessage("§cChal-Kiste entfernt.");
             }
