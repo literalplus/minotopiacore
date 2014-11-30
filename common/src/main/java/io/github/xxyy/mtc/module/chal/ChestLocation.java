@@ -73,7 +73,11 @@ public class ChestLocation extends XyLocation {
                 .map(ItemStackFactory::produce)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList()).toArray(new ItemStack[contents.length]);
-        plr.getInventory().addItem(contents);
+        if(contents.length != 0) {
+            plr.getInventory().addItem(contents);
+        } else {
+            plr.sendMessage(Arrays.toString(chest.getBlockInventory().getContents()));
+        }
         MTCHelper.sendLocArgs("XU-chopened", plr, false, date.getDay());
 
         return true;
