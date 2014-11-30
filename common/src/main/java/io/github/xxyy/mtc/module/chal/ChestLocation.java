@@ -65,19 +65,15 @@ public class ChestLocation extends XyLocation {
 
         Chest chest = (Chest) getBlock().getState();
         ItemStack[] contents = InventoryHelper.cloneAll(chest.getBlockInventory().getContents());
-        List<String> lore = Arrays.asList("§eAdventskalender Tür #" + date.getDay(), "§6geöffnet von "+plr.getName());
+        List<String> lore = Arrays.asList("§eAdventskalender Tür #" + date.getDay(), "§6geöffnet von " + plr.getName());
         contents = Arrays.asList(contents).stream()
                 .filter(Objects::nonNull)
                 .map(ItemStackFactory::new)
                 .map(isf -> isf.appendLore(lore))
                 .map(ItemStackFactory::produce)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList()).toArray(new ItemStack[contents.length]);
-        if(contents.length != 0) {
-            plr.getInventory().addItem(contents);
-        } else {
-            plr.sendMessage(Arrays.toString(chest.getBlockInventory().getContents()));
-        }
+                .collect(Collectors.toList()).toArray(new ItemStack[1]);
+        plr.getInventory().addItem(contents);
         MTCHelper.sendLocArgs("XU-chopened", plr, false, date.getDay());
 
         return true;
