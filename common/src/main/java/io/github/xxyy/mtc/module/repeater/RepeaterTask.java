@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.repeater;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 
 import io.github.xxyy.common.util.CommandHelper;
 
@@ -20,10 +21,11 @@ import java.util.Queue;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 30/11/14
  */
-public class RepeaterTask implements Runnable {
+class RepeaterTask implements Runnable {
     private final Queue<RepeatingMessage> queuedMessages = new LinkedList<>();
     private int currentTick = 0; //ticks, in this context every five seconds
     private final RepeaterModule module;
+    private int loadedForTicks = 0;
 
     public RepeaterTask(RepeaterModule module) {
         this.module = module;
@@ -44,6 +46,14 @@ public class RepeaterTask implements Runnable {
 
             Bukkit.getOnlinePlayers()
                     .forEach(p -> CommandHelper.msg(globalMessage.replace("{player}", p.getName()).replace("\\n","\n"), p));
+
+            loadedForTicks++;
+            if(loadedForTicks > 24 && queuedMessages.size() > 2) {
+                Command.broadcastCommandMessage(Bukkit.getConsoleSender(), "§c§oMTC Repeater: Message overload, " +
+                        "try to remove some messages and/or increase the intervals!", true);
+            }
+        } else {
+            loadedForTicks = 0;
         }
     }
 }
