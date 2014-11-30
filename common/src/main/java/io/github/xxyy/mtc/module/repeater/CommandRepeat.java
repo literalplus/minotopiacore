@@ -47,7 +47,7 @@ class CommandRepeat implements CommandExecutor {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "list":
-                    AtomicInteger i = new AtomicInteger(0);
+                    AtomicInteger i = new AtomicInteger(-1);
                     //@formatter:off
                     module.getMessages().stream()
                             .forEach(msg -> new FancyMessage(" -> ").color(GOLD)
