@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.bukkit.ChatColor.DARK_RED;
@@ -90,6 +91,10 @@ class CommandRepeat implements CommandExecutor {
                         return true;
                     }
                     interval = interval / 1000;
+
+                    if(interval < TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES)) {
+                        sender.sendMessage("§cAchtung! Intervalle kürzer als 5 Minuten sind sehr nervig für die User!");
+                    }
 
                     String message = StringHelper.varArgsString(args, 2, true);
                     module.getMessages().add(new RepeatingMessage(message,
