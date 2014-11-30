@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -63,6 +64,16 @@ public class ChalModule extends ConfigurableMTCModule {
         plugin.getCommand("chal").setExecutor(new CommandChal(this));
         plugin.getServer().getPluginManager().registerEvents(new EventListener(), plugin);
         plugin.getServer().getScheduler().runTaskTimer(plugin, this::save, 60 * 20L, 5 * 60 * 20L); //Don't wanna save every time somebody opens a chest
+    }
+
+    @Override
+    public void disable(MTC plugin) {
+        super.disable(plugin);
+
+        locations.stream()
+                .map(Location::getBlock)
+                .filter(Objects::nonNull)
+                .forEach(b -> b.removeMetadata(METADATA_KEY, plugin));
     }
 
     @Override
