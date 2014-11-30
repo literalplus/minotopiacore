@@ -7,10 +7,12 @@
 
 package io.github.xxyy.mtc.hook;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import io.github.xxyy.common.shared.uuid.UUIDRepositories;
 import io.github.xxyy.mtc.hook.impl.XLoginHookImpl;
 
 import java.util.UUID;
@@ -50,6 +52,20 @@ public class XLoginHook extends SimpleHookWrapper {
         if(isActive()) {
             unsafe.resetSpawnLocation();
         }
+    }
+
+    public String getDisplayString(UUID uuid) {
+        Player onlinePlayer = Bukkit.getPlayer(uuid);
+        if(onlinePlayer != null) {
+            return onlinePlayer.getName();
+        }
+
+        String foundName = UUIDRepositories.getRepository().getName(uuid);
+        if(foundName != null) {
+            return foundName;
+        }
+
+        return uuid.toString();
     }
 
     @Override

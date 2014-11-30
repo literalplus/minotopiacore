@@ -97,3 +97,7 @@ commands:
     description: "such quiz. many quest. such difficult. wow."
     usage: "/<command> help"
     aliases: [qz]
+  repeat:
+    description: Repeats messages. Advance.
+    usage: "/<command> help"
+    aliases: [rpt, blitzwiederholung]
