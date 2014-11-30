@@ -145,6 +145,7 @@ class CommandChal implements CommandExecutor {
         sender.sendMessage("§9/chal list §2Listet alle Kisten auf");
         sender.sendMessage("§9/chal chest [Monat-Tag] §2Setzt eine Kiste");
         sender.sendMessage("§9/chal reset [Name|UUID] §2Setzt die geöffneten Kisten für einen Spieler zurück");
+        sender.sendMessage("§9/chal edit §2Erlaubt, Chal-Kisten zu ändern");
         sender.sendMessage("§eMehr Info: https://www.minotopia.me/wiki/index.php/Chal");
         return true;
     }
