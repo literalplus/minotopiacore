@@ -229,3 +229,8 @@ lang:
     &6[&aQuiz&6] &o%s &6hat gewonnen! Die richtige Antwort war:
     &6[&aQuiz&6] &d%s
   XU-qzabort: '&6[&aQuiz&6] &cDas Quiz wure abgebrochen.'
+  XU-chopendenied: '&4[&2Adventskalender&4] &6Du kannst dieses T&uuml;rchen nur am %s &ouml;ffnen!'
+  XU-chopened: |
+    &4[&2Adventskalender&4] &6Du hast die Tür &e%d&6 geöffnet!
+    &4[&2Adventskalender&4] &6Viel Spaß mit deinem Zeug! :)
+  XU-chaopened: '&4[&2Adventskalender&4] &6Du hast die Tür &e%d&6 bereits geöffnet!'

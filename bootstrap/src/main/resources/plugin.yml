@@ -101,3 +101,7 @@ commands:
     description: Repeats messages. Advance.
     usage: "/<command> help"
     aliases: [rpt, blitzwiederholung]
+  chal:
+    description: Admin tools for the advent calendar module
+    usage: "/<command> help"
+    aliases: [adventskalender, letchestsbedoors]
