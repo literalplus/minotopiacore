@@ -12,9 +12,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import io.github.xxyy.common.shared.uuid.UUIDRepositories;
 import io.github.xxyy.mtc.hook.impl.XLoginHookImpl;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -60,7 +60,7 @@ public class XLoginHook extends SimpleHookWrapper {
             return onlinePlayer.getName();
         }
 
-        String foundName = UUIDRepositories.getRepository().getName(uuid);
+        String foundName = unsafe.getName(uuid);
         if(foundName != null) {
             return foundName;
         }
@@ -68,8 +68,34 @@ public class XLoginHook extends SimpleHookWrapper {
         return uuid.toString();
     }
 
+    public List<Profile> getProfiles(String nameOrId) {
+        return unsafe.getProfiles(nameOrId);
+    }
+
+    public Profile getBestProfile(String nameOrId) {
+        List<Profile> profiles = unsafe.getProfiles(nameOrId);
+
+        if(profiles.size() == 1) {
+            return profiles.get(0); //If there's only one premium player, xLogin only returns that one
+        } else {
+            return null;
+        }
+    }
+
+    public UUID getBestUniqueId(String nameOrId) {
+        Profile profile = getBestProfile(nameOrId);
+        return profile == null ? null : profile.getUniqueId();
+    }
+
     @Override
     public boolean isActive() {
         return unsafe != null && unsafe.isHooked();
+    }
+
+    public interface Profile {
+        boolean isPremium();
+        String getName();
+        UUID getUniqueId();
+        String getLastIp();
     }
 }

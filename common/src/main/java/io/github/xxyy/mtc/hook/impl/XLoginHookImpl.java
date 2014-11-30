@@ -7,15 +7,19 @@
 
 package io.github.xxyy.mtc.hook.impl;
 
-import io.github.xxyy.mtc.hook.HookWrapper;
-import io.github.xxyy.mtc.hook.Hooks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import io.github.xxyy.mtc.hook.HookWrapper;
+import io.github.xxyy.mtc.hook.Hooks;
+import io.github.xxyy.mtc.hook.XLoginHook;
 import io.github.xxyy.xlogin.common.PreferencesHolder;
 import io.github.xxyy.xlogin.common.api.SpawnLocationHolder;
+import io.github.xxyy.xlogin.common.api.XLoginProfile;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of xLogin hook which contains unsafe statements.
@@ -62,5 +66,54 @@ public final class XLoginHookImpl implements Hook {
 
     public void resetSpawnLocation() {
         this.spawnLocation = null;
+    }
+
+    public List<XLoginHook.Profile> getProfiles(String name) {
+        List<? extends XLoginProfile> profiles = PreferencesHolder.getConsumer().getRepository().getProfiles(name);
+
+        return profiles.stream()
+                .map(XLoginProfileProxy::new)
+                .collect(Collectors.toList());
+    }
+
+    public XLoginHook.Profile getProfile(UUID uuid) {
+        XLoginProfile profile = PreferencesHolder.getConsumer().getRepository().getProfile(uuid);
+        return profile == null ? null : new XLoginProfileProxy(profile);
+    }
+
+    public String getName(UUID uuid) {
+        return PreferencesHolder.getConsumer().getRepository().getName(uuid);
+    }
+
+    private class XLoginProfileProxy implements XLoginHook.Profile {
+        private final XLoginProfile profile;
+
+        private XLoginProfileProxy(XLoginProfile profile) {
+            this.profile = profile;
+        }
+
+        @Override
+        public boolean isPremium() {
+            return profile.isPremium();
+        }
+
+        @Override
+        public String getName() {
+            return profile.getName();
+        }
+
+        @Override
+        public UUID getUniqueId() {
+            return profile.getUniqueId();
+        }
+
+        @Override
+        public String getLastIp() {
+            return profile.getLastIp();
+        }
+
+        public XLoginProfile getProfile() {
+            return profile;
+        }
     }
 }
