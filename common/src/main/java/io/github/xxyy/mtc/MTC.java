@@ -59,6 +59,7 @@ import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.module.InfiniteDispenserModule;
 import io.github.xxyy.mtc.module.MTCModuleAdapter;
+import io.github.xxyy.mtc.module.chal.ChalModule;
 import io.github.xxyy.mtc.module.quiz.QuizModule;
 import io.github.xxyy.mtc.module.repeater.RepeaterModule;
 import io.github.xxyy.mtc.module.truefalse.TrueFalseModule;
@@ -253,6 +254,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         new WebsiteModule();
         new QuizModule();
         new RepeaterModule();
+        new ChalModule();
     }
 
     private void registerCommands() {
