@@ -7,13 +7,13 @@
 
 package io.github.xxyy.mtc.module.repeater;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 
 import io.github.xxyy.common.util.CommandHelper;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A task for repeating messages.
@@ -22,10 +22,8 @@ import java.util.Queue;
  * @since 30/11/14
  */
 class RepeaterTask implements Runnable {
-    private final Queue<RepeatingMessage> queuedMessages = new LinkedList<>();
     private int currentTick = 0; //ticks, in this context every five seconds
     private final RepeaterModule module;
-    private int loadedForTicks = 0;
 
     public RepeaterTask(RepeaterModule module) {
         this.module = module;
@@ -35,25 +33,19 @@ class RepeaterTask implements Runnable {
     public void run() {
         currentTick++;
 
-        module.getMessages().stream()
+        List<RepeatingMessage> messagesForThisTick = module.getMessages().stream()
                 .filter(m -> (currentTick % m.getTickInterval()) == 0)
-                .forEach(queuedMessages::add);
+                .collect(Collectors.toList());
+        RepeatingMessage toBroadcast = null;
+        if (!messagesForThisTick.isEmpty()) {
+            toBroadcast = messagesForThisTick.get(RandomUtils.nextInt(messagesForThisTick.size()));
+        }
 
-        RepeatingMessage toBroadcast = queuedMessages.poll();
-
-        if(toBroadcast != null) {
+        if (toBroadcast != null) {
             String globalMessage = toBroadcast.getMessage();
 
             Bukkit.getOnlinePlayers()
-                    .forEach(p -> CommandHelper.msg(globalMessage.replace("{player}", p.getName()).replace("\\n","\n"), p));
-
-            loadedForTicks++;
-            if(loadedForTicks > 24 && queuedMessages.size() > 2) {
-                Command.broadcastCommandMessage(Bukkit.getConsoleSender(), "§c§oMTC Repeater: Message overload, " +
-                        "try to remove some messages and/or increase the intervals!", true);
-            }
-        } else {
-            loadedForTicks = 0;
+                    .forEach(p -> CommandHelper.msg(globalMessage.replace("{player}", p.getName()).replace("\\n", "\n"), p));
         }
     }
 }

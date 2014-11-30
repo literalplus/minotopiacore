@@ -107,8 +107,10 @@ class CommandRepeat implements CommandExecutor {
         }
 
         sender.sendMessage("§9/repeat list §2Listet alle Nachrichten auf");
-        sender.sendMessage("§9/qz remove [Index] §2Entfernt eine Nachricht");
-        sender.sendMessage("§9/qz add [Intervall] [Frage] §2Fügt eine Nachricht hinzu");
+        sender.sendMessage("§9/repeat remove [Index] §2Entfernt eine Nachricht");
+        sender.sendMessage("§9/repeat add [Intervall] [Frage] §2Fügt eine Nachricht hinzu");
+        sender.sendMessage("§cAchtung: Wenn es für ein intervall mehrere Nachrichten gibt, wird jedes Mal nur eine zufällige angezeigt!");
+        sender.sendMessage("§eVerwende §6{player} §ein einer Nachricht für den jeweiligen Spielernamen!");
         return true;
     }
 }
