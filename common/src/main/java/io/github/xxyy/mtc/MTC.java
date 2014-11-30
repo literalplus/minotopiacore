@@ -238,7 +238,14 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
         MTCModuleAdapter.getInstances().stream()
                 .filter(m -> m.isEnabled(this))
-                .forEach(m -> m.enable(this));
+                .forEach(m -> {
+                    try {
+                        m.enable(this);
+                    } catch (Throwable e) {
+                        getLogger().warning("Could not enable " + m.getName() + ":");
+                        e.printStackTrace();
+                    }
+                });
 
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
