@@ -72,6 +72,7 @@ public class RepeatingMessage implements ConfigurationSerializable {
     }
 
     @Override
+    @SuppressWarnings("RedundantIfStatement")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RepeatingMessage)) return false;
