@@ -42,7 +42,8 @@ class RepeaterTask implements Runnable {
         }
 
         if (toBroadcast != null) {
-            String globalMessage = toBroadcast.getMessage();
+            String globalMessage = toBroadcast.getMessage()
+                    .replace("{p}", module.getPlugin().getChatPrefix());
 
             Bukkit.getOnlinePlayers()
                     .forEach(p -> CommandHelper.msg(globalMessage.replace("{player}", p.getName()).replace("\\n", "\n"), p));

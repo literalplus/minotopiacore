@@ -87,12 +87,12 @@ class CommandRepeat implements CommandExecutor {
                     try {
                         interval = StringHelper.parseTimePeriod(args[1]);
                     } catch (IllegalStateException e) {
-                        sender.sendMessage("§cTime Parse error: "+e.getMessage());
+                        sender.sendMessage("§cTime Parse error: " + e.getMessage());
                         return true;
                     }
                     interval = interval / 1000;
 
-                    if(interval < TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES)) {
+                    if (interval < TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES)) {
                         sender.sendMessage("§cAchtung! Intervalle kürzer als 5 Minuten sind sehr nervig für die User!");
                     }
 
@@ -100,7 +100,7 @@ class CommandRepeat implements CommandExecutor {
                     module.getMessages().add(new RepeatingMessage(message,
                             (long) Math.floor(interval / 5),
                             CommandHelper.getSenderId(sender)));
-                    sender.sendMessage("§aHinzugefügt mit Intervall=§e"+interval+"s§a!");
+                    sender.sendMessage("§aHinzugefügt mit Intervall=§e" + interval + "s§a!");
                     module.save();
                     return true;
             }
@@ -111,6 +111,7 @@ class CommandRepeat implements CommandExecutor {
         sender.sendMessage("§9/repeat add [Intervall] [Frage] §2Fügt eine Nachricht hinzu");
         sender.sendMessage("§cAchtung: Wenn es für ein intervall mehrere Nachrichten gibt, wird jedes Mal nur eine zufällige angezeigt!");
         sender.sendMessage("§eVerwende §6{player} §ein einer Nachricht für den jeweiligen Spielernamen!");
+        sender.sendMessage("§eVerwende §6{p} §ein einer Nachricht für " + module.getPlugin().getChatPrefix() + "§e!");
         return true;
     }
 }
