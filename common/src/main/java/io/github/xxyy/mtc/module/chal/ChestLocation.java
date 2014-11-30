@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 30/11/14
  */
-class ChestLocation extends XyLocation {
+public class ChestLocation extends XyLocation {
     private ChalDate date;
 
     public ChestLocation(Location toClone, ChalDate date) {
