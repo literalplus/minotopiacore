@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.chal;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -55,6 +56,7 @@ public class ChalModule extends ConfigurableMTCModule {
 
     public ChalModule() {
         super(NAME, "modules/chal/data.yml", ClearCacheBehaviour.SAVE);
+        ConfigurationSerialization.registerClass(ChestLocation.class);
     }
 
     @Override
