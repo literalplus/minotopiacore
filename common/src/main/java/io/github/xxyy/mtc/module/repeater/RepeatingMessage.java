@@ -59,7 +59,7 @@ public class RepeatingMessage implements ConfigurationSerializable {
         Map<String, Object> result = new HashMap<>();
         result.put(MESSAGE_PATH, message);
         result.put(INTERVAL_PATH, tickInterval);
-        result.put(AUTHOR_PATH, author);
+        result.put(AUTHOR_PATH, author.toString());
         return result;
     }
 
@@ -68,7 +68,7 @@ public class RepeatingMessage implements ConfigurationSerializable {
         Validate.isTrue(input.containsKey(INTERVAL_PATH), "Need interval!");
         Validate.isTrue(input.containsKey(AUTHOR_PATH), "Need author!");
         return new RepeatingMessage(input.get(MESSAGE_PATH).toString(), (Integer) input.get(INTERVAL_PATH),
-                (UUID) input.get(AUTHOR_PATH));
+                UUID.fromString(input.get(AUTHOR_PATH).toString()));
     }
 
     @Override

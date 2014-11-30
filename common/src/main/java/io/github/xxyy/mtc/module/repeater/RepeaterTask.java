@@ -34,7 +34,7 @@ public class RepeaterTask implements Runnable {
         currentTick++;
 
         module.getMessages().stream()
-                .filter(m -> (m.getTickInterval() % currentTick) == 0)
+                .filter(m -> (currentTick % m.getTickInterval()) == 0)
                 .forEach(queuedMessages::add);
 
         RepeatingMessage toBroadcast = queuedMessages.poll();
