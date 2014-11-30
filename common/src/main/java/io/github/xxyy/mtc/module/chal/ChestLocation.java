@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +67,7 @@ public class ChestLocation extends XyLocation {
         ItemStack[] contents = InventoryHelper.cloneAll(chest.getBlockInventory().getContents());
         List<String> lore = Arrays.asList("§eAdventskalender Tür #" + date.getDay(), "§6geöffnet von "+plr.getName());
         contents = (ItemStack[]) Arrays.asList(contents).stream()
+                .filter(Objects::nonNull)
                 .map(ItemStackFactory::new)
                 .map(isf -> isf.appendLore(lore))
                 .map(ItemStackFactory::produce)
