@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.UUIDHelper;
@@ -123,6 +124,20 @@ class CommandChal implements CommandExecutor {
 
                     module.resetOpened(uuid);
                     sender.sendMessage("§aGeöffnete Kisten entfernt.");
+                    return true;
+                case "edit":
+                    if(CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        return true;
+                    }
+
+                    Player plr = ((Player) sender);
+                    if(plr.hasMetadata(ChalModule.METADATA_KEY)) {
+                        plr.removeMetadata(ChalModule.METADATA_KEY, module.getPlugin());
+                        plr.sendMessage("§eEdit Mode deaktiviert");
+                    } else {
+                        plr.setMetadata(ChalModule.METADATA_KEY, new FixedMetadataValue(module.getPlugin(), true));
+                        plr.sendMessage("§eEdit Mode aktiviert (Du kannst Kisten jetzt bearbeiten)");
+                    }
                     return true;
             }
         }

@@ -46,7 +46,7 @@ public class ChalModule extends ConfigurableMTCModule {
     public static final String ADMIN_PERMISSION = "mtc.chal.admin";
     public static final String DATE_BYPASS_PERMISSION = "mtc.chal.bypass";
     public static final String DATE_BYPASS_PAST_PERMISSION = "mtc.chal.bypass-past";
-    public static final String METADATA_KEY = "chal_chest_location";
+    public static final String METADATA_KEY = "chal-metadata";
 
     private List<ChestLocation> locations;
     private ListMultimap<String, UUID> chestsUsed = MultimapBuilder.hashKeys().arrayListValues().build();
@@ -155,6 +155,10 @@ public class ChalModule extends ConfigurableMTCModule {
                 } else {
                     plr.sendMessage("§eAuswahl abgebrochen!");
                 }
+                evt.setCancelled(true);
+                return;
+            } else if(plr.hasMetadata(METADATA_KEY)) {
+                return; //Allow to open chests
             }
 
             if (evt.getClickedBlock().getType() != Material.CHEST) {
@@ -163,6 +167,7 @@ public class ChalModule extends ConfigurableMTCModule {
 
             Block block = evt.getClickedBlock();
             if (block.hasMetadata(METADATA_KEY)) {
+                evt.setCancelled(true);
                 ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0);
 
                 if (hasOpened(plr, location)) {
