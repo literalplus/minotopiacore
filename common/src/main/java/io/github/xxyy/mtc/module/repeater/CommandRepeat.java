@@ -112,6 +112,7 @@ class CommandRepeat implements CommandExecutor {
         sender.sendMessage("§cAchtung: Wenn es für ein intervall mehrere Nachrichten gibt, wird jedes Mal nur eine zufällige angezeigt!");
         sender.sendMessage("§eVerwende §6{player} §ein einer Nachricht für den jeweiligen Spielernamen!");
         sender.sendMessage("§eVerwende §6{p} §ein einer Nachricht für " + module.getPlugin().getChatPrefix() + "§e!");
+        sender.sendMessage("§eMehr Info: https://www.minotopia.me/wiki/index.php/Repeater");
         return true;
     }
 }
