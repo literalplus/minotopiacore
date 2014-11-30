@@ -74,6 +74,8 @@ public class ChalModule extends ConfigurableMTCModule {
                 .map(Location::getBlock)
                 .filter(Objects::nonNull)
                 .forEach(b -> b.removeMetadata(METADATA_KEY, plugin));
+
+        save();
     }
 
     @Override
@@ -129,6 +131,7 @@ public class ChalModule extends ConfigurableMTCModule {
     public ChestLocation createChest(Location loc, ChalDate date) {
         ChestLocation result = new ChestLocation(loc, date);
         loc.getBlock().setMetadata(METADATA_KEY, new FixedMetadataValue(plugin, result));
+        locations.add(result);
         save();
         return result;
     }
