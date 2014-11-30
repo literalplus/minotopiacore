@@ -70,8 +70,10 @@ public class ChalModule extends ConfigurableMTCModule {
     protected void reloadImpl() {
         locations = (List<ChestLocation>) configuration.getList(LOCATIONS_PATH, new ArrayList<>());
         chestsUsed.clear();
-        for (Map.Entry<String, Object> entry : configuration.getConfigurationSection(USED_PATH).getValues(false).entrySet()) {
-            chestsUsed.putAll(entry.getKey(), (List<UUID>) entry.getValue());
+        if (configuration.isConfigurationSection(USED_PATH)) {
+            for (Map.Entry<String, Object> entry : configuration.getConfigurationSection(USED_PATH).getValues(false).entrySet()) {
+                chestsUsed.putAll(entry.getKey(), (List<UUID>) entry.getValue());
+            }
         }
 
         Iterator<ChestLocation> it = locations.iterator();
@@ -145,9 +147,9 @@ public class ChalModule extends ConfigurableMTCModule {
             }
 
             Player plr = evt.getPlayer();
-            if(chestSelectors.containsKey(plr.getUniqueId())) {
+            if (chestSelectors.containsKey(plr.getUniqueId())) {
                 ChalDate date = chestSelectors.remove(plr.getUniqueId());
-                if(evt.getClickedBlock().getType() == Material.CHEST) {
+                if (evt.getClickedBlock().getType() == Material.CHEST) {
                     createChest(evt.getClickedBlock().getLocation(), date);
                     plr.sendMessage("§aKiste für " + date + " gesetzt!");
                 } else {
@@ -155,7 +157,7 @@ public class ChalModule extends ConfigurableMTCModule {
                 }
             }
 
-            if(evt.getClickedBlock().getType() != Material.CHEST) {
+            if (evt.getClickedBlock().getType() != Material.CHEST) {
                 return;
             }
 
