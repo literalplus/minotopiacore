@@ -75,6 +75,7 @@ class CommandRepeat implements CommandExecutor {
                     }
 
                     RepeatingMessage removed = module.getMessages().remove(index);
+                    module.save();
                     sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
                     return true;
                 case "add":
