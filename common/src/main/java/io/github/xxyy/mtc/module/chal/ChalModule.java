@@ -77,6 +77,8 @@ public class ChalModule extends ConfigurableMTCModule {
                 .map(Location::getBlock)
                 .filter(Objects::nonNull)
                 .forEach(b -> b.removeMetadata(METADATA_KEY, plugin));
+        plugin.getServer().getOnlinePlayers()
+                .forEach(p -> p.removeMetadata(METADATA_KEY, plugin));
 
         save();
     }
