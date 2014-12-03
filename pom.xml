@@ -71,7 +71,12 @@
         <repository>
             <id>xxyy-libs-snapshot</id>
             <!-- Fanciful -->
-            <url>http://repo.nowak-at.net/libs-snapshot/</url>
+            <url>http://repo.nowak-at.net/public-all/</url>
+        </repository>
+        <repository>
+            <id>xxyy-repo</id>
+            <!-- xLogin, etc. -->
+            <url>http://repo.nowak-at.net/xxyy-private/</url>
         </repository>
     </repositories>
 
