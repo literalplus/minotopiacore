@@ -71,12 +71,12 @@
         <repository>
             <id>xxyy-libs-snapshot</id>
             <!-- Fanciful -->
-            <url>http://repo.nowak-at.net/public-all/</url>
+            <url>http://server.nowak-at.net/repo/public-all/</url>
         </repository>
         <repository>
             <id>xxyy-repo</id>
             <!-- xLogin, etc. -->
-            <url>http://repo.nowak-at.net/xxyy-private/</url>
+            <url>http://server.nowak-at.net/repo/xxyy-private/</url>
         </repository>
     </repositories>
 
@@ -112,6 +112,16 @@
                 <version>5.8.1-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
+            <!--
+            <dependency>
+                <groupId>com.gmail.filoghost</groupId>
+                <artifactId>HolographicDisplays</artifactId>
+                <version>1.8.11</version>
+                Temporary until we fix Maven and / or Artifactory
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/HolographicDisplays.jar</systemPath>
+            </dependency>
+            -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
