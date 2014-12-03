@@ -113,7 +113,7 @@ public class ChalModule extends ConfigurableMTCModule {
         Map<String, List<String>> serializableChestsUsed = new HashMap<>();
 
         chestsUsed.asMap().forEach((s, us) ->
-                serializableChestsUsed.put(s, us.stream().map(UUID::toString).collect(Collectors.toList())));
+                serializableChestsUsed.put(s, us.stream().map(Object::toString).collect(Collectors.toList())));
 
         configuration.set(USED_PATH, serializableChestsUsed);
         super.save();
