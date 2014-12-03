@@ -71,12 +71,12 @@
         <repository>
             <id>xxyy-libs-snapshot</id>
             <!-- Fanciful -->
-            <url>http://repo.nowak-at.net/public-all/</url>
+            <url>http://server.nowak-at.net/repo/public-all/</url>
         </repository>
         <repository>
             <id>xxyy-repo</id>
             <!-- xLogin, etc. -->
-            <url>http://repo.nowak-at.net/xxyy-private/</url>
+            <url>http://server.nowak-at.net/repo/xxyy-private/</url>
         </repository>
     </repositories>
 
