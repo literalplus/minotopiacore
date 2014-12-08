@@ -69,6 +69,11 @@
             <url>http://jcenter.bintray.com/</url>
         </repository>
         <repository>
+            <id>spigot-repo</id>
+            <!-- Spigot-API -->
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>xxyy-libs-snapshot</id>
             <!-- Fanciful -->
             <url>http://server.nowak-at.net/repo/public-all/</url>
