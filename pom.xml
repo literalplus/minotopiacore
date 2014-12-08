@@ -40,6 +40,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <powermock.version>1.5.5</powermock.version>
         <xyc.version>3.1.0.2-SNAPSHOT</xyc.version>
+        <minecraft.version>1.7.10</minecraft.version>
+        <spigot-api.release>R0.1</spigot-api.release>
     </properties>
 
     <repositories>
@@ -90,7 +92,7 @@
             <dependency>
                 <groupId>org.spigotmc</groupId>
                 <artifactId>spigot-api</artifactId>
-                <version>1.7.10-R0.1-SNAPSHOT</version>
+                <version>${minecraft.version}-${spigot-api.release}-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
