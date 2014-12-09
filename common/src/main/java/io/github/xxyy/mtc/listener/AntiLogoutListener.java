@@ -93,7 +93,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             // plr.getInventory().setArmorContents(new ItemStack[4]);
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-fightlogout", plr.getName(), true, plr.getName()));
             if (MTC.isUseHologram()) {
-                Hologram h = HolographicDisplaysAPI.createHologram(plugin, plr.getLocation(),
+                Hologram h = HolographicDisplaysAPI.createHologram(plugin, plr.getLocation().add(0d, 1.5d, 0d),
                         "§a" + plr.getName(),
                         "§cIm Kampf geloggt",
                         String.format("[%s]", SIMPLE_TIME_FORMAT.format(new Date())));
