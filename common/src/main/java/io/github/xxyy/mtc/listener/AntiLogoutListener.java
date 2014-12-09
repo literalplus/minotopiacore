@@ -7,6 +7,13 @@
 
 package io.github.xxyy.mtc.listener;
 
+import com.gmail.filoghost.holograms.api.Hologram;
+import com.gmail.filoghost.holograms.api.HolographicDisplaysAPI;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.AntiLogoutHandler;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,16 +26,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.AntiLogoutHandler;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     private final MTC plugin;
@@ -77,15 +76,23 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             return false;
         }
         if(isFighting(plr.getUniqueId())){
-            for(ItemStack stk : plr.getInventory().getArmorContents()){
+	        // Inventory extends Iterable, which includes both inventory and armor slots
+	        for (ItemStack stk : plr.getInventory()){
+            // for(ItemStack stk : plr.getInventory().getArmorContents()){
                 if(stk == null || stk.getType() == Material.AIR)
                 {
                     continue;
                 }
                 plr.getWorld().dropItemNaturally(plr.getLocation(), stk);
             }
-            plr.getInventory().setArmorContents(new ItemStack[4]);
+	        plr.getInventory().clear();
+            // plr.getInventory().setArmorContents(new ItemStack[4]);
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-fightlogout", plr.getName(), true, plr.getName()));
+	        if (MTC.isUseHologram())
+	        {
+		        Hologram h = HolographicDisplaysAPI.createHologram(plugin, plr.getLocation(), ChatColor.GREEN + plr.getName(), ChatColor.RED + "Im Kampf geloggt", String.format("[%s]", new SimpleDateFormat("HH:mm:ss").format(new Date())));
+		        plugin.getServer().getScheduler().runTaskLater(plugin, h::delete, ConfigHelper.getHologramTimeout() * 20);
+	        }
             return true;
         }
         return false;

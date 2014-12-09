@@ -96,6 +96,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private PexHook pexHook;
 
     private boolean showDisableMsg = true;
+	private static boolean useHologram = false;
     private PlayerGameManager gameManager;
 
     @Override
@@ -250,6 +251,8 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
 
+	    MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
+
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC enabled,Sir!");
         }
@@ -392,6 +395,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     public static MTC instance() {
         return MTC.instance;
     }
+
+	public static boolean isUseHologram()
+	{
+		return MTC.useHologram;
+	}
 
     public VaultHook getVaultHook() {
         return vaultHook;

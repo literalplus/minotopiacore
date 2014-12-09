@@ -60,6 +60,7 @@ public class ConfigHelper {
     private static boolean worldSpecificChat;
     private static boolean antiLogoutEnabled;
     private static int secsInFight;
+	private static int hologramTimeout;
     private static List<String> fightAllowedCmds;
     private static List<String> vehicleAllowedCmds;
     private static boolean enableBungeeAPI;
@@ -118,6 +119,13 @@ public class ConfigHelper {
     public static int getSecsInFight() {
         return ConfigHelper.secsInFight;
     }
+
+	/**
+	 * @return the hologramTimeout
+	 */
+	public static int getHologramTimeout() {
+		return ConfigHelper.hologramTimeout;
+	}
 
     public static ArrayList<PotionEffect> getSnowballEffects() {
         return ConfigHelper.snowballEffects;
@@ -371,6 +379,7 @@ public class ConfigHelper {
         cfg.addDefault("snowball.effects", new Integer[]{4, 15, 22});
         cfg.addDefault("snowball.timeoutTicks", 12000);
         cfg.addDefault("antilogout.secsInFight", 20);
+	    cfg.addDefault("antilogout.hologramTimeout", 60);
         cfg.addDefault("antilogout.allowedCmds", new String[]{"msg", "m", "fix", "heal", "eat"});
         cfg.addDefault("vehicles.allowedCmds", new String[]{"msg", "m", "fix", "heal", "eat", "reply", "team"});
     }
@@ -423,6 +432,7 @@ public class ConfigHelper {
         ConfigHelper.worldSpecificChat = cfg.getBoolean("enable.worldspecificchat", false);
         ConfigHelper.antiLogoutEnabled = cfg.getBoolean("enable.antilogout", false);
         ConfigHelper.secsInFight = cfg.getInt("antilogout.secsInFight", 20);
+	    ConfigHelper.hologramTimeout = cfg.getInt("antilogout.hologramTimeout", 60);
         ConfigHelper.fightAllowedCmds = cfg.getStringList("antilogout.allowedCmds");
         ChatHelper.allowedChatColors = cfg.getString("chat.farbe.allowed", "012356789AaBbDdEeFfRr");
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");
