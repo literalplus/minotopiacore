@@ -60,6 +60,10 @@
             <groupId>io.github.xxyy.xlogin</groupId>
             <artifactId>xlogin-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gmail.filoghost</groupId>
+            <artifactId>HolographicDisplays</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
