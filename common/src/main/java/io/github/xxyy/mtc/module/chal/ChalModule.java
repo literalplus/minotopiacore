@@ -90,7 +90,10 @@ public class ChalModule extends ConfigurableMTCModule {
         chestsUsed.clear();
         if (configuration.isConfigurationSection(USED_PATH)) {
             for (Map.Entry<String, Object> entry : configuration.getConfigurationSection(USED_PATH).getValues(false).entrySet()) {
-                chestsUsed.putAll(entry.getKey(), (List<UUID>) entry.getValue());
+                chestsUsed.putAll(entry.getKey(),
+                        ((List<String>) entry.getValue()).stream()
+                                .map(UUID::fromString)
+                                .collect(Collectors.toList()));
             }
         }
 
@@ -181,7 +184,7 @@ public class ChalModule extends ConfigurableMTCModule {
                 }
                 evt.setCancelled(true);
                 return;
-            } else if(plr.hasMetadata(METADATA_KEY)) {
+            } else if (plr.hasMetadata(METADATA_KEY)) {
                 return; //Allow to open chests
             }
 
