@@ -96,7 +96,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private PexHook pexHook;
 
     private boolean showDisableMsg = true;
-	private static boolean useHologram = false;
+    private static boolean useHologram = false;
     private PlayerGameManager gameManager;
 
     @Override
@@ -251,7 +251,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
 
-	    MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
+        MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
 
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC enabled,Sir!");
@@ -332,9 +332,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
         this.regEvents(pm, new CmdSpyListener(), "enable.cmdspy", true);
-        if (ConfigHelper.isClanEnabled()) {
-            pm.registerEvents(new MainDamageListener(this), this);
-        }
+        pm.registerEvents(new MainDamageListener(this), this);
         if (ConfigHelper.isProhibitCmdsInBoats()) {
             pm.registerEvents(new MainInventoryOpenListener(), this);
         }
@@ -396,10 +394,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         return MTC.instance;
     }
 
-	public static boolean isUseHologram()
-	{
-		return MTC.useHologram;
-	}
+    public static boolean isUseHologram() {
+        return MTC.useHologram;
+    }
 
     public VaultHook getVaultHook() {
         return vaultHook;

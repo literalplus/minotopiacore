@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
+import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanMemberInfo;
@@ -54,7 +55,7 @@ public final class MainDamageListener implements Listener {
         boolean message = true;
         Player plr = (Player) e.getEntity();
 
-        if(plugin.getGameManager().isInGame(plr.getUniqueId())) {
+        if (plugin.getGameManager().isInGame(plr.getUniqueId())) {
             return;
         }
 
@@ -84,34 +85,39 @@ public final class MainDamageListener implements Listener {
             default:
                 return;
         }
-        // ANTILOGOUT
-        Calendar cal = Calendar.getInstance();
         // INVISIBILITY
         plrDamager.removePotionEffect(PotionEffectType.INVISIBILITY);
-        // CLAN
-        ClanMemberInfo cmiVictim = ClanHelper.getMemberInfoByPlayerName(plr.getName());
-        ClanMemberInfo cmiDamager = ClanHelper.getMemberInfoByPlayerName(plrDamager.getName());
-        if (cmiVictim.clanId < 0 || cmiDamager.clanId < 0 || (cmiVictim.clanId != cmiDamager.clanId)) {
-            String clnPrefix = ClanHelper.getPrefix(plr.getName()) + ((cmiVictim.clanId < 0) ? "" : ClanHelper.getStarsByRank(cmiVictim.getRank()));
-            if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
-                if (message) {
-                    MTCHelper.sendLocArgs("XU-peacehit", plrDamager, true, clnPrefix,
-                            plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
-                }
-                MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
-                return;
+
+        // PEACE
+        if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
+            if (message) {
+                MTCHelper.sendLocArgs("XU-peacehit_", plrDamager, true,
+                        plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
             }
-            //this happens if the players can hit each other
-            plugin.getLogoutHandler().setFighting(plr, plrDamager, cal); //ANTILOGOUT
-            MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clnPrefix,
-                    plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
+            MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
             return;
         }
-        //this happens if the players are in the same clan.
-        MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
-        if (message) {
-            MTCHelper.sendLoc("XC-clanhit", plrDamager, true);
+
+        // CLAN
+        String clanPrefix = "";
+        if (ConfigHelper.isClanEnabled()) {
+            ClanMemberInfo cmiVictim = ClanHelper.getMemberInfoByPlayerName(plr.getName());
+            ClanMemberInfo cmiDamager = ClanHelper.getMemberInfoByPlayerName(plrDamager.getName());
+            if (cmiVictim.clanId > 0 && cmiDamager.clanId > 0 && (cmiVictim.clanId == cmiDamager.clanId)) {
+                MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
+                if (message) {
+                    MTCHelper.sendLoc("XC-clanhit", plrDamager, true);
+                }
+                return;
+            }
+            clanPrefix = ClanHelper.getPrefix(plr.getName()) +
+                    ((cmiVictim.clanId < 0) ? "" : ClanHelper.getStarsByRank(cmiVictim.getRank()));
         }
+
+        //this happens if the players can hit each other
+        plugin.getLogoutHandler().setFighting(plr, plrDamager, Calendar.getInstance()); //ANTILOGOUT
+        MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clanPrefix,
+                plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
     }
 
     private static void cancelAndStopWolves(EntityDamageByEntityEvent e) {
