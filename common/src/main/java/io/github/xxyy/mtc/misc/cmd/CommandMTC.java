@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,6 +254,9 @@ public final class CommandMTC extends MTCCommandExecutor {
                     return true;
                 case "config":
                     return this.handleConfigAction(sender, args, label);
+                case "pid":
+                    sender.sendMessage("§e"+ ManagementFactory.getRuntimeMXBean().getName());
+                    return true;
                 default:
                     sender.sendMessage("§cUnbekannte Aktion.");
             }
