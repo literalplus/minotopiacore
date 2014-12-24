@@ -323,6 +323,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new LightningListener(), "enable.misc.lighting.cow", true);
         this.regEvents(pm, new DmgPotionListener(), "enable.betterdmgpotions", true);
         this.regEvents(pm, new MinecartPortalListener(), "enable.fixes.minecartPortal", true);
+        this.regEvents(pm, new NetherPortalExpDupeListener(this), "enable.fixes.expPortal", true);
         this.regEvents(pm, new EnderPearlProjectileLaunchListener(), "enable.enderpearlListener", true);
         this.regEvents(pm, new AntiFreeCamListener(), "enable.fixes.freecam", true);
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
