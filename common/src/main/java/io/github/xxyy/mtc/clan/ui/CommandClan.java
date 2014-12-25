@@ -7,15 +7,6 @@
 
 package io.github.xxyy.mtc.clan.ui;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.clan.ClanInfo;
-import io.github.xxyy.mtc.clan.ClanMemberInfo;
-import io.github.xxyy.mtc.clan.ClanPermission;
-import io.github.xxyy.mtc.clan.InvitationInfo;
-import io.github.xxyy.mtc.clan.RunnableTpClanBase;
-import io.github.xxyy.mtc.helper.MTCHelper;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,10 +15,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import io.github.xxyy.common.util.CommandHelper;
-
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanInfo;
+import io.github.xxyy.mtc.clan.ClanMemberInfo;
+import io.github.xxyy.mtc.clan.ClanPermission;
+import io.github.xxyy.mtc.clan.InvitationInfo;
+import io.github.xxyy.mtc.clan.RunnableTpClanBase;
 import io.github.xxyy.mtc.helper.LaterMessageHelper;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 
 import java.util.logging.Level;
@@ -461,7 +460,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             if(rankId < 0) {
                 return MTCHelper.sendLoc("XC-invalidrank", sender, true);
             }
-            if(rankId >= cmi.userRankId && !sender.hasPermission("mtc.clana.override")) {
+            if(rankId >= cmi.userRankId && cmi.getRank() != ClanMemberInfo.ClanRank.LEADER && !sender.hasPermission("mtc.clana.override")) {
                 return MTCHelper.sendLoc("XC-sethigherrank", sender, true);
             }
             cmiTarget.userRankId = rankId;
