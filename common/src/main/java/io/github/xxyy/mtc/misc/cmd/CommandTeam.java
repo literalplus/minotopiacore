@@ -59,9 +59,29 @@ public class CommandTeam extends MTCCommandExecutor {
             }
         }
 
+
         this.groups.stream()
                 .filter(TeamGroup::hasMembers)
                 .forEach(group -> sender.sendMessage(group.niceRepresentation()));
+
+        TeamMember invalidMember = this.groups.stream()
+                .flatMap(g -> g.getMembers().stream())
+                .filter(m -> !m.hasUniqueId())
+                .findFirst().orElse(null);
+
+        if (invalidMember != null && sender.hasPermission("permissions.manage.users")) {
+            sender.sendMessage("§4§l§o!!!! ACHTUNG !!!! Irgendein inkompetenter Vollpfosten hat in seiner unendlichen " +
+                    "Inkompetenz wieder mal jemanden in PEx hinzugefügt, ohne dass dieser vorher dort mit " +
+                    "UUID registriert gewesen wäre. Wäre er nicht so ein kompletter Idiot, hätte er (Der Vollpfosten, " +
+                    "#nosexist) zuerst gewartet, bis die betroffene Person online gewesen wäre. Da er das nicht gemacht hat, " +
+                    "kann ich sagen, dass er in Kürze des Teams verwiesen werden wird, wenn er dies nicht JETZT SOFORT " +
+                    "korrigiert. Sollte er das nicht tun, würde ein SWAT-Team vor seinem Haus bereitstehen und ohne " +
+                    "zu zögern jeden zernichten, der dem Vollpfosten lieb und heilig wäre. Danke. (Opfer des Vollpfosten: " +
+                    invalidMember.getLastName() + ")");
+        }
+        if (sender.hasPermission("mtc.cmd.mtc.clearcache")) {
+            sender.sendMessage("§aAktualisieren mit §2/mtc clearcache§a - Wer §4/reload§a verwendet, wird demoted.");
+        }
 
         return true;
     }
@@ -80,7 +100,7 @@ public class CommandTeam extends MTCCommandExecutor {
         public TeamMember(PexHook.User user) {
             Validate.notNull(user);
 
-            this.uuid = user.getUniqueId(); //Not calling (UUID, String) for the null-check
+            this.uuid = user.hasUniqueId() ? user.getUniqueId() : null; //Not calling (UUID, String) for the null-check
             this.lastName = user.getName();
         }
 
@@ -91,6 +111,10 @@ public class CommandTeam extends MTCCommandExecutor {
 
         public UUID getUuid() {
             return uuid;
+        }
+
+        public boolean hasUniqueId() {
+            return uuid != null;
         }
 
         public String getLastName() {

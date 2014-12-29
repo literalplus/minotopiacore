@@ -8,15 +8,15 @@
 package io.github.xxyy.mtc.hook.impl;
 
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.mtc.hook.HookWrapper;
-import io.github.xxyy.mtc.hook.Hooks;
-import io.github.xxyy.mtc.hook.PexHook;
 import org.apache.commons.lang.Validate;
 import ru.tehkode.permissions.PermissionGroup;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.PermissionUser;
 
 import io.github.xxyy.lib.intellij_annotations.Nullable;
+import io.github.xxyy.mtc.hook.HookWrapper;
+import io.github.xxyy.mtc.hook.Hooks;
+import io.github.xxyy.mtc.hook.PexHook;
 
 import java.util.List;
 import java.util.UUID;
@@ -88,6 +88,11 @@ public class PexHookImpl implements Hook {
         @Override
         public String getIdentifier() {
             return handle.getIdentifier();
+        }
+
+        @Override
+        public boolean hasUniqueId() {
+            return uniqueId != null;
         }
 
         @Override

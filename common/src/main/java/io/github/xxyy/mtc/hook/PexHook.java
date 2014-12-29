@@ -46,6 +46,7 @@ public class PexHook extends SimpleHookWrapper {
 
     public static interface User {
         String getIdentifier();
+        boolean hasUniqueId();
         UUID getUniqueId();
         String getName();
     }
