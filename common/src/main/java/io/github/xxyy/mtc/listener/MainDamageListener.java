@@ -91,7 +91,7 @@ public final class MainDamageListener implements Listener {
         // PEACE
         if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
             if (message) {
-                MTCHelper.sendLocArgs("XU-peacehit_", plrDamager, true,
+                MTCHelper.sendLocArgs("XU-peacehit2", plrDamager, true,
                         plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
             }
             MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);

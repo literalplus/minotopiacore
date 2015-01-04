@@ -173,7 +173,7 @@ lang:
   XU-preqrevoked: 'Du hast dein Friedensangebot an &b%1$s&6 zur&uuml;ckgezogen.'
   XU-ppageempty: 'Auf dieser Seite ist nichts.'
   XU-pmorepages: '  &9Um die n&auml;chste Seite zu sehen, verwende &1/%1$s list %2$s&9.'
-  XU-peacehit_: '&9Du hast Frieden mit &1%2$s &a(%3$s&4%4$s&a)&9!'
+  XU-peacehit2: '&9Du hast Frieden mit &1%s &a(%s&4%s&a)&9!'
   XU-preqsent: 'Deine Anfrage wurde verschickt!'
   XU-fightcmd: |
     &cDu kannst im Kampf nur folgende Befehle benutzen:
