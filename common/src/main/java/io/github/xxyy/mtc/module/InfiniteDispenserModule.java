@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public final class InfiniteDispenserModule extends ConfigurableMTCModule implements Listener {
     public static final String NAME = "InfiniteDispensers";
@@ -120,54 +121,47 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
         });
     }
 
+    protected void doIfInfinite(InventoryHolder possibleState, Consumer<MetadataValue> consumer) {
+        if (possibleState instanceof BlockState) {
+            doIfInfinite((BlockState) possibleState, consumer);
+        }
+    }
+
+    protected void doIfInfinite(BlockState state, Consumer<MetadataValue> consumer) {
+        state.getMetadata(INFINITY_TAG).stream() //If performance issues arise, make this an isEmpty() call - https://twitter.com/_xxyy/status/556618846401216512
+                .filter(val -> plugin.equals(val.getOwningPlugin()))
+                .limit(1)
+                .forEach(consumer);
+    }
+
     ////////////// EVENT HANDLERS //////////////////////////////////////////////////////////////////////////////////////
 
     @EventHandler(ignoreCancelled = true)
-    public void onDispense(BlockDispenseEvent evt) {
-        BlockState state = evt.getBlock().getState();
-        List<MetadataValue> metaData = state.getMetadata(INFINITY_TAG);
-        metaData.stream()
-                .filter(val -> plugin.equals(val.getOwningPlugin()))
-                .forEach(val -> ((InventoryHolder) state).getInventory().addItem(evt.getItem().clone()));
+    public void onInfiniteDispenser(BlockDispenseEvent evt) {
+        BlockState dispenser = evt.getBlock().getState();
+        doIfInfinite(dispenser, val -> ((InventoryHolder) dispenser).getInventory().addItem(evt.getItem().clone()));
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onHopper(InventoryMoveItemEvent evt) {
-        InventoryHolder hldr = evt.getInitiator().getHolder();
-        if (!(hldr instanceof BlockState)) {
-            return;
-        }
-        BlockState blkState = (BlockState) hldr;
-        List<MetadataValue> metaData = blkState.getMetadata(INFINITY_TAG);
-        metaData.stream()
-                .filter(val -> val.getOwningPlugin().getName().equals(MTC.instance().getName()))
-                .forEach(val -> evt.getInitiator().addItem(evt.getItem().clone()));
+    public void onInfiniteHopper(InventoryMoveItemEvent evt) {
+        doIfInfinite(evt.getInitiator().getHolder(), val -> evt.getInitiator().addItem(evt.getItem().clone())); //Clone item if initiator is infinite
+        doIfInfinite(evt.getDestination().getHolder(), val -> evt.setCancelled(true)); //Cancel if destination is infinite - bugusing
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onInvOpen(InventoryOpenEvent evt) {
-        InventoryHolder holder = evt.getInventory().getHolder();
-        if (holder instanceof BlockState) {
-            BlockState state = (BlockState) holder;
-            if (state.getMetadata(INFINITY_TAG).stream()
-                    .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
-                evt.setCancelled(true);
-                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true);
-            }
-        }
+    public void onInfiniteInventoryOpen(InventoryOpenEvent evt) {
+        doIfInfinite(evt.getInventory().getHolder(), val -> {
+            evt.setCancelled(true);
+            MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true);
+        });
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInvPickup(InventoryPickupItemEvent evt) {
-        InventoryHolder holder = evt.getInventory().getHolder();
-        if (holder instanceof BlockState) {
-            BlockState state = (BlockState) holder;
-            if (state.getMetadata(INFINITY_TAG).stream()
-                    .anyMatch(val -> plugin.equals(val.getOwningPlugin()))) {
-                evt.setCancelled(true);
-                evt.getItem().remove();
-            }
-        }
+        doIfInfinite(evt.getInventory().getHolder(), val -> {
+            evt.setCancelled(true);
+            evt.getItem().remove();
+        });
     }
 
     /////////////////////////// COMMAND HANDLER ////////////////////////////////////////////////////////////////////////
@@ -215,7 +209,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
                             i.addAndGet(1);
                             //@formatter:on
                         });
-                        sender.sendMessage("§6"+i.get()+" §eInfiniteDispenser registriert.");
+                        sender.sendMessage("§6" + i.get() + " §eInfiniteDispenser registriert.");
                     default:
                         break;
                 }
