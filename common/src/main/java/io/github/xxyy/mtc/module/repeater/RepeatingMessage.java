@@ -46,7 +46,7 @@ public class RepeatingMessage implements ConfigurationSerializable {
         return tickInterval;
     }
 
-    public long getSecondInterval()  {
+    public long getSecondInterval() {
         return tickInterval * RepeaterModule.SECONDS_PER_TICK;
     }
 
@@ -67,7 +67,9 @@ public class RepeatingMessage implements ConfigurationSerializable {
         Validate.isTrue(input.containsKey(MESSAGE_PATH), "Need message!");
         Validate.isTrue(input.containsKey(INTERVAL_PATH), "Need interval!");
         Validate.isTrue(input.containsKey(AUTHOR_PATH), "Need author!");
-        return new RepeatingMessage(input.get(MESSAGE_PATH).toString(), (Integer) input.get(INTERVAL_PATH),
+        Integer interval = (Integer) input.get(INTERVAL_PATH);
+        Validate.isTrue(interval > 0, "Invalid must be positive", interval);
+        return new RepeatingMessage(input.get(MESSAGE_PATH).toString(), interval,
                 UUID.fromString(input.get(AUTHOR_PATH).toString()));
     }
 
