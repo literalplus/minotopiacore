@@ -37,10 +37,10 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
     private final File file;
     private Consumer<ManagedConfiguration> loadHandler = NOOP_CONSUMER;
     private Consumer<ManagedConfiguration> saveHandler = NOOP_CONSUMER;
-    private ClearCacheBehaviour clearCacheBehaviour;
+    private ClearCacheBehaviour clearCacheBehaviour = ClearCacheBehaviour.NOTHING;
     private Exception error;
 
-    private ManagedConfiguration(File file) {
+    protected ManagedConfiguration(File file) {
         this.file = file;
     }
 
@@ -146,6 +146,12 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
     }
 
     public void setClearCacheBehaviour(ClearCacheBehaviour clearCacheBehaviour) {
+        if(this.clearCacheBehaviour != ClearCacheBehaviour.NOTHING && clearCacheBehaviour == ClearCacheBehaviour.NOTHING) {
+            CacheHelper.unregisterCache(this);
+        } else {
+            CacheHelper.registerCache(this); //Simple set operation, existing keys don't change the collection
+        }
+
         this.clearCacheBehaviour = clearCacheBehaviour;
     }
 
