@@ -78,3 +78,7 @@ commands:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
+  shop:
+    description: Adnmin shop module for MTC
+    usage: "/<command> help"
+    aliases: [xshop]
