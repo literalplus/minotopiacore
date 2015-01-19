@@ -30,6 +30,7 @@ import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 
 import java.util.ArrayList;

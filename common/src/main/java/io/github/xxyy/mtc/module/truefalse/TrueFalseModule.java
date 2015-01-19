@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
 import java.util.ArrayList;

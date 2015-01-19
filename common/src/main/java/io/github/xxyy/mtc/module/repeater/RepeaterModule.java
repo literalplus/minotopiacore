@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.module.repeater;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
 import java.util.ArrayList;

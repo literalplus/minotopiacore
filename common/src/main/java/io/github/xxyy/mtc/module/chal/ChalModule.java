@@ -24,6 +24,7 @@ import io.github.xxyy.lib.guava17.collect.ListMultimap;
 import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
 import java.util.ArrayList;
