@@ -9,8 +9,9 @@ package io.github.xxyy.mtc.misc;
 
 import io.github.xxyy.mtc.MTC;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * Another workaround for clearing caches of instances.
@@ -24,14 +25,18 @@ public final class CacheHelper {
 
     }
 
-    private static List<Cache> CACHES = new ArrayList<>();
+    private static Set<Cache> caches = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static void registerCache(Cache cache) {
-        CACHES.add(cache);
+        caches.add(cache);
+    }
+
+    public static boolean unregisterCache(Cache cache) {
+        return caches.remove(cache);
     }
 
     public static void clearCaches(boolean forced, MTC plugin) {
-        CACHES.stream().forEach(c -> c.clearCache(forced, plugin));
+        caches.stream().forEach(c -> c.clearCache(forced, plugin));
     }
 
     public interface Cache {
