@@ -173,6 +173,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
         //MODULES
         loadModules();
+        saveConfig(); //Save here so that changes from modules also apply to the config file
 
         //HELP
         MTCHelper.initHelp();
@@ -259,12 +260,8 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     }
 
     private void loadModules() { //TODO: proper, configurable, maybe even annotation-based loading thing
-        new InfiniteDispenserModule();
-        new TrueFalseModule();
-        new WebsiteModule();
-        new QuizModule();
-        new RepeaterModule();
-        new ChalModule();
+        MTCModuleAdapter.load(this, InfiniteDispenserModule.class, TrueFalseModule.class, WebsiteModule.class,
+                QuizModule.class, RepeaterModule.class, ChalModule.class);
     }
 
     private void registerCommands() {

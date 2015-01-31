@@ -158,7 +158,6 @@ public class ConfigHelper {
         ConfigHelper.addClanDefaults(cfg);
         ConfigHelper.addFixDefaults(cfg);
         ConfigHelper.addMiscDefaults(cfg);
-        MTC.instance().saveConfig();
 
         ConfigHelper.initClassProperties(cfg);
     }
