@@ -12,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
@@ -30,12 +29,8 @@ import java.util.Map;
 
 
 /**
- * 5m cronjob
- * <p>
- * does: save-all
- * chat swiping
- * clearing of ban cache (updates!)
- * </p>
+ * A task which runs every five minutes and executes some periodic cleanup tasks for MTC, including, but not limited to,
+ * cleaning and updating of caches.
  *
  * @author xxyy98
  */
@@ -53,11 +48,7 @@ public class RunnableCronjob5Minutes implements Runnable {
     @Override
     public void run() {
         try {
-            //saving
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-off");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-all");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "save-on");
-            //private chats
+            //private chats //REFACTOR
             if (!MTCChatHelper.directChats.isEmpty()) {
                 for (Map.Entry<Integer, PrivateChat> entry : MTCChatHelper.directChats.entrySet()) {
                     PrivateChat chat = entry.getValue();
@@ -81,9 +72,6 @@ public class RunnableCronjob5Minutes implements Runnable {
             //Remove dead CommandSpy filters
             CommandSpyFilters.removeDeadFilters();
 
-            //actual msg
-            CommandHelper.broadcast(MTC.chatPrefix + "[Cron-5M] Welt gespeichert! §7§o{" + (new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime())) + "}", "mtc.saveallmsg");
-
             //stats
             StatsHelper.flushQueue();
 
@@ -97,8 +85,9 @@ public class RunnableCronjob5Minutes implements Runnable {
                 (new RunnableCheckInvsForFull(Bukkit.getOnlinePlayers().iterator())).run();
             }
 
-            //clan caches
             CacheHelper.clearCaches(forced, plugin);
+
+            //clan caches
             if (RunnableCronjob5Minutes.cacheExCount >= 12) {//run every hour
                 RunnableCronjob5Minutes.cacheExCount = 0;
                 //clear clan caches
@@ -106,7 +95,7 @@ public class RunnableCronjob5Minutes implements Runnable {
             }
 
             //player stats
-            if (!this.forced && ConfigHelper.isUserStatisticsEnabled()) {
+            if (!this.forced && ConfigHelper.isUserStatisticsEnabled()) { //REFACTOR
                 Calendar cal = Calendar.getInstance();
                 SafeSql sql = MTC.instance().getSql();
                 String todayString = new SimpleDateFormat("YYYYMMdd").format(cal.getTime());
@@ -129,7 +118,7 @@ public class RunnableCronjob5Minutes implements Runnable {
                             todayString, hourString, serverName, Bukkit.getOnlinePlayers().size());
                 }
             }
-        } catch (Exception e) {//always occurs on disable
+        } catch (Exception e) {//always occurs on disable //TODO: wat
             LogHelper.getMainLogger().throwing("RunnableCronJob5Minutes", "run()", e);
             Bukkit.getConsoleSender().sendMessage("§7[MTC]Cronjob 5M generated an exception: " + e.getClass().getName() + " (see main log)");
         }
