@@ -54,9 +54,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     protected abstract void reloadImpl();
 
     public void save() {
-        if (!configuration.trySave()) {
-            plugin.getLogger().log(Level.WARNING, "Unable to save " + getName() + " module config!");
-        }
+        configuration.asyncSave(plugin); //Write to the logger itself if it fails
     }
 
 }

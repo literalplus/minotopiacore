@@ -7,19 +7,24 @@
 
 package io.github.xxyy.mtc.yaml;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
-import io.github.xxyy.lib.guava17.io.Files;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -68,6 +73,35 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
         save(file);
     }
 
+    /**
+     * Tries to save this configuration to a string and then save it to the associated file in an async thread. Any
+     * exceptions that might occur will be ignored and logged to the plugin's logger.
+     * @param plugin the plugin to use for interacting with Bukkit's scheduler
+     */
+    public void asyncSave(Plugin plugin) {
+        Validate.notNull(file, "File cannot be null");
+
+        try {
+            com.google.common.io.Files.createParentDirs(file); //We're using the other Files class in this file too
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Unable to create parent dirs for " + file.getAbsolutePath() + ":", e);
+            return; //We're not throwing the other exception so we might as well swallow this one
+        }
+
+        String data = saveToString();
+
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            //noinspection deprecation
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+                    UTF8_OVERRIDE && !UTF_BIG ? Charsets.UTF_8 : Charset.defaultCharset())) {
+                writer.write(data);
+            } catch (IOException e) {
+                plugin.getLogger().log(Level.WARNING, "Unable to save managed config to " + file.getAbsolutePath() + ":", e);
+            }
+        });
+
+    }
+
     public boolean trySave() {
         try {
             save();
@@ -107,7 +141,7 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
         } catch (InvalidConfigurationException ex) { //Handle backups
             try {
                 File backupFile = new File(file.getAbsolutePath(), file.getName() + ".mtcbak");
-                Files.copy(file, backupFile);
+                io.github.xxyy.lib.guava17.io.Files.copy(file, backupFile); //We're using the other Files class in this class too
                 Bukkit.getLogger().log(Level.SEVERE, String.format("Invalid configuration syntax detected for %s! Backup is available at %s",
                         file, backupFile.getName()), ex);
             } catch (IOException e) {
@@ -146,7 +180,7 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
     }
 
     public void setClearCacheBehaviour(ClearCacheBehaviour clearCacheBehaviour) {
-        if(this.clearCacheBehaviour != ClearCacheBehaviour.NOTHING && clearCacheBehaviour == ClearCacheBehaviour.NOTHING) {
+        if (this.clearCacheBehaviour != ClearCacheBehaviour.NOTHING && clearCacheBehaviour == ClearCacheBehaviour.NOTHING) {
             CacheHelper.unregisterCache(this);
         } else {
             CacheHelper.registerCache(this); //Simple set operation, existing keys don't change the collection
