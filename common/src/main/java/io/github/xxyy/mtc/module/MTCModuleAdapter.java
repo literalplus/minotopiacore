@@ -99,10 +99,10 @@ public abstract class MTCModuleAdapter implements MTCModule {
      */
     public static List<MTCModule> load(MTC plugin, Class... moduleClasses) {
         //noinspection unchecked
-        return Stream.of(moduleClasses)
+        return ((List<MTCModule>) Stream.of(moduleClasses) //Compiler won't accept without cast for some reason
                 .map((c) -> load(plugin, c)) //This method checks if the class implements MTCModule and returns null otherwise, logging an error.
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     /**
