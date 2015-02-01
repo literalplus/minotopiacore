@@ -35,6 +35,8 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     public void enable(MTC plugin) {
         super.enable(plugin);
         configuration = ManagedConfiguration.fromDataFolderPath(filePath, clearCacheBehaviour, plugin);
+        configuration.setLoadHandler(cfg -> reloadImpl());
+        reloadImpl();
     }
 
     @Override
@@ -46,7 +48,6 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
         if (!configuration.tryLoad()) {
             plugin.getLogger().log(Level.WARNING, "Unable to load " + getName() + " module config!");
         }
-        reloadImpl();
     }
 
     /**
