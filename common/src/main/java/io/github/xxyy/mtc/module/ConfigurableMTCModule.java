@@ -46,6 +46,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
         if (!configuration.tryLoad()) {
             plugin.getLogger().log(Level.WARNING, "Unable to load " + getName() + " module config!");
         }
+        reloadImpl();
     }
 
     /**
