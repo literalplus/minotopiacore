@@ -173,7 +173,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
         //MODULES
         loadModules();
-        saveConfig(); //Save here so that changes from modules also apply to the config file
 
         //HELP
         MTCHelper.initHelp();
@@ -248,6 +247,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
                         e.printStackTrace();
                     }
                 });
+        saveConfig(); //Save here so that changes from modules also apply to the config file
 
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
