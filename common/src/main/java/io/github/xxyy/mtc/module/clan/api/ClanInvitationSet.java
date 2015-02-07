@@ -73,16 +73,6 @@ public interface ClanInvitationSet {
     void invite(UUID sourceId, UUID targetId);
 
     /**
-     * @return the unique id of the player who has been offered to join the clan
-     */
-    UUID getTargetId();
-
-    /**
-     * @return the unique id of the player who has initiated the invitation
-     */
-    UUID getSourceId();
-
-    /**
      * Announces to a player that they have been given this invitation in a nice manner, also featuring how to accept or
      * decline this offer.
      *
@@ -90,6 +80,4 @@ public interface ClanInvitationSet {
      * @throws java.lang.IllegalArgumentException if {@code plr} is not the recipient of this invitation
      */
     void announce(Player plr);
-
-
 }

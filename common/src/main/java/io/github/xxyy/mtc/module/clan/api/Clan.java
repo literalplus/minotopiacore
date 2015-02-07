@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.module.clan.api;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -78,21 +77,16 @@ public interface Clan {
     String getPrefix();
 
     /**
-     * @return the unique id of the leader of this clan
+     * @return this clan's base storage
      */
-    UUID getLeaderId();
-
-    /**
-     * @return the user-defined and changeable location of the base of this clan
-     */
-    Location getBaseLocation();
+    ClanBaseStorage getBases();
 
     /**
      * retrieves the amount of money in this clan's coffer. (A supply or store of money, often belonging to an organization)
      *
      * @return the amount of money in this clan's coffer
      */
-    int getCoffer();
+    double getCofferBalance();
 
     /**
      * @return the level of this clan, starting at 0.
@@ -109,6 +103,11 @@ public interface Clan {
      * @return the amount of total deaths this clan's members have accumulated while in teh clan
      */
     int getDeaths();
+
+    /**
+     * @return the clan options associated with this clan
+     */
+    ClanOptions getOptions();
 
     /**
      * Computes the overall kill/death ratio of this clan. For simplicity purposes, no deaths are the same as one death.

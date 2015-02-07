@@ -11,6 +11,7 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 
 /**
@@ -32,7 +33,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws UnknownHostException {
         super.enable(plugin);
         configuration = ManagedConfiguration.fromDataFolderPath(filePath, clearCacheBehaviour, plugin);
         configuration.setLoadHandler(cfg -> reloadImpl());
