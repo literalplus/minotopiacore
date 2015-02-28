@@ -43,7 +43,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         this.plugin = plugin;
     }
 

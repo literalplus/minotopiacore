@@ -56,7 +56,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getCommand("wahrfalsch").setExecutor(new CommandTrueFalse(this));

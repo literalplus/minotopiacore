@@ -50,7 +50,7 @@ public final class InfiniteDispenserModule extends ConfigurableMTCModule impleme
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

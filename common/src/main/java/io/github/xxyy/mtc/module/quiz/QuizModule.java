@@ -47,7 +47,7 @@ public class QuizModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getCommand("quiz").setExecutor(new CommandQuiz(this));

@@ -29,7 +29,7 @@ public class ClanModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         mongo = new MongoClient(configuration.getString("mongo.url"));
