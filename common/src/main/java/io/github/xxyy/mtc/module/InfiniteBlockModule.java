@@ -46,14 +46,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public final class InfiniteBlockModule extends ConfigurableMTCModule implements Listener {
-    public static final String NAME = "InfiniteDispensers"; //legacy constant #backwards-compatibility
+    public static final String NAME = "InfiniteDispensers"; //keeping legacy constant for backwards compatibility
     public static final String INFINITY_TAG = "mtc.infinite";
-    private static final String DATA_PATH = "dispensers"; //legacy constant #backwards-compatibility
-    public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //legacy constant #backwards-compatibility
+    private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
+    public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //keeping legacy constant for backwards compatibility
     private List<XyLocation> infiniteBlockLocations;
 
     public InfiniteBlockModule() {
-        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE); //legacy constant #backwards-compatibility
+        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE); //keeping legacy constant for backwards compatibility
     }
 
     @Override
@@ -71,7 +71,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
         Iterator<XyLocation> it = infiniteBlockLocations.iterator();
 
-        while (it.hasNext()) { //using iterator instead of for loop or #forEach cause of iterator's #remove method
+        while (it.hasNext()) { //using iterator instead of Stream API for Iterator#remove() method
             XyLocation location = it.next();
             Block blk = location.getBlock();
             if (canBeMadeInfinite(blk.getType())) {
@@ -154,7 +154,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         if (evt.getInventory().getType() != InventoryType.ANVIL) {
             doIfInfinite(evt.getInventory().getHolder(), val -> {
                 evt.setCancelled(true);
-                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true); //legacy constant #backwards-compatibility
+                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true); //keeping legacy constant for backwards compatibility
             });
         }
     }
@@ -183,10 +183,11 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
             throw new IllegalArgumentException("invalid anvil block data value");
         }
         if (dataValue >= 4) {
-            if (dataValue < 8)
+            if (dataValue < 8) {
                 dataValue -= 4;
-            else
+            } else {
                 dataValue -= 8;
+            }
         }
         return dataValue;
     }
@@ -195,16 +196,19 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
     public class CommandHandler extends MTCCommandExecutor {
         @Override
+        @SuppressWarnings("ConstantConditions")
         public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
             if (!CommandHelper.checkPermAndMsg(sender, INFINITE_PERMISSION, label)) {
                 return true;
             }
             if (args.length > 0) {
-                switch (args[0]) {
+                if (!(sender instanceof Player) && !args[0].equalsIgnoreCase("list")) {
+                    sender.sendMessage("§cNur Spieler können andere Befehle als /" + label + " list verwenden!");
+                    return true;
+                }
+
+                switch (args[0].toLowerCase()) {
                     case "on":
-                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-                            return true;
-                        }
                         Block blk = getAndCheckTargetBlock((Player) sender);
                         if (blk == null) {
                             return true;
@@ -213,9 +217,6 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                         addInfiniteMetadata(blk);
                         return MTCHelper.sendLoc("XU-infdispon", sender, true); //legacy constant #backwards-compatibility
                     case "off":
-                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-                            return true;
-                        }
                         Block blk2 = getAndCheckTargetBlock((Player) sender);
                         if (blk2 == null) {
                             return true;
@@ -239,7 +240,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                                             .color(ChatColor.YELLOW)
                                             .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
                                             .command(loc.toTpCommand(null))
-                                        .send((Player) sender);
+                                        .send(sender);
                                 i.addAndGet(1);
                                 //@formatter:on
                             });
@@ -250,18 +251,15 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                         break;
                 }
             }
-            if (sender instanceof ConsoleCommandSender) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "Die Konsole kann nur &e/" + label + " list &rausführen."));
-            }
-            return MTCHelper.sendLocArgs("XU-infdisphelp", sender, false, label); //legacy constant #backwards-compatibility
+            return MTCHelper.sendLocArgs("XU-infdisphelp", sender, false, label); //keeping legacy constant for backwards compatibility
         }
 
         @Nullable
         private Block getAndCheckTargetBlock(@NotNull Player plr) {
             @SuppressWarnings("deprecation")
-            Block blk = plr.getTargetBlock(null, 100); //BUKKIT! HAVEN'T I TOLD YOU NOT TO DEPRECATED USEFUL STUFF?! //TODO: do we really need to check 100 block distance?
+            Block blk = plr.getTargetBlock(null, 15);
             if (blk == null || !canBeMadeInfinite(blk.getType())) {
-                MTCHelper.sendLoc("XU-nodisp", plr, true); //legacy constant #backwards-compatibility
+                MTCHelper.sendLoc("XU-nodisp", plr, true); //keeping legacy constant for backwards compatibility
                 return null;
             } else {
                 return blk;
