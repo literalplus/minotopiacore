@@ -7,7 +7,10 @@
 
 package io.github.xxyy.mtc.module.clan.api;
 
-import java.util.function.Function;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
+
+import java.util.function.Predicate;
 
 /**
  * Stores arbitrary objects in the underlying database in relation to a clan.
@@ -27,28 +30,7 @@ public interface ClanOptions {
      * @param key the key to seek
      * @return the associated value or null if no value has been associated.
      */
-    Object get(String key);
-
-    /**
-     * Fetches an option from the cache's options, guaranteeing the return value to be of a certain class.
-     * @param key the key to seek
-     * @param clazz the required class
-     * @param <T> the type of {@code clazz}
-     * @return the value of the option or null if no value has been assigned
-     * @throws ClassCastException thrown if the value is of a wrong type
-     */
-    <T> T get(String key, Class<T> clazz) throws ClassCastException;
-
-    /**
-     * Fetches an option from the cache's options, guaranteeing the return value to be of a certain class and
-     * returning a default value if no value has been associated with that key.
-     * @param key the key to seek
-     * @param clazz the required class
-     * @param def the default value
-     * @param <T> the type of {@code clazz}
-     * @return the value of the option or {@code def} if unset
-     */
-    <T> T getOrDefault(String key, Class<T> clazz, T def);
+    BsonValue get(String key);
 
     /**
      * Fetches an option from the cache's options, returning a default value if no value has been associated with that key.
@@ -56,7 +38,12 @@ public interface ClanOptions {
      * @param def the default value
      * @return the value of the option or the default value if unset
      */
-    Object getOrDefault(String key, Object def);
+    BsonValue getOrDefault(String key, BsonValue def);
+
+    /**
+     * @return a representation of these options as BSON document
+     */
+    BsonDocument asBsonDocument();
 
     /**
      * Checks if any value has been associated with a key.
@@ -70,7 +57,7 @@ public interface ClanOptions {
      * @param key the key to associated with
      * @param value the value to associate
      */
-    void put(String key, Object value);
+    void put(String key, BsonValue value);
 
     /**
      * Gets an integer or 0 if the value has not been set or is not an integer.
@@ -87,14 +74,14 @@ public interface ClanOptions {
      * @param <T> the return type
      * @return the value of the requested type or the default value otherwise
      */
-    <T> T getIfIs(String key, Class<T> clazz, T def);
+    <T extends BsonValue> T getIfIs(String key, Class<T> clazz, T def);
 
     /**
      * Saves a value to the options storage if a function applies.
+     * @param <T> the type of the value
      * @param key the key to seek
      * @param value the value to associate
-     * @param checker the function which checks whether to actually put
-     * @param <T> the type of the value
+     * @param predicate the function which checks whether to actually put
      */
-    <T> void putIf(String key, T value, Function<T, Boolean> checker);
+    <T extends BsonValue> void putIf(String key, T value, Predicate<T> predicate);
 }

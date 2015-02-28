@@ -7,12 +7,12 @@
 
 package io.github.xxyy.mtc.module.clan.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import com.mongodb.client.MongoCollection;
+import org.apache.commons.lang.Validate;
+import org.bson.BsonDocument;
+import org.bson.Document;
 
 import io.github.xxyy.mtc.module.clan.ClanModule;
-import io.github.xxyy.mtc.module.clan.api.Clan;
 import io.github.xxyy.mtc.module.clan.api.ClanManager;
 import io.github.xxyy.mtc.module.clan.api.exception.NoSuchClanException;
 
@@ -31,24 +31,27 @@ public class XClanManager implements ClanManager {
     public static final String CLAN_COLLECTION_NAME = "clans";
     private final ClanModule module;
     private final Map<Integer, XClan> clanCache = new HashMap<>();
-    private final DBCollection mongoCol;
+    private final MongoCollection<BsonDocument> mongoCol;
 
     public XClanManager(ClanModule module) {
         this.module = module;
-        this.mongoCol = module.getMongo().getDB(DATABASE_NAME).getCollection(CLAN_COLLECTION_NAME);
+        this.mongoCol = module.getMongo()
+                .getDatabase(DATABASE_NAME)
+                .getCollection(CLAN_COLLECTION_NAME)
+                .withDefaultClass(BsonDocument.class);
     }
 
     public ClanModule getModule() {
         return module;
     }
 
-    public Clan getClan(int id) {
-        return clanCache.computeIfAbsent(id, this::fetchClan);
+    public XClan getClan(int id) {
+        return clanCache.computeIfAbsent(id, this::fetchOrCreateClan);
     }
 
     @Override
-    public Clan getClanChecked(int id) throws NoSuchClanException {
-        Clan clan = getClan(id);
+    public XClan getClanChecked(int id) throws NoSuchClanException {
+        XClan clan = getClan(id);
         if (clan == null) {
             throw new NoSuchClanException("id: " + id);
         }
@@ -56,21 +59,33 @@ public class XClanManager implements ClanManager {
     }
 
     @Override
-    public Clan getClanFor(UUID playerId) {
+    public XClan getClanFor(UUID playerId) {
         return null; //FIXME
     }
 
-    protected XClan fetchClan(int id) {
-        XClan clan = clanCache.computeIfAbsent(id, id1 -> new XClan(this, id1));
+    protected XClan fetchOrCreateClan(int id) {
+        return fetchClan(id);
+    }
 
-        try(DBCursor cursor = mongoCol.find(new BasicDBObject("_id", id))) {
-            clan.fromMongo(cursor.one());
+    protected XClan fetchClan(int id) {
+        XClan clan = clanCache.get(id);
+        BsonDocument doc = mongoCol.find(new Document("_id", id)).first();
+
+        if(doc != null) {
+            if (clan == null) {
+                clan = new XClan(this, id);
+            }
+            clan.fromMongo(doc);
+        } else { //Clan does (no longer) exist in database
+            clanCache.remove(id);
+            return null;
         }
 
         return clan;
     }
 
-    protected void saveClan(Clan clan) {
-
+    protected void saveClan(XClan clan) {
+        Validate.notNull(clan, "Cannot save null clan!");
+        mongoCol.replaceOne(new Document("_id", clan.getId()), clan.asMongo());
     }
 }

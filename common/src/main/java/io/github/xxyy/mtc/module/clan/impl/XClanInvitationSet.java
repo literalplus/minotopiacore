@@ -7,10 +7,10 @@
 
 package io.github.xxyy.mtc.module.clan.impl;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.apache.commons.lang.Validate;
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 import org.bukkit.entity.Player;
 
 import io.github.xxyy.mtc.module.clan.api.Clan;
@@ -32,6 +32,7 @@ public class XClanInvitationSet implements ClanInvitationSet, MongoStoreable {
     private final XClan clan;
     private final Map<UUID, UUID> invitations = new HashMap<>();
     private final Map<UUID, UUID> immutableInvitations = Collections.unmodifiableMap(invitations);
+    private boolean dirty = false;
 
     public XClanInvitationSet(XClan clan) {
         this.clan = clan;
@@ -49,6 +50,7 @@ public class XClanInvitationSet implements ClanInvitationSet, MongoStoreable {
 
     @Override
     public UUID revoke(UUID targetId) {
+        setDirty(true);
         return invitations.remove(targetId);
     }
 
@@ -56,11 +58,13 @@ public class XClanInvitationSet implements ClanInvitationSet, MongoStoreable {
     public boolean accept(UUID targetId) {
         invitations.remove(targetId);
         //FIXME needs to actually add the player to the clan
+        setDirty(true);
         throw new UnsupportedOperationException("not implemented");
     }
 
     @Override
     public void invite(UUID sourceId, UUID targetId) {
+        setDirty(true);
         invitations.put(targetId, sourceId); //TODO: mark clan for saving or something
     }
 
@@ -70,31 +74,43 @@ public class XClanInvitationSet implements ClanInvitationSet, MongoStoreable {
     }
 
     @Override
-    public DBObject asMongo() {
-        BasicDBList result = new BasicDBList();
+    public BsonValue asMongo() {
+        setDirty(false);
+        BsonArray result = new BsonArray();
         invitations.entrySet().stream()
-                .forEach(e -> result.add(new BasicDBObject()
-                        .append(TARGET_ID_PATH, e.getKey())
-                        .append(SOURCE_ID_PATH, e.getValue())));
+                .forEach(e -> result.add(new BsonDocument()
+                        .append(TARGET_ID_PATH, new BsonString(e.getKey().toString()))
+                        .append(SOURCE_ID_PATH, new BsonString(e.getValue().toString()))));
         return result;
     }
 
     @Override
-    public void fromMongo(DBObject dbObject) {
+    public void fromMongo(BsonValue dbObject) {
         invitations.clear();
-        Validate.isTrue(dbObject instanceof BasicDBList, "cannot retrieve invitations from anything else than a list!");
         //noinspection ConstantConditions
-        ((BasicDBList) dbObject).stream()
-                .filter(obj -> obj instanceof DBObject) //Discard everything else that doesn't belong there
-                .forEach(obj -> loadInvitationFromMongo((DBObject) obj));
+        dbObject.asArray().stream()
+                .map(BsonValue::asDocument)
+                .forEach(this::loadInvitationFromMongo);
+        setDirty(false);
     }
 
-    private void loadInvitationFromMongo(DBObject dbObject) {
-        if (!dbObject.containsField(TARGET_ID_PATH) || !dbObject.containsField(SOURCE_ID_PATH)) {
+    private void loadInvitationFromMongo(BsonDocument dbObject) {
+        if (!dbObject.containsKey(TARGET_ID_PATH) || !dbObject.containsKey(SOURCE_ID_PATH)) {
             clan.getManager().getModule().getPlugin().getLogger().info("Omitting a clan invitation because it was invalid");
             return;
         }
-        invitations.put(UUID.fromString(dbObject.get(TARGET_ID_PATH).toString()),
-                UUID.fromString(dbObject.get(SOURCE_ID_PATH).toString()));
+        invitations.put(UUID.fromString(dbObject.getString(TARGET_ID_PATH).getValue()),
+                UUID.fromString(dbObject.getString(SOURCE_ID_PATH).getValue()));
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public boolean setDirty(boolean dirty) {
+        this.dirty = dirty;
+        clan.setDirty(clan.isDirty() || dirty);
+        return this.dirty;
     }
 }

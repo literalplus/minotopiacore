@@ -7,9 +7,11 @@
 
 package io.github.xxyy.mtc.module.clan.impl;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
+import org.bson.BsonDouble;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -36,6 +38,8 @@ public class XClanBaseStorage implements ClanBaseStorage, MongoStoreable {
     public static final String MAIN_BASE_KEY = "base";
     private final XClan clan;
     private final Map<String, Location> bases = new HashMap<>();
+    private final Map<String, Location> immutableBases = Collections.unmodifiableMap(bases);
+    private boolean dirty = false;
 
     public XClanBaseStorage(XClan clan) {
         this.clan = clan;
@@ -65,17 +69,24 @@ public class XClanBaseStorage implements ClanBaseStorage, MongoStoreable {
 
     @Override
     public Map<String, Location> getBases() {
-        return Collections.unmodifiableMap(bases);
+        return immutableBases;
     }
 
     @Override
     public void setBase(String key, Location location) {
         bases.put(key, location);
+        setDirty(true);
+    }
+
+    private boolean setDirty(boolean dirty) {
+        this.dirty = dirty;
+        clan.setDirty(clan.isDirty() || dirty);
+        return this.dirty;
     }
 
     @Override
     public boolean deleteBase(String key) {
-        return bases.remove(key) != null;
+        return setDirty(bases.remove(key) != null || dirty);
     }
 
     @Override
@@ -85,55 +96,54 @@ public class XClanBaseStorage implements ClanBaseStorage, MongoStoreable {
 
 
     @Override
-    public DBObject asMongo() {
+    public BsonValue asMongo() {
+        setDirty(false);
         return bases.entrySet().stream()
                 .map(this::serialiseLocation)
-                .collect(Collectors.toCollection(BasicDBList::new));
+                .collect(Collectors.toCollection(BsonArray::new));
     }
 
     @Override
-    public void fromMongo(DBObject dbObject) {
-        if (!(dbObject instanceof BasicDBList)) {
-            clan.getManager().getModule().getPlugin().getLogger().info("Invalid base meta for clan " + clan.getId() + " - ignoring!");
-            return;
-        }
-
-        ((BasicDBList) dbObject).stream()
+    public void fromMongo(BsonValue dbObject) {
+        dbObject.asArray().stream()
+                .map(BsonValue::asDocument)
                 .filter(this::isValidLocation)
-                .map(obj -> (DBObject) obj)
                 .forEach(obj -> bases.put(obj.get("name").toString(), deserialiseLocation(obj)));
+        setDirty(false);
     }
 
 
-    private DBObject serialiseLocation(Map.Entry<String, Location> entry) {
+    private BsonValue serialiseLocation(Map.Entry<String, Location> entry) {
         Location loc = entry.getValue();
-        return new BasicDBObject("name", entry.getKey())
-                .append("x", loc.getX())
-                .append("y", loc.getY())
-                .append("z", loc.getZ())
-                .append("pitch", loc.getPitch())
-                .append("yaw", loc.getYaw())
-                .append("world", loc.getWorld().getName());
+        return new BsonDocument("name", new BsonString(entry.getKey()))
+                .append("x", new BsonDouble(loc.getX()))
+                .append("y", new BsonDouble(loc.getY()))
+                .append("z", new BsonDouble(loc.getZ()))
+                .append("pitch", new BsonDouble(loc.getPitch()))
+                .append("yaw", new BsonDouble(loc.getYaw()))
+                .append("world", new BsonString(loc.getWorld().getName()));
     }
 
-    private Location deserialiseLocation(DBObject dbObject) { //assumes #isValidLocation(obj) has already been checked
-        World world = Bukkit.getWorld(dbObject.get("world").toString());
-        Location loc = new XyLocation(world, (Double) dbObject.get("x"), (Double) dbObject.get("y"), (Double) dbObject.get("z"));
-        if (allAre(dbObject, Float.class, "pitch", "yaw")) {
-            loc.setPitch((Float) dbObject.get("pitch"));
-            loc.setYaw((Float) dbObject.get("yaw"));
+    private Location deserialiseLocation(BsonDocument doc) { //assumes #isValidLocation(obj) has already been checked
+        World world = Bukkit.getWorld(doc.getString("world").getValue());
+        Location loc = new XyLocation(world,
+                doc.getDouble("x").doubleValue(),
+                doc.getDouble("y").doubleValue(),
+                doc.getDouble("z").doubleValue());
+        if (containsAll(doc, "pitch", "yaw")) {
+            loc.setPitch((float) doc.getDouble("pitch").doubleValue());
+            loc.setYaw((float) doc.getDouble("yaw").doubleValue());
         }
         return loc;
     }
 
-    private boolean isValidLocation(Object obj) { //checks if an object is a valid serialised location
-        return obj instanceof DBObject &&
-                containsAll(((DBObject) obj), "world", "_id") &&
-                allAre(((DBObject) obj), Double.class, "x", "y", "z") &&
-                Bukkit.getWorld(((DBObject) obj).get("world").toString()) != null;
+    private boolean isValidLocation(BsonDocument doc) { //checks if an object is a valid serialised location
+        return containsAll(doc, "world", "_id") &&
+                allAre(doc, Double.class, "x", "y", "z") &&
+                Bukkit.getWorld(doc.get("world").toString()) != null;
     }
 
-    private boolean allAre(DBObject dbObject, Class<?> clazz, String... keys) {
+    private boolean allAre(BsonDocument dbObject, Class<?> clazz, String... keys) {
         return containsAll(dbObject, keys) &&
                 Arrays.stream(keys)
                         .map(dbObject::get)
@@ -142,7 +152,12 @@ public class XClanBaseStorage implements ClanBaseStorage, MongoStoreable {
                         .allMatch(clazz::isAssignableFrom);
     }
 
-    private boolean containsAll(DBObject dbObject, String... keys) {
-        return Arrays.stream(keys).allMatch(dbObject::containsField);
+    private boolean containsAll(BsonDocument dbObject, String... keys) {
+        return Arrays.stream(keys).allMatch(dbObject::containsKey);
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
     }
 }

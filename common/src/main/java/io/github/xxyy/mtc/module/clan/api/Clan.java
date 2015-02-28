@@ -52,7 +52,12 @@ public interface Clan {
     Set<Player> getOnlineMembers();
 
     /**
-     * Permanently and irrevocably removes this clan and all assiociated data.
+     * @return a set representing all members of this class, regardless if online or not.
+     */
+    Set<? extends ClanMember> getAllMembers();
+
+    /**
+     * Permanently and irrevocably removes this clan and all associated data.
      */
     void remove();
 

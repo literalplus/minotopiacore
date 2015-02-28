@@ -7,14 +7,15 @@
 
 package io.github.xxyy.mtc.module.clan.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.BsonArray;
+import org.bson.BsonValue;
 
-import io.github.xxyy.mtc.module.clan.api.ClanMember;
 import io.github.xxyy.mtc.module.clan.api.MongoStoreable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Stores member information for a clan.
@@ -23,17 +24,55 @@ import java.util.Set;
  * @since 05/02/15
  */
 class XClanMemberSet implements MongoStoreable {
-    private Set<ClanMember> members = new HashSet<>();
+    private final XClan clan;
 
-    @Override
-    public BasicDBObject asMongo() {
-        return null;
+    private Set<XClanMember> members = new HashSet<>();
+
+    XClanMemberSet(XClan clan) {
+        this.clan = clan;
     }
 
     @Override
-    public void fromMongo(DBObject dbObject) {
-
+    public BsonValue asMongo() {
+        return new BsonArray(members.stream()
+                .map(XClanMember::asMongo)
+                .collect(Collectors.toList()));
     }
 
-    //FIXME
+    @Override
+    public void fromMongo(BsonValue val) {
+        members.clear();
+
+        //noinspection ConstantConditions
+        val.asArray().stream()
+                .map(BsonValue::asDocument)
+                .filter(obj -> obj.containsKey("uuid"))
+                .forEach(obj -> members.add(new XClanMember(clan, UUID.fromString(obj.get("uuid").toString()))));
+    }
+
+    @Override
+    public boolean isDirty() {
+        return members.stream().anyMatch(MongoStoreable::isDirty);
+    }
+
+    public XClan getClan() {
+        return clan;
+    }
+
+    public Set<XClanMember> getMembers() {
+        return members;
+    }
+
+    public boolean addMember(UUID uuid, String lastName) { //TODO announcement
+        if (members.stream().anyMatch(xcm -> xcm.getUniqueId().equals(uuid))) {
+            return false;
+        }
+
+        members.add(new XClanMember(clan, uuid, lastName));
+        return true;
+    }
+
+    public boolean removeMember(UUID uuid) { //TODO announcement
+        return members.removeIf(xcm -> xcm.getUniqueId().equals(uuid));
+    }
 }

@@ -7,7 +7,7 @@
 
 package io.github.xxyy.mtc.module.clan.api;
 
-import com.mongodb.DBObject;
+import org.bson.BsonValue;
 
 /**
  * An object which can be serialize itself into a MongoDB-compatible format.
@@ -17,14 +17,23 @@ import com.mongodb.DBObject;
  */
 public interface MongoStoreable {
     /**
-     * @return a view of this object in the MongoDB object format
+     * Serialises this object into a MongoDB-compatible format. This also resets the dirty bit.
+     *
+     * @return a view of this object in the MongoDB object format which will be written to database
      */
-    DBObject asMongo();
+    BsonValue asMongo();
 
     /**
      * Popularises this object with the values from a passed MongoDB object.
      *
      * @param dbObject the object to get values from
      */
-    void fromMongo(DBObject dbObject);
+    void fromMongo(BsonValue dbObject);
+
+    /**
+     * @return whether this storeable has been modified locally but the database has not yet been updated
+     */
+    default boolean isDirty() {
+        return false;
+    }
 }

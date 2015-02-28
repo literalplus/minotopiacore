@@ -7,16 +7,17 @@
 
 package io.github.xxyy.mtc.module.clan.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import org.bukkit.Location;
+import org.apache.commons.lang.Validate;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
+import org.bson.BsonString;
+import org.bson.BsonValue;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.mtc.module.clan.ClanModule;
 import io.github.xxyy.mtc.module.clan.api.Clan;
-import io.github.xxyy.mtc.module.clan.api.ClanInvitationSet;
 import io.github.xxyy.mtc.module.clan.api.MongoStoreable;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ class XClan implements Clan, MongoStoreable {
     private boolean valid = true;
     private String name;
     private String prefix;
+    private boolean dirty = false;
 
     public XClan(XClanManager manager, int id) {
         this.manager = manager;
@@ -55,21 +57,24 @@ class XClan implements Clan, MongoStoreable {
 
     @Override
     public XClanInvitationSet getInvitations() {
-        if(invitations == null) {
-            invitations = new XClanInvitationSet(this);
-        }
-        return invitations;
+        return invitations == null ? invitations = new XClanInvitationSet(this) : invitations;
+    }
+
+    @Override
+    public Set<XClanMember> getAllMembers() {
+        return getMemberSet().getMembers();
     }
 
     @Override
     public Set<UUID> getMemberIds() {
-        return memberIds;
+        return memberSet.getMembers().stream().map(XClanMember::getUniqueId).collect(Collectors.toSet());
     }
 
     @Override
     public Set<Player> getOnlineMembers() {
+        Set<UUID> memberIds = memberSet.getMembers().stream().map(XClanMember::getUniqueId).collect(Collectors.toSet());
         return manager.getModule().getPlugin().getServer().getOnlinePlayers().stream()
-                .filter(p -> memberIds.contains(p.getUniqueId()))
+                .filter(p -> memberIds.remove(p.getUniqueId()))
                 .collect(Collectors.toSet());
     }
 
@@ -101,7 +106,11 @@ class XClan implements Clan, MongoStoreable {
 
     @Override
     public XClanBaseStorage getBases() {
-        return baseStorage;
+        return baseStorage == null ? baseStorage = new XClanBaseStorage(this) : baseStorage;
+    }
+
+    public XClanMemberSet getMemberSet() {
+        return memberSet == null ? memberSet = new XClanMemberSet(this) : memberSet;
     }
 
     @Override
@@ -130,37 +139,86 @@ class XClan implements Clan, MongoStoreable {
 
     @Override
     public XClanOptions getOptions() {
-        if(options == null) {
+        if (options == null) {
             options = new XClanOptions(this);
         }
         return options;
     }
 
     @Override
-    public DBObject asMongo() {
-        BasicDBObject result = new BasicDBObject()
-                .append("_id", id)
-                .append("name", name)
-                .append("prefix", prefix);
+    public BsonDocument asMongo() {
+        BsonDocument result = new BsonDocument()
+                .append("_id", new BsonInt32(id))
+                .append("name", new BsonString(name))
+                .append("prefix", new BsonString(prefix));
 
-        if(options != null && !options.asMap().isEmpty()) {
-            result.append("options", options.asMongo());
+        if (options != null && !options.asMap().isEmpty()) {
+            result.append("options",  options.asMongo());
         }
-        if(baseStorage != null && !baseStorage.getBases().isEmpty()) {
+        if (baseStorage != null && !baseStorage.getBases().isEmpty()) {
             result.append("bases", baseStorage.asMongo());
         }
-        if(invitations != null && !invitations.getInvitations().isEmpty()) {
+        if (invitations != null && !invitations.getInvitations().isEmpty()) {
             result.append("invitations", invitations.asMongo());
         }
-        if(memberSet != null && memberSet.g)
+        if (memberSet != null && !memberSet.getMembers().isEmpty()) {
+            result.append("members", memberSet.asMongo());
+        }
 
-        throw new UnsupportedOperationException("not implemented"); //FIXME
-//        return new BasicDBObject()
+        setDirty(false);
+
+        return result;
     }
 
     @Override
-    public void fromMongo(DBObject dbObject) {
-        //FIXME
+    public void fromMongo(BsonValue dbValue) {
+        BsonDocument dbObject = dbValue.asDocument();
+        Validate.isTrue(containsAll(dbObject, "name", "prefix"), "Clans must have at least name and prefix!");
+        this.name = dbObject.get("name").toString();
+        this.prefix = dbObject.get("prefix").toString();
+
+        if(dbObject.containsKey("options")) {
+            getOptions().fromMongo(dbObject.get("options").asDocument());
+        }
+        if(dbObject.containsKey("bases")) {
+            getBases().fromMongo(dbObject.get("bases").asDocument());
+        }
+        if(dbObject.containsKey("invitations")) {
+            getInvitations().fromMongo(dbObject.get("invitations").asDocument());
+        }
+        if(dbObject.containsKey("members")) {
+            getOptions().fromMongo(dbObject.get("members").asDocument());
+        }
+        setDirty(false);
+    }
+
+    private boolean containsAll(BsonDocument dbObject, String... keys) {
+        return Arrays.stream(keys).allMatch(dbObject::containsKey);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof XClan)) return false;
+
+        XClan xClan = (XClan) o;
+
+        return id == xClan.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 }
 
