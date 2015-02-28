@@ -14,8 +14,6 @@ import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import io.github.xxyy.mtc.module.clan.impl.XClanManager;
 
-import java.net.UnknownHostException;
-
 /**
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 04/02/15
@@ -31,7 +29,7 @@ public class ClanModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws UnknownHostException {
+    public void enable(MTC plugin) {
         super.enable(plugin);
 
         mongo = new MongoClient(configuration.getString("mongo.url"));
@@ -52,5 +50,9 @@ public class ClanModule extends ConfigurableMTCModule {
 
     public MongoClient getMongo() {
         return mongo;
+    }
+
+    public XClanManager getManager() {
+        return manager;
     }
 }

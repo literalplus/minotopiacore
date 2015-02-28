@@ -13,7 +13,6 @@ import io.github.xxyy.mtc.MTC;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws UnknownHostException {
+    public void enable(MTC plugin) {
         this.plugin = plugin;
     }
 
@@ -99,7 +98,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
      * @see #load(io.github.xxyy.mtc.MTC, Class)
      */
     public static List<MTCModule> load(MTC plugin, Class... moduleClasses) {
-        //noinspection unchecked
+        //noinspection unchecked,RedundantCast
         return ((List<MTCModule>) Stream.of(moduleClasses) //Compiler won't accept without cast for some reason
                 .map((c) -> load(plugin, c)) //This method checks if the class implements MTCModule and returns null otherwise, logging an error.
                 .filter(Objects::nonNull)
