@@ -7,12 +7,6 @@
 
 package io.github.xxyy.mtc.module;
 
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,6 +31,13 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,7 +57,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

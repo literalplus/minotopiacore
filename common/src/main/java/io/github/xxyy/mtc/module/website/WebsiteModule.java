@@ -48,7 +48,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         listener = new WebsiteListener(this);

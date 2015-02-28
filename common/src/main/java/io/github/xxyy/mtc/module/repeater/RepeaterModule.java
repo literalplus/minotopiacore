@@ -34,7 +34,7 @@ public class RepeaterModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getCommand("repeat").setExecutor(new CommandRepeat(this));

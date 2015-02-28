@@ -32,7 +32,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
         configuration = ManagedConfiguration.fromDataFolderPath(filePath, clearCacheBehaviour, plugin);
         configuration.setLoadHandler(cfg -> reloadImpl());
