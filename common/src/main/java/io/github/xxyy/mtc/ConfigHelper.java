@@ -366,7 +366,7 @@ public class ConfigHelper {
         cfg.addDefault("speedonjoin.potency", 5);
         cfg.addDefault("servername", "Unknown-" + (new File("").getAbsolutePath()));
         cfg.addDefault("noobprotection.durationInMinutes", 20);
-        cfg.addDefault("fulltag.allowedPlayers", Arrays.asList("xxyy98", "chris301234", "kANNEY", "dani448", "SkillerProfiZ"));
+        cfg.addDefault("fulltag.allowedPlayers", Arrays.asList("xxyy98", "chris301234"));
         cfg.addDefault("fulltag.removeUnkownFulls", false);
         cfg.addDefault("fulltag.checkEveryInMinutes", 20);
         cfg.addDefault("itemonjoin", new ItemStack(Material.WATCH));
