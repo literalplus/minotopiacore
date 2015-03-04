@@ -57,7 +57,7 @@ import io.github.xxyy.mtc.misc.cmd.CommandPeace;
 import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
 import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
-import io.github.xxyy.mtc.module.InfiniteDispenserModule;
+import io.github.xxyy.mtc.module.InfiniteBlockModule;
 import io.github.xxyy.mtc.module.MTCModuleAdapter;
 import io.github.xxyy.mtc.module.chal.ChalModule;
 import io.github.xxyy.mtc.module.quiz.QuizModule;
@@ -260,7 +260,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     }
 
     private void loadModules() { //TODO: proper, configurable, maybe even annotation-based loading thing
-        MTCModuleAdapter.load(this, InfiniteDispenserModule.class, TrueFalseModule.class, WebsiteModule.class,
+        MTCModuleAdapter.load(this, InfiniteBlockModule.class, TrueFalseModule.class, WebsiteModule.class,
                 QuizModule.class, RepeaterModule.class, ChalModule.class);
     }
 
