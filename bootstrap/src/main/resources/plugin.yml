@@ -80,7 +80,7 @@ commands:
   infiniteblocks:
     description: "Mache Dispenser unendlich, Ambosse unkaputtbar bzw Truhen unantastbar!!11!"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [infblocks, infb, iblocks, infdisp] # TODO: add more legacy aliases?
+    aliases: [infb, infdisp]
   random:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
