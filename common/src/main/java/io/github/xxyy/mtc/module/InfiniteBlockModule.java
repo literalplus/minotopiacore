@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,12 +30,14 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,13 +45,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public final class InfiniteBlockModule extends ConfigurableMTCModule implements Listener {
-    public static final String NAME = "InfiniteDispensers"; // don't change such constants as that would require manual cfg changes
+    public static final String NAME = "InfiniteDispensers"; //legacy constant #backwards-compatibility
     public static final String INFINITY_TAG = "mtc.infinite";
-    private static final String DATA_PATH = "dispensers";
+    private static final String DATA_PATH = "dispensers"; //legacy constant #backwards-compatibility
+    public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //legacy constant #backwards-compatibility
     private List<XyLocation> infiniteBlockLocations;
 
     public InfiniteBlockModule() {
-        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE); //legacy constant #backwards-compatibility
     }
 
     @Override
@@ -56,7 +60,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         super.enable(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getCommand("infdisp").setExecutor(new CommandHandler());
+        plugin.getCommand("infiniteblocks").setExecutor(new CommandHandler());
     }
 
     @SuppressWarnings("unchecked")
@@ -66,24 +70,18 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
         Iterator<XyLocation> it = infiniteBlockLocations.iterator();
 
-        while (it.hasNext()) { // any reason not using enhanced for loop or #forEach?
+        while (it.hasNext()) { //using iterator instead of for loop or #forEach cause of iterator's #remove method
             XyLocation location = it.next();
             Block blk = location.getBlock();
-            BlockState state = blk.getState();
-            if (!canBeMadeInfinite(state)) {
-                plugin.getLogger().info("Removing infinite tag at " + location.pretyPrint() + " because the block changed to " + state.getType() + "!");
-                it.remove();
+            if (canBeMadeInfinite(blk.getType())) {
+                addInfiniteMetadata(blk);
             } else {
-                addInfiniteMetadata(state);
+                plugin.getLogger().info("Removing infinite tag at " + location.pretyPrint() + " because the block changed to " + blk.getType() + "!");
+                it.remove();
             }
         }
 
         save();
-    }
-
-    @Override
-    public void disable(MTC plugin) {
-
     }
 
     public void addInfiniteToCfg(Location input) { //REFACTOR: un-spaghetti //will be changed separately if xyc is updated
@@ -112,8 +110,8 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         save();
     }
 
-    private void addInfiniteMetadata(BlockState dispenser) {
-        dispenser.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, null));
+    private void addInfiniteMetadata(Block blk) {
+        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, null));
     }
 
     private void doIfInfinite(InventoryHolder possibleState, Consumer<MetadataValue> consumer) {
@@ -152,10 +150,10 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteInventoryOpen(InventoryOpenEvent evt) {
-        if (!(evt.getInventory() instanceof AnvilInventory)) {
+        if (evt.getInventory().getType() != InventoryType.ANVIL) {
             doIfInfinite(evt.getInventory().getHolder(), val -> {
                 evt.setCancelled(true);
-                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true);
+                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true); //legacy constant #backwards-compatibility
             });
         }
     }
@@ -173,21 +171,21 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     public void onAnvilClick(PlayerInteractEvent evt) {
         if (evt.hasBlock() && evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block blk = evt.getClickedBlock();
-            if (blk.getType() == Material.ANVIL) {   //always the byte casts //don't update physics so anvil can't fall down when clicked if placed w/o physics on
+            if (blk.getType() == Material.ANVIL) {   //don't update physics so anvil can't fall down when clicked if placed w/o physics on
                 doIfInfinite(blk, val -> blk.setData(getUndamagedDataValueOfAnvil(blk.getData()), false)); //no possibility without using a deprecated method
             }
         }
     }
 
-    private byte getUndamagedDataValueOfAnvil(byte dataValue) { // see http://minecraft.gamepedia.com/Anvil#Data_values "Block"
+    private byte getUndamagedDataValueOfAnvil(byte dataValue) { //see http://minecraft.gamepedia.com/Anvil#Data_values section 'Block'
+        if (dataValue < 0 || dataValue > 11) {
+            throw new IllegalArgumentException("invalid anvil block data value");
+        }
         if (dataValue >= 4) {
-            if (dataValue < 8) {
+            if (dataValue < 8)
                 dataValue -= 4;
-            } else if (dataValue < 12) {
-                return dataValue -= 8;
-            } else {
-                throw new IllegalArgumentException("invalid anvil block data value");
-            }
+            else
+                dataValue -= 8;
         }
         return dataValue;
     }
@@ -197,75 +195,94 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     public class CommandHandler extends MTCCommandExecutor {
         @Override
         public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-            if (!CommandHelper.checkPermAndMsg(sender, "mtc.infinitedispenser", label)) {
+            if (!CommandHelper.checkPermAndMsg(sender, INFINITE_PERMISSION, label)) {
                 return true;
             }
-            if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-                return true;
-            }
-
-            Player plr = (Player) sender;
             if (args.length > 0) {
                 switch (args[0]) {
                     case "on":
-                        BlockState disp = checkTargetBlock(plr);
-                        if (disp == null) {
+                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                             return true;
                         }
-                        addInfiniteToCfg(disp.getLocation());
-                        addInfiniteMetadata(disp);
-                        return MTCHelper.sendLoc("XU-infdispon", sender, true);
+                        Block blk = getAndCheckTargetBlock((Player) sender);
+                        if (blk == null) {
+                            return true;
+                        }
+                        addInfiniteToCfg(blk.getLocation());
+                        addInfiniteMetadata(blk);
+                        return MTCHelper.sendLoc("XU-infdispon", sender, true); //legacy constant #backwards-compatibility
                     case "off":
-                        BlockState disp2 = checkTargetBlock(plr);
-                        if (disp2 == null) {
+                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                             return true;
                         }
-                        disp2.removeMetadata(INFINITY_TAG, plugin);
-                        removeInfiniteFromCfg(disp2.getLocation());
-                        return MTCHelper.sendLoc("XU-infdispoff", sender, true);
+                        Block blk2 = getAndCheckTargetBlock((Player) sender);
+                        if (blk2 == null) {
+                            return true;
+                        }
+                        blk2.removeMetadata(INFINITY_TAG, plugin);
+                        removeInfiniteFromCfg(blk2.getLocation());
+                        return MTCHelper.sendLoc("XU-infdispoff", sender, true); //legacy constant #backwards-compatibility
                     case "list":
                         AtomicInteger i = new AtomicInteger(0);
-                        infiniteBlockLocations.stream().forEach(loc -> {
-                            //@formatter:off
-                            new FancyMessage(loc.getBlock().getType() + " @ ")
-                                        .color(ChatColor.GOLD)
-                                    .then(loc.pretyPrint() +" [klick]")
-                                        .color(ChatColor.YELLOW)
-                                        .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
-                                        .command(loc.toTpCommand(null))
-                                    .send(plr);
-                            i.addAndGet(1);
-                            //@formatter:on
-                        });
-                        sender.sendMessage("§6" + i.get() + " §eInfiniteDispenser registriert.");
-                        //intended fall-through?
+                        if (sender instanceof ConsoleCommandSender) {
+                            infiniteBlockLocations.stream().forEach(loc -> {
+                                sender.sendMessage("" + ChatColor.GOLD + loc.getBlock().getType() + " @ " + loc.pretyPrint());
+                                i.addAndGet(1);
+                            });
+                        } else {
+                            infiniteBlockLocations.stream().forEach(loc -> {
+                                //@formatter:off
+                                new FancyMessage(loc.getBlock().getType() + " @ ")
+                                            .color(ChatColor.GOLD)
+                                        .then(loc.pretyPrint() +" [klick]")
+                                            .color(ChatColor.YELLOW)
+                                            .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
+                                            .command(loc.toTpCommand(null))
+                                        .send((Player) sender);
+                                i.addAndGet(1);
+                                //@formatter:on
+                            });
+                        }
+                        sender.sendMessage("§6" + i.get() + " §eInfiniteBlocks registriert.");
+                        return true;
                     default:
                         break;
                 }
             }
-            return MTCHelper.sendLocArgs("XU-infdisphelp", sender, false, label);
+            if (sender instanceof ConsoleCommandSender) {
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "Die Konsole kann nur &e/" + label + " list &rausführen."));
+            }
+            return MTCHelper.sendLocArgs("XU-infdisphelp", sender, false, label); //legacy constant #backwards-compatibility
         }
 
-        private BlockState checkTargetBlock(Player plr) {
+        @Nullable
+        private Block getAndCheckTargetBlock(@NotNull Player plr) {
             @SuppressWarnings("deprecation")
-            Block blk = plr.getTargetBlock(null, 100); //BUKKIT! HAVEN'T I TOLD YOU NOT TO DEPRECATED USEFUL STUFF?!
-            if (blk == null) {
-                MTCHelper.sendLoc("XU-nodisp", plr, true);
+            Block blk = plr.getTargetBlock(null, 100); //BUKKIT! HAVEN'T I TOLD YOU NOT TO DEPRECATED USEFUL STUFF?! //TODO: do we really need to check 100 block distance?
+            if (blk == null || !canBeMadeInfinite(blk.getType())) {
+                MTCHelper.sendLoc("XU-nodisp", plr, true); //legacy constant #backwards-compatibility
                 return null;
             } else {
-                BlockState state = blk.getState(); //just call Block#getState() once, as it consumes time
-
-                if (canBeMadeInfinite(state)) {
-                    return state;
-                }
-                MTCHelper.sendLoc("XU-nodisp", plr, true);
-                return null;
+                return blk;
             }
         }
     }
-    private boolean canBeMadeInfinite(BlockState state) {
-        //maybe use a chain of material checks instead of computing the state of block even if it does not fit to the criteria
-        return state.getType() == Material.ANVIL || state instanceof InventoryHolder;
+
+    private boolean canBeMadeInfinite(Material material) {
+        switch (material) {
+            case ANVIL:
+            case BEACON:
+            case BREWING_STAND:
+            case CHEST:
+            case DISPENSER:
+            case DROPPER:
+            case FURNACE:
+            case BURNING_FURNACE:
+            case HOPPER:
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

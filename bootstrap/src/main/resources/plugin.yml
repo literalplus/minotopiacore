@@ -77,10 +77,10 @@ commands:
     description: "Schliesse Frieden mit deinen allerbesten Freunden! <3"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [nichtangriffspakt, peace, fr, friede]
-  infdisp:
-    description: "Mache Dispenser unendlich, Ambösse unkaputtbar bzw Truhen unantastbar!!11!"
+  infiniteblocks:
+    description: "Mache Dispenser unendlich, Ambosse unkaputtbar bzw Truhen unantastbar!!11!"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [infd, infinitedispenser, idisp, inhp, infhpr, ihpr, infinitehopper, infa, infiniteanvil, ianvil, infanv, ianv, infinite]
+    aliases: [infblocks, infb, iblocks, infdisp] # TODO: add more legacy aliases?
   random:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
