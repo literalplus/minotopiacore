@@ -151,9 +151,9 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
                     Player signPlayer = (Player) sender;
-                    List<Block> targets = signPlayer.getLastTwoTargetBlocks(ImmutableSet.<Material>of(), 120);
-                    Block target = targets.get(1);
-                    if (!(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
+                    List<Block> targets = signPlayer.getLastTwoTargetBlocks(ImmutableSet.<Material>of(), 50);
+                    Block target = targets.stream().findFirst().orElse(null);
+                    if (target == null || !(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
                         sender.sendMessage("§8Das nennst du ein Schild?!");
                         return true;
                     }
