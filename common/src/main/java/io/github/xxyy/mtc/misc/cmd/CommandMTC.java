@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +153,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                     }
                     Player signPlayer = (Player) sender;
                     List<Block> targets = signPlayer.getLastTwoTargetBlocks(ImmutableSet.<Material>of(), 50);
+                    sender.sendMessage(Arrays.toString(targets.toArray()));
                     Block target = targets.stream().findFirst().orElse(null);
                     if (target == null || !(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
                         sender.sendMessage("§8Das nennst du ein Schild?!");
