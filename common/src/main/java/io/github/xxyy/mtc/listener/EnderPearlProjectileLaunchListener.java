@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.listener;
 
-import com.google.common.collect.ImmutableSet;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -22,6 +21,7 @@ import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.mtc.MTC;
 
 import java.util.List;
+import java.util.Set;
 
 public final class EnderPearlProjectileLaunchListener implements Listener {
 
@@ -44,7 +44,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
             EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
-        List<Block> lineOfSight = shooter.getLineOfSight(ImmutableSet.<Material>of(), 100);
+        List<Block> lineOfSight = shooter.getLineOfSight((Set<Material>) null, 100);
         for (Block lineOfSightItem : lineOfSight) {
             if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);

@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,10 +38,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class CommandMTC extends MTCCommandExecutor {
 
@@ -152,8 +151,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
                     Player signPlayer = (Player) sender;
-                    List<Block> targets = signPlayer.getLastTwoTargetBlocks(ImmutableSet.<Material>of(), 50);
-                    sender.sendMessage(Arrays.toString(targets.toArray()));
+                    List<Block> targets = signPlayer.getLastTwoTargetBlocks((Set<Material>) null, 50);
                     Block target = targets.stream().findFirst().orElse(null);
                     if (target == null || !(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
                         sender.sendMessage("§8Das nennst du ein Schild?!");

@@ -15,17 +15,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.mtc.MTC;
 
 import java.util.List;
+import java.util.Set;
 
 public final class AntiFreeCamListener implements Listener {
 
     @EventHandler
     public void onInvOpenFreeCam(InventoryOpenEvent e) {
         HumanEntity he = e.getPlayer();
-        List<Block> lineOfSight = he.getLineOfSight(ImmutableSet.<Material>of(), 50); //perfectionists!
+        List<Block> lineOfSight = he.getLineOfSight((Set<Material>) null, 50); //perfectionists!
         for (Block aLineOfSight : lineOfSight) {
             if (aLineOfSight.getType() == Material.BEDROCK) {
                 Player plr = (Player) e.getPlayer(); //Bukkit.getPlayerExact(e.getPlayer().getName()); TODO Find out wtf this was for
