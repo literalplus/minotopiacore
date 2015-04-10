@@ -7,8 +7,8 @@
 
 package io.github.xxyy.mtc.listener;
 
-import com.gmail.filoghost.holograms.api.Hologram;
-import com.gmail.filoghost.holograms.api.HolographicDisplaysAPI;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -93,10 +93,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             // plr.getInventory().setArmorContents(new ItemStack[4]);
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-fightlogout", plr.getName(), true, plr.getName()));
             if (MTC.isUseHologram()) {
-                Hologram h = HolographicDisplaysAPI.createHologram(plugin, plr.getLocation().add(0d, 1.5d, 0d),
-                        "§a" + plr.getName(),
-                        "§cIm Kampf geloggt",
-                        String.format("[%s]", SIMPLE_TIME_FORMAT.format(new Date())));
+                Hologram h = HologramsAPI.createHologram(plugin, plr.getLocation().add(0d, 1.5d, 0d));
+                h.appendTextLine("§a" + plr.getName()); //filoghost pls into builder pattern ;-;
+                h.appendTextLine("§cIm Kampf geloggt");
+                h.appendTextLine(String.format("[%s]", SIMPLE_TIME_FORMAT.format(new Date())));
+
                 plugin.getServer().getScheduler().runTaskLater(plugin, h::delete, ConfigHelper.getHologramTimeout() * 20);
             }
             return true;

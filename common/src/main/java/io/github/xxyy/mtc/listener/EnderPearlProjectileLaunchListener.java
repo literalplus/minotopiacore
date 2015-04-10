@@ -7,8 +7,7 @@
 
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.common.localisation.LangHelper;
-import io.github.xxyy.mtc.MTC;
+import com.google.common.collect.ImmutableSet;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -18,6 +17,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+
+import io.github.xxyy.common.localisation.LangHelper;
+import io.github.xxyy.mtc.MTC;
 
 import java.util.List;
 
@@ -42,8 +44,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
             EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
-        @SuppressWarnings("deprecation")
-        List<Block> lineOfSight = shooter.getLineOfSight(null, 100); //Bukkit is ruining all the fun :(
+        List<Block> lineOfSight = shooter.getLineOfSight(ImmutableSet.<Material>of(), 100);
         for (Block lineOfSightItem : lineOfSight) {
             if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);

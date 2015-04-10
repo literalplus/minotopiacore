@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -150,8 +151,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
                     Player signPlayer = (Player) sender;
-                    @SuppressWarnings("deprecation") List<Block> blks = signPlayer.getLastTwoTargetBlocks(null, 120);
-                    Block target = blks.get(1);
+                    List<Block> targets = signPlayer.getLastTwoTargetBlocks(ImmutableSet.<Material>of(), 120);
+                    Block target = targets.get(1);
                     if (!(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
                         sender.sendMessage("§8Das nennst du ein Schild?!");
                         return true;

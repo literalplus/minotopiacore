@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module;
 
+import com.google.common.collect.ImmutableSet;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -256,8 +257,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
         @Nullable
         private Block getAndCheckTargetBlock(@NotNull Player plr) {
-            @SuppressWarnings("deprecation")
-            Block blk = plr.getTargetBlock(null, 15);
+            Block blk = plr.getTargetBlock(ImmutableSet.<Material>of(), 15);
             if (blk == null || !canBeMadeInfinite(blk.getType())) {
                 MTCHelper.sendLoc("XU-nodisp", plr, true); //keeping legacy constant for backwards compatibility
                 return null;
