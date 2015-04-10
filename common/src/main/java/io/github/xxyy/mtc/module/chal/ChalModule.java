@@ -75,6 +75,7 @@ public class ChalModule extends ConfigurableMTCModule {
         super.disable(plugin);
 
         locations.stream()
+                .filter(Objects::nonNull)
                 .map(Location::getBlock)
                 .filter(Objects::nonNull)
                 .forEach(b -> b.removeMetadata(METADATA_KEY, plugin));
