@@ -108,7 +108,13 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     @Override
     public void disable() {
-        MTCModuleAdapter.forEach(m -> m.disable(this));
+        MTCModuleAdapter.forEach(m -> {
+            try {
+                m.disable(this);
+            } catch (Exception e) {
+                getLogger().log(Level.WARNING, "Error occurred while disabling MTC module " + m.getName() + ": ", e);
+            }
+        });
 
         //SQL
         if (this.ssql2 != null) {
