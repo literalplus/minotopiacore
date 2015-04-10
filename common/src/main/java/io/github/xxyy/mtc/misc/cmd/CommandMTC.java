@@ -152,9 +152,9 @@ public final class CommandMTC extends MTCCommandExecutor {
                     }
                     Player signPlayer = (Player) sender;
                     List<Block> targets = signPlayer.getLastTwoTargetBlocks((Set<Material>) null, 50);
-                    Block target = targets.stream().findFirst().orElse(null);
+                    Block target = targets.get(1);
                     if (target == null || !(target.getType() == Material.WALL_SIGN) && !(target.getType() == Material.SIGN_POST)) {
-                        sender.sendMessage("§8Das nennst du ein Schild?!");
+                        sender.sendMessage("§8Das nennst du ein Schild?! (" + target + ")");
                         return true;
                     }
 
@@ -256,7 +256,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                 case "config":
                     return this.handleConfigAction(sender, args, label);
                 case "pid":
-                    sender.sendMessage("§e"+ ManagementFactory.getRuntimeMXBean().getName());
+                    sender.sendMessage("§e" + ManagementFactory.getRuntimeMXBean().getName());
                     return true;
                 default:
                     sender.sendMessage("§cUnbekannte Aktion.");
