@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.module;
 
-import com.google.common.collect.ImmutableSet;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -45,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.Set;
 
 public final class InfiniteBlockModule extends ConfigurableMTCModule implements Listener {
     public static final String NAME = "InfiniteDispensers"; //keeping legacy constant for backwards compatibility
@@ -257,7 +257,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
         @Nullable
         private Block getAndCheckTargetBlock(@NotNull Player plr) {
-            Block blk = plr.getTargetBlock(ImmutableSet.<Material>of(), 15);
+            Block blk = plr.getTargetBlock((Set<Material>) null, 15);
             if (blk == null || !canBeMadeInfinite(blk.getType())) {
                 MTCHelper.sendLoc("XU-nodisp", plr, true); //keeping legacy constant for backwards compatibility
                 return null;
