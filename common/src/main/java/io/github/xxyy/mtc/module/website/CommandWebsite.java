@@ -103,7 +103,7 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
     private boolean hasConfirmedActivate(Player plr, String[] args) {
         if (args.length < 2 || !args[1].equalsIgnoreCase(playerCodes.get(plr.getUniqueId()))) {
             String confirmationCode = StringHelper.alphanumericString(8, false).toUpperCase();
-            confirmationCode = String.format("%s-%s", confirmationCode.substring(0, 4), confirmationCode.substring(5, 9));
+            confirmationCode = String.format("%s-%s", confirmationCode.substring(0, 4), confirmationCode.substring(4, 8));
             playerCodes.put(plr.getUniqueId(), confirmationCode);
 
             plr.spigot().sendMessage(new ComponentBuilder("Achtung, du bist gerade in Begriff, deinen " +
