@@ -43,6 +43,7 @@
         <minecraft.version>1.8.3</minecraft.version>
         <spigot-api.release>R0.1</spigot-api.release>
         <rootDir>${project.basedir}</rootDir>
+        <build-comment>dev</build-comment>
     </properties>
 
     <repositories>

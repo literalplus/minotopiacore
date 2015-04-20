@@ -71,7 +71,7 @@
                     <doCheck>true</doCheck>
                     <doUpdate>false</doUpdate>
                     <shortRevisionLength>7</shortRevisionLength>
-                    <timestampFormat>{0,date,yyyy.MM.dd HH:mm}</timestampFormat>
+                    <timestampFormat>{0,date,yyyy-MM-dd HH:mm}</timestampFormat>
                     <format>{1}</format>
                     <items>
                         <item>timestamp</item>
@@ -99,7 +99,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Build>${buildNumber}@${timestamp}</Implementation-Build>
+                            <Implementation-Build>${buildNumber}@${timestamp}-${build-comment}</Implementation-Build>
                         </manifestEntries>
                     </archive>
                 </configuration>
