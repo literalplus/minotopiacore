@@ -43,7 +43,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true) //kick event could be cancelled before, event priority monitor does not set ignoreCancelled to true
     public void onPlayerKick(PlayerKickEvent e) {
         playersInAFight.remove(e.getPlayer().getUniqueId());
     }
