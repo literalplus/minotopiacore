@@ -61,11 +61,8 @@ public class AnvilNBrewingStandStackListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInvClickBrewingStand(InventoryClickEvent e) {
-        if (e.isCancelled()) {
-            return;
-        }
         HumanEntity he = e.getWhoClicked();
         if (!(he instanceof Player)) {
             return; //lol

@@ -7,9 +7,6 @@
 
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -23,6 +20,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,12 +33,9 @@ public final class MagicSnowballHitListener implements Listener {
 
     protected List<String> deniedPlayers = new ArrayList<>();
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 // this HAS to ignore if the damage was already cancelled by ClanDamage.. and MUST therefore be called afterwards...
     public void onDmg(EntityDamageByEntityEvent e) {
-        if (e.isCancelled()) {
-            return;
-        }
         if (!e.getEntityType().equals(EntityType.PLAYER) || !e.getDamager().getType().equals(EntityType.SNOWBALL)) {
             return;
         }

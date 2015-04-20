@@ -45,10 +45,10 @@ public final class MainDamageListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     // event should be cancelled before by i.e. WorldGuard
     public void onHit(EntityDamageByEntityEvent e) {
-        if (e.isCancelled() || e.getEntityType() != EntityType.PLAYER) {
+        if (e.getEntityType() != EntityType.PLAYER) {
             return;
         }
         Player plrDamager;
