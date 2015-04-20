@@ -95,12 +95,13 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     }
 
     /**
-     * Gets the time played in the current session for a player. If no time has been recorded for given player, 0 is returned.
+     * Gets the time played in the current session for a player and removes it from the queue.
+     * If no time has been recorded for the given player, 0 is returned.
      *
      * @param uuid the unique id of the target player
      * @return the amount of minutes the target player has played in the current session
      */
-    long getMinutesPlayed(UUID uuid) {
+    long popMinutesPlayed(UUID uuid) { //This is *NOT* an API method, note how it only applies to the current session
         long minutesPlayed = ChronoUnit.MINUTES.between(
                 playerJoinTimes.getOrDefault(uuid, Instant.now()), //Just making sure
                 Instant.now());
@@ -114,7 +115,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
      * @param uuid the unique id of the target player whose time to save
      */
     void saveTimePlayed(UUID uuid) {
-        long newlyPlayedMinutes = getMinutesPlayed(uuid);
+        long newlyPlayedMinutes = popMinutesPlayed(uuid);
 
         getPlugin().getSql().safelyExecuteUpdate("INSERT INTO " + WebsiteModule.PLAYTIME_TABLE_NAME +
                         " SET uuid=?,minutes=? ON DUPLICATE KEY UPDATE minutes=minutes+?",
