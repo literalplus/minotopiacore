@@ -108,10 +108,8 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     @Override
     public void setFighting(final Player damaged, final Player damager, final Calendar cal) {
         cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
-        if (!damaged.hasPermission("mtc.ignore")) {
+        if (!damaged.hasPermission("mtc.ignore") && !damager.hasPermission("mtc.ignore")) {
             setFightingInternal(damaged, damager, cal.getTime());
-        }
-        if (!damager.hasPermission("mtc.ignore")) {
             setFightingInternal(damager, damaged, cal.getTime());
         }
     }
@@ -122,7 +120,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     private void setFightingInternal(final Player plr, final Player other, final Date dt) {
-        if (!playersInAFight.containsKey(other.getUniqueId()) && !plr.hasPermission("mtc.ignore")) {
+        if (!playersInAFight.containsKey(other.getUniqueId())) {
 //            PluginAPIInterfacer.cancelAllEssTeleports(plr); //teleports already handled by #onTp(PlayerTeleportEvent)
             MTCHelper.sendLocArgs("XU-fightstart", plr, true, other.getName());
         }
