@@ -106,13 +106,13 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     @Override
-    public void setFighting(final Player plr, final Player other, final Calendar cal) {
+    public void setFighting(final Player damaged, final Player damager, final Calendar cal) {
         cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
-        if (!plr.hasPermission("mtc.ignore")) {
-            setFightingInternal(plr, other, cal.getTime());
+        if (!damaged.hasPermission("mtc.ignore")) {
+            setFightingInternal(damaged, damager, cal.getTime());
         }
-        if (!other.hasPermission("mtc.ignore")) {
-            setFightingInternal(other, plr, cal.getTime());
+        if (!damager.hasPermission("mtc.ignore")) {
+            setFightingInternal(damager, damaged, cal.getTime());
         }
     }
 
