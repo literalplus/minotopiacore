@@ -106,13 +106,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     @Override
-    public void setFighting(final Player plr, final Player other, final Calendar cal) {
+    public void setFighting(final Player damaged, final Player damager, final Calendar cal) {
         cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
-        if (!plr.hasPermission("mtc.ignore")) {
-            setFightingInternal(plr, other, cal.getTime());
-        }
-        if (!other.hasPermission("mtc.ignore")) {
-            setFightingInternal(other, plr, cal.getTime());
+        if (!damaged.hasPermission("mtc.ignore") && !damager.hasPermission("mtc.ignore")) {
+            setFightingInternal(damaged, damager, cal.getTime());
+            setFightingInternal(damager, damaged, cal.getTime());
         }
     }
 
@@ -122,9 +120,8 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     private void setFightingInternal(final Player plr, final Player other, final Date dt) {
-        final String plrName = plr.getName();
         if (!playersInAFight.containsKey(other.getUniqueId())) {
-//            PluginAPIInterfacer.cancelAllEssTeleports(plr); //TODO why is this commented out? Should we readd this?
+//            PluginAPIInterfacer.cancelAllEssTeleports(plr); //teleports already handled by #onTp(PlayerTeleportEvent)
             MTCHelper.sendLocArgs("XU-fightstart", plr, true, other.getName());
         }
         playersInAFight.put(plr.getUniqueId(), dt);
