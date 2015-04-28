@@ -86,28 +86,14 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         save();
     }
 
-    public void addInfiniteToCfg(Location input) { //REFACTOR: un-spaghetti //will be changed separately if xyc is updated
-        XyLocation loc;
-        if (input instanceof XyLocation) {
-            loc = (XyLocation) input;
-        } else {
-            loc = new XyLocation(input);
-        }
-
-        infiniteBlockLocations.add(loc);
+    public void addInfiniteToCfg(Location input) {
+        infiniteBlockLocations.add(XyLocation.of(input));
         configuration.set(DATA_PATH, infiniteBlockLocations);
         save();
     }
 
-    public void removeInfiniteFromCfg(Location input) { //REFACTOR: un-spaghetti //will be changed separately if xyc is updated
-        XyLocation loc;
-        if (input instanceof XyLocation) {
-            loc = (XyLocation) input;
-        } else {
-            loc = new XyLocation(input);
-        }
-
-        infiniteBlockLocations.remove(loc);
+    public void removeInfiniteFromCfg(Location input) {
+        infiniteBlockLocations.remove(XyLocation.of(input));
         configuration.set(DATA_PATH, infiniteBlockLocations);
         save();
     }
