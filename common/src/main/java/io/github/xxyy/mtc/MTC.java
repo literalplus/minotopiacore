@@ -338,7 +338,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new CmdSpyListener(), "enable.cmdspy", true);
         pm.registerEvents(new MainDamageListener(this), this);
         if (ConfigHelper.isProhibitCmdsInBoats()) {
-            pm.registerEvents(new MainInventoryOpenListener(), this);
+            pm.registerEvents(new VehicleInventoryOpenListener(), this);
         }
         if (ConfigHelper.isStatsEnabled() || ConfigHelper.isClanEnabled()) {
             pm.registerEvents(new StatsDeathListener(), this);
