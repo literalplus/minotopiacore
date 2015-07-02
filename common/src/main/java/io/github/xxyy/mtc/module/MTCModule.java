@@ -46,10 +46,12 @@ public interface MTCModule extends CacheHelper.Cache {
     String getName();
 
     /**
-     * Checks whether this plugin is generally ready to be enabled. This checks a value in the global config by default.
+     * Checks whether this plugin can be enabled in the current environment. The default implementation checks for a
+     * user-defined switch in the global configuration file.
      *
      * @param plugin the plugin requesting the state
      * @return whether this plugin wants to be enabled (modules have feelings, too)
+     * @see ModuleManager#isEnabled(MTCModule)
      */
-    boolean isEnabled(MTC plugin);
+    boolean canBeEnabled(MTC plugin);
 }
