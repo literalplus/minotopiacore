@@ -81,14 +81,18 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             return false;
         }
         if (isFighting(plr.getUniqueId())) {
-            // Inventory extends Iterable, which includes both inventory and armor slots
             for (ItemStack stk : plr.getInventory()) {
-                // for(ItemStack stk : plr.getInventory().getArmorContents()){
                 if (stk == null || stk.getType() == Material.AIR) {
                     continue;
                 }
                 plr.getWorld().dropItemNaturally(plr.getLocation(), stk);
             }
+	        for (ItemStack stk : plr.getInventory().getArmorContents()) {
+		        if (stk == null || stk.getType() == Material.AIR) {
+			        continue;
+		        }
+		        plr.getWorld().dropItemNaturally(plr.getLocation(), stk);
+	        }
             plr.getInventory().clear();
             // plr.getInventory().setArmorContents(new ItemStack[4]);
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-fightlogout", plr.getName(), true, plr.getName()));
