@@ -8,6 +8,7 @@ package io.github.xxyy.mtc;
 
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -46,6 +47,7 @@ import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.hook.WorldGuardHook;
 import io.github.xxyy.mtc.hook.XLoginHook;
 import io.github.xxyy.mtc.listener.*;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
 import io.github.xxyy.mtc.misc.cmd.CommandBReload;
@@ -59,7 +61,7 @@ import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
 import io.github.xxyy.mtc.module.ModuleManager;
 
-import java.util.logging.Level;
+import java.util.Arrays;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable {
 
@@ -85,6 +87,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private boolean showDisableMsg = true;
     private PlayerGameManager gameManager;
     private ModuleManager moduleManager = new ModuleManager(this);
+    private Logger logger;
 
     /**
      * @return an instance of MTC. No guarantees are made as to which and if it's actually usable.
@@ -102,14 +105,19 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     @Override
     public void reloadConfig() {
+        logInfo("Reloading MTC config!");
         super.reloadConfig();
         ConfigHelper.onConfigReload(this);
+        logInfo("Reloading MTC module configs...");
         moduleManager.getEnabledModules().forEach(m -> m.reload(this));
+        logInfo("Reloaded MTC configs!");
     }
 
     @Override
     public void disable() {
+        logInfo("Disabling modules...");
         moduleManager.getEnabledModules().forEach(m -> moduleManager.setEnabled(m, false));
+        logInfo("Disabled modules!");
 
         //SQL
         if (this.ssql2 != null) {
@@ -137,7 +145,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         for (Player plr : Bukkit.getOnlinePlayers()) {
             final ItemStack itemOnCursor = plr.getItemOnCursor();
             if (itemOnCursor != null) {
-                LogHelper.getMainLogger().log(Level.FINE, "ItemOnCursor @" + plr.getName() + ": " + itemOnCursor);
+                getLog().info("itemOnCursor @{}: {}", plr.getName(), itemOnCursor);
                 plr.setItemOnCursor(null);
             }
             plr.closeInventory();
@@ -145,11 +153,17 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         LogHelper.flushAll();
 
         MTC.instance = null;
+        logInfo("Disabled MTC, now shutting down logging system... Goodbye world :(");
+        LogManager.setPlugin(null);
     }
 
     @Override
     public void enable() {
         MTC.instance = this;
+        LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
+        logger = LogManager.getLogger(getClass());
+        logger.info("Logging context initialised!");
+
         this.reloadConfig();
         final PluginManager pluginManager = this.getServer().getPluginManager();
 
@@ -172,21 +186,23 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         registerCommands();
 
         //MODULES
+        logger.info("Loading modules!");
         moduleManager.load(moduleManager.findShippedModules());
 
         //HELP
         MTCHelper.initHelp();
 
-        //LSITENERS
+        //LISTENERS
         registerEventListeners(pluginManager);
 
         //RUNNABLES
         if (this.getConfig().getBoolean("enable.cron.5m", true)) {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableCronjob5Minutes(false, this), 2 * 60 * 20, 5 * 60 * 20);
-            Bukkit.getConsoleSender().sendMessage("§8[MTC] AUTOSAVE enabled!");
+            getLogger().info("Automatically saving world every 5 minutes.");
         }
 
         //HOOKS
+        logger.info("Hooking hooks!");
         this.xLoginHook = new XLoginHook(this);
         this.vaultHook = new VaultHook(this);
         this.worldGuardHook = new WorldGuardHook(this);
@@ -229,6 +245,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.serverName = this.getConfig().getString("servername", "UNKNOWN");
 
         //LOGS
+        logger.info("Initialising legacy logging system! (don't tell it that I said that, but it's ugly)");
         LogHelper.initLogs();
 
         //SQL LOGGER
@@ -237,8 +254,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         //API
         gameManager = new PlayerGameManagerImpl(this);
 
+        logger.info("Enabling modules!");
         moduleManager.enableLoaded();
         saveConfig(); //Save here so that changes from modules also apply to the config file
+        logger.info("Enabled MTC modules!");
 
         //PREPARING FOR BEING DISABLED
         this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
@@ -246,8 +265,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
 
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC enabled,Sir!");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC] MTC enabled!");
         }
+        logger.info("Fully enabled MTC, probably ready!");
     }
 
     private void registerCommands() {
@@ -288,7 +308,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         }
         if (this.getConfig().getBoolean("enable.chat", true)) {
             pm.registerEvents(new ChatListener(this), this);
-            Bukkit.getConsoleSender().sendMessage("§8[MTC] CHAT enabled!");
         }
         if (ConfigHelper.isEnableTablist() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {
@@ -364,6 +383,12 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         };
     }
 
+    private void logInfo(String message) {
+        if (logger != null) {
+            logger.info(message);
+        }
+    }
+
     private <T extends Listener> T regEvents(PluginManager pm, T listener, String cfgOption, boolean defaultValue) {
         if (!this.getConfig().getBoolean(cfgOption, defaultValue)) {
             return null;
@@ -400,5 +425,15 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    /**
+     * Obtains the logger instance used by this plugin to log to its custom Log4j logging context. This does not
+     * use Bukkit defaults or provide a java.util.logging API, try {@link #getLogger()} for that.
+     *
+     * @return Obtains the logger instance used by this plugin
+     */
+    public Logger getLog() {
+        return logger;
     }
 }

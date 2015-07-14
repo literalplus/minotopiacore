@@ -44,6 +44,8 @@
         <spigot-api.release>R0.1</spigot-api.release>
         <rootDir>${project.basedir}</rootDir>
         <build-comment>dev</build-comment>
+        <log4j.version>2.0-beta9</log4j.version>
+        <!-- Mojang ship outdated Beta code in Production -->
     </properties>
 
     <repositories>
@@ -152,6 +154,18 @@
                 <groupId>mkremins</groupId>
                 <artifactId>fanciful</artifactId>
                 <version>0.3.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <!-- For async loggers with log4j2 -->
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
