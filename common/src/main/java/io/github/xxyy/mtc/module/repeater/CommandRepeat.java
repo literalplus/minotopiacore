@@ -56,7 +56,7 @@ class CommandRepeat implements CommandExecutor {
                             .then(" @" + msg.getSecondInterval() + "s ").color(RED)
                             .then("[-]").color(DARK_RED)
                                 .tooltip("Löschen?")
-                                .suggest("/repeat delete "+i.addAndGet(1))
+                                .suggest("/repeat delete " + i.addAndGet(1))
                             .send(sender));
                     //@formatter:on
                     return true;
@@ -74,6 +74,10 @@ class CommandRepeat implements CommandExecutor {
                         return true;
                     }
 
+                    if (module.getMessages().size() >= index) {
+                        sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID.");
+                        return true;
+                    }
                     RepeatingMessage removed = module.getMessages().remove(index);
                     module.save();
                     sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
