@@ -75,11 +75,11 @@ class CommandRepeat implements CommandExecutor {
                         return true;
                     }
 
-                    List<RepeatingMessage> messages = module.getMessages();
-                    if (messages.size() >= index) {
+                    if (module.getMessages().size() >= index) {
                         sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID.");
+                        return true;
                     }
-                    RepeatingMessage removed = messages.remove(index);
+                    RepeatingMessage removed = module.getMessages().remove(index);
                     module.save();
                     sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
                     return true;
