@@ -49,6 +49,62 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
         this.file = file;
     }
 
+    /**
+     * Creates a new {@link ManagedConfiguration}, loading from the given file.
+     * </p><p>
+     * Any errors loading the Configuration will be logged and available at {@link #getError()}.
+     * If the specified input is not a valid config, a blank config will be
+     * returned.
+     * </p>
+     * The encoding used may follow the system dependent default.
+     *
+     * @param file      Input file
+     * @param behaviour what to do on a cache clear
+     * @return Resulting configuration
+     * @throws IllegalArgumentException Thrown if file is null or it didn't exist and couldn't be created
+     */
+    public static ManagedConfiguration fromFile(File file, ClearCacheBehaviour behaviour) {
+        Validate.notNull(file, "File cannot be null");
+
+        if (!file.exists()) {
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+                throw new IllegalStateException("Couldn't create managed config file's parent dirs for some reason: " + file.getAbsolutePath()); //Sometimes I hate Java's backwards compat
+            }
+            try {
+                if (!file.createNewFile()) {
+                    throw new IOException("Couldn't create managed config file for some reason: " + file.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Caught IOException", e);
+            }
+        }
+
+        ManagedConfiguration config = new ManagedConfiguration(file);
+        config.setClearCacheBehaviour(behaviour);
+        config.tryLoad();
+
+        return config;
+    }
+
+    /**
+     * Creates a new {@link ManagedConfiguration}, loading from the given file path relative to the given plugin's data folder.
+     * </p><p>
+     * Any errors loading the Configuration will be logged and available at {@link #getError()}.
+     * If the specified input is not a valid config, a blank config will be
+     * returned.
+     * </p>
+     * The encoding used may follow the system dependent default.
+     *
+     * @param filePath  Input file path, relative to the plugin's data folder
+     * @param behaviour what to do on a cache clear
+     * @param plugin    the plugin whose data folder to use
+     * @return Resulting configuration
+     * @throws IllegalArgumentException Thrown if file is null or it didn't exist and couldn't be created
+     */
+    public static ManagedConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, MTC plugin) {
+        File file = new File(plugin.getDataFolder(), filePath);
+        return fromFile(file, behaviour);
+    }
 
     @Override
     public void loadFromString(String contents) throws InvalidConfigurationException {
@@ -90,16 +146,22 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
 
         String data = saveToString();
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            //noinspection deprecation
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(file),
-                    UTF8_OVERRIDE && !UTF_BIG ? Charsets.UTF_8 : Charset.defaultCharset())) {
-                writer.write(data);
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.WARNING, "Unable to save managed config to " + file.getAbsolutePath() + ":", e);
-            }
-        });
+        if (plugin.isEnabled()) {
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> internalSave(plugin, data));
+        } else {
+            internalSave(plugin, data);
+        }
 
+    }
+
+    private void internalSave(Plugin plugin, String data) {
+        //noinspection deprecation
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file),
+                UTF8_OVERRIDE && !UTF_BIG ? Charsets.UTF_8 : Charset.defaultCharset())) {
+            writer.write(data);
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Unable to save managed config to " + file.getAbsolutePath() + ":", e);
+        }
     }
 
     public boolean trySave() {
@@ -174,7 +236,6 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
         }
     }
 
-
     public ClearCacheBehaviour getClearCacheBehaviour() {
         return clearCacheBehaviour;
     }
@@ -206,62 +267,5 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
 
     public void setSaveHandler(Consumer<ManagedConfiguration> saveHandler) {
         this.saveHandler = saveHandler;
-    }
-
-    /**
-     * Creates a new {@link ManagedConfiguration}, loading from the given file.
-     * </p><p>
-     * Any errors loading the Configuration will be logged and available at {@link #getError()}.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
-     * </p>
-     * The encoding used may follow the system dependent default.
-     *
-     * @param file      Input file
-     * @param behaviour what to do on a cache clear
-     * @return Resulting configuration
-     * @throws IllegalArgumentException Thrown if file is null or it didn't exist and couldn't be created
-     */
-    public static ManagedConfiguration fromFile(File file, ClearCacheBehaviour behaviour) {
-        Validate.notNull(file, "File cannot be null");
-
-        if (!file.exists()) {
-            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-                throw new IllegalStateException("Couldn't create managed config file's parent dirs for some reason: " + file.getAbsolutePath()); //Sometimes I hate Java's backwards compat
-            }
-            try {
-                if (!file.createNewFile()) {
-                    throw new IOException("Couldn't create managed config file for some reason: " + file.getAbsolutePath());
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Caught IOException", e);
-            }
-        }
-
-        ManagedConfiguration config = new ManagedConfiguration(file);
-        config.setClearCacheBehaviour(behaviour);
-        config.tryLoad();
-
-        return config;
-    }
-
-    /**
-     * Creates a new {@link ManagedConfiguration}, loading from the given file path relative to the given plugin's data folder.
-     * </p><p>
-     * Any errors loading the Configuration will be logged and available at {@link #getError()}.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
-     * </p>
-     * The encoding used may follow the system dependent default.
-     *
-     * @param filePath  Input file path, relative to the plugin's data folder
-     * @param behaviour what to do on a cache clear
-     * @param plugin    the plugin whose data folder to use
-     * @return Resulting configuration
-     * @throws IllegalArgumentException Thrown if file is null or it didn't exist and couldn't be created
-     */
-    public static ManagedConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, MTC plugin) {
-        File file = new File(plugin.getDataFolder(), filePath);
-        return fromFile(file, behaviour);
     }
 }
