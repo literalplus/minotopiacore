@@ -46,7 +46,7 @@ public final class MainCommandListener implements Listener {
             return;
         }
         if ((cmd.equalsIgnoreCase("stop") && e.getPlayer().hasPermission("bukkit.command.stop"))
-            || (cmd.equalsIgnoreCase("restart")&& e.getPlayer().hasPermission("bukkit.command.restart"))) {
+            || (cmd.equalsIgnoreCase("restart") && e.getPlayer().hasPermission("bukkit.command.restart"))) {
             plugin.getLogoutHandler().clearFighters(); //TODO what is this doing here?
         }
     }
