@@ -16,6 +16,7 @@ import org.bukkit.command.CommandSender;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,7 +57,7 @@ class CommandRepeat implements CommandExecutor {
                             .then(" @" + msg.getSecondInterval() + "s ").color(RED)
                             .then("[-]").color(DARK_RED)
                                 .tooltip("Löschen?")
-                                .suggest("/repeat delete "+i.addAndGet(1))
+                                .suggest("/repeat delete " + i.addAndGet(1))
                             .send(sender));
                     //@formatter:on
                     return true;
@@ -74,7 +75,11 @@ class CommandRepeat implements CommandExecutor {
                         return true;
                     }
 
-                    RepeatingMessage removed = module.getMessages().remove(index);
+                    List<RepeatingMessage> messages = module.getMessages();
+                    if (messages.size() >= index) {
+                        sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID.");
+                    }
+                    RepeatingMessage removed = messages.remove(index);
                     module.save();
                     sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
                     return true;
