@@ -45,70 +45,70 @@ class CommandRepeat implements CommandExecutor {
 
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
-            case "list":
-                AtomicInteger i = new AtomicInteger(-1);
-                //@formatter:off
-                module.getMessages().stream()
-                    .forEachOrdered(msg ->
-                        new FancyMessage(" -> ").color(GOLD)
-                        .then(msg.getMessage()).color(WHITE)
-                            .tooltip("von " + module.getPlugin().getXLoginHook().getDisplayString(msg.getAuthor()))
-                        .then(" @" + msg.getSecondInterval() + "s ").color(RED)
-                        .then("[-]").color(DARK_RED)
-                            .tooltip("Löschen?")
-                            .suggest("/repeat delete " + i.incrementAndGet())
-                        .send(sender));
-                //@formatter:on
-                return true;
-            case "delete":
-            case "remove":
-                if (args.length < 2) {
-                    sender.sendMessage("§c/repeat delete [id]");
+                case "list":
+                    AtomicInteger i = new AtomicInteger(-1);
+                    //@formatter:off
+                    module.getMessages().stream()
+                        .forEachOrdered(msg ->
+                            new FancyMessage(" -> ").color(GOLD)
+                            .then(msg.getMessage()).color(WHITE)
+                                .tooltip("von " + module.getPlugin().getXLoginHook().getDisplayString(msg.getAuthor()))
+                            .then(" @" + msg.getSecondInterval() + "s ").color(RED)
+                            .then("[-]").color(DARK_RED)
+                                .tooltip("Löschen?")
+                                .suggest("/repeat delete " + i.incrementAndGet())
+                            .send(sender));
+                    //@formatter:on
                     return true;
-                }
-                int index;
-                if (StringUtils.isNumeric(args[1])) {
-                    index = Integer.parseInt(args[1]);
-                } else {
-                    sender.sendMessage("§cDas ist keine Zahl!");
+                case "delete":
+                case "remove":
+                    if (args.length < 2) {
+                        sender.sendMessage("§c/repeat delete [id]");
+                        return true;
+                    }
+                    int index;
+                    if (StringUtils.isNumeric(args[1])) {
+                        index = Integer.parseInt(args[1]);
+                    } else {
+                        sender.sendMessage("§cDas ist keine Zahl!");
+                        return true;
+                    }
+
+                    if (index >= module.getMessages().size()) {
+                        sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID!");
+                        return true;
+                    }
+
+                    RepeatingMessage removed = module.getMessages().remove(index);
+                    module.save();
+                    sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
                     return true;
-                }
+                case "add":
+                    if (args.length < 3) {
+                        sender.sendMessage("§c/repeat add [Intervall: 1y2M3d5h40m10s] [Nachricht]");
+                        return true;
+                    }
 
-                if (index >= module.getMessages().size()) {
-                    sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID!");
+                    long interval;
+                    try {
+                        interval = StringHelper.parseTimePeriod(args[1]);
+                    } catch (IllegalStateException e) {
+                        sender.sendMessage("§cTime Parse error: " + e.getMessage());
+                        return true;
+                    }
+                    interval = interval / 1000;
+
+                    if (interval < TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES)) {
+                        sender.sendMessage("§cAchtung! Intervalle kürzer als 5 Minuten sind sehr nervig für die User!");
+                    }
+
+                    String message = StringHelper.varArgsString(args, 2, true);
+                    module.getMessages().add(new RepeatingMessage(message,
+                            (long) Math.floor(interval / 5),
+                            CommandHelper.getSenderId(sender)));
+                    sender.sendMessage("§aHinzugefügt mit Intervall=§e" + interval + "s§a!");
+                    module.save();
                     return true;
-                }
-
-                RepeatingMessage removed = module.getMessages().remove(index);
-                module.save();
-                sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
-                return true;
-            case "add":
-                if (args.length < 3) {
-                    sender.sendMessage("§c/repeat add [Intervall: 1y2M3d5h40m10s] [Nachricht]");
-                    return true;
-                }
-
-                long interval;
-                try {
-                    interval = StringHelper.parseTimePeriod(args[1]);
-                } catch (IllegalStateException e) {
-                    sender.sendMessage("§cTime Parse error: " + e.getMessage());
-                    return true;
-                }
-                interval = interval / 1000;
-
-                if (interval < TimeUnit.SECONDS.convert(5, TimeUnit.MINUTES)) {
-                    sender.sendMessage("§cAchtung! Intervalle kürzer als 5 Minuten sind sehr nervig für die User!");
-                }
-
-                String message = StringHelper.varArgsString(args, 2, true);
-                module.getMessages().add(new RepeatingMessage(message,
-                        (long) Math.floor(interval / 5),
-                        CommandHelper.getSenderId(sender)));
-                sender.sendMessage("§aHinzugefügt mit Intervall=§e" + interval + "s§a!");
-                module.save();
-                return true;
             }
         }
 
