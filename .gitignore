@@ -30,3 +30,6 @@ ehthumbs.db
 Thumbs.db
 
 # Built using https://github.com/github/gitignore/
+
+#Ignore files left after a merge saometimes by merge programs
+*.orig
