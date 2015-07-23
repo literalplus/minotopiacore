@@ -7,14 +7,13 @@
 
 package io.github.xxyy.mtc.module.repeater;
 
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,13 +49,14 @@ class CommandRepeat implements CommandExecutor {
                     AtomicInteger i = new AtomicInteger(-1);
                     //@formatter:off
                     module.getMessages().stream()
-                            .forEach(msg -> new FancyMessage(" -> ").color(GOLD)
+                        .forEachOrdered(msg ->
+                            new FancyMessage(" -> ").color(GOLD)
                             .then(msg.getMessage()).color(WHITE)
                                 .tooltip("von " + module.getPlugin().getXLoginHook().getDisplayString(msg.getAuthor()))
                             .then(" @" + msg.getSecondInterval() + "s ").color(RED)
                             .then("[-]").color(DARK_RED)
                                 .tooltip("Löschen?")
-                                .suggest("/repeat delete " + i.addAndGet(1))
+                                .suggest("/repeat delete " + i.incrementAndGet())
                             .send(sender));
                     //@formatter:on
                     return true;
@@ -74,10 +74,11 @@ class CommandRepeat implements CommandExecutor {
                         return true;
                     }
 
-                    if (module.getMessages().size() >= index) {
-                        sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID.");
+                    if (index >= module.getMessages().size()) {
+                        sender.sendMessage("§cEs gibt keine Nachricht mit dieser ID!");
                         return true;
                     }
+
                     RepeatingMessage removed = module.getMessages().remove(index);
                     module.save();
                     sender.sendMessage("§6Entfernt: " + removed.getMessage() + " §c@" + removed.getSecondInterval() + "s");
@@ -85,7 +86,7 @@ class CommandRepeat implements CommandExecutor {
                 case "add":
                     if (args.length < 3) {
                         sender.sendMessage("§c/repeat add [Intervall: 1y2M3d5h40m10s] [Nachricht]");
-                        break;
+                        return true;
                     }
 
                     long interval;
@@ -114,10 +115,10 @@ class CommandRepeat implements CommandExecutor {
         sender.sendMessage("§9/repeat list §2Listet alle Nachrichten auf");
         sender.sendMessage("§9/repeat remove [Index] §2Entfernt eine Nachricht");
         sender.sendMessage("§9/repeat add [Intervall] [Frage] §2Fügt eine Nachricht hinzu");
-        sender.sendMessage("§cAchtung: Wenn es für ein intervall mehrere Nachrichten gibt, wird jedes Mal nur eine zufällige angezeigt!");
+        sender.sendMessage("§cAchtung: Wenn es für ein Intervall mehrere Nachrichten gibt, wird jedes Mal nur eine zufällige angezeigt!");
         sender.sendMessage("§eVerwende §6{player} §ein einer Nachricht für den jeweiligen Spielernamen!");
         sender.sendMessage("§eVerwende §6{p} §ein einer Nachricht für " + module.getPlugin().getChatPrefix() + "§e!");
-        sender.sendMessage("§eMehr Info: https://www.minotopia.me/wiki/index.php/Repeater");
+        sender.sendMessage("§eMehr Info: https://wiki.minotopia.me/w/Repeater");
         return true;
     }
 }
