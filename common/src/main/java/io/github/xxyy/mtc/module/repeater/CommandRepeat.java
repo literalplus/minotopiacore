@@ -7,13 +7,14 @@
 
 package io.github.xxyy.mtc.module.repeater;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

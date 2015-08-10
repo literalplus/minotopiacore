@@ -14,6 +14,7 @@ import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Repeats stuffs
@@ -44,7 +45,8 @@ public class RepeaterModule extends ConfigurableMTCModule {
     @Override
     @SuppressWarnings("unchecked")
     protected void reloadImpl() {
-        messages = (List<RepeatingMessage>) configuration.getList(MESSAGES_PATH, messages);
+        messages = ((List<RepeatingMessage>) configuration.getList(MESSAGES_PATH, messages));
+        messages.removeIf(Objects::isNull);
     }
 
     @Override
