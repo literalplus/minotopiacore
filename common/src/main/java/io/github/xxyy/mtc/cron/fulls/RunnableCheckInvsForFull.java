@@ -53,6 +53,7 @@ public final class RunnableCheckInvsForFull implements Runnable, FullCheckHelper
                 }
             }
             LogHelper.getFullLogger().fine("[CJ]Finished player: " + plr.getName());
+            i++;
         }
 
         if (playerIterator.hasNext()) {
