@@ -28,10 +28,6 @@
             <artifactId>mtc-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
             <groupId>mkremins</groupId>
             <artifactId>fanciful</artifactId>
         </dependency>
@@ -114,7 +110,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.4.1</version>
 
                 <executions>
                     <execution>
@@ -128,7 +124,6 @@
                     <artifactSet>
                         <includes>
                             <include>io.github.xxyy.mtc:*</include>
-                            <include>org.apache.commons:commons-lang3</include>
                             <include>mkremins:fanciful</include>
                         </includes>
                     </artifactSet>

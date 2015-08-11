@@ -139,11 +139,6 @@
                 <version>1.12.2</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.3</version>
-            </dependency>
-            <dependency>
                 <groupId>io.github.xxyy.common</groupId>
                 <artifactId>xyc-bukkit</artifactId>
                 <version>${xyc.version}</version>
