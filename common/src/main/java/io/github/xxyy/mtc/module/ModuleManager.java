@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 
 import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
+import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
 
 import java.util.Collection;
@@ -103,8 +104,8 @@ public class ModuleManager {
     }
 
     /**
-     * Attempts to enable all loaded modules which are not currently enabled. Errors will be caught on a per-module
-     * basis and logged to {@link Plugin#getLogger()}.
+     * Attempts to enable all loaded modules which are not currently enabled and are ready to be enabled.
+     * Errors will be caught on a per-module basis and logged to {@link Plugin#getLogger()}.
      */
     public void enableLoaded() {
         loader.getLoadedModules().stream()
@@ -119,10 +120,17 @@ public class ModuleManager {
      *
      * @param module  the module to enable
      * @param enabled the new enable state
-     * @return a list of MTC modules whose states have changed as result of this method call
+     * @return a list of MTC modules whose states have changed as result of this method call or null if an error occurred
      */
+    @Nullable
     public List<MTCModule> setEnabled(MTCModule module, boolean enabled) {
-        return loader.setEnabled(module, enabled);
+        try {
+            return loader.setEnabled(module, enabled);
+        } catch (Exception e) {
+            plugin.getLogger().log(Level.SEVERE, "Module " + module.getName() + " could not be " +
+                    (enabled ? "en" : "dis") + "abled:", e);
+            return null;
+        }
     }
 
     void registerEnabled(MTCModule module, boolean enabled) {
