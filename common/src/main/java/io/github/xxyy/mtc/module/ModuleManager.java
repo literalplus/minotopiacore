@@ -107,7 +107,9 @@ public class ModuleManager {
      * basis and logged to {@link Plugin#getLogger()}.
      */
     public void enableLoaded() {
-        loader.getLoadedModules().forEach(m -> loader.setEnabled(m, true));
+        loader.getLoadedModules().stream()
+                .filter(m -> m.getModule().canBeEnabled(plugin))
+                .forEach(m -> loader.setEnabled(m, true));
     }
 
     /**
