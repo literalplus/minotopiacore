@@ -50,7 +50,8 @@ Here are some examples of complying ("good") commit messages:
      lot of hassle to get them to work with mocking MTC. Some test-related things have been changed in
     the poms to allow for the tests to run correctly.
 	
-	*(yes, the whole thing)*
+	_(yes, the whole thing)_
+    
  * `Relocate Fanciful to lib package to prevent incompatibilities`
  * `RepeaterModule: Fix null appearing in message list`
  
