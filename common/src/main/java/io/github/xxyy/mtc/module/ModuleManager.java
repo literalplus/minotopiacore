@@ -8,18 +8,21 @@
 package io.github.xxyy.mtc.module;
 
 import org.bukkit.plugin.Plugin;
+import org.reflections.Reflections;
 
 import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
 
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Manages MTC modules at runtime.
@@ -32,6 +35,7 @@ public class ModuleManager {
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final Collection<MTCModule> enabledModulesView = Collections.unmodifiableMap(enabledModules).values();
+    private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
 
     public ModuleManager(MTC plugin) {
         this.plugin = plugin;
@@ -87,6 +91,17 @@ public class ModuleManager {
     public <T extends MTCModule> T getModule(Class<T> clazz) {
         //noinspection unchecked
         return (T) enabledModules.get(clazz);
+    }
+
+    /**
+     * Finds module classes in the shipped module package {@code io.github.xxyy.mtc.module}.
+     *
+     * @return a list of the discovered classes
+     */
+    public List<Class<? extends MTCModule>> findShippedModules() {
+        return reflections.getSubTypesOf(MTCModule.class).stream()
+                .filter(clazz -> Modifier.isAbstract(clazz.getModifiers()))
+                .collect(Collectors.toList());
     }
 
     /**

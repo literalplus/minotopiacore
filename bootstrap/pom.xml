@@ -125,12 +125,17 @@
                         <includes>
                             <include>io.github.xxyy.mtc:*</include>
                             <include>mkremins:fanciful</include>
+                            <include>org.reflections:reflections</include>
                         </includes>
                     </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>mkremins.fanciful</pattern>
                             <shadedPattern>io.github.xxyy.lib.mkremins.fanciful</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.reflections</pattern>
+                            <shadedPattern>io.github.xxyy.lib.org.reflections</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>

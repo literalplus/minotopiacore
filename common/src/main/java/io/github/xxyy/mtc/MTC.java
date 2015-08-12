@@ -57,15 +57,8 @@ import io.github.xxyy.mtc.misc.cmd.CommandPeace;
 import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
 import io.github.xxyy.mtc.misc.cmd.CommandRandom;
 import io.github.xxyy.mtc.misc.cmd.CommandTeam;
-import io.github.xxyy.mtc.module.InfiniteBlockModule;
 import io.github.xxyy.mtc.module.ModuleManager;
-import io.github.xxyy.mtc.module.chal.ChalModule;
-import io.github.xxyy.mtc.module.quiz.QuizModule;
-import io.github.xxyy.mtc.module.repeater.RepeaterModule;
-import io.github.xxyy.mtc.module.truefalse.TrueFalseModule;
-import io.github.xxyy.mtc.module.website.WebsiteModule;
 
-import java.util.Arrays;
 import java.util.logging.Level;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable {
@@ -179,7 +172,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         registerCommands();
 
         //MODULES
-        loadModules();
+        moduleManager.load(moduleManager.findShippedModules());
 
         //HELP
         MTCHelper.initHelp();
@@ -255,11 +248,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC enabled,Sir!");
         }
-    }
-
-    private void loadModules() { //TODO: proper, configurable, maybe even annotation-based loading thing
-        moduleManager.load(Arrays.asList(InfiniteBlockModule.class, TrueFalseModule.class, WebsiteModule.class,
-                QuizModule.class, RepeaterModule.class, ChalModule.class));
     }
 
     private void registerCommands() {

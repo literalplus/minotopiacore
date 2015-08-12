@@ -153,6 +153,11 @@
                 <artifactId>fanciful</artifactId>
                 <version>0.3.3-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.github.xxyy.mtc</groupId>
