@@ -106,11 +106,11 @@ commands:
     usage: "/<command> help"
     aliases: [adventskalender, letchestsbedoors]
   showhomes:
-    description: Shows essentials homes near you as holograms.
+    description: Shows Essentials homes near you as holograms.
     aliases: [sh, jsh, jshowhomes]
     permission: showhomes.execute
-    usage: /<command> help - Zeigt die Hilfe
+    usage: /<command> help - Shows the help
   homeutil:
-    description: Allowes you to change essentials homes even if the user is offline.
+    description: Allows you to change essentials homes even if the home-owner is offline.
     aliases: [hu, jhu, jhomeutil]
-    usage: /<command> - Zeigt die Hilfe
+    usage: /<command> - Shows the help

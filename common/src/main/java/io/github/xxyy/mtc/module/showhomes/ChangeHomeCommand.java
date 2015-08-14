@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * This command allowes to manipulate homes which owners are currently offline.
+ *
+ * @author Janmm14
+ */
 @RequiredArgsConstructor
 public class ChangeHomeCommand implements TabExecutor {
 
@@ -22,18 +27,18 @@ public class ChangeHomeCommand implements TabExecutor {
     private final ShowHomesModule module;
 
     @Override
-    public boolean onCommand(CommandSender cs, Command cmd, String alias, String[] args) {
-        //TODO make async if laggy
+    public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
+        //make async if laggy
         try {
-            if (!cs.hasPermission("essentials.sethome.others") && !cs.hasPermission("essentials.delhome.others") &&
-                    !cs.hasPermission("essentials.home.others")) {
-                cs.sendMessage("§cDu bist nicht berechtigt, dieses Kommnado zu benutzen!");
+            if (!sender.hasPermission("essentials.sethome.others") && !sender.hasPermission("essentials.delhome.others") &&
+                    !sender.hasPermission("essentials.home.others")) {
+                sender.sendMessage("§cDu bist nicht berechtigt, dieses Kommnado zu benutzen!");
             }
-            if (!(cs instanceof Player)) {
-                cs.sendMessage("§cNur Spieler können dieses Kommando verwenden!");
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("§cNur Spieler können dieses Kommando verwenden!");
                 return true;
             }
-            final Player plr = (Player) cs;
+            final Player plr = (Player) sender;
             if (args.length < 3) {
                 return showHelp(plr);
             }
@@ -48,9 +53,11 @@ public class ChangeHomeCommand implements TabExecutor {
             if (uuid.version() != 3 && uuid.version() != 4) {
                 plr.sendMessage("§cDie UUID ist keine valide Minecraft-UUID!");
             }
-            EssentialsDataUser user = EssentialsDataUser.readHomes(uuid);
-            if (user != null) {
-                List<Home> filteredHomes = user.stream()
+            EssentialsDataUser user = EssentialsDataUser.fromFile(module, uuid);
+            if (user == null) {
+                plr.sendMessage("§cKonnte Homes nicht lesen!");
+            } else {
+                List<Home> filteredHomes = user.getHomes().stream()
                         .filter(home -> home.getName().equalsIgnoreCase(args[2]))
                         .collect(Collectors.toList());
                 if (filteredHomes.size() > 1) {
@@ -65,34 +72,31 @@ public class ChangeHomeCommand implements TabExecutor {
                 if (args[0].equalsIgnoreCase("delete")) {
                     user.removeHome(plr, home.getName());
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("set")) {
+                } else if (args[0].equalsIgnoreCase("set")) {
                     user.setHome(plr, home.getName(), null);
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("tp")) {
-                    if (plr.hasPermission("essentials.home.others")) {
-                        Player aim = Bukkit.getPlayer(uuid);
-                        if (aim != null && aim.isOnline()) {
-                            plr.performCommand("/home " + aim.getName() + ':' + home.getName());
-                            return true;
-                        }
-                        plr.teleport(home.getLocation());
-                        plr.sendMessage(
-                                "§aDu hast dich zu " + user.getLastName() + "'s Home " + home.getName() + " teleportiert.");
-                    } else {
+                } else if (args[0].equalsIgnoreCase("tp")) {
+                    if (!plr.hasPermission("essentials.home.others")) {
                         plr.sendMessage("§cDu hast keine Berechtigung, dich zu Homes anderer Spieler zu teleportieren!");
+                        return true;
                     }
+                    Player target = Bukkit.getPlayer(uuid);
+                    if (target != null && target.isOnline()) {
+                        plr.performCommand("home " + target.getName() + ':' + home.getName());
+                        return true;
+                    }
+                    plr.teleport(home.getLocation());
+                    plr.sendMessage(
+                            "§aDu hast dich zu " + user.getLastName() + "'s Home " + home.getName() + " teleportiert.");
                     return true;
+                } else {
+                    showHelp(plr);
                 }
-            } else {
-                plr.sendMessage("§cKonnte Homes nicht lesen!");
             }
-            return true;
         } catch (Exception ex) {
-            ShowHomesModule.handleException(new Exception("ChangeHomeCommand#onCommand", ex));
-            return true;
+            module.handleException(new Exception("ChangeHomeCommand#onCommand", ex));
         }
+        return true;
     }
 
     private boolean showHelp(Player plr) {
@@ -137,7 +141,7 @@ public class ChangeHomeCommand implements TabExecutor {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender cs, Command cmd, String alias, String[] args) {
-        return null;
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+        return null; //maybe sometimes later
     }
 }
