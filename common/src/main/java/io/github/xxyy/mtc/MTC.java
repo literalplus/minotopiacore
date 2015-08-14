@@ -93,6 +93,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private PlayerGameManager gameManager;
     private ModuleManager moduleManager = new ModuleManager(this);
 
+    /**
+     * @return an instance of MTC. No guarantees are made as to which and if it's actually usable.
+     * @deprecated static `getInstance()` methods are a code smell and should not be used unless absolutely necessary
+     */
+    @Deprecated
     public static MTC instance() {
         return MTC.instance;
     }
