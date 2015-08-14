@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2013-2015.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
