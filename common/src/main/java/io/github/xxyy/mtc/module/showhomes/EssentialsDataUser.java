@@ -173,14 +173,9 @@ public final class EssentialsDataUser {
     }
 
     public static EssentialsDataUser fromFile(@NonNull ShowHomesModule module, @NonNull UUID uuid) {
-        try {
-            File essentialsUserdataFolder = module.getEssentialsUserdataFolder();
-            File yaml = new File(essentialsUserdataFolder, uuid + ".yml");
-            return fromFile(module, yaml);
-        } catch (Exception ex) {
-            module.handleException(ex);
-            return null;
-        }
+        File essentialsUserdataFolder = module.getEssentialsUserdataFolder();
+        File yaml = new File(essentialsUserdataFolder, uuid + ".yml");
+        return fromFile(module, yaml);
     }
 
     @NonNull

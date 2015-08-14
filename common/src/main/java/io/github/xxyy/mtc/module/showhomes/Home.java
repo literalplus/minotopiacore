@@ -12,6 +12,7 @@ import java.util.UUID;
 
 /**
  * Class representing an Essentials home.
+ *
  * @author Janmm14
  */
 public class Home {
@@ -28,12 +29,8 @@ public class Home {
     }
 
     public void showHologram(@NonNull ShowHomesModule module, UUID executor) {
-        try {
-            showHologram(module);
-            module.getHolosByExecutingUser().get(executor).add(this);
-        } catch (Exception ex) {
-            module.handleException(new Exception("Home#showHologram(module, executor);this:" + this, ex));
-        }
+        showHologram(module);
+        module.getHolosByExecutingUser().get(executor).add(this);
     }
 
     public void showHologram(@NonNull ShowHomesModule module) {
@@ -62,6 +59,7 @@ public class Home {
 
     /**
      * Deletes the hologram of this home if it was spawned.
+     *
      * @return whether the hologram was shown before
      */
     public boolean hideHologram() {

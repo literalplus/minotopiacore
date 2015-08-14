@@ -15,6 +15,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Command executor showing holograms for essentials homes near a player.
+ *
+ * @author Janmm14
+ */
 public class ShowHomesCommand implements CommandExecutor {
 
     @NonNull

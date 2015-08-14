@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This module reads essentials userdata files and show you homes of all users in a given radius on command.
+ * This module reads Essentials userdata files and show you homes of all users in a given radius on command.
  *
  * @author Janmm14
  */
@@ -203,7 +203,6 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                 .collect(Collectors.toSet());
     }
 
-    @Deprecated //TODO remove deprecation
     public void handleException(Throwable t) {
         String exceptionString = ExceptionUtils.getFullStackTrace(t);
 
