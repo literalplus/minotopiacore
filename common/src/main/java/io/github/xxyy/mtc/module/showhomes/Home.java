@@ -40,7 +40,7 @@ public class Home {
         Location loc = location.clone().add(0, 1.2, 0);
         hologram = HologramsAPI.createHologram(module.getPlugin(), loc);
 
-        Set<UUID> plrsToShow = ShowHomesModule.getPlayersWithShowHomesPermission();
+        Set<UUID> plrsToShow = ShowHomesModule.getPlayerUuidsWithShowHomesPermission();
 
         //set visibility - needs to be first (see that plugins doc)
         VisibilityManager visibilityManager = hologram.getVisibilityManager();

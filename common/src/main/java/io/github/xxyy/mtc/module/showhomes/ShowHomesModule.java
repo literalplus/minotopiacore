@@ -88,6 +88,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         super.reloadConfig();
         setConfigDefaults();
         readConfig();
+        save();
     }
 
     @Override
@@ -102,7 +103,6 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         taskIdByUser.values()
                 .forEach(plugin.getServer().getScheduler()::cancelTask);
         taskIdByUser.clear();
-        essentialsUserdataFolder = null;
     }
 
     private void setConfigDefaults() {
@@ -142,13 +142,12 @@ public class ShowHomesModule extends ConfigurableMTCModule {
     public List<Home> getHomesInRadius(Player plr, Location center, int xzRadius) throws IOException {
         List<Home> homes = new ArrayList<>();
         int radius2 = xzRadius * xzRadius; //use squared distance, faster
-        //makes distance just X and Z sensible
+        //make distance just X and Z sensible
         Location centerYZero = center.clone();
         centerYZero.setY(0);
 
         File[] files = essentialsUserdataFolder.listFiles();
         if (files == null) {
-            plr.sendMessage("Fehler beim Lesen der Essentials-Userdaten.");
             throw new IOException("Could not get essentials userdata folder contents!");
         }
         List<File> userDataFiles = Arrays.stream(files)
@@ -162,7 +161,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
             File file = userDataFiles.get(i);
 
             long currMillis = System.currentTimeMillis();
-            if ((currMillis - 10000) > lastProgessSent) {
+            if ((currMillis - 10 * 1000) > lastProgessSent) {
                 lastProgessSent = currMillis;
                 plr.sendMessage("§6Ladefortschritt: §b" + i + "§6 / §b" + fileAmount + "§6 Userdaten gelesen" +
                         " (relevante Homes: §b" + homes.size() + "§6)");
@@ -174,9 +173,8 @@ public class ShowHomesModule extends ConfigurableMTCModule {
             }
             essentialsDataUser.getHomes().stream()
                     .filter(loc -> center.getWorld().equals(loc.getLocation().getWorld()))
-                    .forEach(home -> {
-                        //filter homes for distance, can't be done nice with Stream methods cause we need both objects later on
-                        //makes distance just X and Z sensible
+                    .forEach(home -> {//filter homes for distance, can't be done nice with Stream methods cause we need both objects later on
+                        //make distance just X and Z sensible
                         Location yZero = home.getLocation().clone();
                         yZero.setY(0);
                         if (yZero.distanceSquared(centerYZero) < radius2) { //use squared distance, faster
@@ -190,12 +188,12 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.GERMAN);
         format.applyPattern("###.##");
 
-        plr.sendMessage("§b" + homes.size() + " §6Homes in §b" + format.format(dur) + "§6 Sekunden gefunden.");
+        plr.sendMessage("§b" + homes.size() + " §6Homes, gefunden in §b" + format.format(dur) + "§6 Sekunden.");
 
         return homes;
     }
 
-    public static Set<UUID> getPlayersWithShowHomesPermission() {
+    public static Set<UUID> getPlayerUuidsWithShowHomesPermission() {
         Collection<? extends Player> plrs = Bukkit.getOnlinePlayers();
         return plrs.stream()
                 .filter(plr -> plr.hasPermission("showhomes.see"))
