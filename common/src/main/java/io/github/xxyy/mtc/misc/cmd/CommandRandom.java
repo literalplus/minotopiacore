@@ -22,6 +22,12 @@ import java.util.Collection;
 
 public final class CommandRandom extends MTCCommandExecutor {
 
+    private final MTC plugin;
+
+    public CommandRandom(MTC plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         if (!CommandHelper.checkPermAndMsg(sender, "mtc.random", label)) {
@@ -36,8 +42,8 @@ public final class CommandRandom extends MTCCommandExecutor {
                     if (args.length < 2) {
                         return MTCHelper.sendLoc("XU-rdmhelp", sender, false);
                     }
-                    Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableAnnounceChoice(args[1]),
-                            MTC.instance().getConfig().getLong("random.tickdelay", 100));
+                    Bukkit.getScheduler().runTaskLater(plugin, new RunnableAnnounceChoice(args[1]),
+                            plugin.getConfig().getLong("random.tickdelay", 100));
                     return true;
                 case "-m":
                     if (args.length < 2) {
@@ -57,8 +63,8 @@ public final class CommandRandom extends MTCCommandExecutor {
                 .skip(RandomUtils.nextInt(plrs.size()))
                 .findFirst().get();
 
-        Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableAnnounceChoice(chosenOne.getName()),
-                MTC.instance().getConfig().getLong("random.tickdelay", 100));
+        Bukkit.getScheduler().runTaskLater(plugin, new RunnableAnnounceChoice(chosenOne.getName()),
+                plugin.getConfig().getLong("random.tickdelay", 100));
 
         return true;
     }

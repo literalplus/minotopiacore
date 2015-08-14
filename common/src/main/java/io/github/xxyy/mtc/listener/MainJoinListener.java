@@ -27,6 +27,11 @@ import java.util.UUID;
 
 public final class MainJoinListener implements Listener {
     //TODO merge in BanJoinListener
+    private final MTC plugin;
+
+    public MainJoinListener(MTC plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
@@ -79,7 +84,7 @@ public final class MainJoinListener implements Listener {
 
         }
         //playerhide
-        if (MTC.instance().getConfig().getBoolean("enable.playerhide", false)) {
+        if (plugin.getConfig().getBoolean("enable.playerhide", false)) {
             final Iterator<UUID> iterator = PlayerHideInteractListener.affectedPlayerIds.iterator();
             while (iterator.hasNext()) {
                 final UUID targetId = iterator.next();

@@ -346,7 +346,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             if(ci.id < 0) {
                 return MTCHelper.sendLocArgs("XC-cifetcherr", sender, true, ci.id);
             }
-            Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableTpClanBase(plr, plr.getLocation(), plr.getHealth(), ci.id),40);
+            Bukkit.getScheduler().runTaskLater(plugin, new RunnableTpClanBase(plr, plr.getLocation(), plr.getHealth(), ci.id),40);
             return MTCHelper.sendLoc("XC-preparetp", sender, true);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }else if(args[0].equalsIgnoreCase("setbase")){

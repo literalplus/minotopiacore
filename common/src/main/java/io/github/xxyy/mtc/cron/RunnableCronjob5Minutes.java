@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import io.github.xxyy.common.sql.QueryResult;
-import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
@@ -79,10 +79,10 @@ public class RunnableCronjob5Minutes implements Runnable {
             RunnableCronjob5Minutes.fullInfoExCount++;
 
             //Check Fulls
-            int checkEvery = MTC.instance().getConfig().getInt("fulltag.checkEveryInMinutes", 20);
+            int checkEvery = plugin.getConfig().getInt("fulltag.checkEveryInMinutes", 20);
             if (checkEvery > 0 && (RunnableCronjob5Minutes.fullInfoExCount * 5) >= checkEvery && ConfigHelper.isFullTagEnabled()) {
                 RunnableCronjob5Minutes.fullInfoExCount = 0;
-                (new RunnableCheckInvsForFull(Bukkit.getOnlinePlayers().iterator())).run();
+                (new RunnableCheckInvsForFull(plugin, Bukkit.getOnlinePlayers().iterator())).run();
             }
 
             CacheHelper.clearCaches(forced, plugin);
@@ -97,10 +97,10 @@ public class RunnableCronjob5Minutes implements Runnable {
             //player stats
             if (!this.forced && ConfigHelper.isUserStatisticsEnabled()) { //REFACTOR
                 Calendar cal = Calendar.getInstance();
-                SafeSql sql = MTC.instance().getSql();
+                SpigotSql sql = plugin.getSql();
                 String todayString = new SimpleDateFormat("YYYYMMdd").format(cal.getTime());
                 String hourString = new SimpleDateFormat("HHmm").format(cal.getTime());
-                String serverName = MTC.instance().getConfig().getString("servername");
+                String serverName = plugin.getConfig().getString("servername");
                 if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) > 45) {//there will have been 3 opportunities for the job to be executed, so safe
 
                     try (QueryResult qr = sql.executeQueryWithResult("SELECT day FROM " + sql.dbName + ".mtc_userstats WHERE serverid=? AND day=?",

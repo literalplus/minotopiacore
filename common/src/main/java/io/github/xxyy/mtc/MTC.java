@@ -270,11 +270,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.getCommand("playerhead").setExecutor(new CommandPlayerHead());
         this.getCommand("giveall").setExecutor(new CommandGiveAll());
         if (this.getConfig().getBoolean("enable.command.breload", true)) {
-            this.getCommand("breload").setExecutor(new CommandBReload());
+            this.getCommand("breload").setExecutor(new CommandBReload(this));
         }
         if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
             this.getCommand("globalmute").setExecutor(new CommandGlobalMute());
-            this.getCommand("chatclear").setExecutor(new CommandChatClear());
+            this.getCommand("chatclear").setExecutor(new CommandChatClear(this));
             this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe(this));
             this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
@@ -291,7 +291,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         }
         this.getCommand("list").setExecutor(new CommandList());
         this.setExecAndCompleter(new CommandPeace(), "frieden");
-        this.setExec(new CommandRandom(), "random");
+        this.setExec(new CommandRandom(this), "random");
     }
 
     private void registerEventListeners(PluginManager pm) {
@@ -304,7 +304,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         }
         if (ConfigHelper.isEnableTablist() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {
-            pm.registerEvents(new MainJoinListener(), this);
+            pm.registerEvents(new MainJoinListener(this), this);
         }
 
         if (this.getConfig().getBoolean("enable.antilogout", false)) {
@@ -319,7 +319,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new DmgPotionListener(), "enable.betterdmgpotions", true);
         this.regEvents(pm, new MinecartPortalListener(), "enable.fixes.minecartPortal", true);
         this.regEvents(pm, new NetherPortalExpDupeListener(this), "enable.fixes.expPortal", true);
-        this.regEvents(pm, new EnderPearlProjectileLaunchListener(), "enable.enderpearlListener", true);
+        this.regEvents(pm, new EnderPearlProjectileLaunchListener(this), "enable.enderpearlListener", true);
         this.regEvents(pm, new AntiFreeCamListener(), "enable.fixes.freecam", true);
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
         this.regEvents(pm, new AntiInfPotionListener(), "enable.infPotionFix", true);
@@ -336,7 +336,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             pm.registerEvents(new StatsDeathListener(), this);
         }
         if (ConfigHelper.isMagicSnowballEnabled()) {
-            pm.registerEvents(new MagicSnowballHitListener(), this);
+            pm.registerEvents(new MagicSnowballHitListener(this), this);
         }
         pm.registerEvents(new MainCommandListener(this), this);
     }

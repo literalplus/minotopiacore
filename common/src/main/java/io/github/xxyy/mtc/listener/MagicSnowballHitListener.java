@@ -32,6 +32,11 @@ import java.util.Random;
 public final class MagicSnowballHitListener implements Listener {
 
     protected List<String> deniedPlayers = new ArrayList<>();
+    private final MTC plugin;
+
+    public MagicSnowballHitListener(MTC plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 // this HAS to ignore if the damage was already cancelled by ClanDamage.. and MUST therefore be called afterwards...
@@ -71,7 +76,9 @@ public final class MagicSnowballHitListener implements Listener {
         hitLoc.getWorld().createExplosion(hitLoc.getX(), hitLoc.getY(), hitLoc.getZ(), 1.0F, false, false);
 
         MTCHelper.sendLocArgs("XU-snowballtarget", plr, true, plrShooter.getName());
-        Bukkit.getScheduler().runTaskLater(MTC.instance(), new RunnableMagicSnowballTimeout(plrShooter.getName()), ConfigHelper.getSnowballTimeoutTicks());
+        Bukkit.getScheduler().runTaskLater(plugin,
+                new RunnableMagicSnowballTimeout(plrShooter.getName()),
+                ConfigHelper.getSnowballTimeoutTicks());
     }
 
     protected class RunnableMagicSnowballTimeout implements Runnable {
