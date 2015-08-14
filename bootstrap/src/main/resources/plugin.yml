@@ -7,6 +7,9 @@ depend: [XYC]
 softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials, HolographicDisplays, HologrpahicDisplaysPatch]
 website: http://xxyy.github.io/
 
+permissions:
+  mtc.exception:
+    default: false
 
 commands:
   gtime:

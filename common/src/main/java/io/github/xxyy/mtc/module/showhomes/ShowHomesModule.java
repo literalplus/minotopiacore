@@ -39,7 +39,9 @@ public class ShowHomesModule extends ConfigurableMTCModule {
     private File essentialsUserdataFolder;
 
     private final Multimap<UUID, Home> holosByExecutingUser = HashMultimap.create(3, 40);
-    /** Automatic holograms remove task */
+    /**
+     * Automatic holograms remove task
+     */
     private final Map<UUID, Integer> taskIdByUser = new HashMap<>();
 
     private int defaultRadius = DEFAULT_RADIUS_DEFAULT;
@@ -204,10 +206,11 @@ public class ShowHomesModule extends ConfigurableMTCModule {
     @Deprecated //TODO remove deprecation
     public void handleException(Throwable t) {
         String exceptionString = ExceptionUtils.getFullStackTrace(t);
-        Player janmm14 = Bukkit.getPlayerExact("Janmm14");
-        if (janmm14 != null) {
-            janmm14.sendMessage(exceptionString);
-        }
+
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> player.hasPermission("mtc.exceptions"))
+                .forEach(player -> player.sendMessage(exceptionString));
+
         t.printStackTrace();
     }
 
