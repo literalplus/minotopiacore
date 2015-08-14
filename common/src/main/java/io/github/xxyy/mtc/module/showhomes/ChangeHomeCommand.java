@@ -1,7 +1,6 @@
 package io.github.xxyy.mtc.module.showhomes;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -20,11 +19,14 @@ import java.util.stream.Collectors;
  *
  * @author Janmm14
  */
-@RequiredArgsConstructor
 public class ChangeHomeCommand implements TabExecutor {
 
     @NonNull
     private final ShowHomesModule module;
+
+    public ChangeHomeCommand(ShowHomesModule module) {
+        this.module = module;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {

@@ -4,7 +4,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.VisibilityManager;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
-import lombok.*;
+import lombok.NonNull;
 import org.bukkit.Location;
 
 import java.util.Set;
@@ -14,17 +14,18 @@ import java.util.UUID;
  * Class representing an Essentials home.
  * @author Janmm14
  */
-@RequiredArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode(of = "name")
-@ToString(exclude = "hologram")
 public class Home {
 
     private final EssentialsDataUser essentialsDataUser;
     private final Location location;
     private final String name;
     private Hologram hologram;
+
+    public Home(EssentialsDataUser essentialsDataUser, Location location, String name) {
+        this.essentialsDataUser = essentialsDataUser;
+        this.location = location;
+        this.name = name;
+    }
 
     public void showHologram(@NonNull ShowHomesModule module, UUID executor) {
         try {
@@ -70,5 +71,43 @@ public class Home {
         hologram.delete();
         hologram = null;
         return true;
+    }
+
+    public EssentialsDataUser getEssentialsDataUser() {
+        return this.essentialsDataUser;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Hologram getHologram() {
+        return this.hologram;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Home)) return false;
+        final Home other = (Home) o;
+        final Object otherName = other.getName();
+        return !(this.name == null ? otherName != null : !this.name.equals(otherName));
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        result = result * PRIME + (this.name == null ? 0 : this.name.hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "io.github.xxyy.mtc.module.showhomes.Home(essentialsDataUser=" + this.essentialsDataUser + ", location=" + this.location + ", name=" + this.name + ")";
     }
 }

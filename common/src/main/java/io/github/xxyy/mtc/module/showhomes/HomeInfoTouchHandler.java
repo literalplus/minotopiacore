@@ -2,7 +2,6 @@ package io.github.xxyy.mtc.module.showhomes;
 
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -18,13 +17,17 @@ import java.util.UUID;
  *
  * @author Janmm14
  */
-@RequiredArgsConstructor
 public class HomeInfoTouchHandler implements TouchHandler {
 
     @NonNull
     private final Home home;
     @NonNull
     private final Set<UUID> plrsToShow;
+
+    public HomeInfoTouchHandler(Home home, Set<UUID> plrsToShow) {
+        this.home = home;
+        this.plrsToShow = plrsToShow;
+    }
 
     @Override
     public void onTouch(Player player) {

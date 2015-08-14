@@ -1,7 +1,7 @@
 package io.github.xxyy.mtc.module.showhomes;
 
 import io.github.xxyy.common.util.LocationHelper;
-import lombok.*;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,10 +22,6 @@ import java.util.logging.Level;
  *
  * @author Janmm14
  */
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = "uuid")
-@ToString(exclude = {"homes", "file", "module"})
 public final class EssentialsDataUser {
 
     @NonNull
@@ -38,6 +34,13 @@ public final class EssentialsDataUser {
     private final File file;
     @NonNull
     private Set<Home> homes = new HashSet<>();
+
+    private EssentialsDataUser(ShowHomesModule module, UUID uuid, String lastName, File file) {
+        this.module = module;
+        this.uuid = uuid;
+        this.lastName = lastName;
+        this.file = file;
+    }
 
     /**
      * Deletes a home of this user.
@@ -178,5 +181,53 @@ public final class EssentialsDataUser {
             module.handleException(ex);
             return null;
         }
+    }
+
+    @NonNull
+    public ShowHomesModule getModule() {
+        return this.module;
+    }
+
+    @NonNull
+    public UUID getUuid() {
+        return this.uuid;
+    }
+
+    @NonNull
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    @NonNull
+    public File getFile() {
+        return this.file;
+    }
+
+    @NonNull
+    public Set<Home> getHomes() {
+        return this.homes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof EssentialsDataUser)) return false;
+        final EssentialsDataUser other = (EssentialsDataUser) o;
+        final Object otherUuid = other.getUuid();
+        if (this.uuid == null ? otherUuid != null : !this.uuid.equals(otherUuid)) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        result = result * PRIME + (this.uuid == null ? 0 : this.uuid.hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "io.github.xxyy.mtc.module.showhomes.EssentialsDataUser(uuid=" + this.uuid + ", lastName=" + this.lastName + ")";
     }
 }

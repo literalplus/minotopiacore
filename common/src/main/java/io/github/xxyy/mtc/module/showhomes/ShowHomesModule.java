@@ -6,7 +6,6 @@ import com.google.common.collect.Multimap;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
  *
  * @author Janmm14
  */
-@Getter
 public class ShowHomesModule extends ConfigurableMTCModule {
 
     public static final String NAME = "ShowHomes";
@@ -137,11 +135,11 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         return null;
     }
 
-    private boolean isSimilarHomeDisplayed(Home home) {
+    public boolean isSimilarHomeDisplayed(Home home) {
         return holosByExecutingUser.containsValue(home);
     }
 
-    private List<Home> getHomesInRadius(Player plr, Location center, int xzRadius) throws IOException {
+    public List<Home> getHomesInRadius(Player plr, Location center, int xzRadius) throws IOException {
         List<Home> homes = new ArrayList<>();
         int radius2 = xzRadius * xzRadius; //use squared distance, faster
         //makes distance just X and Z sensible
@@ -197,41 +195,6 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         return homes;
     }
 
-    public Set<Home> showHolograms(@NonNull Player plr, int radius) {
-        try {
-            Set<Home> homes = getHomesInRadius(plr, plr.getLocation(), radius).stream()
-                    .filter(home -> !isSimilarHomeDisplayed(home))
-                    .collect(Collectors.toSet());
-            final int amountOfRepeats = (homes.size() % hologramRateLimit) + 1;
-
-            for (int i = 0; i < amountOfRepeats; i++) {
-                int iFinal = i;
-                int jStart = i * amountOfRepeats;
-                int max = Math.min(jStart + amountOfRepeats, homes.size());
-                getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), () -> {
-                    try {
-                        for (int j = jStart; j < max; j++) {
-                            //Home home = homes.get(j);//TODO fix
-                            ;
-                            //home.showHologram(this);
-                        }
-                        if (iFinal == (amountOfRepeats - 1)) {
-                            plr.sendMessage("§6Alle Homes dargestellt.");
-                        }
-                    } catch (Exception ex) {
-                        handleException(ex);
-                    }
-                }, i);
-            }
-            plr.sendMessage("§6Stelle Homes dar...");
-
-            return homes;
-        } catch (Exception ex) {
-            handleException(new Exception("showHolograms(" + plr + ", " + radius + ")", ex));
-            return null;
-        }
-    }
-
     public static Set<UUID> getPlayersWithShowHomesPermission() {
         Collection<? extends Player> plrs = Bukkit.getOnlinePlayers();
         return plrs.stream()
@@ -258,4 +221,27 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         return taskIdByUser;
     }
 
+    public File getEssentialsUserdataFolder() {
+        return this.essentialsUserdataFolder;
+    }
+
+    public int getDefaultRadius() {
+        return this.defaultRadius;
+    }
+
+    public int getMinRadius() {
+        return this.minRadius;
+    }
+
+    public int getMaxRadius() {
+        return this.maxRadius;
+    }
+
+    public int getHologramDuration() {
+        return this.hologramDuration;
+    }
+
+    public int getHologramRateLimit() {
+        return this.hologramRateLimit;
+    }
 }

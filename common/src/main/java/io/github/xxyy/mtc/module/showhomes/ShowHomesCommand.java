@@ -2,7 +2,6 @@ package io.github.xxyy.mtc.module.showhomes;
 
 import com.google.common.base.Joiner;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -15,12 +14,16 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class ShowHomesCommand implements CommandExecutor {
 
     @NonNull
     private final ShowHomesModule module;
+
+    public ShowHomesCommand(ShowHomesModule module) {
+        this.module = module;
+    }
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmd, String alias, String[] args) {
@@ -129,7 +132,7 @@ public class ShowHomesCommand implements CommandExecutor {
                 }
 
                 //show holograms
-                Set<Home> homes = module.showHolograms(plr, radius);
+                Set<Home> homes = showHolograms(plr, radius);
                 if (homes == null) {
                     return;
                 }
@@ -153,6 +156,41 @@ public class ShowHomesCommand implements CommandExecutor {
         });
 
         return true;
+    }
+
+    public Set<Home> showHolograms(@NonNull Player plr, int radius) {
+        try {
+            Set<Home> homes = module.getHomesInRadius(plr, plr.getLocation(), radius).stream()
+                    .filter(home -> !module.isSimilarHomeDisplayed(home))
+                    .collect(Collectors.toSet());
+            final int amountOfRepeats = (homes.size() % module.getHologramRateLimit()) + 1;
+
+            for (int i = 0; i < amountOfRepeats; i++) {
+                int iFinal = i;
+                int jStart = i * amountOfRepeats;
+                int max = Math.min(jStart + amountOfRepeats, homes.size());
+                module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), () -> { //TODO own class, turn into repeating task
+                    try {
+                        for (int j = jStart; j < max; j++) {
+                            //Home home = homes.get(j);//TODO fix
+                            ;
+                            //home.showHologram(this);
+                        }
+                        if (iFinal == (amountOfRepeats - 1)) {
+                            plr.sendMessage("§6Alle Homes dargestellt.");
+                        }
+                    } catch (Exception ex) {
+                        module.handleException(ex);
+                    }
+                }, i);
+            }
+            plr.sendMessage("§6Stelle Homes dar...");
+
+            return homes;
+        } catch (Exception ex) {
+            module.handleException(new Exception("showHolograms(" + plr + ", " + radius + ")", ex));
+            return null;
+        }
     }
 
     private boolean showHelp(Player plr) {
