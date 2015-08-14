@@ -100,7 +100,7 @@ public class ModuleManager {
      */
     public List<Class<? extends MTCModule>> findShippedModules() {
         return reflections.getSubTypesOf(MTCModule.class).stream()
-                .filter(clazz -> Modifier.isAbstract(clazz.getModifiers()))
+                .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
                 .collect(Collectors.toList());
     }
 
