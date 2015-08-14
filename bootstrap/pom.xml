@@ -126,6 +126,7 @@
                             <include>io.github.xxyy.mtc:*</include>
                             <include>mkremins:fanciful</include>
                             <include>org.reflections:reflections</include>
+                            <include>org.javassist:javassist</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -136,6 +137,10 @@
                         <relocation>
                             <pattern>org.reflections</pattern>
                             <shadedPattern>io.github.xxyy.lib.org.reflections</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.javassist</pattern>
+                            <shadedPattern>io.github.xxyy.lib.org.javassist</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
