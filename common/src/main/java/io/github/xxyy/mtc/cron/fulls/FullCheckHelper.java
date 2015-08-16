@@ -7,17 +7,18 @@
 
 package io.github.xxyy.mtc.cron.fulls;
 
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.fulltag.FullInfo;
-import io.github.xxyy.mtc.fulltag.FullTagHelper;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.fulltag.FullInfo;
+import io.github.xxyy.mtc.fulltag.FullTagHelper;
+import io.github.xxyy.mtc.helper.MTCHelper;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -101,13 +102,6 @@ public final class FullCheckHelper {
         Bukkit.getScheduler().runTaskAsynchronously(MTC.instance(), fullInfo::flush);
     }
 
-    public interface FullCheckExecutor {
-        /**
-         * @return IDs of all already checked Fulls.
-         */
-        Collection<Integer> getCheckedFullIds();
-    }
-
     public enum FullCheckResult {
         STACKED("gestackt"),
         DUPED("doppelt"),
@@ -116,7 +110,7 @@ public final class FullCheckHelper {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private final String verb;
 
-        private FullCheckResult(String verb) {
+        FullCheckResult(String verb) {
             this.verb = verb;
         }
 
@@ -128,5 +122,12 @@ public final class FullCheckHelper {
             return MTC.chatPrefix + "§cEin Fullteil in deinem Inventar ist " + verb + " und wurde daher entfernt." +
                     " §eFür Beschwerden notiere dir bitte unbedingt das aktuelle Datum und melde dich frühstmöglich!";
         }
+    }
+
+    public interface FullCheckExecutor {
+        /**
+         * @return IDs of all already checked Fulls.
+         */
+        Collection<Integer> getCheckedFullIds();
     }
 }

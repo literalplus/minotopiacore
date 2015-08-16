@@ -314,7 +314,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                     HelpManager.tryPrintHelp("mtc", sender, label, "", "mtc help mtc");
                     return true;
                 }
-                final String fetchedValue = String.valueOf(MTC.instance().getConfig().get(args[2]));
+                final String fetchedValue = String.valueOf(plugin.getConfig().get(args[2]));
                 sender.sendMessage("§7Der Wert §3" + args[2] + "§7 ist im Moment gesetzt auf: §3" + fetchedValue + "§e.");
                 break;
             case "reload":

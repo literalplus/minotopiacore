@@ -7,8 +7,8 @@
 
 package io.github.xxyy.mtc.module.chal;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 
@@ -25,6 +25,15 @@ class ChalDate {
     ChalDate(int month, int day) {
         this.month = month;
         this.day = day;
+    }
+
+    public static ChalDate deserialize(String serialized) {
+        Validate.isTrue(serialized.contains("-"), "Invalid format: Missing dash: ", serialized);
+        String[] parts = serialized.split("-");
+        Validate.isTrue(parts.length == 2, "Invalid format: There must be exactly one dash: ", serialized);
+        Validate.isTrue(StringUtils.isNumeric(parts[0]), "Part 1 must be numeric: ", serialized);
+        Validate.isTrue(StringUtils.isNumeric(parts[1]), "Part 2 must be numeric: ", serialized);
+        return new ChalDate(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
 
     public int getMonth() {
@@ -72,14 +81,5 @@ class ChalDate {
         int result = month;
         result = 31 * result + day;
         return result;
-    }
-
-    public static ChalDate deserialize(String serialized) {
-        Validate.isTrue(serialized.contains("-"), "Invalid format: Missing dash: ", serialized);
-        String[] parts = serialized.split("-");
-        Validate.isTrue(parts.length == 2, "Invalid format: There must be exactly one dash: ", serialized);
-        Validate.isTrue(StringUtils.isNumeric(parts[0]), "Part 1 must be numeric: ", serialized);
-        Validate.isTrue(StringUtils.isNumeric(parts[1]), "Part 2 must be numeric: ", serialized);
-        return new ChalDate(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
     }
 }

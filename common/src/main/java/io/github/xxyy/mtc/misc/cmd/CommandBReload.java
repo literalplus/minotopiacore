@@ -28,9 +28,13 @@ import java.util.List;
 public final class CommandBReload extends MTCCommandExecutor {
 
     public static int taskId = -2;
-
     private static final List<Integer> SECONDS = new ArrayList<>();
     private static final List<Long> DELAYS = new ArrayList<>();
+    private final MTC plugin;
+
+    public CommandBReload(MTC plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
@@ -88,12 +92,12 @@ public final class CommandBReload extends MTCCommandExecutor {
         RunnableReloadTimer.iDelays = CommandBReload.DELAYS.iterator();
         RunnableReloadTimer.seconds = CommandBReload.SECONDS;
         RunnableReloadTimer.iSeconds = CommandBReload.SECONDS.iterator();
-        CommandBReload.taskId = sched.runTaskLater(MTC.instance(), new RunnableReloadTimer(sender), 10).getTaskId();//message order
+        CommandBReload.taskId = sched.runTaskLater(plugin, new RunnableReloadTimer(sender, plugin), 10).getTaskId();//message order
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, ((secCount != 0) ? secCount * 60 : 30));
         Command.broadcastCommandMessage(sender, "§d§oScheduled Reload for " + (new SimpleDateFormat("HH:mm:ss")).format(cal.getTime()) + "§7§o");
-        Bukkit.getScheduler().runTask(MTC.instance(), new RunnableCronjob5Minutes(true, MTC.instance()));
+        Bukkit.getScheduler().runTask(plugin, new RunnableCronjob5Minutes(true, plugin));
         return true;
     }
 

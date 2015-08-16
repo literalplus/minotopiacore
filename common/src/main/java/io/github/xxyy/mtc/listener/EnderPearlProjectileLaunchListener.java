@@ -25,9 +25,14 @@ import java.util.Set;
 
 public final class EnderPearlProjectileLaunchListener implements Listener {
 
+    private final MTC plugin;
+
+    public EnderPearlProjectileLaunchListener(MTC plugin) {
+        this.plugin = plugin;
+    }
+
     @EventHandler
     public void onProjectileLaunchEP(ProjectileLaunchEvent e) {
-//		System.out.println("CAUGHT PEARL!");
         if (e.getEntity().getType() != EntityType.ENDER_PEARL) {
             return;
         }
@@ -40,7 +45,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
 
         if (!shooter.hasPermission("mtc.enderpearl.use")) {
             e.setCancelled(true);
-            shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", shooter.getName(), MTC.instance().getName()));
+            shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", shooter.getName(), plugin.getName()));
             EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
@@ -48,7 +53,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
         for (Block lineOfSightItem : lineOfSight) {
             if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);
-                shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", shooter.getName(), MTC.instance().getName()));
+                shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", shooter.getName(), plugin.getName()));
                 EnderPearlProjectileLaunchListener.returnPearl(shooter);
                 return;
             }
