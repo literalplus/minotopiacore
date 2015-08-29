@@ -26,7 +26,20 @@ public class ShopModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) {
+    public boolean canBeEnabled(MTC plugin) {
+        if (!plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
+            getPlugin().getLogger().warning("[" + NAME + "] Could not be enabled because Vault is not installed or enabled.");
+            return false;
+        }
+        if (!plugin.getVaultHook().isEconomyHooked()) {
+            getPlugin().getLogger().warning("[" + NAME + "] Could not be enabled because Vault did not hooked Economy. Make sure you use a money/economy plugin supported by Vault.");
+            return false;
+        }
+        return super.canBeEnabled(plugin);
+    }
+
+    @Override
+    public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, getPlugin());
 
@@ -35,12 +48,16 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-
+        //TODO (re-)read from cfg
     }
 
     @Override
     public void save() {
         itemConfig.trySave();
         super.save();
+    }
+
+    public ShopItemConfiguration getItemConfig() {
+        return itemConfig;
     }
 }
