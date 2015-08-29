@@ -23,24 +23,28 @@ public class ShopItem {
     public static final String ALIASES_PATH = "aliases";
     public static final String BUY_COST_PATH = "buy";
     public static final String SELL_WORTH_PATH = "sell";
+    public static final String DISPLAY_NAME_PATH = "display_name";
 
     private final Material material;
     private final byte dataValue;
     private final String serialisationName;
     private final List<String> aliases;
-    private int buyCost;
-    private int sellWorth;
+    private float buyCost;
+    private float sellWorth;
+    private String displayName;
 
-    protected ShopItem(int buyCost, int sellWorth, Material material, byte dataValue, List<String> aliases) {
+    protected ShopItem(float buyCost, float sellWorth, Material material, byte dataValue, List<String> aliases, String displayName) {
         Validate.notNull(material, "material");
         Validate.notNull(aliases, "aliases");
         Validate.isTrue(buyCost > 0, "buyCost must be greater than 0");
         Validate.isTrue(sellWorth > 0, "sellWorth must be greater than 0");
+        Validate.isTrue(dataValue > -2, "dataValue must be greater than -1");
         this.buyCost = buyCost;
         this.sellWorth = sellWorth;
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
+        this.displayName = displayName;
 
         this.serialisationName = dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
     }
@@ -69,7 +73,7 @@ public class ShopItem {
     /**
      * @return the amount of virtual money that players have to pay in order to be sold this item
      */
-    public int getBuyCost() {
+    public float getBuyCost() {
         return buyCost;
     }
 
@@ -78,14 +82,14 @@ public class ShopItem {
      *
      * @param buyCost the cost of this item
      */
-    public void setBuyCost(int buyCost) {
+    public void setBuyCost(float buyCost) {
         this.buyCost = buyCost;
     }
 
     /**
      * @return the amount of virtual money that players get upon selling this item
      */
-    public int getSellWorth() {
+    public float getSellWorth() {
         return sellWorth;
     }
 
@@ -94,7 +98,7 @@ public class ShopItem {
      *
      * @param sellWorth the worth of this item
      */
-    public void setSellWorth(int sellWorth) {
+    public void setSellWorth(float sellWorth) {
         this.sellWorth = sellWorth;
     }
 
@@ -111,6 +115,7 @@ public class ShopItem {
         result.set(ALIASES_PATH, aliases);
         result.set(BUY_COST_PATH, buyCost);
         result.set(SELL_WORTH_PATH, sellWorth);
+        result.set(DISPLAY_NAME_PATH, displayName);
         return result;
     }
 
@@ -119,6 +124,13 @@ public class ShopItem {
      */
     public String getSerializationName() {
         return serialisationName;
+    }
+
+    /**
+     * @return the display name of this item to be used in output
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 
     /**
@@ -139,8 +151,9 @@ public class ShopItem {
         List<String> aliases = section.getStringList(ALIASES_PATH);
         int cost = section.getInt(BUY_COST_PATH);
         int worth = section.getInt(SELL_WORTH_PATH);
+        String displayName = section.getString(DISPLAY_NAME_PATH);
 
-        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases);
+        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases, displayName);
     }
 
     @Override
@@ -173,6 +186,7 @@ public class ShopItem {
                 ", aliases=" + aliases +
                 ", buyCost=" + buyCost +
                 ", sellWorth=" + sellWorth +
+                ", displayName=" + displayName +
                 '}'; //IntelliJ says that this is "at least as efficient or more efficient" than StringBuilder
     }
 

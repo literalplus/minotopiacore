@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.collect.Lists;
+import io.github.xxyy.lib.guava17.collect.Table;
 import org.bukkit.Material;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,9 +31,9 @@ import static org.mockito.Mockito.mock;
  */
 public class ShopItemConfigurationTest {
     private static ShopItem POTATO = new ShopItem(1, 3, Material.POTATO, (byte) -1,
-            Lists.newArrayList("yolo", "potatos", "Kartoffel"));
+            Lists.newArrayList("yolo", "potatos", "Kartoffel"), "Kartoffel");
     private static ShopItem DIAMOND = new ShopItem(5, 7, Material.DIAMOND, (byte) 42,
-            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"));
+            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), "Diamant");
     private ShopItemConfiguration config;
 
     @Before
@@ -44,11 +45,11 @@ public class ShopItemConfigurationTest {
     @Test
     public void testLoadFromString() throws Exception {
         String serialized = config.saveToString();
-        Map<String, ShopItem> items = config.getShopItems();
+        Table<Material, Byte, ShopItem> items = config.getShopItemTable();
         Map<String, ShopItem> aliases = config.getItemAliases();
 
         config.loadFromString(serialized);
-        assertThat("Items not loaded correctly/equals not functioning", config.getShopItems(), is(items));
+        assertThat("Items not loaded correctly/equals not functioning", config.getShopItemTable(), is(items));
         assertThat("Aliases not loaded correctly/equals not functioning", config.getItemAliases(), is(aliases));
     }
 

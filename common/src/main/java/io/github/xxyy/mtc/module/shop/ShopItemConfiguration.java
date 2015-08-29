@@ -7,17 +7,16 @@
 
 package io.github.xxyy.mtc.module.shop;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-
 import io.github.xxyy.lib.guava17.collect.HashBasedTable;
-import io.github.xxyy.lib.guava17.collect.ImmutableMap;
+import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,15 +172,15 @@ class ShopItemConfiguration extends ManagedConfiguration {
      */
     public boolean removeItem(ShopItem item) {
         Validate.notNull(item, "item");
-        String key = shopItems.entrySet().stream()
+        Table.Cell<Material, Byte, ShopItem> key = shopItems.cellSet().stream()
                 .filter(e -> e.getValue().equals(item))
-                .findAny().orElse(null).getKey();
+                .findAny().orElse(null);
 
         if (key == null) {
             return false;
         }
 
-        shopItems.remove(key);
+        shopItems.remove(key.getRowKey(), key.getColumnKey());
 
         itemAliases.values()
                 .removeIf(Predicate.isEqual(item));
@@ -189,8 +188,8 @@ class ShopItemConfiguration extends ManagedConfiguration {
         return true;
     }
 
-    public Map<String, ShopItem> getShopItems() {
-        return ImmutableMap.copyOf(shopItems);
+    public Table<Material, Byte, ShopItem> getShopItemTable() {
+        return ImmutableTable.copyOf(shopItems);
     }
 
     public Map<String, ShopItem> getItemAliases() {
