@@ -60,6 +60,10 @@ public final class VaultHookImpl implements Hook {
         return getEconomy().depositPlayer(offlinePlayer, amount);
     }
 
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
+        return getEconomy().withdrawPlayer(offlinePlayer, amount);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Chat getChat() {

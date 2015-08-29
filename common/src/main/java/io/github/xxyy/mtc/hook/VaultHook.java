@@ -51,6 +51,14 @@ public class VaultHook extends SimpleHookWrapper {
         return unsafe.depositPlayer(offlinePlayer, amount);
     }
 
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double amount) {
+        if(!isEconomyHooked()) {
+            throw new IllegalStateException("Economy not hooked!");
+        }
+
+        return unsafe.withdrawPlayer(offlinePlayer, amount);
+    }
+
     //// ACTIVITY METHODS //////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean arePermissionsHooked() {
