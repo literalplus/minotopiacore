@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.misc;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.misc.cmd.CommandLore;
+import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -65,7 +66,7 @@ public class LoreManager {
             return false;
         }
         for (String str : lore) {
-            if (str.startsWith("§9full:")) {
+            if (str.startsWith(FullTagModule.FULL_LORE_PREFIX)) {
                 this.sender.sendMessage("§4Du kannst die Lore einer registrierten Full-Rüstung nicht editieren!");
                 return true;
             }

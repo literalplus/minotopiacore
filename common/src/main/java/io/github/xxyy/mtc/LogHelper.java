@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 public final class LogHelper {
 
     private static final Logger MAIN_LOGGER = Logger.getLogger("MTC");
-    private static final Logger FULL_LOGGER = Logger.getLogger("MTC.FULLS");
 
     private LogHelper() {
 
@@ -32,15 +31,6 @@ public final class LogHelper {
 
     public static void flushAll() {
         LogHelper.flush(LogHelper.MAIN_LOGGER);
-        LogHelper.flush(LogHelper.FULL_LOGGER);
-    }
-
-    public static Logger getFullLogger() {
-        return LogHelper.FULL_LOGGER;
-    }
-
-    public static Logger getMainLogger() {
-        return LogHelper.MAIN_LOGGER;
     }
 
     public static void initLogs() {
@@ -81,11 +71,7 @@ public final class LogHelper {
                 System.out.println(">>MTC exception when tryin to initialize cmd loggerz.");
             }
         }
-        if (ConfigHelper.isFullLogEnabled()) {
-            LogHelper.tryInitLogger(LogHelper.FULL_LOGGER, MTC.instance().getDataFolder() + "/logs/fulls.log", "FullLogger", true);
-        }
         LogHelper.MAIN_LOGGER.setUseParentHandlers(false);
-        LogHelper.FULL_LOGGER.setUseParentHandlers(false);
     }
 
     private static void flush(Logger lgr) {
