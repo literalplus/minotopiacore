@@ -49,18 +49,24 @@
                      filePattern="${sys:mtc.logsdir}fulltag/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="${pattern}"/>
             <TimeBasedTriggeringPolicy/>
-            <DefaultRolloverStrategy max="60"/>
+            <DefaultRolloverStrategy max="100"/>
         </RollingFile>
-        <RollingFile name="FullTagDistLogFile" fileName="${sys:mtc.logsdir}fulltag-dist.log"
+        <RollingFile name="FullTagCmdLogFile" fileName="${sys:mtc.logsdir}fulltag-cmd.log"
                      filePattern="${sys:mtc.logsdir}fulltag-cmd/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="${pattern}"/>
             <TimeBasedTriggeringPolicy/>
-            <DefaultRolloverStrategy max="60"/>
+            <DefaultRolloverStrategy max="200"/>
         </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="io.github.xxyy.mtc" level="info" additivity="false">
             <AppenderRef ref="MiscLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.module.fulltag" level="info" additivity="false">
+            <AppenderRef ref="FullTagLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.module.fulltag.CommandFullTag" level="info" additivity="false">
+            <AppenderRef ref="FullTagCmdLogFile"/>
         </Logger>
         <Logger name="io.github.xxyy.mtc.chat" level="info" additivity="false">
             <AppenderRef ref="ChatLogFile"/>
