@@ -27,10 +27,10 @@
     </scm>
 
     <distributionManagement>
-        <downloadUrl>http://www.minotopia.de/ci/job/pvp~mtc/</downloadUrl>
+        <downloadUrl>https://ci.minotopia.me/job/pvp~mtc/</downloadUrl>
         <repository>
             <id>xxyy-repo</id>
-            <url>http://server.nowak-at.net/repo/xxyy-private/</url>
+            <url>https://repo.nowak-at.net/xxyy-private/</url>
         </repository>
     </distributionManagement>
 
@@ -80,7 +80,7 @@
         <repository>
             <id>xxyy-libs-snapshot</id>
             <!-- HolographicDisplays -->
-            <url>http://server.nowak-at.net/repo/ext-release-local/</url>
+            <url>https://repo.nowak-at.net/ext-release-local/</url>
         </repository>
         <repository>
             <id>fanciful-repo</id>
@@ -90,7 +90,7 @@
         <repository>
             <id>xxyy-repo</id>
             <!-- xLogin, etc. -->
-            <url>http://server.nowak-at.net/repo/xxyy-private/</url>
+            <url>https://repo.nowak-at.net/xxyy-private/</url>
         </repository>
     </repositories>
 
