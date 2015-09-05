@@ -11,13 +11,13 @@ import org.bukkit.plugin.Plugin;
 import org.reflections.Reflections;
 
 import io.github.xxyy.lib.guava17.base.Preconditions;
+import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
 
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,6 @@ public class ModuleManager {
     private final MTC plugin;
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
-    private final Collection<MTCModule> enabledModulesView = Collections.unmodifiableMap(enabledModules).values();
     private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
 
     public ModuleManager(MTC plugin) {
@@ -45,7 +44,7 @@ public class ModuleManager {
      * @return a view of the set of currently enabled modules
      */
     public Collection<MTCModule> getEnabledModules() {
-        return enabledModulesView;
+        return ImmutableSet.copyOf(enabledModules.values());
     }
 
     /**
