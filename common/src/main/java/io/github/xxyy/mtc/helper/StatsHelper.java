@@ -76,7 +76,7 @@ public class StatsHelper {
     }
     
     public static void fetchStats(String plrName){
-        SafeSql sql = MTC.instance().ssql;
+        SafeSql sql = MTC.instance().getSql();
         boolean fetchKills = !StatsHelper.killMap.containsKey(plrName);
         boolean fetchDeaths = !StatsHelper.deathMap.containsKey(plrName);
         if(!fetchKills && !fetchDeaths) {
