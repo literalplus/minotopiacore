@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import io.github.xxyy.lib.guava17.collect.ImmutableList;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -33,16 +34,19 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     }
 
     @Override
-    public boolean notifyOnMatch(String command, Player sender) {
-        logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
-        return super.notifyOnMatch(command, sender);
+    public boolean matches(String command, Player sender) {
+        if(super.matches(command, sender)) {
+            logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    protected Stream<Player> getOnlineSubscriberStream() {
-        return ImmutableList.copyOf(Bukkit.getOnlinePlayers())
-                .stream()
-                .filter(plr -> plr.hasPermission("mtc.cmdspy"));
+    protected List<Player> getOnlineSubscribers() {
+        List<Player> result = ImmutableList.copyOf(Bukkit.getOnlinePlayers());
+        result.removeIf(plr -> !plr.hasPermission("mtc.cmdspy"));
+        return result;
     }
 
     @Override

@@ -37,14 +37,22 @@ public interface CommandSpyFilter {
      *
      * @param command Command to be matched, without preceding slash.
      * @param sender  Who executed that command
-     * @return Whether a notification was sent to this filter's subscribers
      */
-    boolean notifyOnMatch(String command, Player sender);
+    void notifyOnMatch(String command, Player sender);
 
     /**
      * @return A modifiable Collection of this filter's subscribers
      */ //REFACTOR: Exposing internal representation? Is this bad maybe?
     Collection<UUID> getSubscribers();
+
+    void addSubscriber(Player newSubscriber);
+
+    /**
+     * Attempts to remove a subscriber by their unique id.
+     * @param uuid the unique id of the subscriber to remove
+     * @return if a subscriber has been removed
+     */
+    boolean removeSubscriber(UUID uuid);
 
     default String niceRepresentation() {
         return getClass().getSimpleName();

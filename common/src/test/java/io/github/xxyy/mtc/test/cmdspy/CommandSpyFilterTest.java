@@ -20,7 +20,9 @@ import io.github.xxyy.mtc.chat.cmdspy.RegExCommandSpyFilter;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static org.mockito.Mockito.when;
 
@@ -68,7 +70,7 @@ public class CommandSpyFilterTest {
     @Test
      public void testTextFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Arrays.asList(fakeSpy));
+        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "inert string";
@@ -83,7 +85,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testToggleTextFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Arrays.asList(fakeSpy));
+        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "inert string";
@@ -94,19 +96,19 @@ public class CommandSpyFilterTest {
     @Test
     public void testRegexFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Arrays.asList(fakeSpy));
+        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
-        String regex = "(.+?)woa\\2";
+        String regex = "(open)?inv(see)?";
         String rawRegex = "("+regex+")\\s*";
         CommandSpyFilter stringFilter = CommandSpyFilters.stringFilter("!r" + regex);
         Assert.assertTrue(stringFilter instanceof RegExCommandSpyFilter);
 
-        String matching = " something woa something ";
-        String notMatching = "something that contains woa but doesn't even match";
+        String matching = "invsee chris301234";
+        String notMatching = "shop kaufen xT0Bi";
 
-        Assert.assertTrue(matching.matches(rawRegex));
-        Assert.assertFalse(notMatching.matches(rawRegex));
+        Assert.assertTrue(Pattern.compile(rawRegex).matcher(matching).find());
+        Assert.assertFalse(Pattern.compile(rawRegex).matcher(notMatching).find());
 
         Assert.assertTrue("RegEx filter didn't match target!",
                 stringFilter.matches(matching, fakeSpy));
@@ -117,7 +119,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testToggleRegExFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Arrays.asList(fakeSpy));
+        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "!r(.+?)woa\\2";

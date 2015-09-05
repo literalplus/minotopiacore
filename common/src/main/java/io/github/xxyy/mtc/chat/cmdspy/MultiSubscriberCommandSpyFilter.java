@@ -7,14 +7,16 @@
 
 package io.github.xxyy.mtc.chat.cmdspy;
 
-import com.google.common.collect.ImmutableList;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
-import java.util.stream.Stream;
 
 /**
  * A CommandSpyFilter impl that allows for multiple subscribers and keeps them internally as a set of their UUIDs.
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
  */
 public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     private final Set<UUID> subscribers = new HashSet<>();
+    private final Map<Player, Void> subscriberPlayers = new WeakHashMap<>(); //values not used
     private final String notificationFormat;
 
     public MultiSubscriberCommandSpyFilter(String notificationFormat, BiPredicate<String, Player> predicate) {
@@ -33,14 +36,12 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     }
 
     public void notifySubscribers(String command, Player sender) {
-        getOnlineSubscriberStream()
+        getOnlineSubscribers()
                 .forEach(plr -> sendNotification(MessageFormat.format(getNotificationFormat(), sender.getName(), command), plr));
     }
 
-    protected Stream<Player> getOnlineSubscriberStream() {
-        return ImmutableList.copyOf(subscribers).stream() //Using the original would cause a CME
-                .map(this::getPlayerIfPresent)
-                .filter(p -> p != null);
+    protected Collection<Player> getOnlineSubscribers() {
+        return subscriberPlayers.keySet();
     }
 
     protected void sendNotification(String notificationMessage, Player plr) {
@@ -48,9 +49,22 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     }
 
     @Override
-    public boolean notifyOnMatch(String command, Player sender) {
+    public void notifyOnMatch(String command, Player sender) {
         if (matches(command, sender)) {
             notifySubscribers(command, sender);
+        }
+    }
+
+    @Override
+    public void addSubscriber(Player newSubscriber) {
+        getSubscribers().add(newSubscriber.getUniqueId());
+        subscriberPlayers.put(newSubscriber, null);
+    }
+
+    @Override
+    public boolean removeSubscriber(UUID uuid) {
+        if(getSubscribers().remove(uuid)) {
+            subscriberPlayers.keySet().removeIf(plr -> uuid.equals(plr.getUniqueId()));
             return true;
         }
         return false;
@@ -58,14 +72,6 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
 
     public Set<UUID> getSubscribers() {
         return subscribers;
-    }
-
-    private Player getPlayerIfPresent(UUID uuid) {
-        Player rtrn = Bukkit.getPlayer(uuid);
-        if (rtrn == null) {
-            subscribers.remove(uuid);
-        }
-        return rtrn;
     }
 
     protected String getNotificationFormat() {

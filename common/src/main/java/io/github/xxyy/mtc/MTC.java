@@ -31,7 +31,7 @@ import io.github.xxyy.mtc.chat.CommandGlobalMute;
 import io.github.xxyy.mtc.chat.CommandMute;
 import io.github.xxyy.mtc.chat.CommandPrivateChat;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.chat.cmdspy.CmdSpyListener;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
 import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
 import io.github.xxyy.mtc.clan.ui.CommandClan;
 import io.github.xxyy.mtc.clan.ui.CommandClanAdmin;
@@ -315,7 +315,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
-        this.regEvents(pm, new CmdSpyListener(), "enable.cmdspy", true);
+        this.regEvents(pm, new CommandSpyListener(), "enable.cmdspy", true);
         pm.registerEvents(new MainDamageListener(this), this);
         if (ConfigHelper.isProhibitCmdsInBoats()) {
             pm.registerEvents(new VehicleInventoryOpenListener(), this);

@@ -7,8 +7,9 @@
 
 package io.github.xxyy.mtc.chat.cmdspy;
 
-import io.github.xxyy.common.util.CommandHelper;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.util.CommandHelper;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -35,20 +36,30 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     }
 
     @Override
-    public boolean notifyOnMatch(String command, Player sender) {
-        return patterns.stream().filter(pattern -> {
+    public boolean matches(String command, Player sender) {
+        for(Pattern pattern : patterns) {
             Matcher matcher = pattern.matcher(command);
-
-            if (matcher.find()) {
-                String message = MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7 "));
-
-                getOnlineSubscriberStream()
-                        .forEach(plr -> plr.sendMessage(message));
-
+            if(matcher.find()) {
                 return true;
             }
-            return false;
-        }).findAny().isPresent();
+        }
+        return false;
+    }
+
+    @Override
+    public void notifyOnMatch(String command, Player sender) {
+        /*
+        This implementation is separate from #matches(...)Z so that we can mark matches in the notification
+         */
+        for(Pattern pattern : patterns) {
+            Matcher matcher = pattern.matcher(command);
+            if(matcher.find()) {
+                String message = MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7 "));
+
+                getOnlineSubscribers()
+                        .forEach(plr -> plr.sendMessage(message));
+            }
+        }
     }
 
     public boolean hasCommandName(String commandName) {

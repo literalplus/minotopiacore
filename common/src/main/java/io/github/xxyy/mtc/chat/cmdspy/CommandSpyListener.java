@@ -17,12 +17,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 20.6.14
  */
-public class CmdSpyListener implements Listener {
-    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR, ignoreCancelled = false)
+public class CommandSpyListener implements Listener {
+    @EventHandler(priority = org.bukkit.event.EventPriority.MONITOR, ignoreCancelled = true)
     public void onCmdSpy(PlayerCommandPreprocessEvent evt) {
         String cmd = evt.getMessage().substring(1, evt.getMessage().length());
 
-        CommandSpyFilters.getActiveFilters().stream()
-                .anyMatch(filter -> filter.notifyOnMatch(cmd, evt.getPlayer()));
+        for(CommandSpyFilter filter : CommandSpyFilters.getActiveFilters()) {
+            filter.notifyOnMatch(cmd, evt.getPlayer());
+        }
     }
 }

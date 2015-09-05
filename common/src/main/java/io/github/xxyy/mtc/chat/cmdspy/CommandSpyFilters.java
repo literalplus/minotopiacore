@@ -9,7 +9,6 @@ package io.github.xxyy.mtc.chat.cmdspy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
@@ -18,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public final class CommandSpyFilters {
             return "(global) all";
         }
     };
-    private static Set<CommandSpyFilter> activeFilters = Sets.newHashSet();
+    private static Set<CommandSpyFilter> activeFilters = new CopyOnWriteArraySet<>();
 
     private CommandSpyFilters() {
 
@@ -47,9 +47,9 @@ public final class CommandSpyFilters {
      * Use the {@link #registerFilter(CommandSpyFilter)} and {@link #unregisterFilter(CommandSpyFilter)} methods to add and remove filters.
      *
      * @return Unmodifiable Set containing registered filters.
-     */
+     */ //nobody needs to know that this is actually modifiable
     public static Set<CommandSpyFilter> getActiveFilters() {
-        return ImmutableSet.copyOf(activeFilters);
+        return activeFilters;
     }
 
     public static void registerFilter(CommandSpyFilter filter) {
@@ -65,7 +65,7 @@ public final class CommandSpyFilters {
      * This method ignores filters whose {@link CommandSpyFilter#canSubscribe()} method returns FALSE.
      */
     public static void removeDeadFilters() {
-        Set<CommandSpyFilter> filters = getActiveFilters().stream()
+        Set<CommandSpyFilter> filters = ImmutableSet.copyOf(getActiveFilters()).stream()
                 .filter(CommandSpyFilter::canSubscribe)
                 .collect(Collectors.toSet());
 
@@ -80,7 +80,7 @@ public final class CommandSpyFilters {
     public static void removeOfflineSubscribers(CommandSpyFilter filter) {
         ImmutableList.copyOf(filter.getSubscribers()).stream()
                 .filter(id -> Bukkit.getPlayer(id) == null)
-                .forEach(filter.getSubscribers()::remove);
+                .forEach(filter::removeSubscriber);
     }
 
     public static Stream<CommandSpyFilter> getSubscribedFilters(UUID subscriberId) {
@@ -90,7 +90,7 @@ public final class CommandSpyFilters {
 
     public static long unsubscribeFromAll(UUID subscriberId) {
         long rtrn = activeFilters.stream()
-                .filter(filter -> filter.canSubscribe() && filter.getSubscribers().remove(subscriberId))
+                .filter(filter -> filter.canSubscribe() && filter.removeSubscriber(subscriberId))
                 .count();
 
         removeDeadFilters();
@@ -99,10 +99,10 @@ public final class CommandSpyFilters {
     }
 
     public static boolean toggleSubscribedAndRegister(CommandSpyFilter filter, Player spy) {
-        if (filter.getSubscribers().remove(spy.getUniqueId())) {
+        if (filter.removeSubscriber(spy.getUniqueId())) {
             removeDeadFilters();
         } else {
-            filter.getSubscribers().add(spy.getUniqueId());
+            filter.addSubscriber(spy);
             registerFilter(filter);
         }
 
@@ -115,7 +115,7 @@ public final class CommandSpyFilters {
 
     public static boolean togglePlayerFilter(UUID targetId, Player spy) { //This could be generified more - see instanceof
         return toggleSubscribedAndRegister(activeFilters.stream()
-                .filter(f -> f instanceof PlayerCommandSpyFilter && ((PlayerCommandSpyFilter) f).getTarget().equals(targetId))
+                .filter(f -> f instanceof PlayerCommandSpyFilter && ((PlayerCommandSpyFilter) f).getTargetId().equals(targetId))
                 .findAny()
                 .orElseGet(() -> playerFilter(targetId)), spy);
     }
