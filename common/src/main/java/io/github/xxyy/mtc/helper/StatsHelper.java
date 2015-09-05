@@ -68,7 +68,7 @@ public class StatsHelper {
     }
     
     public static void createEntryBoth(String plrName, int kills, int deaths){
-        SafeSql sql = MTC.instance().ssql;
+        SafeSql sql = MTC.instance().getSql();
         sql.safelyExecuteUpdate("INSERT INTO "+sql.dbName+"."+Const.TABLE_STATS +
                 " SET user_name=?, kills="+kills+", deaths="+deaths, plrName);
         StatsHelper.killMap.put(plrName, kills);
