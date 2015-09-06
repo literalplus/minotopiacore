@@ -13,8 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -153,7 +152,7 @@ public final class CommandSpyFilters {
             );
         } else {
             PluginCommand foundCommand = Bukkit.getPluginCommand(input);
-            List<String> commandsToMatch = new LinkedList<>();
+            Set<String> commandsToMatch = new HashSet<>();
 
             commandsToMatch.add(input);
             if (foundCommand != null) {
