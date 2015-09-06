@@ -33,12 +33,19 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     }
 
     @Override
-    public boolean matches(String command, Player sender) {
+    public boolean matches(String command, Player sender) { //Doesn't work since super #notifyOnMatch doesn't call matches
         if(super.matches(command, sender)) {
             logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void notifyOnMatch(String command, Player sender) {
+        if (matches(command, sender)) {
+            notifySubscribers(command, sender);
+        }
     }
 
     @Override
