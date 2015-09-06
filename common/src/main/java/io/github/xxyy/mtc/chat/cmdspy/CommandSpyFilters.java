@@ -53,6 +53,7 @@ public final class CommandSpyFilters {
 
     public static void registerFilter(CommandSpyFilter filter) {
         activeFilters.add(filter);
+        System.out.println("register filter: " + filter.niceRepresentation());
     }
 
     public static void unregisterFilter(CommandSpyFilter filter) {

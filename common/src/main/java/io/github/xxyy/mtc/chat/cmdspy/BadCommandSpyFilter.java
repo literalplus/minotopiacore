@@ -42,13 +42,6 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     }
 
     @Override
-    public void notifyOnMatch(String command, Player sender) {
-        if (matches(command, sender)) {
-            notifySubscribers(command, sender);
-        }
-    }
-
-    @Override
     protected List<Player> getOnlineSubscribers() {
         List<Player> result = new ArrayList<>(Bukkit.getOnlinePlayers());
         result.removeIf(plr -> !plr.hasPermission("mtc.cmdspy"));
