@@ -28,7 +28,7 @@ import java.util.stream.Stream;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19.6.14
  */
-public final class CommandSpyFilters {
+public final class CommandSpyFilters { //TODO: This needs to be refactored into a Manager or so
     private static CommandSpyFilter ALL_FILTER = new MultiSubscriberCommandSpyFilter("§8[CmdSpy]§7{0}: §o/{1}", (cmd, plr) -> true) {
         @Override
         public String niceRepresentation() {
@@ -37,6 +37,10 @@ public final class CommandSpyFilters {
     };
     private static BadCommandSpyFilter BAD_COMMAND_FILTER = new BadCommandSpyFilter();
     private static Set<CommandSpyFilter> activeFilters = new CopyOnWriteArraySet<>();
+
+    static { //this is why we need to refactor it to a Manager
+        registerFilter(BAD_COMMAND_FILTER);
+    }
 
     private CommandSpyFilters() {
 
@@ -54,7 +58,6 @@ public final class CommandSpyFilters {
 
     public static void registerFilter(CommandSpyFilter filter) {
         activeFilters.add(filter);
-        System.out.println("register filter: " + filter.niceRepresentation());
     }
 
     public static void unregisterFilter(CommandSpyFilter filter) {
