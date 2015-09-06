@@ -33,6 +33,10 @@ class MTCModuleRuntimeMeta<T extends MTCModule> {
     private T module;
     private boolean initialised = false;
 
+    static {
+        InjectionTarget.class.getName(); //Prevents a NoClassDefFoundError on disable if MTC jar is replaced
+    }
+
     public MTCModuleRuntimeMeta(Class<T> clazz) {
         this.clazz = clazz;
     }
@@ -137,7 +141,7 @@ class MTCModuleRuntimeMeta<T extends MTCModule> {
         initialised = true;
     }
 
-    public class InjectionTarget {
+    public static class InjectionTarget {
         private final Field field;
         private final InjectModule annotation;
         private final MTCModuleRuntimeMeta<?> meta;
