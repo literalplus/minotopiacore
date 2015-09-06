@@ -35,6 +35,7 @@ public final class CommandSpyFilters {
             return "(global) all";
         }
     };
+    private static BadCommandSpyFilter BAD_COMMAND_FILTER = new BadCommandSpyFilter();
     private static Set<CommandSpyFilter> activeFilters = new CopyOnWriteArraySet<>();
 
     private CommandSpyFilters() {
@@ -141,6 +142,10 @@ public final class CommandSpyFilters {
 
     public static CommandSpyFilter stringFilter(String input, Function<Stream<Pattern>, CommandSpyFilter> filterBuilder) {
         return filterBuilder.apply(getStringFilterPatterns(input));
+    }
+
+    public static void addBadCommand(String badCommand) {
+        BAD_COMMAND_FILTER.addCommand(badCommand);
     }
 
     public static Stream<Pattern> getStringFilterPatterns(String input) {

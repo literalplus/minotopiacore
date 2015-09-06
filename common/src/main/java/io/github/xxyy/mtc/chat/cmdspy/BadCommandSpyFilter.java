@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.chat.cmdspy;
 
+import io.github.xxyy.mtc.LogHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * CommandSpy filter for bad commands.
@@ -27,18 +27,15 @@ import java.util.stream.Stream;
 public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     private final Logger logger;
 
-    public BadCommandSpyFilter(Stream<Pattern> patterns, Logger logger) {
-        super("§4[CmdSpy] §c{0}: §7§o/{1}", patterns.collect(Collectors.toList()));
-        this.logger = logger;
+    public BadCommandSpyFilter() {
+        super("§4[CmdSpy] §c{0}: §7§o/{1}", new ArrayList<>());
+        this.logger = LogHelper.getBadCmdLogger();
     }
 
     @Override
-    public boolean matches(String command, Player sender) { //Doesn't work since super #notifyOnMatch doesn't call matches
-        if(super.matches(command, sender)) {
-            logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
-            return true;
-        }
-        return false;
+    protected String formatMatch(Matcher matcher, Player sender, String command) {
+        logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
+        return super.formatMatch(matcher, sender, command);
     }
 
     @Override
@@ -56,5 +53,9 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     @Override
     public boolean canSubscribe() {
         return false;
+    }
+
+    public void addCommand(String commandName) {
+        getPatterns().addAll(CommandSpyFilters.getStringFilterPatterns(commandName).collect(Collectors.toList()));
     }
 }

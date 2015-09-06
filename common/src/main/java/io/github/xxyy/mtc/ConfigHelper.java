@@ -7,15 +7,13 @@
 
 package io.github.xxyy.mtc;
 
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.mtc.chat.cmdspy.BadCommandSpyFilter;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -437,11 +435,7 @@ public class ConfigHelper {
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");
         ConfigHelper.enableBungeeAPI = cfg.getBoolean("enable.bungeeapi");
         setBrewStackCheckpoints(cfg.getIntegerList("fixes.brewstack.checkpoints"));
-        cfg.getStringList("badCmds").stream()
-                .map(str -> CommandSpyFilters.stringFilter(str,
-                                (pats) -> new BadCommandSpyFilter(pats, LogHelper.getBadCmdLogger()))
-                )
-                .forEach(CommandSpyFilters::registerFilter);
+        cfg.getStringList("badCmds").stream().forEach(CommandSpyFilters::addBadCommand);
     }
 
     private static void initPotionProps(FileConfiguration cfg) {//4, 9, 15

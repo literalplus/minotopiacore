@@ -31,7 +31,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     }
 
     public RegExCommandSpyFilter(String notificationFormat, List<Pattern> patterns) {
-        super(notificationFormat, (cmd, plr) -> patterns.stream().anyMatch(pat -> pat.matcher(cmd).matches()));
+        super(notificationFormat, null); //overridden anyways
         this.patterns = patterns;
     }
 
@@ -54,13 +54,17 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
         for(Pattern pattern : patterns) {
             Matcher matcher = pattern.matcher(command);
             if(matcher.find()) {
-                String message = MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7 "));
+                String message = formatMatch(matcher, sender, command);
 
                 getOnlineSubscribers()
                         .forEach(plr -> plr.sendMessage(message));
                 return;
             }
         }
+    }
+
+    protected String formatMatch(Matcher matcher, Player sender, String command) {
+        return MessageFormat.format(getNotificationFormat(), sender.getName(), matcher.replaceFirst("§9$1§7 "));
     }
 
     public boolean hasCommandName(String commandName) {
