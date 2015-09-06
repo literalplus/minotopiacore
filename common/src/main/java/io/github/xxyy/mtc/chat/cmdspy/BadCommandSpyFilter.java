@@ -35,7 +35,6 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
     @Override
     public boolean matches(String command, Player sender) {
         if(super.matches(command, sender)) {
-            Bukkit.getLogger().info("matching! " + command + niceRepresentation());
             logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
             return true;
         }

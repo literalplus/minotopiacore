@@ -143,8 +143,8 @@ public final class CommandSpyFilters {
     }
 
     public static Stream<Pattern> getStringFilterPatterns(String input) {
-        Function<String, Pattern> regExPatternBuilder = (str) -> Pattern.compile("(" + str + ")\\s*", Pattern.CASE_INSENSITIVE);
-        Function<String, Pattern> stringPatternBuilder = (str) -> Pattern.compile("(^" + str + ")\\s*", Pattern.CASE_INSENSITIVE);
+        Function<String, Pattern> regExPatternBuilder = (str) -> Pattern.compile("(" + str + ")(?:\\s+|$)", Pattern.CASE_INSENSITIVE);
+        Function<String, Pattern> cmdPatternBuilder = (str) -> Pattern.compile("^(" + str + ")(?:\\s+|$)", Pattern.CASE_INSENSITIVE);
 
         if (input.startsWith("!r")) {
             return Stream.of(
@@ -161,7 +161,7 @@ public final class CommandSpyFilters {
 
             return commandsToMatch.stream()
                     .map(Pattern::quote)
-                    .map(stringPatternBuilder);
+                    .map(cmdPatternBuilder);
         }
     }
 }
