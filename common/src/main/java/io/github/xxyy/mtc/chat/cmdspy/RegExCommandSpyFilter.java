@@ -58,6 +58,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
 
                 getOnlineSubscribers()
                         .forEach(plr -> plr.sendMessage(message));
+                return;
             }
         }
     }
