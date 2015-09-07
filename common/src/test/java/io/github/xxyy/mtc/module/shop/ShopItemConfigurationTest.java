@@ -89,7 +89,7 @@ public class ShopItemConfigurationTest {
         assertThat("Diamond mapped to data value 0", config.getItem(Material.DIAMOND.name() + ":0"), is(nullValue()));
         assertThat("Diamond mapped to data value 1", config.getItem(Material.DIAMOND.name() + ":1"), is(nullValue()));
         assertThat("Diamond mapped to data value 127", config.getItem(Material.DIAMOND.name() + ":127"), is(nullValue()));
-        assertThat("Potato mapped to data value 127 (native)", config.getItem(Material.POTATO, (byte) 127), is(nullValue()));
+        assertThat("Diamond mapped to data value 127 (native)", config.getItem(Material.DIAMOND, (byte) 127), is(nullValue()));
         assertThat("Diamond not mapped to own data value",
                 config.getItem(Material.DIAMOND.name() + ":" + DIAMOND.getDataValue()), is(DIAMOND));
 

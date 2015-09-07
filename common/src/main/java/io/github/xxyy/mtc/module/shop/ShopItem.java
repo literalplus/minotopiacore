@@ -23,7 +23,7 @@ public class ShopItem {
     public static final String ALIASES_PATH = "aliases";
     public static final String BUY_COST_PATH = "buy";
     public static final String SELL_WORTH_PATH = "sell";
-    public static final String DISPLAY_NAME_PATH = "display_name";
+    public static final String DISPLAY_NAME_PATH = "display";
 
     private final Material material;
     private final byte dataValue;
@@ -36,9 +36,9 @@ public class ShopItem {
     protected ShopItem(float buyCost, float sellWorth, Material material, byte dataValue, List<String> aliases, String displayName) {
         Validate.notNull(material, "material");
         Validate.notNull(aliases, "aliases");
-        Validate.isTrue(buyCost > 0, "buyCost must be greater than 0");
+        Validate.isTrue(buyCost > 0, "buyCost must be greater than 0"); //FIXME: should be possible to be negative to disable buy/sell separately
         Validate.isTrue(sellWorth > 0, "sellWorth must be greater than 0");
-        Validate.isTrue(dataValue > -2, "dataValue must be greater than -1");
+        Validate.isTrue(dataValue > -2, "dataValue must be greater than or equal to -1");
         this.buyCost = buyCost;
         this.sellWorth = sellWorth;
         this.material = material;
@@ -47,6 +47,29 @@ public class ShopItem {
         this.displayName = displayName;
 
         this.serialisationName = dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
+    }
+
+    /**
+     * Attempts to deserialize an item from a configuration section. This method is fail-fast and does not support
+     * custom validation, so expect exceptions for data which has not been return exactly like that by
+     * {@link #serializeToSection(ConfigurationSection)}. Because of this, the format is not specified more in depth.
+     *
+     * @param section the section to read from
+     * @return an item with the serialized properties
+     * @throws NumberFormatException if the data value is not a byte
+     * @throws ClassCastException    if anything else is not parsable
+     */
+    public static ShopItem deserialize(ConfigurationSection section) throws NumberFormatException, ClassCastException {
+        String[] arr = section.getName().split(":");
+        String materialName = arr[0];
+        byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : -1;
+
+        List<String> aliases = section.getStringList(ALIASES_PATH);
+        int cost = section.getInt(BUY_COST_PATH);
+        int worth = section.getInt(SELL_WORTH_PATH);
+        String displayName = section.getString(DISPLAY_NAME_PATH);
+
+        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases, displayName);
     }
 
     /**
@@ -131,29 +154,6 @@ public class ShopItem {
      */
     public String getDisplayName() {
         return displayName;
-    }
-
-    /**
-     * Attempts to deserialize an item from a configuration section. This method is fail-fast and does not support
-     * custom validation, so expect exceptions for data which has not been return exactly like that by
-     * {@link #serializeToSection(ConfigurationSection)}. Because of this, the format is not specified more in depth.
-     *
-     * @param section the section to read from
-     * @return an item with the serialized properties
-     * @throws NumberFormatException if the data value is not a byte
-     * @throws ClassCastException    if anything else is not parsable
-     */
-    public static ShopItem deserialize(ConfigurationSection section) throws NumberFormatException, ClassCastException {
-        String[] arr = section.getName().split(":");
-        String materialName = arr[0];
-        byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : -1;
-
-        List<String> aliases = section.getStringList(ALIASES_PATH);
-        int cost = section.getInt(BUY_COST_PATH);
-        int worth = section.getInt(SELL_WORTH_PATH);
-        String displayName = section.getString(DISPLAY_NAME_PATH);
-
-        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases, displayName);
     }
 
     @Override

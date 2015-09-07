@@ -35,7 +35,7 @@ import java.util.logging.Level;
  */
 class ShopItemConfiguration extends ManagedConfiguration {
     private final MTC plugin;
-    private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //FIXME - maps Material to data val, -1 = any
+    private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
 
     protected ShopItemConfiguration(File file, MTC plugin) {
@@ -95,7 +95,7 @@ class ShopItemConfiguration extends ManagedConfiguration {
     }
 
     private void saveItems() {
-        shopItems.values().forEach(msi -> msi.serializeToSection(this));
+        shopItems.values().forEach(msi -> msi.serializeToSection(this)); //Sets stuff directly
     }
 
     /**
@@ -121,8 +121,17 @@ class ShopItemConfiguration extends ManagedConfiguration {
             return null;
         }
 
-        if (parts.length > 1 && StringUtils.isNumeric(parts[1])) {
-            dataValue = Byte.parseByte(parts[1]);
+        if (parts.length > 1) {
+            String dataPart = parts[1];
+            if (!dataPart.isEmpty()
+                    && (StringUtils.isNumeric(dataPart)
+                    || ((dataPart.startsWith("-") || dataPart.startsWith("+"))
+                        && StringUtils.isNumeric(dataPart.substring(1))))) {
+                dataValue = Byte.parseByte(dataPart);
+            }
+        }
+        if (dataValue < 0) { //invalid data value, uer data value input -1 may not be correct
+            return null;
         }
 
         return getItem(material, dataValue);
@@ -130,10 +139,10 @@ class ShopItemConfiguration extends ManagedConfiguration {
 
     /**
      * Attempts to get an item managed by this configuration. The special data value {@code -1} represents a catch-all
-     * wildcard item that matches all data values of that material that do not have a specifc item attached to them.
+     * wildcard item that matches all data values of that material that do not have a specific item attached to them.
      *
      * @param material  the material to find the item for
-     * @param dataValue the data value to fidn the item for
+     * @param dataValue the data value to find the item for
      * @return the found item for the specific data value, if found, the wildcard item, if found, or {@code null} otherwise.
      */
     public ShopItem getItem(Material material, byte dataValue) {
@@ -141,8 +150,7 @@ class ShopItemConfiguration extends ManagedConfiguration {
         if (item != null) {
             return item;
         }
-
-        return shopItems.get(material, -1); //catch-all wildcard thingy
+        return shopItems.get(material, (byte) -1); //catch-all wildcard thingy
     }
 
     /**
