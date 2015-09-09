@@ -100,17 +100,14 @@ public final class CommandMute implements CommandExecutor {
             }
             return true;
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("info")) {
-            String tgtName = args[1];
-            if (args.length < 2) {
-                args[1] = sender.getName();
-            }
-            if (MuteHelper.isPlayerMuted(tgtName)) {
-                sender.sendMessage("§6------ §bMuteInfo: " + tgtName + "§6 ------");
-                sender.sendMessage("§6Mutegrund: §e" + MuteHelper.getReasonByPath(tgtName));
-                sender.sendMessage("§6gemuted von: §b" + MuteHelper.getMuterByPath(tgtName));
-                sender.sendMessage("§6Mutezeit: §e" + MuteHelper.getMuteTimeByPath(tgtName));
+            String targetName = args.length > 1 ? args[1] : sender.getName();
+            if (MuteHelper.isPlayerMuted(targetName)) {
+                sender.sendMessage("§6------ §bMuteInfo: " + targetName + "§6 ------");
+                sender.sendMessage("§6Mutegrund: §e" + MuteHelper.getReasonByPath(targetName));
+                sender.sendMessage("§6gemuted von: §b" + MuteHelper.getMuterByPath(targetName));
+                sender.sendMessage("§6Mutezeit: §e" + MuteHelper.getMuteTimeByPath(targetName));
             } else {
-                sender.sendMessage("§6Der Spieler §b" + tgtName + "§6 ist §lnicht §6gemutet.");
+                sender.sendMessage("§6Der Spieler §b" + targetName + "§6 ist §lnicht §6gemutet.");
                 return true;
             }
         } else {
