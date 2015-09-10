@@ -22,7 +22,7 @@ import java.util.logging.Level;
  *
  * @author Janmm14
  */
-public final class EssentialsDataUser {
+public final class EssentialsPlayerData {
 
     @NonNull
     private final ShowHomesModule module;
@@ -35,7 +35,7 @@ public final class EssentialsDataUser {
     @NonNull
     private Set<Home> homes = new HashSet<>();
 
-    private EssentialsDataUser(ShowHomesModule module, UUID uuid, String lastName, File file) {
+    private EssentialsPlayerData(ShowHomesModule module, UUID uuid, String lastName, File file) {
         this.module = module;
         this.uuid = uuid;
         this.lastName = lastName;
@@ -134,7 +134,7 @@ public final class EssentialsDataUser {
      * @param userdataFile the file to read the homes from
      * @return a new UserHomes object containing the read data
      */
-    public static EssentialsDataUser fromFile(@NonNull ShowHomesModule module, @NonNull File userdataFile) {
+    public static EssentialsPlayerData fromFile(@NonNull ShowHomesModule module, @NonNull File userdataFile) {
         String fileName = userdataFile.getName();
         UUID uuid = UUID.fromString(fileName.substring(0, fileName.length() - ".yml".length()));
 
@@ -145,11 +145,11 @@ public final class EssentialsDataUser {
             lastAccountName = uuid.toString();
         }
 
-        EssentialsDataUser essentialsDataUser = new EssentialsDataUser(module, uuid, lastAccountName, userdataFile);
+        EssentialsPlayerData essentialsPlayerData = new EssentialsPlayerData(module, uuid, lastAccountName, userdataFile);
 
         ConfigurationSection homesSection = cfg.getConfigurationSection("homes");
         if (homesSection == null) { //homes is not a required value in Essentials user files
-            return essentialsDataUser;
+            return essentialsPlayerData;
         }
         Set<String> homeNames = homesSection.getKeys(false);
         final Set<Home> homes = new HashSet<>(homeNames.size());
@@ -166,13 +166,13 @@ public final class EssentialsDataUser {
                 continue;
             }
             Location loc = LocationHelper.fromConfiguration(homeSection);
-            homes.add(new Home(essentialsDataUser, loc, homeName));
+            homes.add(new Home(essentialsPlayerData, loc, homeName));
         }
-        essentialsDataUser.homes = homes;
-        return essentialsDataUser;
+        essentialsPlayerData.homes = homes;
+        return essentialsPlayerData;
     }
 
-    public static EssentialsDataUser fromFile(@NonNull ShowHomesModule module, @NonNull UUID uuid) {
+    public static EssentialsPlayerData fromFile(@NonNull ShowHomesModule module, @NonNull UUID uuid) {
         File essentialsUserdataFolder = module.getEssentialsUserdataFolder();
         File yaml = new File(essentialsUserdataFolder, uuid + ".yml");
         return fromFile(module, yaml);
@@ -206,8 +206,8 @@ public final class EssentialsDataUser {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (!(o instanceof EssentialsDataUser)) return false;
-        final EssentialsDataUser other = (EssentialsDataUser) o;
+        if (!(o instanceof EssentialsPlayerData)) return false;
+        final EssentialsPlayerData other = (EssentialsPlayerData) o;
         final Object otherUuid = other.getUuid();
         if (this.uuid == null ? otherUuid != null : !this.uuid.equals(otherUuid)) return false;
         return true;
