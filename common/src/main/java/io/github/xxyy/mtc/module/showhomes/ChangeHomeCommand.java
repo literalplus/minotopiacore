@@ -1,10 +1,10 @@
 package io.github.xxyy.mtc.module.showhomes;
 
+import io.github.xxyy.common.util.UUIDHelper;
 import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,10 +12,9 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
- * This command allowes to manipulate homes which owners are currently offline.
+ * This command allows to manipulate homes whose owners are currently offline.
  *
  * @author Janmm14
  */
@@ -30,14 +29,14 @@ public class ChangeHomeCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
-        //make async if laggy
+        //TODO find out if its laggy and make async in that case
         try {
             if (!sender.hasPermission("essentials.sethome.others") && !sender.hasPermission("essentials.delhome.others") &&
                     !sender.hasPermission("essentials.home.others")) {
                 sender.sendMessage("§cDu bist nicht berechtigt, dieses Kommnado zu benutzen!");
             }
             if (!(sender instanceof Player)) {
-                sender.sendMessage("§cNur Spieler können dieses Kommando verwenden!");
+                sender.sendMessage("§cNur Spieler können diesen Befehl verwenden!");
                 return true;
             }
             final Player plr = (Player) sender;
@@ -45,58 +44,43 @@ public class ChangeHomeCommand implements TabExecutor {
                 return showHelp(plr);
             }
             UUID uuid;
+            if (!UUIDHelper.isValidUUID(args[1])) {
+                plr.sendMessage("§c\"§6" + args[1] + "\"§c ist keine valide UUID. Bindestriche vergessen?");
+            }
             try {
                 uuid = UUID.fromString(args[1]);
             } catch (Exception ex) {
-                plr.sendMessage("§cDie UUID ist nicht valid! Vermutlich hast du eine UUID ohne §b- §ceingegeben.");
-                plr.sendMessage("§cFehlermeldung: §6" + ex.getMessage());
+                plr.sendMessage("§c\"§6" + args[1] + "\"§c ist keine valide UUID. Bindestriche vergessen?");
                 return true;
             }
             if (uuid.version() != 3 && uuid.version() != 4) {
                 plr.sendMessage("§cDie UUID ist keine valide Minecraft-UUID!");
             }
-            EssentialsDataUser user = EssentialsDataUser.fromFile(module, uuid);
+            EssentialsPlayerData user = EssentialsPlayerData.fromFile(module, uuid);
             if (user == null) {
                 plr.sendMessage("§cKonnte Homes nicht lesen!");
+                return true;
+            }
+            Home home = user.getHomes().stream()
+                    .filter(home_ -> home_.getName().equalsIgnoreCase(args[2]))
+                    .findFirst().orElse(null);
+            if (args[0].equalsIgnoreCase("delete")) {
+                user.removeHome(plr, home.getName());
+            } else if (args[0].equalsIgnoreCase("set")) {
+                user.setHome(plr, home.getName());
+            } else if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
+                if (!plr.hasPermission("essentials.home.others")) {
+                    plr.sendMessage("§cDu hast keine Berechtigung, dich zu Homes anderer Spieler zu teleportieren!");
+                    return true;
+                }
+                plr.teleport(home.getLocation());
+                plr.sendMessage(
+                        "§aDu hast dich zu " + user.getLastName() + "'s Home " + home.getName() + " teleportiert.");
             } else {
-                List<Home> filteredHomes = user.getHomes().stream()
-                        .filter(home -> home.getName().equalsIgnoreCase(args[2]))
-                        .collect(Collectors.toList());
-                if (filteredHomes.size() > 1) {
-                    module.getPlugin().getLogger()
-                            .warning("[ShowHomes] The user " + user.getLastName() + " (UUID: " + user.getUuid() +
-                                    ") has multiple homes with the name " + args[2] + ". Please check what's wrong where!");
-                    plr.sendMessage("§cDer User " + user.getLastName() + " hat mehrere Homes mit dem Namen " + args[2] +
-                            ". Dies ist komsich, melde das bitte einem Owner.");
-                    return true;
-                }
-                Home home = filteredHomes.get(0);
-                if (args[0].equalsIgnoreCase("delete")) {
-                    user.removeHome(plr, home.getName());
-                    return true;
-                } else if (args[0].equalsIgnoreCase("set")) {
-                    user.setHome(plr, home.getName(), null);
-                    return true;
-                } else if (args[0].equalsIgnoreCase("tp")) {
-                    if (!plr.hasPermission("essentials.home.others")) {
-                        plr.sendMessage("§cDu hast keine Berechtigung, dich zu Homes anderer Spieler zu teleportieren!");
-                        return true;
-                    }
-                    Player target = Bukkit.getPlayer(uuid);
-                    if (target != null && target.isOnline()) {
-                        plr.performCommand("home " + target.getName() + ':' + home.getName());
-                        return true;
-                    }
-                    plr.teleport(home.getLocation());
-                    plr.sendMessage(
-                            "§aDu hast dich zu " + user.getLastName() + "'s Home " + home.getName() + " teleportiert.");
-                    return true;
-                } else {
-                    showHelp(plr);
-                }
+                showHelp(plr);
             }
         } catch (Exception ex) {
-            module.handleException(new Exception("ChangeHomeCommand#onCommand", ex));
+            module.handleException(ex);
         }
         return true;
     }

@@ -1,7 +1,6 @@
 package io.github.xxyy.mtc.module.showhomes;
 
 import com.google.common.base.Joiner;
-import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -10,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
  */
 public class ShowHomesCommand implements CommandExecutor {
 
-    @NonNull
+    @NotNull
     private final ShowHomesModule module;
 
-    public ShowHomesCommand(ShowHomesModule module) {
+    public ShowHomesCommand(@NotNull ShowHomesModule module) {
         this.module = module;
     }
 
@@ -37,16 +37,16 @@ public class ShowHomesCommand implements CommandExecutor {
                         "[ShowHomes] The command '" + cmd.getName() + "', executed by " + sender +
                                 " was forwarded to ShowHomes, but it is not handled by it: " +
                                 '/' + alias + ' ' + Joiner.on(' ').join(args));
-                sender.sendMessage("§cEs ist ein interner Fehler beim Verarbeiten dieses Kommandos aufgetreten.");
+                sender.sendMessage("§cEs ist ein interner Fehler beim Verarbeiten dieses Befehls aufgetreten.");
                 return true;
             }
             if (!sender.hasPermission("showhomes.execute")) {
-                sender.sendMessage("§cDu bist nicht berechtigt, dieses Kommnado zu benutzen!");
+                sender.sendMessage("§cDu bist nicht berechtigt, diesen Befehl zu benutzen!");
                 return true;
             }
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage("§cNur Spieler können dieses Kommando verwenden!");
+                sender.sendMessage("§cNur Spieler können diesen Befehl verwenden!");
                 return true;
             }
             final Player plr = (Player) sender;
@@ -56,28 +56,29 @@ public class ShowHomesCommand implements CommandExecutor {
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
                     return showHelp(plr);
-                }
-                if (args[0].equalsIgnoreCase("reload")) {
+                } else if (args[0].equalsIgnoreCase("reload")) {
                     if (plr.hasPermission("showhomes.reload")) {
                         module.reloadConfig();
+                        sender.sendMessage("§aDie ShowHomes Konfiguration wurde neu geladen.");
+                    } else {
+                        sender.sendMessage("§cDu bist nicht berechtigt, diesen Befehl zu benutzen!");
                     }
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("remove")) {
+                } else if (args[0].equalsIgnoreCase("remove")) {
                     if (args.length >= 2) {
                         if (!args[1].equalsIgnoreCase("all")) {
                             showHelp(plr);
-                        } else {
-                            Collection<Home> shownHomes = module.getHolosByExecutingUser().values();
-                            int holoAmount = shownHomes.size();
-                            shownHomes.forEach(Home::hideHologram);
-                            module.getHolosByExecutingUser().clear();
-                            module.getTaskIdByUser().values()
-                                    .forEach(module.getPlugin().getServer().getScheduler()::cancelTask);
-                            module.getTaskIdByUser().clear();
-                            plr.sendMessage("§aAlle Home-Hologramme wurden entfernt. (§b" + holoAmount + "§aStück)");
                             return true;
                         }
+                        Collection<Home> shownHomes = module.getHolosByExecutingUser().values();
+                        int holoAmount = shownHomes.size();
+                        shownHomes.forEach(Home::hideHologram);
+                        module.getHolosByExecutingUser().clear();
+                        module.getTaskIdByUser().values()
+                                .forEach(module.getPlugin().getServer().getScheduler()::cancelTask);
+                        module.getTaskIdByUser().clear();
+                        plr.sendMessage("§aAlle Home-Hologramme wurden entfernt. (§b" + holoAmount + "§aStück)");
+                        return true;
                     }
                     UUID uuid = plr.getUniqueId();
                     Collection<Home> shownHomes = module.getHolosByExecutingUser().get(uuid);
@@ -86,10 +87,13 @@ public class ShowHomesCommand implements CommandExecutor {
                         return true;
                     }
                     int holoAmount = shownHomes.size();
+
                     shownHomes.forEach(Home::hideHologram);
+
                     module.getHolosByExecutingUser().removeAll(uuid);
                     module.getPlugin().getServer().getScheduler().cancelTask(module.getTaskIdByUser().get(uuid));
                     module.getTaskIdByUser().remove(uuid);
+
                     plr.sendMessage("§aDeine Home-Hologramme wurden entfernt. (§b" + holoAmount + " §aStück)");
                     return true;
                 }
@@ -99,28 +103,24 @@ public class ShowHomesCommand implements CommandExecutor {
                     return showHelp(plr);
                 }
                 if (radius > module.getMaxRadius()) {
-                    plr.sendMessage("§6Radius gekappt auf §b" + module.getMaxRadius() + " §6Blöcke.");
+                    plr.sendMessage("§6Radius limitiert auf §b" + module.getMaxRadius() + " §6Blöcke.");
                     radius = module.getMaxRadius();
-                }
-                if (radius < module.getMinRadius()) {
-                    plr.sendMessage("§6Radius geringer als Mindestradius, daher erhöht auf §b" + module.getMinRadius() + " §6Blöcke.");
-                    radius = module.getMinRadius();
                 }
                 return showHologramsCmd(plr, radius);
             }
             return true;
         } catch (Exception ex) {
             module.handleException(ex);
-            sender.sendMessage("§cEs ist ein Fehler beim Ausführen des Kommandos aufgetreten! #1");
+            sender.sendMessage("§cEs ist ein Fehler beim Ausführen des Befehls aufgetreten! #1");
             return true;
         }
     }
 
-    private boolean showHologramsCmd(Player executor, int radius) {
-        executor.sendMessage("§6Lade Homes im Umkreis " + radius);
+    private boolean showHologramsCmd(Player sender, int radius) {
+        sender.sendMessage("§6Lade Homes im Umkreis " + radius);
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
             try {
-                UUID uuid = executor.getUniqueId();
+                UUID uuid = sender.getUniqueId();
 
                 //remove existing holograms
                 if (module.getHolosByExecutingUser().containsKey(uuid)) {
@@ -130,11 +130,11 @@ public class ShowHomesCommand implements CommandExecutor {
                     module.getPlugin().getServer().getScheduler().cancelTask(module.getTaskIdByUser().get(uuid));
                     module.getTaskIdByUser().remove(uuid);
 
-                    executor.sendMessage("§6Deine jetzigen Home-Hologramme wurden zuerst entfernt.");
+                    sender.sendMessage("§6Deine jetzigen Home-Hologramme wurden zuerst entfernt.");
                 }
 
                 //show holograms
-                Set<Home> homes = showHolograms(executor, radius);
+                Set<Home> homes = showHolograms(sender, radius);
                 if (homes == null) {
                     return;
                 }
@@ -146,48 +146,48 @@ public class ShowHomesCommand implements CommandExecutor {
                         module.getHolosByExecutingUser().removeAll(uuid)
                                 .forEach(Home::hideHologram);
                         module.getTaskIdByUser().remove(uuid);
-                        executor.sendMessage("§6Deine Home-Hologramme sind nun abgelaufen und wurden daher entfernt.");
+                        sender.sendMessage("§6Deine Home-Hologramme sind nun abgelaufen und wurden daher entfernt.");
                     } catch (Exception ex) {
                         module.handleException(ex);
-                        executor.sendMessage("§cEs ist ein Fehler beim Ausführen des Kommandos aufgetreten! #2");
+                        sender.sendMessage("§cEs ist ein Fehler beim entfernen der Hologramme aufgetreten!");
                     }
                 }, 20 * module.getHologramDuration());
 
                 module.getTaskIdByUser().put(uuid, task.getTaskId());
             } catch (Exception ex) {
                 module.handleException(ex);
-                executor.sendMessage("§cEs ist ein Fehler beim Ausführen des Kommandos aufgetreten! #3");
+                sender.sendMessage("§cEs ist ein Fehler beim Ausführen des Befehls aufgetreten! #3");
             }
         });
 
         return true;
     }
 
-    public Set<Home> showHolograms(@NonNull Player executor, int radius) throws IOException {
-        List<Home> homes = module.getHomesInRadius(executor, executor.getLocation(), radius).stream()
+    public Set<Home> showHolograms(@NotNull Player sender, int radius) throws IOException {
+        List<Home> homes = module.getHomesInRadius(sender, sender.getLocation(), radius).stream()
                 .filter(home -> !module.isSimilarHomeDisplayed(home))
                 .collect(Collectors.toList());
-        final int amountOfRepeats = (homes.size() % module.getHologramRateLimit()) + 1;
+        final int iterations = (homes.size() % module.getHologramRateLimit()) + 1;
 
-        for (int i = 0; i < amountOfRepeats; i++) {
+        for (int i = 0; i < iterations; i++) {
             int iFinal = i;
-            int jStart = i * amountOfRepeats;
-            int max = Math.min(jStart + amountOfRepeats, homes.size());
+            int jStart = i * iterations;
+            int max = Math.min(jStart + iterations, homes.size());
             module.getPlugin().getServer().getScheduler().runTaskLater(module.getPlugin(), () -> { //TODO own class, turn into repeating task
                 try {
                     for (int j = jStart; j < max; j++) {
                         Home home = homes.get(j);
                         home.showHologram(module);
                     }
-                    if (iFinal == (amountOfRepeats - 1)) {
-                        executor.sendMessage("§6Alle Homes dargestellt.");
+                    if (iFinal == (iterations - 1)) {
+                        sender.sendMessage("§6Alle Homes dargestellt.");
                     }
                 } catch (Exception ex) {
                     module.handleException(ex);
                 }
             }, i);
         }
-        executor.sendMessage("§6Stelle Homes dar...");
+        sender.sendMessage("§6Stelle Homes dar...");
 
         return new HashSet<>(homes);
     }

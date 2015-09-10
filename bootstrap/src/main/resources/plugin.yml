@@ -8,7 +8,7 @@ softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials, HolographicDisplays, 
 website: http://xxyy.github.io/
 
 permissions:
-  mtc.exception:
+  mtc.err.notify:
     default: false
 
 commands:
@@ -108,12 +108,12 @@ commands:
     description: Admin tools for the advent calendar module
     usage: "/<command> help"
     aliases: [adventskalender, letchestsbedoors]
-  showhomes:
+  jshowhomes:
     description: Shows Essentials homes near you as holograms.
-    aliases: [sh, jsh, jshowhomes]
+    aliases: [sh, jsh, showhomes]
     permission: showhomes.execute
     usage: /<command> help - Shows the help
-  homeutil:
-    description: Allows you to change essentials homes even if the home-owner is offline.
-    aliases: [hu, jhu, jhomeutil]
+  jhomeutil:
+    description: Allows you to change Essentials homes even if its owner is offline.
+    aliases: [hu, jhu, homeutil]
     usage: /<command> - Shows the help

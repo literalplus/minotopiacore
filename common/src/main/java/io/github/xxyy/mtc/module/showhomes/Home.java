@@ -17,13 +17,13 @@ import java.util.UUID;
  */
 public class Home {
 
-    private final EssentialsDataUser essentialsDataUser;
+    private final EssentialsPlayerData essentialsPlayerData;
     private final Location location;
     private final String name;
     private Hologram hologram;
 
-    public Home(EssentialsDataUser essentialsDataUser, Location location, String name) {
-        this.essentialsDataUser = essentialsDataUser;
+    public Home(EssentialsPlayerData essentialsPlayerData, Location location, String name) {
+        this.essentialsPlayerData = essentialsPlayerData;
         this.location = location;
         this.name = name;
     }
@@ -37,7 +37,7 @@ public class Home {
         Location loc = location.clone().add(0, 1.2, 0);
         hologram = HologramsAPI.createHologram(module.getPlugin(), loc);
 
-        Set<UUID> plrsToShow = ShowHomesModule.getPlayerUuidsWithShowHomesPermission();
+        Set<UUID> plrsToShow = ShowHomesModule.getPermittedPlayerUUIDs();
 
         //set visibility - needs to be first (see that plugins doc)
         VisibilityManager visibilityManager = hologram.getVisibilityManager();
@@ -50,10 +50,10 @@ public class Home {
         TextLine homeNameLine = hologram.appendTextLine("§6Home §c" + name);
         homeNameLine.setTouchHandler(new HomeInfoTouchHandler(this, plrsToShow));
 
-        TextLine homeOwnerLine = hologram.appendTextLine("§6by §c" + essentialsDataUser.getLastName());
+        TextLine homeOwnerLine = hologram.appendTextLine("§6by §c" + essentialsPlayerData.getLastName());
         homeOwnerLine.setTouchHandler(homeNameLine.getTouchHandler());
 
-        TextLine uuidLine = hologram.appendTextLine("§6UUID: " + essentialsDataUser.getUuid());
+        TextLine uuidLine = hologram.appendTextLine("§6UUID: " + essentialsPlayerData.getUuid());
         uuidLine.setTouchHandler(homeNameLine.getTouchHandler());
     }
 
@@ -71,8 +71,8 @@ public class Home {
         return true;
     }
 
-    public EssentialsDataUser getEssentialsDataUser() {
-        return this.essentialsDataUser;
+    public EssentialsPlayerData getEssentialsPlayerData() {
+        return this.essentialsPlayerData;
     }
 
     public Location getLocation() {
@@ -106,6 +106,6 @@ public class Home {
 
     @Override
     public String toString() {
-        return "io.github.xxyy.mtc.module.showhomes.Home(essentialsDataUser=" + this.essentialsDataUser + ", location=" + this.location + ", name=" + this.name + ")";
+        return "showhomes.Home(essentialsDataUser=" + this.essentialsPlayerData + ", location=" + this.location + ", name=" + this.name + ")";
     }
 }

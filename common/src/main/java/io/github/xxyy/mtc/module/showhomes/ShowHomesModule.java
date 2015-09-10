@@ -6,35 +6,28 @@ import com.google.common.collect.Multimap;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This module reads Essentials userdata files and show you homes of all users in a given radius on command.
+ * This module offers utility for Essentials home management.
  *
  * @author Janmm14
  */
 public class ShowHomesModule extends ConfigurableMTCModule {
 
     public static final String NAME = "ShowHomes";
-
-    private static final int DEFAULT_RADIUS_DEFAULT = 20;
-    private static final int MIN_RADIUS_DEFAULT = 3;
-    private static final int MAX_RADIUS_DEFAULT = 50;
-    private static final int HOLOGRAM_DURATION_DEFAULT = 60;
-    private static final int HOLOGRAM_RATE_LIMIT_DEFAULT = 20;
 
     private File essentialsUserdataFolder;
 
@@ -44,11 +37,11 @@ public class ShowHomesModule extends ConfigurableMTCModule {
      */
     private final Map<UUID, Integer> taskIdByUser = new HashMap<>();
 
-    private int defaultRadius = DEFAULT_RADIUS_DEFAULT;
-    private int minRadius = MIN_RADIUS_DEFAULT;
-    private int maxRadius = MAX_RADIUS_DEFAULT;
-    private int hologramDuration = HOLOGRAM_DURATION_DEFAULT;
-    private int hologramRateLimit = HOLOGRAM_RATE_LIMIT_DEFAULT;
+    private int defaultRadius = ShowHomesConstants.DEFAULT_RADIUS_DEFAULT;
+    private int maxRadius = ShowHomesConstants.MAX_RADIUS_DEFAULT;
+    private int hologramDuration = ShowHomesConstants.HOLOGRAM_DURATION_DEFAULT;
+    private int hologramRateLimit = ShowHomesConstants.HOLOGRAM_RATE_LIMIT_DEFAULT;
+
 
     public ShowHomesModule() {
         super(NAME, "modules/showhomes.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -61,11 +54,11 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         }
         boolean success = true;
         if (!plugin.getServer().getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            plugin.getLogger().warning("[ShowHomesModule] Could not enable, because HolographicDisplays is not available!");
+            plugin.getLogger().warning("[ShowHomesModule] Required plugin HolographicDisplays is missing, won't start up!");
             success = false;
         }
         if (!plugin.getServer().getPluginManager().isPluginEnabled("Essentials")) {
-            plugin.getLogger().warning("[ShowHomesModule] Could not enable, because Essentials is not available!");
+            plugin.getLogger().warning("[ShowHomesModule] Required plugin Essentials is missing, won't start up!");
             success = false;
         }
         return success;
@@ -81,8 +74,8 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         readConfig();
         configuration.options().copyDefaults(true).copyHeader(true);
         save();
-        plugin.setExec(new ShowHomesCommand(this), "showhomes");
-        plugin.setExecAndCompleter(new ChangeHomeCommand(this), "homeutil");
+        plugin.setExec(new ShowHomesCommand(this), "jshowhomes");
+        plugin.setExecAndCompleter(new ChangeHomeCommand(this), "jhomeutil");
     }
 
     @Override
@@ -108,28 +101,32 @@ public class ShowHomesModule extends ConfigurableMTCModule {
     }
 
     private void setConfigDefaults() {
-        configuration.addDefault("defaultRadius", DEFAULT_RADIUS_DEFAULT);
-        configuration.addDefault("minRadius", MIN_RADIUS_DEFAULT);
-        configuration.addDefault("maxRadius", MAX_RADIUS_DEFAULT);
-        configuration.addDefault("hologramDuration", HOLOGRAM_DURATION_DEFAULT);
-        configuration.addDefault("hologramCreationsPerCommandPerTick", HOLOGRAM_RATE_LIMIT_DEFAULT);
+        configuration.addDefault("defaultRadius", ShowHomesConstants.DEFAULT_RADIUS_DEFAULT);
+        configuration.addDefault("maxRadius", ShowHomesConstants.MAX_RADIUS_DEFAULT);
+        configuration.addDefault("hologramDuration", ShowHomesConstants.HOLOGRAM_DURATION_DEFAULT);
+        configuration.addDefault("hologramCreationsPerCommandPerTick", ShowHomesConstants.HOLOGRAM_RATE_LIMIT_DEFAULT);
     }
 
     private void readConfig() {
         defaultRadius = configuration.getInt("defaultRadius");
-        minRadius = configuration.getInt("minRadius");
         maxRadius = configuration.getInt("maxRadius");
         hologramDuration = configuration.getInt("hologramDuration");
         hologramRateLimit = configuration.getInt("hologramCreationsPerCommandPerTick");
     }
 
+    /**
+     * Parses a string containing only numeric chars to an Integer
+     *
+     * @param numberStr the String to parse
+     * @return the Integer parsed or {@code null} if the input is not a valid number in the meanings of this method
+     */
     @Nullable
-    public static Integer parsePositiveInt(@NonNull String numberStr) {
-        if (numberStr.length() < 1) {
+    public static Integer parsePositiveInt(@NotNull String numberStr) {
+        if (numberStr.isEmpty()) { //required as StringUtils.isNumeric(numberStr) returns true on empty string
             return null;
         }
         if (StringUtils.isNumeric(numberStr)) {
-            int i = Integer.parseInt(numberStr);
+            int i = Integer.parseInt(numberStr); //should not throw NumberFormatEception, as its tested before
             if (i >= 0) {
                 return i;
             }
@@ -169,11 +166,11 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                         " (relevante Homes: §b" + homes.size() + "§6)");
             }
 
-            EssentialsDataUser essentialsDataUser = EssentialsDataUser.fromFile(this, file);
-            if (essentialsDataUser == null) {
+            EssentialsPlayerData essentialsPlayerData = EssentialsPlayerData.fromFile(this, file);
+            if (essentialsPlayerData == null) {
                 continue;
             }
-            essentialsDataUser.getHomes().stream()
+            essentialsPlayerData.getHomes().stream()
                     .filter(loc -> center.getWorld().equals(loc.getLocation().getWorld()))
                     .forEach(home -> {//filter homes for distance, can't be done nice with Stream methods cause we need both objects later on
                         //make distance just X and Z sensible
@@ -187,15 +184,13 @@ public class ShowHomesModule extends ConfigurableMTCModule {
 
         long end = System.currentTimeMillis();
         double dur = ((double) (end - start)) / 1000d;
-        DecimalFormat format = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.GERMAN);
-        format.applyPattern("###.##");
 
-        plr.sendMessage("§b" + homes.size() + " §6Homes, gefunden in §b" + format.format(dur) + "§6 Sekunden.");
+        plr.sendMessage("§b" + homes.size() + " §6Homes, gefunden in §b" + ShowHomesConstants.DECIMAL_FORMAT.format(dur) + "§6 Sekunden.");
 
         return homes;
     }
 
-    public static Set<UUID> getPlayerUuidsWithShowHomesPermission() {
+    public static Set<UUID> getPermittedPlayerUUIDs() {
         Collection<? extends Player> plrs = Bukkit.getOnlinePlayers();
         return plrs.stream()
                 .filter(plr -> plr.hasPermission("showhomes.see"))
@@ -203,11 +198,18 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Handles exceptions occurred by first sending it to players having the {@code mtc.err.notify} permission
+     * <p>
+     * After that it calls t.printStackTrace();
+     *
+     * @param t The exception to handle
+     */
     public void handleException(Throwable t) {
         String exceptionString = ExceptionUtils.getFullStackTrace(t);
 
-        Bukkit.getOnlinePlayers().stream()
-                .filter(player -> player.hasPermission("mtc.exceptions"))
+        getPlugin().getServer().getOnlinePlayers().stream()
+                .filter(player -> player.hasPermission("mtc.err.notify"))
                 .forEach(player -> player.sendMessage(exceptionString));
 
         t.printStackTrace();
@@ -227,10 +229,6 @@ public class ShowHomesModule extends ConfigurableMTCModule {
 
     public int getDefaultRadius() {
         return this.defaultRadius;
-    }
-
-    public int getMinRadius() {
-        return this.minRadius;
     }
 
     public int getMaxRadius() {

@@ -1,30 +1,36 @@
 package io.github.xxyy.mtc.module.showhomes;
 
 import com.gmail.filoghost.holographicdisplays.api.handler.TouchHandler;
-import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ClickEvent.Action;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
 
+import static net.md_5.bungee.api.ChatColor.GOLD;
+import static net.md_5.bungee.api.ChatColor.GREEN;
+import static net.md_5.bungee.api.ChatColor.RED;
+
 /**
- * Shows additional information and proposed actions about/with the according home when its hologram is clicked.
+ * Shows additional information and proposed actions for the associated home when its hologram is clicked.
  *
  * @author Janmm14
  */
 public class HomeInfoTouchHandler implements TouchHandler {
 
-    @NonNull
+    @NotNull
     private final Home home;
-    @NonNull
+    @NotNull
     private final Set<UUID> plrsToShow;
 
-    public HomeInfoTouchHandler(Home home, Set<UUID> plrsToShow) {
+    public HomeInfoTouchHandler(@NotNull Home home, @NotNull Set<UUID> plrsToShow) {
         this.home = home;
         this.plrsToShow = plrsToShow;
     }
@@ -35,73 +41,66 @@ public class HomeInfoTouchHandler implements TouchHandler {
             return;
         }//@formatter:off
         BaseComponent[] components = new ComponentBuilder("Home options: ")
-            .color(ChatColor.GOLD)
+            .color(GOLD)
             .append("[TELEPORT]")
-            .color(ChatColor.GREEN)
+            .color(GREEN)
             .event(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder("Klicken für ")
-                    .color(ChatColor.GOLD)
-                    .append("/homeutil tp " + home.getEssentialsDataUser().getUuid() + ' ' + home.getName())
-                    .color(ChatColor.RED)
+                    .color(GOLD)
+                    .append("/homeutil tp " + home.getEssentialsPlayerData().getUuid() + ' ' + home.getName())
+                    .color(RED)
                     .create()))
-            .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                "/homeutil tp " + home.getEssentialsDataUser().getUuid() + ' ' + home.getName()))
+            .event(new ClickEvent(Action.SUGGEST_COMMAND,
+                    "/jhu tp " + home.getEssentialsPlayerData().getUuid() + ' ' + home.getName()))
 
-            .append(" ").reset()
+            .append(" ", FormatRetention.NONE)
             .append("[ALLE HOMES DES USERS]")
-            .color(ChatColor.GOLD)
+            .color(GOLD)
             .event(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder("Klicken für ")
-                    .color(ChatColor.GOLD)
-                    .append("/home " + home.getEssentialsDataUser().getLastName() + ":") //that works also if the user is offline
-                    .color(ChatColor.RED)
+                    .color(GOLD)
+                    .append("/home " + home.getEssentialsPlayerData().getLastName() + ":") //that works also if the user is offline
+                    .color(RED)
                     .create()))
-            .event(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND,
-                "/home " + home.getEssentialsDataUser().getLastName() + ":"))
+            .event(new ClickEvent(Action.RUN_COMMAND, "/home " + home.getEssentialsPlayerData().getLastName() + ":"))
 
-            .append(" ").reset()
+            .append(" ", FormatRetention.NONE)
             .append("[LÖSCHEN]")
-            .color(ChatColor.RED)
+            .color(RED)
             .event(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder("Klicken für ")
-                    .color(ChatColor.GOLD)
-                    .append("/homeutil delete " + home.getEssentialsDataUser().getUuid() + ' ' + home.getName())
-                    .color(ChatColor.RED)
+                    .color(GOLD)
+                    .append("/homeutil delete " + home.getEssentialsPlayerData().getUuid() + ' ' + home.getName())
+                    .color(RED)
                     .create()))
-            .event(new ClickEvent(
-                ClickEvent.Action.SUGGEST_COMMAND,
-                "/homeutil delete " + home.getEssentialsDataUser().getUuid() + ' ' + home.getName()))
+            .event(new ClickEvent(Action.SUGGEST_COMMAND,
+                    "/jhu delete " + home.getEssentialsPlayerData().getUuid() + ' ' + home.getName()))
 
-            .append(" ").reset()
+            .append(" ", FormatRetention.NONE)
             .append("[USERNAME]")
-            .color(ChatColor.GOLD)
-            .event(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder("Füge den Usernamen in den Chat ein: ")
-                    .color(ChatColor.GOLD)
-                    .append(home.getEssentialsDataUser().getLastName())
-                    .color(ChatColor.GREEN)
+            .color(GOLD)
+            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder("Benutzernamen kopieren: ")
+                    .color(GOLD)
+                    .append(home.getEssentialsPlayerData().getLastName())
+                    .color(GREEN)
                     .create()))
-            .event(
-                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, home.getEssentialsDataUser().getLastName()))
+            .event(new ClickEvent(Action.SUGGEST_COMMAND, home.getEssentialsPlayerData().getLastName()))
 
-            .append(" ").reset()
+            .append(" ", FormatRetention.NONE)
             .append("[UUID]")
-            .color(ChatColor.GOLD)
+            .color(GOLD)
             .event(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder("Füge die User-UUID in den Chat ein: ")
-                    .color(ChatColor.GOLD)
-                    .append(home.getEssentialsDataUser().getUuid().toString())
-                    .color(ChatColor.GREEN)
+                new ComponentBuilder("UUID kopieren: ")
+                    .color(GOLD)
+                    .append(home.getEssentialsPlayerData().getUuid().toString())
+                    .color(GREEN)
                     .create()))
-            .event(new ClickEvent(
-                ClickEvent.Action.SUGGEST_COMMAND,
-                home.getEssentialsDataUser().getUuid().toString()
+            .event(new ClickEvent(Action.SUGGEST_COMMAND, home.getEssentialsPlayerData().getUuid().toString()
             )).create();//@formatter:on
         player.spigot().sendMessage(components);
     }
