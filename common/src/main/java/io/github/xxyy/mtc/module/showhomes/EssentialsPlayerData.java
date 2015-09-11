@@ -1,10 +1,7 @@
 package io.github.xxyy.mtc.module.showhomes;
 
-import io.github.xxyy.common.util.LocationHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +31,7 @@ public final class EssentialsPlayerData {
     @NotNull
     private Set<Home> homes = new HashSet<>();
 
-    private EssentialsPlayerData(@NotNull ShowHomesModule module, @NotNull UUID uuid, @NotNull String lastName, @NotNull File file) {
+    EssentialsPlayerData(@NotNull ShowHomesModule module, @NotNull UUID uuid, @NotNull String lastName, @NotNull File file) {
         this.module = module;
         this.uuid = uuid;
         this.lastName = lastName;
@@ -76,13 +73,14 @@ public final class EssentialsPlayerData {
     public void setHome(@NotNull Player executor, @NotNull String homeName) {
         setHome(executor, homeName, executor.getLocation());
     }
-        /**
-         * Sets a home of this user.
-         *
-         * @param executor the player who executed the command
-         * @param homeName the home to set
-         * @param loc      the location to set the home to
-         */
+
+    /**
+     * Sets a home of this user.
+     *
+     * @param executor the player who executed the command
+     * @param homeName the home to set
+     * @param loc      the location to set the home to
+     */
     public void setHome(@NotNull Player executor, @NotNull String homeName, @NotNull Location loc) {
         //TODO notify Essentials cache about changes
         Player target = Bukkit.getPlayer(uuid);
@@ -123,56 +121,6 @@ public final class EssentialsPlayerData {
         executor.sendMessage("§aDer Home " + homeName + " von " + lastName + " wurde erfolgreich gesetzt.");
     }
 
-    /**
-     * Reads homes of the given essentials userdata file
-     *
-     * @param userdataFile the file to read the homes from
-     * @return a new EssentialsPlayerData object containing the read data
-     */
-    public static EssentialsPlayerData fromFile(@NotNull ShowHomesModule module, @NotNull File userdataFile) {
-        String fileName = userdataFile.getName();
-        UUID uuid = UUID.fromString(fileName.substring(0, fileName.length() - ".yml".length()));
-
-        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(userdataFile);
-
-        String lastAccountName = cfg.getString("lastAccountName");
-        if (lastAccountName == null || lastAccountName.isEmpty()) {
-            lastAccountName = uuid.toString();
-        }
-
-        EssentialsPlayerData essentialsPlayerData = new EssentialsPlayerData(module, uuid, lastAccountName, userdataFile);
-
-        ConfigurationSection homesSection = cfg.getConfigurationSection("homes");
-        if (homesSection == null) { //homes is not a required value in Essentials user files
-            return essentialsPlayerData;
-        }
-        Set<String> homeNames = homesSection.getKeys(false);
-        final Set<Home> homes = new HashSet<>(homeNames.size());
-
-        for (String homeName : homeNames) {
-            ConfigurationSection homeSection = homesSection.getConfigurationSection(homeName);
-            String worldName = homeSection.getString("world");
-            //ignore homes which world is not loaded currently
-            World world = Bukkit.getWorld(worldName);
-            if (world == null) {
-                module.getPlugin().getLogger()
-                        .warning("[ShowHomes] Could not find world '" + worldName + "' defined in home '" + homeName +
-                                "' by user " + lastAccountName + " (UUID: " + uuid + ")");
-                continue;
-            }
-            Location loc = LocationHelper.fromConfiguration(homeSection);
-            homes.add(new Home(essentialsPlayerData, loc, homeName));
-        }
-        essentialsPlayerData.homes = homes;
-        return essentialsPlayerData;
-    }
-
-    public static EssentialsPlayerData fromFile(@NotNull ShowHomesModule module, @NotNull UUID uuid) {
-        File essentialsUserdataFolder = module.getEssentialsUserdataFolder();
-        File yaml = new File(essentialsUserdataFolder, uuid + ".yml");
-        return fromFile(module, yaml);
-    }
-
     @NotNull
     public ShowHomesModule getModule() {
         return this.module;
@@ -196,6 +144,10 @@ public final class EssentialsPlayerData {
     @NotNull
     public Set<Home> getHomes() {
         return this.homes;
+    }
+
+    void setHomes(@NotNull Set<Home> homes) {
+        this.homes = homes;
     }
 
     @Override

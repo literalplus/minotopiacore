@@ -166,7 +166,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                         " (relevante Homes: §b" + homes.size() + "§6)");
             }
 
-            EssentialsPlayerData essentialsPlayerData = EssentialsPlayerData.fromFile(this, file);
+            EssentialsPlayerData essentialsPlayerData = EssentialsPlayerDataManager.fromFile(this, file);
             if (essentialsPlayerData == null) {
                 continue;
             }

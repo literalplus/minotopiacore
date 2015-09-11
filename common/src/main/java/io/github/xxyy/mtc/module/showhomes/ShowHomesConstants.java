@@ -3,7 +3,7 @@ package io.github.xxyy.mtc.module.showhomes;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-public final class ShowHomesConstants {
+public final class ShowHomesConstants { //TODO remove
 
     static final DecimalFormat DECIMAL_FORMAT = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.GERMAN);
 

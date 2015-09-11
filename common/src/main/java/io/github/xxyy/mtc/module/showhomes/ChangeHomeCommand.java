@@ -56,7 +56,7 @@ public class ChangeHomeCommand implements TabExecutor {
             if (uuid.version() != 3 && uuid.version() != 4) {
                 plr.sendMessage("§cDie UUID ist keine valide Minecraft-UUID!");
             }
-            EssentialsPlayerData user = EssentialsPlayerData.fromFile(module, uuid);
+            EssentialsPlayerData user = EssentialsPlayerDataManager.fromFile(module, uuid);
             if (user == null) {
                 plr.sendMessage("§cKonnte Homes nicht lesen!");
                 return true;
