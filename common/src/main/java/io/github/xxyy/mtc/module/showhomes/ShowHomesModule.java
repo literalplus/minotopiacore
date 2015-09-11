@@ -42,6 +42,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
     private int hologramDuration = ShowHomesConstants.HOLOGRAM_DURATION_DEFAULT;
     private int hologramRateLimit = ShowHomesConstants.HOLOGRAM_RATE_LIMIT_DEFAULT;
 
+    private EssentialsPlayerDataManager essentialsPlayerDataManager;
 
     public ShowHomesModule() {
         super(NAME, "modules/showhomes.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -69,13 +70,14 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         super.enable(plugin);
         File essentialsPluginFolder = plugin.getServer().getPluginManager().getPlugin("Essentials").getDataFolder();
         essentialsUserdataFolder = new File(essentialsPluginFolder, "userdata");
+        essentialsPlayerDataManager = new EssentialsPlayerDataManager(this);
 
         setConfigDefaults();
         readConfig();
         configuration.options().copyDefaults(true).copyHeader(true);
         save();
         plugin.setExec(new ShowHomesCommand(this), "jshowhomes");
-        plugin.setExecAndCompleter(new ChangeHomeCommand(this), "jhomeutil");
+        plugin.setExec(new ChangeHomeCommand(this), "jhomeutil");
     }
 
     @Override
@@ -84,6 +86,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         setConfigDefaults();
         readConfig();
         save();
+        essentialsPlayerDataManager.clearCache();
     }
 
     @Override
@@ -98,6 +101,8 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         taskIdByUser.values()
                 .forEach(plugin.getServer().getScheduler()::cancelTask);
         taskIdByUser.clear();
+        essentialsPlayerDataManager.clearCache();
+        essentialsPlayerDataManager = null;
     }
 
     private void setConfigDefaults() {
@@ -166,7 +171,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                         " (relevante Homes: §b" + homes.size() + "§6)");
             }
 
-            EssentialsPlayerData essentialsPlayerData = EssentialsPlayerDataManager.fromFile(this, file);
+            EssentialsPlayerData essentialsPlayerData = essentialsPlayerDataManager.getByFile(file);
             if (essentialsPlayerData == null) {
                 continue;
             }
@@ -194,7 +199,7 @@ public class ShowHomesModule extends ConfigurableMTCModule {
         Collection<? extends Player> plrs = Bukkit.getOnlinePlayers();
         return plrs.stream()
                 .filter(plr -> plr.hasPermission("showhomes.see"))
-                .map(OfflinePlayer::getUniqueId)
+                .map(OfflinePlayer::getUniqueId) // why can't we use Player::getUniqueId, java pls allow method references by subclass, using OfflinePlayer looks ugly and leads to misinterpretation we get the oflline uuid
                 .collect(Collectors.toSet());
     }
 
@@ -213,6 +218,10 @@ public class ShowHomesModule extends ConfigurableMTCModule {
                 .forEach(player -> player.sendMessage(exceptionString));
 
         t.printStackTrace();
+    }
+
+    public EssentialsPlayerDataManager getEssentialsPlayerDataManager() {
+        return essentialsPlayerDataManager;
     }
 
     public Multimap<UUID, Home> getHolosByExecutingUser() {

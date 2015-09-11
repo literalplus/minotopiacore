@@ -30,6 +30,7 @@ public final class EssentialsPlayerData {
     private final File file;
     @NotNull
     private Set<Home> homes = new HashSet<>();
+    private boolean modified;
 
     EssentialsPlayerData(@NotNull ShowHomesModule module, @NotNull UUID uuid, @NotNull String lastName, @NotNull File file) {
         this.module = module;
@@ -81,6 +82,7 @@ public final class EssentialsPlayerData {
      * @param homeName the home to set
      * @param loc      the location to set the home to
      */
+    @Deprecated
     public void setHome(@NotNull Player executor, @NotNull String homeName, @NotNull Location loc) {
         //TODO notify Essentials cache about changes
         Player target = Bukkit.getPlayer(uuid);
@@ -110,7 +112,7 @@ public final class EssentialsPlayerData {
         }
         homes.removeIf(home2 -> {
             if (home2.getName().equalsIgnoreCase(homeName)) {
-                home2.getHologram().delete();
+                home2.hideHologram();
                 return true;
             }
             return false;
@@ -119,6 +121,33 @@ public final class EssentialsPlayerData {
         homes.add(newHome);
         newHome.showHologram(module);
         executor.sendMessage("§aDer Home " + homeName + " von " + lastName + " wurde erfolgreich gesetzt.");
+    }
+
+    public void saveChanges() {
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+        if (!modified) {
+            return;
+        }
+        homes.stream()
+                .filter(Home::isModified)
+                .forEach(home -> home.serialize(cfg));
+
+        try {
+            cfg.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified(boolean modified) {
+        if (this.modified) { //once modified, this stays
+            return;
+        }
+        this.modified = modified;
     }
 
     @NotNull
@@ -165,10 +194,7 @@ public final class EssentialsPlayerData {
 
     @Override
     public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = result * PRIME + this.uuid.hashCode();
-        return result;
+        return 59 + this.uuid.hashCode();
     }
 
     @Override

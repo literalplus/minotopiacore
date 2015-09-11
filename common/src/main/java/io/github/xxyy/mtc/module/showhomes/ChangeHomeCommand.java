@@ -1,16 +1,15 @@
 package io.github.xxyy.mtc.module.showhomes;
 
 import io.github.xxyy.common.util.UUIDHelper;
-import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,12 +17,12 @@ import java.util.UUID;
  *
  * @author Janmm14
  */
-public class ChangeHomeCommand implements TabExecutor {
+public class ChangeHomeCommand implements CommandExecutor {
 
-    @NonNull
+    @NotNull
     private final ShowHomesModule module;
 
-    public ChangeHomeCommand(ShowHomesModule module) {
+    public ChangeHomeCommand(@NotNull ShowHomesModule module) {
         this.module = module;
     }
 
@@ -33,7 +32,7 @@ public class ChangeHomeCommand implements TabExecutor {
         try {
             if (!sender.hasPermission("essentials.sethome.others") && !sender.hasPermission("essentials.delhome.others") &&
                     !sender.hasPermission("essentials.home.others")) {
-                sender.sendMessage("§cDu bist nicht berechtigt, dieses Kommnado zu benutzen!");
+                sender.sendMessage("§cDu bist nicht berechtigt, diesen Befehl zu benutzen!");
             }
             if (!(sender instanceof Player)) {
                 sender.sendMessage("§cNur Spieler können diesen Befehl verwenden!");
@@ -43,20 +42,16 @@ public class ChangeHomeCommand implements TabExecutor {
             if (args.length < 3) {
                 return showHelp(plr);
             }
-            UUID uuid;
-            if (!UUIDHelper.isValidUUID(args[1])) {
-                plr.sendMessage("§c\"§6" + args[1] + "\"§c ist keine valide UUID. Bindestriche vergessen?");
-            }
-            try {
-                uuid = UUID.fromString(args[1]);
-            } catch (Exception ex) {
+            UUID uuid = UUIDHelper.getFromString(args[1]);
+            if (uuid == null) {
                 plr.sendMessage("§c\"§6" + args[1] + "\"§c ist keine valide UUID. Bindestriche vergessen?");
                 return true;
             }
+
             if (uuid.version() != 3 && uuid.version() != 4) {
                 plr.sendMessage("§cDie UUID ist keine valide Minecraft-UUID!");
             }
-            EssentialsPlayerData user = EssentialsPlayerDataManager.fromFile(module, uuid);
+            EssentialsPlayerData user = module.getEssentialsPlayerDataManager().get(uuid);
             if (user == null) {
                 plr.sendMessage("§cKonnte Homes nicht lesen!");
                 return true;
@@ -124,10 +119,5 @@ public class ChangeHomeCommand implements TabExecutor {
                 .color(ChatColor.GOLD)
                 .create());
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-        return null; //maybe sometimes later
     }
 }
