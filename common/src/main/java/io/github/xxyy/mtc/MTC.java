@@ -6,6 +6,7 @@
  */
 package io.github.xxyy.mtc;
 
+import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
 import org.bukkit.Bukkit;
@@ -300,7 +301,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             pm.registerEvents(listener, this);
             logoutHandler = listener;
         } else {
-            logoutHandler = (id) -> false; //overrides isFighting method - I know this is dirty, suggest something better if you have it
+            logoutHandler = new DummyLogoutHandler();
         }
 
         this.regEvents(pm, new LightningListener(), "enable.misc.lighting.cow", true);
