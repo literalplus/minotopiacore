@@ -12,7 +12,9 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.logging.LogManager;
+import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.fulltag.model.FullData;
@@ -25,6 +27,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -37,7 +40,7 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 10/09/15
  */
-public class FullDistributionManager {
+public class FullDistributionManager implements CacheHelper.Cache {
     private static final Logger LOGGER = LogManager.getLogger(FullDistributionManager.class);
     private static final String STORAGE_PATH = "unstored";
 
@@ -46,16 +49,17 @@ public class FullDistributionManager {
     // Immediately queued fulls with data attached already, waiting for their receiver to retrieve them
     private final SetMultimap<UUID, FullInfo> queuedFullInfos = MultimapBuilder.hashKeys().hashSetValues().build();
     private final ManagedConfiguration storage;
+    @Nonnull
     private final FullTagModule module;
 
-    public FullDistributionManager(FullTagModule module) {
+    public FullDistributionManager(@Nonnull FullTagModule module) {
         this.module = module;
         this.storage = ManagedConfiguration.fromDataFolderPath( //TODO: Migrate to SQL
-                "modules/fulltag/dist.stor.yml", ClearCacheBehaviour.SAVE, module.getPlugin()
+                "modules/fulltag/dist.stor.yml", ClearCacheBehaviour.NOTHING, module.getPlugin()
         );
 
         ConfigurationSection section = storage.getConfigurationSection(STORAGE_PATH);
-        if(section == null) {
+        if (section == null) {
             section = storage.createSection(STORAGE_PATH);
         }
         for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
@@ -78,9 +82,10 @@ public class FullDistributionManager {
      * @param info     the full info of the item to store
      * @param receiver the player who is going to receive the item
      */
-    public void requestStore(FullInfo info, Player receiver) {
+    public void requestStore(@Nonnull FullInfo info, Player receiver) {
         Preconditions.checkNotNull(info, "info");
         Preconditions.checkNotNull(receiver, "receiver");
+        Preconditions.checkArgument(info.getData() != null, "info must have valid data associated!");
         LOGGER.info("Full storage request: {} -> {} (from {})",
                 info.getId(), info.getData().getReceiverId(), info.getData().getSenderId());
 
@@ -95,7 +100,7 @@ public class FullDistributionManager {
      *
      * @param receiver the player to notify
      */
-    public void notifyWaiting(Player receiver) {
+    public void notifyWaiting(@Nonnull Player receiver) {
         long waitingItemCount = queuedFulls.values().stream()
                 .filter(u -> receiver.getUniqueId().equals(u))
                 .count();
@@ -122,13 +127,15 @@ public class FullDistributionManager {
      * @param receiver the player who is going to receive the stack, may not be null
      * @return an item stack for that data and receiver
      */
-    public ItemStack createStack(FullData data, Player receiver) {
+    @Nonnull
+    public ItemStack createStack(@Nonnull FullData data, @Nonnull Player receiver) {
         Preconditions.checkNotNull(receiver, "receiver");
         Preconditions.checkNotNull(data, "data");
 
         ItemStackFactory factory = new ItemStackFactory(data.getPart().getMaterial())
                 .lore(FullTagModule.FULL_LORE_PREFIX + data.getId())
-                .lore(String.format("§6Besitzer: %s/%s", data.getReceiverId(), receiver.getName()));
+                .lore(String.format("§6Besitzer: %s", receiver.getName()))
+                .lore(String.format("§6UUID: %s", receiver.getUniqueId().toString().substring(0, 9)));
 
         Arrays.stream(Enchantment.values())
                 .filter(e -> e.canEnchantItem(factory.getBase()))
@@ -147,19 +154,27 @@ public class FullDistributionManager {
      * @param receiver the player to request information for
      * @param callback the callback to call with the information
      */
-    public void requestRetrievableFulls(Player receiver, Consumer<Set<FullInfo>> callback) {
+    public void requestRetrievableFulls(@Nonnull Player receiver, @Nonnull Consumer<Set<FullInfo>> callback) {
         Preconditions.checkNotNull(receiver, "receiver");
         Preconditions.checkNotNull(callback, "callback");
 
         Set<Integer> queuedIds = getQueuedFullIds(receiver.getUniqueId());
+        Set<Integer> unfetchedIds = new HashSet<>(queuedIds);
         Set<FullInfo> queuedInfos = queuedFullInfos.get(receiver.getUniqueId());
 
-        queuedInfos.forEach(fi -> queuedIds.remove(fi.getId()));
+        queuedInfos.forEach(fi -> unfetchedIds.remove(fi.getId()));
 
-        if (!queuedIds.isEmpty()) { //Runs async because database latency shouldn't stop the main thread
+        if (!unfetchedIds.isEmpty()) { //Runs async because database latency shouldn't stop the main thread
             module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
-                Set<FullInfo> fullInfos = queuedIds.stream()
-                        .map(getModule().getRegistry()::getById)
+                Set<FullInfo> fullInfos = unfetchedIds.stream()
+                        .map(id -> {
+                            FullInfo info = getModule().getRegistry().getById(id);
+                            if (info == null || info.getData() == null || !info.getData().isValid()) {
+                                queuedFulls.remove(id); //If the info is no longer valid, remove from queue too to prevent players from seeing it again, etc
+                            }
+                            return info;
+                        })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toSet());
                 fullInfos.addAll(queuedInfos);
 
@@ -172,6 +187,11 @@ public class FullDistributionManager {
         }
     }
 
+    @Override
+    public void clearCache(boolean forced, MTC plugin) {
+        saveStorage();
+    }
+
     /**
      * Attempts to store a full item in a player's inventory.
      *
@@ -179,7 +199,8 @@ public class FullDistributionManager {
      * @param receiver the player whose inventory to store in
      * @return whether the item has been added to the inventory
      */
-    protected boolean attemptStore(FullInfo info, Player receiver) {
+    protected boolean attemptStore(@Nonnull FullInfo info, @Nonnull Player receiver) {
+        Preconditions.checkArgument(info.getData() != null, "info must have valid associated data");
         if (!receiver.isOnline()) {
             return false;
         }
@@ -203,6 +224,7 @@ public class FullDistributionManager {
                 .collect(Collectors.toSet());
     }
 
+    @Nonnull
     public FullTagModule getModule() {
         return module;
     }

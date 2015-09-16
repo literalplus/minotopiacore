@@ -12,6 +12,7 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.fulltag.dist.CommandRetrieveFull;
 import io.github.xxyy.mtc.module.fulltag.dist.FullDistributionManager;
 import io.github.xxyy.mtc.module.fulltag.model.FullDataRepository;
 import io.github.xxyy.mtc.module.fulltag.model.FullInfo;
@@ -57,6 +58,7 @@ public class FullTagModule extends ConfigurableMTCModule {
         distributionManager = new FullDistributionManager(this);
 
         plugin.getCommand("full").setExecutor(new CommandFullTag(this));
+        plugin.getCommand("fulls").setExecutor(new CommandRetrieveFull(this));
         plugin.getServer().getPluginManager().registerEvents(new FullTagListener(this), getPlugin());
     }
 

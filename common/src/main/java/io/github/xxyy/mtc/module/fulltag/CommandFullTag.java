@@ -146,6 +146,8 @@ public final class CommandFullTag implements CommandExecutor {
 
         final Player finalReceiver = receiver;
         final boolean finalThorns = thorns;
+        sender.sendMessage(String.format("%s§eBitte warten, §6%d §eFullteile werden für §6%s §ebereitgestellt...",
+                module.getPlugin().getChatPrefix(), parts.size(), receiver.getName()));
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
                     List<FullInfo> createdInfos = new LinkedList<>();
                     for (FullPart part : parts) {
@@ -158,13 +160,14 @@ public final class CommandFullTag implements CommandExecutor {
                         ));
                     }
 
-                    module.getPlugin().getServer().getScheduler().runTask(module.getPlugin(), () ->
-                            createdInfos.forEach(info -> {
-                                        module.getDistributionManager().requestStore(info, finalReceiver);
-                                        sender.sendMessage(String.format("%s%d Fullitems erstellt.",
-                                                module.getPlugin().getChatPrefix(), createdInfos.size()));
-                                    }
-                            ));
+                    module.getPlugin().getServer().getScheduler().runTask(module.getPlugin(), () -> {
+                        createdInfos.forEach(info ->
+                                        module.getDistributionManager().requestStore(info, finalReceiver)
+                        );
+                        module.getDistributionManager().notifyWaiting(finalReceiver);
+                        sender.sendMessage(String.format("%s%d Fullitems erstellt.",
+                                module.getPlugin().getChatPrefix(), createdInfos.size()));
+                    });
                 }
         );
         return true;

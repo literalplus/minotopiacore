@@ -51,8 +51,8 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="100"/>
         </RollingFile>
-        <RollingFile name="FullTagCmdLogFile" fileName="${sys:mtc.logsdir}fulltag-cmd.log"
-                     filePattern="${sys:mtc.logsdir}fulltag-cmd/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="FullTagDistLogFile" fileName="${sys:mtc.logsdir}fulltag-dist.log"
+                     filePattern="${sys:mtc.logsdir}fulltag-dist/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="${pattern}"/>
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="200"/>
@@ -65,8 +65,8 @@
         <Logger name="io.github.xxyy.mtc.module.fulltag" level="info" additivity="false">
             <AppenderRef ref="FullTagLogFile"/>
         </Logger>
-        <Logger name="io.github.xxyy.mtc.module.fulltag.CommandFullTag" level="info" additivity="false">
-            <AppenderRef ref="FullTagCmdLogFile"/>
+        <Logger name="io.github.xxyy.mtc.module.fulltag.dist" level="info" additivity="false">
+            <AppenderRef ref="FullTagDistLogFile"/>
         </Logger>
         <Logger name="io.github.xxyy.mtc.chat" level="info" additivity="false">
             <AppenderRef ref="ChatLogFile"/>
