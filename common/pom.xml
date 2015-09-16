@@ -40,10 +40,6 @@
             <artifactId>PermissionsEx</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.ess3</groupId>
-            <artifactId>Essentials</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>worldguard</artifactId>
         </dependency>

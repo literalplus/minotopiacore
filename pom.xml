@@ -63,11 +63,6 @@
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
         </repository>
         <repository>
-            <id>essentials-repo</id>
-            <!-- Essentials -->
-            <url>http://repo.ess3.net/content/groups/essentials</url>
-        </repository>
-        <repository>
             <id>jcenter</id>
             <!-- PowerMock -->
             <url>http://jcenter.bintray.com/</url>
@@ -112,12 +107,6 @@
                 <groupId>net.milkbowl.vault</groupId>
                 <artifactId>VaultAPI</artifactId>
                 <version>1.4</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.ess3</groupId>
-                <artifactId>Essentials</artifactId>
-                <version>2.13-SNAPSHOT</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
