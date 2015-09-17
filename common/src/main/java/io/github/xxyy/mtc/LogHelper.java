@@ -17,7 +17,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * @deprecated Has several issues in code style and functionality. Use {@link io.github.xxyy.mtc.logging.LogManager}.
+ */
+@Deprecated
 public final class LogHelper {
 
     private static final Logger MAIN_LOGGER = Logger.getLogger("MTC");
@@ -48,10 +51,6 @@ public final class LogHelper {
         return LogHelper.BAD_CMD_LOGGER;
     }
 
-    public static Logger getBanLogger() {
-        return LogHelper.BAN_LOGGER;
-    }
-
     public static Logger getChatLogger() {
         return LogHelper.CHAT_LOGGER;
     }
@@ -72,16 +71,12 @@ public final class LogHelper {
         return LogHelper.PRIV_CHAT_LOGGER;
     }
 
-    public static Logger getWarnLogger() {
-        return LogHelper.WARN_LOGGER;
-    }
-
     public static void initLogs() {
 
         File logDirectory = new File(MTC.instance().getDataFolder() + "/logs/");
 
         if (!logDirectory.isDirectory()) {
-            if(logDirectory.isFile()) {
+            if (logDirectory.isFile()) {
                 throw new IllegalStateException("logs in the plugin data dir is a file while it should be a directory."); //The day this happens is the day I send every user a package with a cookie
 
             }
