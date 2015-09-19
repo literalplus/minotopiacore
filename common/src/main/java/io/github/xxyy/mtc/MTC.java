@@ -6,17 +6,6 @@
  */
 package io.github.xxyy.mtc;
 
-import io.github.xxyy.mtc.misc.DummyLogoutHandler;
-import me.minotopia.mitoscb.SBHelper;
-import me.minotopia.mitoscb.SqlConsts2;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginManager;
-
 import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.misc.HelpManager;
@@ -26,15 +15,9 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.mtc.api.PlayerGameManager;
-import io.github.xxyy.mtc.chat.ChatListener;
-import io.github.xxyy.mtc.chat.CommandChatClear;
-import io.github.xxyy.mtc.chat.CommandChatFarbe;
-import io.github.xxyy.mtc.chat.CommandGlobalMute;
-import io.github.xxyy.mtc.chat.CommandMute;
-import io.github.xxyy.mtc.chat.CommandPrivateChat;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
+import io.github.xxyy.mtc.chat.*;
 import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
+import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
 import io.github.xxyy.mtc.clan.ui.CommandClan;
 import io.github.xxyy.mtc.clan.ui.CommandClanAdmin;
 import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
@@ -50,19 +33,19 @@ import io.github.xxyy.mtc.hook.XLoginHook;
 import io.github.xxyy.mtc.listener.*;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.AntiLogoutHandler;
+import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
-import io.github.xxyy.mtc.misc.cmd.CommandBReload;
-import io.github.xxyy.mtc.misc.cmd.CommandGiveAll;
-import io.github.xxyy.mtc.misc.cmd.CommandList;
-import io.github.xxyy.mtc.misc.cmd.CommandLore;
-import io.github.xxyy.mtc.misc.cmd.CommandMTC;
-import io.github.xxyy.mtc.misc.cmd.CommandPeace;
-import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
-import io.github.xxyy.mtc.misc.cmd.CommandRandom;
-import io.github.xxyy.mtc.misc.cmd.CommandTeam;
+import io.github.xxyy.mtc.misc.cmd.*;
 import io.github.xxyy.mtc.module.ModuleManager;
-
-import java.util.Arrays;
+import me.minotopia.mitoscb.SBHelper;
+import me.minotopia.mitoscb.SqlConsts2;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginManager;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable {
 
@@ -163,7 +146,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         MTC.instance = this;
         LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
         logger = LogManager.getLogger(getClass());
+        logger.info("=================================================");
         logger.info("Logging context initialised!");
+        logger.info("Enabling " + PLUGIN_VERSION.toString());
+        logger.info("Container: " + getServer().getVersion());
 
         this.reloadConfig();
         final PluginManager pluginManager = this.getServer().getPluginManager();
