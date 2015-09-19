@@ -6,6 +6,7 @@ main: io.github.xxyy.mtc.MTC
 depend: [XYC]
 softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials, HolographicDisplays, HologrpahicDisplaysPatch]
 website: http://xxyy.github.io/
+prefix: MTC
 
 
 commands:
