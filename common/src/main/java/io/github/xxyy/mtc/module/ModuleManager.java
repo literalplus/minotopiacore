@@ -156,7 +156,7 @@ public class ModuleManager {
                 enabledModules.remove(module.getClass());
                 module.disable(plugin);
             }
-        } catch (Exception e) {
+        } catch (Exception | NoClassDefFoundError e) { //occurs at disable when reloading with replaced jar
             plugin.getLogger().log(Level.SEVERE, "Module " + module.getName() + " failed to change enabled state:", e);
         }
     }
