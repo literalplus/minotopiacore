@@ -39,9 +39,11 @@ import io.github.xxyy.mtc.misc.cmd.*;
 import io.github.xxyy.mtc.module.ModuleManager;
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -89,172 +91,193 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     @Override
     public void reloadConfig() {
-        logInfo("Reloading MTC config!");
+        log(Level.INFO, "Reloading MTC config...");
         super.reloadConfig();
         ConfigHelper.onConfigReload(this);
-        logInfo("Reloading MTC module configs...");
+        log(Level.DEBUG, "Reloading MTC module configs...");
         moduleManager.getEnabledModules().forEach(m -> m.reload(this));
-        logInfo("Reloaded MTC configs!");
+        log(Level.DEBUG, "Reloaded MTC configs!");
     }
 
     @Override
     public void disable() {
-        logInfo("Disabling modules...");
-        moduleManager.getEnabledModules().forEach(m -> moduleManager.setEnabled(m, false));
-        logInfo("Disabled modules!");
+        try {
+            log(Level.INFO, "Disabling modules...");
+            moduleManager.getEnabledModules().forEach(m -> moduleManager.setEnabled(m, false));
+            log(Level.INFO, "Disabled modules!");
 
-        //SQL
-        if (this.ssql2 != null) {
-            this.ssql2.preReload();
+            //SQL
+            if (this.ssql2 != null) {
+                this.ssql2.preReload();
+            }
+
+            ///HELP
+            HelpManager.clearHelpManagers();
+
+            //CHAT
+            MTCChatHelper.clearPrivateChats();
+
+            //CLEANING
+            StatsHelper.flushQueue();
+
+            //SCOREBOARD
+            for (Player plr : Bukkit.getOnlinePlayers()) {
+                plr.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            }
+            LogHelper.flushAll();
+        } catch (Exception e) {
+            getLogger().warning("Unable to disable MTC. Resources might not have been freed up properly, restart asap.");
+            e.printStackTrace();
+            logger.error("Encountered an exception while attempting to disable. Resources might still be open. " +
+                    "Please restart the container as soon as possible.");
+            logger.error("Encountered this: ", e);
+            logger.info("Attempting to finish important cleanup tasks...");
+            CommandHelper.broadcast(String.format("§cMTC failed to disable - %s: %s",
+                    e.getClass().getSimpleName(), e.getMessage()), "mtc.ignore");
         }
 
-        ///HELP
-        HelpManager.clearHelpManagers();
-
-        //CHAT
-        MTCChatHelper.clearPrivateChats();
-
-        //CLEANING
-        StatsHelper.flushQueue();
-
-        //SCOREBOARD
-        for (Player plr : Bukkit.getOnlinePlayers()) {
-            plr.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-
-        if (this.showDisableMsg) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC]MTC disabled :(");
-        }
 
         for (Player plr : Bukkit.getOnlinePlayers()) {
             final ItemStack itemOnCursor = plr.getItemOnCursor();
-            if (itemOnCursor != null) {
+            if (itemOnCursor != null && itemOnCursor.getType() != Material.AIR) {
                 getLog().info("itemOnCursor @{}: {}", plr.getName(), itemOnCursor);
                 plr.setItemOnCursor(null);
             }
             plr.closeInventory();
         }
-        LogHelper.flushAll();
 
         MTC.instance = null;
-        logInfo("Disabled MTC, now shutting down logging system... Goodbye world :(");
+        log(Level.INFO, "I'm afraid, Dave.");
         LogManager.setPlugin(null);
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC] MTC disabled =(");
     }
 
     @Override
     public void enable() {
         MTC.instance = this;
-        LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
-        logger = LogManager.getLogger(getClass());
-        logger.info("=================================================");
-        logger.info("Logging context initialised!");
-        logger.info("Enabling " + PLUGIN_VERSION.toString());
-        logger.info("Container: " + getServer().getVersion());
+        try {
+            LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
+            logger = LogManager.getLogger(getClass());
+            logger.info("=================================================");
+            logger.info("Enabling {}...", PLUGIN_VERSION.toString());
+            logger.info("Container: {}", getServer().getVersion());
 
-        this.reloadConfig();
-        final PluginManager pluginManager = this.getServer().getPluginManager();
+            this.reloadConfig();
+            final PluginManager pluginManager = this.getServer().getPluginManager();
 
-        if (!this.getConfig().getBoolean("enable.mtc", true)) {
-            Bukkit.getConsoleSender().sendMessage("§8[MTC]§eAborting! Disabled in config.");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        //XYC LOCALIZATION
-        LangHelper.copyLangsFromJar(this, this);
-        if (LangHelper.localiseString("XU-name", "xxyy98", this.getName()).equals("XU-name")) {
-            CommandHelper.sendMessageToOpsAndConsole("§e§l[MTC][WARNING] Language files not loaded. There may be some funny messages.");
-        }
-
-        //CONFIG
-        ConfigHelper.initMainConfig();
-
-        //COMMANDS
-        registerCommands();
-
-        //MODULES
-        logger.info("Loading modules!");
-        moduleManager.load(moduleManager.findShippedModules());
-
-        //HELP
-        MTCHelper.initHelp();
-
-        //LISTENERS
-        registerEventListeners(pluginManager);
-
-        //RUNNABLES
-        if (this.getConfig().getBoolean("enable.cron.5m", true)) {
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableCronjob5Minutes(false, this), 2 * 60 * 20, 5 * 60 * 20);
-            getLogger().info("Automatically saving world every 5 minutes.");
-        }
-
-        //HOOKS
-        logger.info("Hooking hooks!");
-        this.xLoginHook = new XLoginHook(this);
-        this.vaultHook = new VaultHook(this);
-        this.worldGuardHook = new WorldGuardHook(this);
-        this.pexHook = new PexHook(this);
-
-        //SCOREBOARD
-        if (ConfigHelper.isEnableScB()) {
-            String mode = ConfigHelper.getScBMode();
-            switch (mode) {
-                case "PVP":
-                    this.pvpMode = true;
-                    this.cycle = false;
-                    break;
-                case "TM":
-                    this.pvpMode = false;
-                    this.cycle = false;
-                    break;
-                case "ALL":
-                default:
-                    this.cycle = true;
+            if (!this.getConfig().getBoolean("enable.mtc", true)) {
+                logger.warn("idk why anyone use that option but we're disabled");
+                Bukkit.getConsoleSender().sendMessage("§8[MTC]§eAborting! Disabled in config.");
+                pluginManager.disablePlugin(this);
+                return;
             }
 
-            MTC.tMconsts = new SqlConsts2();
-            if (!mode.equalsIgnoreCase("PVP") && !MTC.tMconsts.getSqlUser().equalsIgnoreCase("")) {
-                this.ssql2 = new SafeSql(MTC.tMconsts);
+            //XYC LOCALIZATION
+            LangHelper.copyLangsFromJar(this, this);
+            if (LangHelper.localiseString("XU-name", "xxyy98", this.getName()).equals("XU-name")) {
+                CommandHelper.sendMessageToOpsAndConsole("§e§l[MTC][WARNING] Language files not loaded. There may be some funny messages.");
             }
 
+            //CONFIG
+            ConfigHelper.initMainConfig();
 
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SBHelper(this).getUpdateTask(),
-                    ConfigHelper.getScBUpdateInterval(), ConfigHelper.getScBUpdateInterval());
+            //COMMANDS
+            registerCommands();
+
+            //MODULES
+            logger.info("Loading modules!");
+            moduleManager.load(moduleManager.findShippedModules());
+
+            //HELP
+            MTCHelper.initHelp();
+
+            //LISTENERS
+            registerEventListeners(pluginManager);
+
+            //RUNNABLES
+            if (this.getConfig().getBoolean("enable.cron.5m", true)) {
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableCronjob5Minutes(false, this), 2 * 60 * 20, 5 * 60 * 20);
+                getLogger().info("Automatically saving world every 5 minutes.");
+            }
+
+            //HOOKS
+            logger.info("Hooking hooks!");
+            this.xLoginHook = new XLoginHook(this);
+            this.vaultHook = new VaultHook(this);
+            this.worldGuardHook = new WorldGuardHook(this);
+            this.pexHook = new PexHook(this);
+
+            //SCOREBOARD
+            if (ConfigHelper.isEnableScB()) {
+                String mode = ConfigHelper.getScBMode();
+                switch (mode) {
+                    case "PVP":
+                        this.pvpMode = true;
+                        this.cycle = false;
+                        break;
+                    case "TM":
+                        this.pvpMode = false;
+                        this.cycle = false;
+                        break;
+                    case "ALL":
+                    default:
+                        this.cycle = true;
+                }
+
+                MTC.tMconsts = new SqlConsts2();
+                if (!mode.equalsIgnoreCase("PVP") && !MTC.tMconsts.getSqlUser().equalsIgnoreCase("")) {
+                    this.ssql2 = new SafeSql(MTC.tMconsts);
+                }
+
+
+                Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SBHelper(this).getUpdateTask(),
+                        ConfigHelper.getScBUpdateInterval(), ConfigHelper.getScBUpdateInterval());
+            }
+
+            //BUNGEECORD
+            if (this.getConfig().getBoolean("enable.bungeeapi", true)) {
+                Bukkit.getMessenger().registerOutgoingPluginChannel(this, "mtcAPI");
+            }
+
+            //SERVER NAME
+            this.warnBanServerSuffix = this.getConfig().getString("warnban.serversuffix", "§7§o[Unknown]");
+            this.serverName = this.getConfig().getString("servername", "UNKNOWN");
+
+            //LOGS
+            logger.info("Initialising legacy logging system!");
+            logger.debug("Don't tell it, but I hate it. It's just ugly and stuff.");
+            LogHelper.initLogs();
+
+            //SQL LOGGER
+            this.getSql().errLogger = LogHelper.getMainLogger();
+
+            //API
+            gameManager = new PlayerGameManagerImpl(this);
+
+            logger.info("Enabling modules!");
+            moduleManager.enableLoaded();
+            saveConfig(); //Save here so that changes from modules also apply to the config file
+            logger.debug("Enabled MTC modules!");
+
+            //PREPARING FOR BEING DISABLED
+            this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
+
+            MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
+
+            if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC] MTC enabled!");
+            }
+            logger.info("Fully enabled MTC, probably ready!");
+        } catch (Exception e) {
+            getLogger().warning("MTC encountered an exception at enable!");
+            e.printStackTrace();
+            logger.error("Encountered an exception while attempting to enable. Entering undefined behaviour!");
+            logger.error("Here's what I caught: " + e);
+            CommandHelper.broadcast(String.format("§4§lMTC failed to enable - %s: %s; Notify devops asap!",
+                    e.getClass().getSimpleName(), e.getMessage()), "mtc.ignore");
+            throw e;
         }
-
-        //BUNGEECORD
-        if (this.getConfig().getBoolean("enable.bungeeapi", true)) {
-            Bukkit.getMessenger().registerOutgoingPluginChannel(this, "mtcAPI");
-        }
-
-        //SERVER NAME
-        this.warnBanServerSuffix = this.getConfig().getString("warnban.serversuffix", "§7§o[Unknown]");
-        this.serverName = this.getConfig().getString("servername", "UNKNOWN");
-
-        //LOGS
-        logger.info("Initialising legacy logging system! (don't tell it that I said that, but it's ugly)");
-        LogHelper.initLogs();
-
-        //SQL LOGGER
-        this.getSql().errLogger = LogHelper.getMainLogger();
-
-        //API
-        gameManager = new PlayerGameManagerImpl(this);
-
-        logger.info("Enabling modules!");
-        moduleManager.enableLoaded();
-        saveConfig(); //Save here so that changes from modules also apply to the config file
-        logger.info("Enabled MTC modules!");
-
-        //PREPARING FOR BEING DISABLED
-        this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
-
-        MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
-
-        if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC] MTC enabled!");
-        }
-        logger.info("Fully enabled MTC, probably ready!");
     }
 
     private void registerCommands() {
@@ -370,9 +393,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         };
     }
 
-    private void logInfo(String message) {
+
+    private void log(Level level, String message) {
         if (logger != null) {
-            logger.info(message);
+            logger.log(level, message);
         }
     }
 
