@@ -53,6 +53,7 @@ class CommandRepeat implements CommandExecutor {
                                         .create(),
                                 sender
                         );
+                        return true;
                     }
 
                     int i = 0;
