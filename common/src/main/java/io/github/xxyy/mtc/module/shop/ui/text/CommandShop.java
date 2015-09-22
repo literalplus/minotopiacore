@@ -154,7 +154,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             amount = NumberHelper.tryParseInt(args[args.length - 1], Integer.MIN_VALUE);
         }
         boolean hasAmount = amount != Integer.MIN_VALUE;
-        if (!hasAmount || amount == 0 || amount < -1) {
+        if (!hasAmount) {
             amount = 1;
         }
         String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
@@ -250,7 +250,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             return true;
         }
 
-        float totalCost = item.getBuyCost() * amount;
+        double totalCost = item.getBuyCost() * amount;
         double balance = vault.getBalance(plr);
         if (balance < totalCost) {
             plr.sendMessage("§cDu hast nicht genügend Geld. Dir fehlen §6" + (totalCost - balance) + " §cMineCoins.");
@@ -305,7 +305,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
                     .count();
         }
         final int amount = amount_;
-        float worth = item.getSellWorth() * amount;
+        double worth = item.getSellWorth() * amount;
         EconomyResponse ecoResponse = vault.depositPlayer(plr, worth);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
             return true;
@@ -390,7 +390,13 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     }
 
     private void sendHelp(Player plr) {
-        plr.sendMessage("§chalp wip bla");
-        //TODO send help actually
+        plr.sendMessage("§b[]----- §5MinoTopia Shop Hilfe §b-----[]");
+        plr.sendMessage("§6/shop <price|preis> <Itemname|Hand|Inv> §c- §bPreise im Shop");
+        plr.sendMessage("§6/shop <buy|kaufen> <Itemname> <Anzahl> §c- §bItems kaufen");
+        plr.sendMessage("§6/shop <sell|verkaufen> <Itemname> <Anzahl|all> §c- §bItems verkaufen");
+        plr.sendMessage("§6/shop <sell|verkaufen> Inv §c- §bgesamtes Inventar verkaufen");
+        plr.sendMessage("§6/shop <sell|verkaufen> Hand §c- §bItems in deiner Hand verkaufen");
+        plr.sendMessage("§6/shop <sell|verkaufen> Hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
+        plr.sendMessage("§b[]----------------------------[]");
     }
 }
