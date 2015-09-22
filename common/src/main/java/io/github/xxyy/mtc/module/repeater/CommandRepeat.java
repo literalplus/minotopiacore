@@ -7,22 +7,19 @@
 
 package io.github.xxyy.mtc.module.repeater;
 
-import mkremins.fanciful.FancyMessage;
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
-
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.bukkit.ChatColor.DARK_RED;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
+import static net.md_5.bungee.api.ChatColor.*;
 
 /**
  * Provides a text-based front-end to the repeater module, with admin features.
@@ -47,19 +44,31 @@ class CommandRepeat implements CommandExecutor {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "list":
-                    AtomicInteger i = new AtomicInteger(-1);
-                    //@formatter:off
-                    module.getMessages().stream()
-                        .forEachOrdered(msg ->
-                            new FancyMessage(" -> ").color(GOLD)
-                            .then(msg.getMessage()).color(WHITE)
-                                .tooltip("von " + module.getPlugin().getXLoginHook().getDisplayString(msg.getAuthor()))
-                            .then(" @" + msg.getSecondInterval() + "s ").color(RED)
-                            .then("[-]").color(DARK_RED)
-                                .tooltip("Löschen?")
-                                .suggest("/repeat delete " + i.incrementAndGet())
-                            .send(sender));
-                    //@formatter:on
+                    if (module.getMessages().isEmpty()) {
+                        ComponentSender.sendTo(
+                                new XyComponentBuilder("Keine Nachrichten vorhanden. ").color(GOLD)
+                                        .append("[+]", DARK_GREEN)
+                                        .tooltip("Hinzufügen?")
+                                        .suggest("/rpt add 5m <Nachricht>")
+                                        .create(),
+                                sender
+                        );
+                    }
+
+                    int i = 0;
+                    for (RepeatingMessage msg : module.getMessages()) {
+                        ComponentSender.sendTo(
+                                new XyComponentBuilder(" -> ").color(GOLD)
+                                        .append(msg.getMessage(), WHITE)
+                                        .tooltip("von " + module.getPlugin().getXLoginHook().getDisplayString(msg.getAuthor()))
+                                        .append(" @" + msg.getSecondInterval() + "s ", RED, ComponentBuilder.FormatRetention.NONE)
+                                        .append("[-]", DARK_RED)
+                                        .tooltip("Löschen?")
+                                        .suggest("/repeat delete " + i++)
+                                        .create(),
+                                sender
+                        );
+                    }
                     return true;
                 case "delete":
                 case "remove":
