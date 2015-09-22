@@ -142,6 +142,7 @@ public class ShopItem {
 
     /**
      * Sets the amount of virtual money that players have to pay in order to be sold this item.
+     * A negative or a value of {@code 0} indicates that this item is not buyable.
      *
      * @param buyCost the cost of this item
      */
@@ -157,7 +158,8 @@ public class ShopItem {
     }
 
     /**
-     * Sets the amount of virtual money that players get upon selling this item to the shop.
+     * Sets the amount of virtual money that players get upon selling this item.
+     * A negative or a value of {@code 0} indicates that this item is not sellable.
      *
      * @param sellWorth the worth of this item
      */
