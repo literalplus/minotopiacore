@@ -175,6 +175,15 @@ public class ShopItem {
     }
 
     /**
+     * @see #isBuyable()
+     * @see #isSellable()
+     * @return whether the item is at least sellable or buyable.
+     */
+    public boolean isTradable() {
+        return sellable || buyable;
+    }
+
+    /**
      * Serializes this item to a configuration section such that it can be reconstructed to an equivalent state using
      * {@link #deserialize(ConfigurationSection)}. The serialized data will be written to a child section of the passed
      * parent section named exactly {@link #getSerializationName()}.
