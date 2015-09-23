@@ -25,7 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -66,18 +66,16 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             case "price":
             case "p": {
                 if (args.length < 2) {
-                    plr.sendMessage("§chalp wip price");
-                    //TODO send help of that sub-cmd
+                    plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
+                    plr.sendMessage("§6/shop <price|preis> <Itemname|Hand|Inv> §c- §bPreise im Shop");
                     return true;
                 }
                 switch (args[1].toLowerCase()) {
                     case "hand":
                     case "held":
                     case "h": {
-                        Boolean x = priceHand(plr);
-                        if (x != null) { //why
-                            return x;
-                        }
+                        priceHand(plr);
+                        break;
                     }
                     case "inv":
                     case "all":
@@ -95,43 +93,35 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             case "kaufen":
             case "buy":
             case "b": {
-                Boolean x = buy(args, plr);
-                if (x != null) {
-                    return x;
-                }
+                buy(args, plr);
             }
             case "verkaufen":
             case "sell":
             case "s": {
                 if (args.length < 2) {
-                    plr.sendMessage("§chalp wip sell");
-                    //TODO send help of that sub-cmd
+                    plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
+
+                    plr.sendMessage("§6/shop <sell|verkaufen> <Itemname> <Anzahl|all> §c- §bItems verkaufen");
+                    plr.sendMessage("§6/shop <sell|verkaufen> Inv §c- §bgesamtes Inventar verkaufen");
+                    plr.sendMessage("§6/shop <sell|verkaufen> Hand §c- §bItems in deiner Hand verkaufen");
+                    plr.sendMessage("§6/shop <sell|verkaufen> Hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
                     return true;
                 }
                 switch (args[1].toLowerCase()) {
                     case "hand":
                     case "held":
                     case "h": {
-                        Boolean x = sellHand(args, plr);
-                        if (x != null) {
-                            return x;
-                        }
+                        sellHand(args, plr);
                         break;
                     }
                     case "inv":
                     case "all":
                     case "i": {
-                        Boolean x = sellInventory(plr);
-                        if (x != null) {
-                            return x;
-                        }
+                        sellInventory(plr);
                         break;
                     }
                     default:
-                        Boolean x = sellNamedItem(args, plr);
-                        if (x != null) {
-                            return x;
-                        }
+                        sellNamedItem(args, plr);
                         break;
                 }
                 break;
@@ -146,7 +136,8 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         return true;
     }
 
-    private Boolean sellNamedItem(String[] args, Player plr) {
+    //  /shop verkaufen <Item> <Anzahl|all>
+    private void sellNamedItem(String[] args, Player plr) {
         int amount;
         if (args[args.length - 1].equalsIgnoreCase("all")) {
             amount = -1;
@@ -160,10 +151,10 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
         ShopItem item = module.getItemConfig().getItem(itemName);
         if (!messager.checkTradable(plr, item, "in deiner Hand")) {
-            return true;
+            return;
         }
         if (!checkHasAccountAndMsg(plr)) {
-            return true;
+            return;
         }
 
         if (amount == -1) { // 3rd argument is "all", -1 equals all items of that type
@@ -177,7 +168,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
         EconomyResponse ecoResponse = module.getPlugin().getVaultHook().depositPlayer(plr, worth);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
-            return true;
+            return;
         }
 
         int amountToRemove = amount;
@@ -199,7 +190,6 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             }
         }
         plr.sendMessage("§6Das Item §e" + item.getDisplayName() + " wurde verkauft (§e" + amount + " §6Stück), dir wurden §e" + worth + " §6MineCoins gutgeschrieben.");
-        return null;
     }
 
     private void priceNamedItem(String[] args, Player plr) {
@@ -221,16 +211,15 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             messager.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
             return;
         }
-
+        
         messager.sendPriceInfo(plr, module.getItemConfig().getItem(itemInHand), "in deiner Hand");
     }
 
-    @Nullable
-    private Boolean buy(String[] args, Player plr) {
+    private void buy(String[] args, Player plr) {
         if (args.length < 2) {
-            plr.sendMessage("§chalp wip buy");
-            //TODO send help of that sub-cmd
-            return true;
+            plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
+            plr.sendMessage("§6/shop <buy|kaufen> <Itemname> <Anzahl> §c- §bItems kaufen");
+            return;
         }
 
         int amount = NumberHelper.tryParseInt(args[args.length - 1], Integer.MIN_VALUE);
@@ -242,23 +231,22 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         ShopItem item = module.getItemConfig().getItem(name);
 
         if (!messager.checkTradable(plr, item, name)) {
-            return true;
-        }
+            return;
 
         VaultHook vault = module.getPlugin().getVaultHook();
         if (!checkHasAccountAndMsg(plr)) {
-            return true;
+            return;
         }
 
         double totalCost = item.getBuyCost() * amount;
         double balance = vault.getBalance(plr);
         if (balance < totalCost) {
             plr.sendMessage("§cDu hast nicht genügend Geld. Dir fehlen §6" + (totalCost - balance) + " §cMineCoins.");
-            return true;
+            return;
         }
         EconomyResponse ecoResponse = vault.withdrawPlayer(plr, totalCost);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, false, totalCost))
-            return true;
+            return;
         ItemStack itemStack = new ItemStack(item.getMaterial(), amount);
         MaterialData data = itemStack.getData();
         //noinspection deprecation
@@ -266,20 +254,18 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         itemStack.setData(data);
         plr.getInventory().addItem(itemStack);
         plr.sendMessage("§6Du hast §e" + amount + "x " + item.getDisplayName() + " für " + totalCost + " MineCoins erworben.");
-        return null;
     }
 
-    @Nullable
-    private Boolean sellHand(String[] args, Player plr) {
+    private void sellHand(String[] args, Player plr) {
         int amount_;
         ItemStack hand = plr.getItemInHand();
         ShopItem item = module.getItemConfig().getItem(hand.getType(), hand.getData().getData());
         if (item == null) {
             plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
-            return true;
+            return;
         }
         VaultHook vault = module.getPlugin().getVaultHook();
-        if (!checkHasAccountAndMsg(plr)) return true;
+        if (!checkHasAccountAndMsg(plr)) return;
         if (args.length > 2) {
             if (NumberUtils.isDigits(args[2])) {
                 amount_ = NumberHelper.tryParseInt(args[2], -2);
@@ -287,16 +273,14 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
                 amount_ = -1;
             } else {
                 plr.sendMessage("§chalp wip sell");
-                //TODO send help of that sub-cmd
-                return true;
+                return;
             }
         } else {
             amount_ = hand.getAmount();
         }
         if (amount_ == -2) { //3rd argument is digits, but cannot be parsed
             plr.sendMessage("§chalp wip sell");
-            //TODO send help of that sub-cmd
-            return true;
+            return;
         }
         if (amount_ == -1) { // 3rd argument is "all" -1 equals all items of that type
             amount_ = (int) Arrays.stream(plr.getInventory().getContents())
@@ -308,7 +292,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         double worth = item.getSellWorth() * amount;
         EconomyResponse ecoResponse = vault.depositPlayer(plr, worth);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
-            return true;
+            return;
         }
         int amountToRemove = amount;
         if (hand.getAmount() >= amountToRemove) {
@@ -339,13 +323,11 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             }
         }
         plr.sendMessage("§6Das Item in deiner Hand wurde verkauft (§e" + amount + " §6Stück), dir wurden §e" + worth + " §6MineCoins gutgeschrieben.");
-        return null;
     }
 
-    @Nullable
-    private Boolean sellInventory(Player plr) {
+    private void sellInventory(Player plr) {
         VaultHook vault = module.getPlugin().getVaultHook();
-        if (!checkHasAccountAndMsg(plr)) return true;
+        if (!checkHasAccountAndMsg(plr)) return;
 
         float worth = 0;
         ItemStack[] invContent = plr.getInventory().getContents();
@@ -361,13 +343,12 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         }
         EconomyResponse ecoResponse = vault.depositPlayer(plr, worth);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth))
-            return true;
+            return;
 
         PlayerInventory inventory = plr.getInventory();
         validItemPositions.forEach(i -> inventory.setItem(i, null));
 
         plr.sendMessage("§6Du hast dein Inventar verkauft. Es war §e" + worth + " §6MineCoins wert.");
-        return null;
     }
 
     private boolean checkSuccessAndMsgLog(Player plr, EconomyResponse ecoResponse, boolean withdraw, float amount) {
