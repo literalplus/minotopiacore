@@ -5,13 +5,13 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package io.github.xxyy.mtc.misc.cmd;
+package io.github.xxyy.mtc.module.peace;
 
 import com.google.common.collect.Lists;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.PeaceInfo;
+import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

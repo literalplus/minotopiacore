@@ -25,7 +25,7 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanMemberInfo;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.PeaceInfo;
+import io.github.xxyy.mtc.module.peace.PeaceInfo;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;

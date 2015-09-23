@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package io.github.xxyy.mtc.misc;
+package io.github.xxyy.mtc.module.peace;
 
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
