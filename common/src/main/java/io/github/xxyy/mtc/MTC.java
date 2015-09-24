@@ -37,7 +37,6 @@ import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
 import io.github.xxyy.mtc.misc.cmd.*;
 import io.github.xxyy.mtc.module.ModuleManager;
-import io.github.xxyy.mtc.module.peace.CommandPeace;
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
 import org.apache.logging.log4j.Level;

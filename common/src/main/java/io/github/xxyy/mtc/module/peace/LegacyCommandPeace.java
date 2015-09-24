@@ -17,19 +17,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
+public final class LegacyCommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
 
-    @NotNull
-    private final PeaceModule module;
     public static final int PEACE_LIST_PAGE_SIZE = 15;
-
-    public CommandPeace(@NotNull PeaceModule module) {
-        this.module = module;
-    }
 
     @Override
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
@@ -52,7 +45,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
                     }
                     rowstart = (page - 1) * PEACE_LIST_PAGE_SIZE;
                 }
-                return CommandPeace.sendPeaceList(plr, piList.peacedPlrs, rowstart, PEACE_LIST_PAGE_SIZE, label, page + 1);
+                return LegacyCommandPeace.sendPeaceList(plr, piList.peacedPlrs, rowstart, PEACE_LIST_PAGE_SIZE, label, page + 1);
             case "status":
                 if (args.length < 2) {
                     return MTCHelper.sendLocArgs("XU-peacehelp", plr, false, label);
@@ -161,7 +154,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
         String toSend = "";
         int i = rowstart; //needed for later use :/
         for (; (i < (rowstart + perPage) && lst.size() > i); i++) {
-            toSend += " ► " + CommandPeace.getPlayerString(lst.get(i)) + "\n";
+            toSend += " ► " + LegacyCommandPeace.getPlayerString(lst.get(i)) + "\n";
         }
         if (toSend.equals("")) {
             toSend = MTCHelper.loc("XU-ppageempty", sender, false);

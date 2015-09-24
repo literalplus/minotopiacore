@@ -16,7 +16,7 @@ public class PeaceModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
-        plugin.setExecAndCompleter(new CommandPeace(this), "frieden");;
+        plugin.setExecAndCompleter(new LegacyCommandPeace(), "frieden");;
     }
 
     @Override
