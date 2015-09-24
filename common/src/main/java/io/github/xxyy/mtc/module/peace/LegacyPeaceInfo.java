@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.peace;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.CacheHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,26 +19,33 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @deprecated breaks so many code style rulez
+ */
+@Deprecated
+public class LegacyPeaceInfo {
+    @Deprecated
+    public static final ConcurrentHashMap<String, LegacyPeaceInfo> CACHE = new ConcurrentHashMap<>();
 
-public class PeaceInfo {
-    public static final ConcurrentHashMap<String, PeaceInfo> CACHE = new ConcurrentHashMap<>();
-
+    @Deprecated
     public String plrName;
+    @Deprecated
     public List<String> peacedPlrs = null;
+    @Deprecated
     public int errCode = 1; //no error
 
-    private PeaceInfo(int errCode, String plrName) {
+    private LegacyPeaceInfo(int errCode, String plrName) {
         this.errCode = errCode;
         this.plrName = plrName;
         this.peacedPlrs = new ArrayList<>();
     }
 
-    private PeaceInfo(String plrName, List<String> peacedPlrs) {
+    private LegacyPeaceInfo(String plrName, List<String> peacedPlrs) {
         this.plrName = plrName;
         this.peacedPlrs = peacedPlrs;
     }
 
-    private PeaceInfo(String plrName, String peacedPlrs) {
+    private LegacyPeaceInfo(String plrName, String peacedPlrs) {
         this(plrName, new ArrayList<>(Arrays.asList(peacedPlrs.split(",")))); //returned list is fixed-size
     }
 
@@ -45,7 +53,7 @@ public class PeaceInfo {
         MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace SET player_name=?, peace_players=?",
                 this.plrName, CommandHelper.CSCollection(this.peacedPlrs, ""));
         this.errCode = 2;
-        PeaceInfo.CACHE.put(this.plrName, this);
+        LegacyPeaceInfo.CACHE.put(this.plrName, this);
     }
 
     public void flush() {
@@ -59,20 +67,20 @@ public class PeaceInfo {
         }
         MTC.instance().getSql().safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?",
                 CommandHelper.CSCollection(this.peacedPlrs, ""), this.plrName);
-        PeaceInfo.CACHE.put(this.plrName, this);
+        LegacyPeaceInfo.CACHE.put(this.plrName, this);
     }
 
     public void nullify() {
         MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
-        PeaceInfo.CACHE.remove(this.plrName);
+        LegacyPeaceInfo.CACHE.remove(this.plrName);
     }
 
-    public static PeaceInfo get(String plrName) {
-        if (PeaceInfo.CACHE.containsKey(plrName)) {
-            return PeaceInfo.CACHE.get(plrName);
+    public static LegacyPeaceInfo get(String plrName) {
+        if (LegacyPeaceInfo.CACHE.containsKey(plrName)) {
+            return LegacyPeaceInfo.CACHE.get(plrName);
         }
-        PeaceInfo rtrn = PeaceInfo.fetch(plrName);
-        PeaceInfo.CACHE.put(plrName, rtrn);
+        LegacyPeaceInfo rtrn = LegacyPeaceInfo.fetch(plrName);
+        LegacyPeaceInfo.CACHE.put(plrName, rtrn);
         return rtrn;
     }
 
@@ -89,7 +97,7 @@ public class PeaceInfo {
     }
 
     public static boolean isInPeaceWith(String checkName, String targetName) {
-        PeaceInfo pi = PeaceInfo.get(checkName);
+        LegacyPeaceInfo pi = LegacyPeaceInfo.get(checkName);
         return pi.errCode >= 0 && pi.peacedPlrs.contains(targetName);
     }
 
@@ -103,20 +111,20 @@ public class PeaceInfo {
                 "sender_name=?, receiver_name=?", senderName, targetName);
     }
 
-    private static PeaceInfo fetch(String plrName) {
+    private static LegacyPeaceInfo fetch(String plrName) {
         SafeSql sql = MTC.instance().getSql();
         ResultSet rs = sql.safelyExecuteQuery("SELECT peace_players FROM mtc_peace WHERE player_name=?", plrName);
         if (rs == null) {
-            return new PeaceInfo(-2, plrName);
+            return new LegacyPeaceInfo(-2, plrName);
         }
         try {
             if (!rs.next()) {
-                return new PeaceInfo(-4, plrName);
+                return new LegacyPeaceInfo(-4, plrName);
             }
-            return new PeaceInfo(plrName, rs.getString("peace_players"));
+            return new LegacyPeaceInfo(plrName, rs.getString("peace_players"));
         } catch (SQLException e) {
             e.printStackTrace();
-            return new PeaceInfo(-3, plrName);
+            return new LegacyPeaceInfo(-3, plrName);
         }
     }
 }

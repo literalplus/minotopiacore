@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.module.peace;
 
-import com.google.common.collect.Lists;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.helper.MTCHelper;
@@ -32,7 +31,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
         }
         switch (args[0]) {
             case "list":
-                PeaceInfo piList = PeaceInfo.get(plrName);
+                LegacyPeaceInfo piList = LegacyPeaceInfo.get(plrName);
                 if (piList.errCode < 0) {
                     return MTCHelper.sendLoc("XU-nopeace", plr, true);
                 }
@@ -54,13 +53,13 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
                 if (args[1].equalsIgnoreCase(plrName)) {
                     return CommandHelper.msg(MTC.chatPrefix + "Ich nehme an, dass du mit dir selbst Frieden hast.", plr);
                 }
-                if (PeaceInfo.isInPeaceWith(plrName, args[1])) {
+                if (LegacyPeaceInfo.isInPeaceWith(plrName, args[1])) {
                     return MTCHelper.sendLocArgs("XU-plrpeace", plr, true, args[1]);
                 }
-                if (PeaceInfo.hasRequest(plrName, args[1])) {
+                if (LegacyPeaceInfo.hasRequest(plrName, args[1])) {
                     return MTCHelper.sendLocArgs("XU-preqpending", plr, true, args[1]);
                 }
-                if (PeaceInfo.hasRequest(args[1], plrName)) {
+                if (LegacyPeaceInfo.hasRequest(args[1], plrName)) {
                     return MTCHelper.sendLocArgs("XU-preqpendingown", plr, true, args[1]);
                 }
                 return MTCHelper.sendLocArgs("XU-plrnopeace", plr, true, args[1]);
@@ -73,23 +72,23 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
                 if (args[1].equalsIgnoreCase(plrName)) {
                     return CommandHelper.msg(MTC.chatPrefix + "Du hast dir selbst keine Friedensanfrage gesendet.", plr);
                 }
-                if (!PeaceInfo.hasRequest(plrName, args[1])) {
+                if (!LegacyPeaceInfo.hasRequest(plrName, args[1])) {
                     return MTCHelper.sendLocArgs("XU-nopreqsent", plr, true, args[1]);
                 }
-                PeaceInfo.revokeRequest(plrName, args[1]);
+                LegacyPeaceInfo.revokeRequest(plrName, args[1]);
                 MTCHelper.sendLocOrSaveArgs("XU-preqrevokedbyother", args[1], "peace", 3, true, plrName);
                 return MTCHelper.sendLocArgs("XU-preqrevoked", plr, true, args[1]);
             default:
                 if (args[0].equalsIgnoreCase(plrName)) {
                     return CommandHelper.msg(MTC.chatPrefix + "Du kannst nicht mit dir selbst Frieden schliessen :)", plr);
                 }
-                PeaceInfo piDefault = PeaceInfo.get(plrName);
+                LegacyPeaceInfo piDefault = LegacyPeaceInfo.get(plrName);
                 if (piDefault.errCode < 0 && piDefault.errCode != -4) {
                     return CommandHelper.msg("§cGenerischer SQL-Fehler: " + piDefault.errCode, plr);
                 }
                 if (piDefault.peacedPlrs.contains(args[0])) {//has peace w/
                     piDefault.peacedPlrs.remove(args[0]);
-                    PeaceInfo piOther = PeaceInfo.get(args[0]);
+                    LegacyPeaceInfo piOther = LegacyPeaceInfo.get(args[0]);
                     if (piOther.errCode < 0 && piOther.errCode != -4) {
                         return CommandHelper.msg("§cGenerischer SQL-Fehler (3): " + piDefault.errCode, plr);
                     }
@@ -99,13 +98,13 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
                     MTCHelper.sendLocOrSaveArgs("XU-prevokedother", args[0], "peace", 4, true, plrName);
                     return MTCHelper.sendLocArgs("XU-prevoked", plr, true, args[0]);
                 }
-                if (PeaceInfo.hasRequest(plrName, args[0])) {
+                if (LegacyPeaceInfo.hasRequest(plrName, args[0])) {
                     return MTCHelper.sendLocArgs("XU-palreadysent", plr, true, args[0]); //already sent request
                 }
-                if (PeaceInfo.hasRequest(args[0], plrName)) {
-                    PeaceInfo.revokeRequest(args[0], plrName);
+                if (LegacyPeaceInfo.hasRequest(args[0], plrName)) {
+                    LegacyPeaceInfo.revokeRequest(args[0], plrName);
                     piDefault.peacedPlrs.add(args[0]);
-                    PeaceInfo piOther = PeaceInfo.get(args[0]);
+                    LegacyPeaceInfo piOther = LegacyPeaceInfo.get(args[0]);
                     if (piOther.errCode < 0 && piOther.errCode != -4) {
                         return CommandHelper.msg("§cGenerischer SQL-Fehler (2): " + piDefault.errCode, plr);
                     }
@@ -115,7 +114,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
                     MTCHelper.sendLocOrSaveArgs("XU-preqaccepted", args[0], "peace", 1, true, plrName);
                     return MTCHelper.sendLocArgs("XU-paccepted", plr, true, args[0]);
                 }
-                PeaceInfo.sendRequest(plrName, args[0]);
+                LegacyPeaceInfo.sendRequest(plrName, args[0]);
                 MTCHelper.sendLocOrSaveArgs("XU-preqreceived", args[0], "peace", 2, true, plrName);
                 return MTCHelper.sendLoc("XU-preqsent", plr, true);
         }
@@ -124,7 +123,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
-            return Lists.newArrayList("Du kannst diesen Befehl nur als Spieler ausfuehren!!!11");
+            return null;//Lists.newArrayList("Du kannst diesen Befehl nur als Spieler ausfuehren!!!11");
         }
         if (args.length == 0) {
             List<String> lst = CommandHelper.getOnlinePlayerNames();
@@ -134,7 +133,7 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
             lst.add("revoke");
             return lst;
         } else if (args[0].equalsIgnoreCase("revoke")) {
-            PeaceInfo pi = PeaceInfo.get(sender.getName());
+            LegacyPeaceInfo pi = LegacyPeaceInfo.get(sender.getName());
             if (pi.errCode < 0) {
                 return null;
             }
