@@ -17,12 +17,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
 
+    @NotNull
+    private final PeaceModule module;
     public static final int PEACE_LIST_PAGE_SIZE = 15;
+
+    public CommandPeace(@NotNull PeaceModule module) {
+        this.module = module;
+    }
 
     @Override
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
