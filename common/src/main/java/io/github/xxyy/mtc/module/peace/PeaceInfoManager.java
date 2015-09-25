@@ -47,6 +47,7 @@ public class PeaceInfoManager {
 
     /**
      * If you are planning to use {@link #get(UUID)} after this method, consider using {@link #getIfCached(UUID)}, as its faster
+     *
      * @param uuid the uuid to get the {@link PeaceInfo} from.
      * @return whether the {@link PeaceInfo} of the given uuid is cached currently
      */
@@ -65,6 +66,7 @@ public class PeaceInfoManager {
 
     /**
      * Gets either the cached value or performes a database lookup
+     *
      * @param uuid the uuid to get the {@link PeaceInfo} from.
      * @return the PeaceInfo
      */
@@ -74,6 +76,7 @@ public class PeaceInfoManager {
 
     /**
      * Gets either the cached value or performes a database lookup and then removes it from the cache.
+     *
      * @param uuid the uuid to get the {@link PeaceInfo} from.
      * @return the PeaceInfo
      */
@@ -85,6 +88,7 @@ public class PeaceInfoManager {
 
     /**
      * Removes the {@link PeaceInfo} from the cache and saves it asynchroniously to the database
+     *
      * @param uuid the uuid which {@link PeaceInfo} should be removed
      */
     public void flush(UUID uuid) {
@@ -93,6 +97,7 @@ public class PeaceInfoManager {
 
     /**
      * Removes the {@link PeaceInfo} from the cache and does not save it
+     *
      * @param uuid the uuid which {@link PeaceInfo} should be removed
      */
     public void discard(UUID uuid) {

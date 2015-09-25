@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+@Deprecated
 public final class LegacyCommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
 
     public static final int PEACE_LIST_PAGE_SIZE = 15;
@@ -123,7 +124,7 @@ public final class LegacyCommandPeace extends MTCPlayerOnlyCommandExecutor imple
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
-            return null;//Lists.newArrayList("Du kannst diesen Befehl nur als Spieler ausfuehren!!!11");
+            return null;
         }
         if (args.length == 0) {
             List<String> lst = CommandHelper.getOnlinePlayerNames();
@@ -156,7 +157,7 @@ public final class LegacyCommandPeace extends MTCPlayerOnlyCommandExecutor imple
         for (; (i < (rowstart + perPage) && lst.size() > i); i++) {
             toSend += " ► " + LegacyCommandPeace.getPlayerString(lst.get(i)) + "\n";
         }
-        if (toSend.equals("")) {
+        if (toSend.isEmpty()) {
             toSend = MTCHelper.loc("XU-ppageempty", sender, false);
         }
         if (i < lst.size()) {

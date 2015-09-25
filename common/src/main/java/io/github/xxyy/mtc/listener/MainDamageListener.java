@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.mtc.module.peace.PeaceModule;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.EntityType;
@@ -25,7 +26,6 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanMemberInfo;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.module.peace.LegacyPeaceInfo;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -89,7 +89,9 @@ public final class MainDamageListener implements Listener {
         plrDamager.removePotionEffect(PotionEffectType.INVISIBILITY);
 
         // PEACE
-        if (LegacyPeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
+        if (plugin.getModuleManager().isEnabled(PeaceModule.class)
+                && plugin.getModuleManager().getModule(PeaceModule.class)
+                .areInPeace(plrDamager, plr)) {
             if (message) {
                 MTCHelper.sendLocArgs("XU-peacehit2", plrDamager, true,
                         plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
