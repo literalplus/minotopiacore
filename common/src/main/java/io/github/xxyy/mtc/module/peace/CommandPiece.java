@@ -2,6 +2,7 @@ package io.github.xxyy.mtc.module.peace;
 
 import com.google.common.collect.ImmutableList;
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,21 @@ public class CommandPiece extends MTCPlayerOnlyCommandExecutor implements TabExe
 
     @Override
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
+        if (args.length == 0) {
+            return MTCHelper.sendLocArgs("XU-peacehelp", plr, false, label);
+        }
+        switch (args[0].toLowerCase()) {
+            case "list": {
+                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(plr.getUniqueId());
+                if (peaceInfo == null) {
+                    return CommandHelper.msg("§cFehler bei der Verarbeitung. ", plr);
+                }
+                break;
+            }
+            case "status": {
+                break;
+            }
+        }
         return true;
     }
 

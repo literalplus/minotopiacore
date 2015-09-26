@@ -38,4 +38,9 @@ public class PeaceInfo {
     public List<UUID> getPeaceWith() {
         return new ArrayList<>(peaceWith);
     }
+
+    @NotNull
+    public List<UUID> getPeaceWithDoNotEdit() {
+        return peaceWith;
+    }
 }
