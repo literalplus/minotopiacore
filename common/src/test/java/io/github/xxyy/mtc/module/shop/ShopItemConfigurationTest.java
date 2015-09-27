@@ -9,11 +9,10 @@ package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.collect.Lists;
 import io.github.xxyy.lib.guava17.collect.Table;
+import io.github.xxyy.mtc.MTC;
 import org.bukkit.Material;
 import org.junit.Before;
 import org.junit.Test;
-
-import io.github.xxyy.mtc.MTC;
 
 import java.io.File;
 import java.util.Map;
@@ -31,9 +30,9 @@ import static org.mockito.Mockito.mock;
  */
 public class ShopItemConfigurationTest {
     private static ShopItem POTATO = new ShopItem(1, 3, Material.POTATO, (byte) -1,
-            Lists.newArrayList("yolo", "potatos", "Kartoffel"), "Kartoffel");
+            Lists.newArrayList("yolo", "potatos", "Kartoffel"));
     private static ShopItem DIAMOND = new ShopItem(5, 7, Material.DIAMOND, (byte) 42,
-            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), "Diamant");
+            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"));
     private ShopItemConfiguration config;
 
     @Before
@@ -45,7 +44,7 @@ public class ShopItemConfigurationTest {
     @Test
     public void testLoadFromString() throws Exception {
         String serialized = config.saveToString();
-        Table<Material, Byte, ShopItem> items = config.getShopItemTable();
+        Table<Material, Byte, ShopItem> items = config.getShopItemTable(); //FIXME: exposing implementation details
         Map<String, ShopItem> aliases = config.getItemAliases();
 
         config.loadFromString(serialized);

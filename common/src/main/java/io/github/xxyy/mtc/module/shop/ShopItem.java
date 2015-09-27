@@ -35,9 +35,9 @@ public class ShopItem {
     protected ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
         Validate.notNull(material, "material");
         Validate.notNull(aliases, "aliases");
-        Validate.isTrue(buyCost > 0, "buyCost must be greater than 0"); //FIXME: should be possible to be negative to disable buy/sell separately
-        Validate.isTrue(sellWorth > 0, "sellWorth must be greater than 0");
-        Validate.isTrue(dataValue > -2, "dataValue must be greater than or equal to -1");
+        Validate.isTrue(buyCost >= 0, "buyCost must be greater than or equal to 0");
+        Validate.isTrue(sellWorth >= 0, "sellWorth must be greater than or equal to 0");
+        Validate.isTrue(dataValue >= -1, "dataValue must be greater than or equal to -1");
         this.buyCost = buyCost;
         this.sellWorth = sellWorth;
         this.material = material;
@@ -70,6 +70,32 @@ public class ShopItem {
     }
 
     /**
+     * @return the human-readable display name of this item to be used in user output
+     */
+    public String getDisplayName() {
+        if (aliases.isEmpty()) {
+            String readableMaterialName = WordUtils.capitalizeFully(material.name().replace('_', ' '));
+            return dataValue < 0 ? (readableMaterialName + ":" + dataValue) : readableMaterialName;
+        } else {
+            return aliases.get(0);
+        }
+    }
+
+    /**
+     * @return whether players are allowed to sell this item to the shop
+     */
+    public boolean canBeSold() {
+        return sellWorth > 0;
+    }
+
+    /**
+     * @return whether players are allowed to buy this item from the shop
+     */
+    public boolean canBeBought() {
+        return buyCost > 0;
+    }
+
+    /**
      * @return this item's material definition
      */
     public Material getMaterial() {
@@ -84,7 +110,7 @@ public class ShopItem {
     }
 
     /**
-     * @return an immutable view of this item's alternative names ("aliases")
+     * @return the modifiable list of this item's alternative names ("aliases")
      */
     public List<String> getAliases() {
         return aliases;
@@ -107,19 +133,26 @@ public class ShopItem {
     }
 
     /**
-     * @return the amount of virtual money that players get upon selling this item
+     * @return the amount of virtual money that players get upon selling this item to the shop
      */
     public double getSellWorth() {
         return sellWorth;
     }
 
     /**
-     * Sets the amount of virtual money that players get upon selling this item.
+     * Sets the amount of virtual money that players get upon selling this item to the shop.
      *
      * @param sellWorth the worth of this item
      */
     public void setSellWorth(double sellWorth) {
         this.sellWorth = sellWorth;
+    }
+
+    /**
+     * @return a name which uniquely represents this item which can be used to save it in serialization
+     */
+    public String getSerializationName() {
+        return serialisationName;
     }
 
     /**
@@ -136,25 +169,6 @@ public class ShopItem {
         result.set(BUY_COST_PATH, buyCost);
         result.set(SELL_WORTH_PATH, sellWorth);
         return result;
-    }
-
-    /**
-     * @return a name which uniquely represents this item which can be used to save it in serialization
-     */
-    public String getSerializationName() {
-        return serialisationName;
-    }
-
-    /**
-     * @return the display name of this item to be used in output
-     */
-    public String getDisplayName() {
-        if (aliases.isEmpty()) {
-            String readableMaterialName = WordUtils.capitalizeFully(material.name().replace('_', ' '));
-            return dataValue < 0 ? (readableMaterialName + ":" + dataValue) : readableMaterialName;
-        } else {
-            return aliases.get(0);
-        }
     }
 
     @Override

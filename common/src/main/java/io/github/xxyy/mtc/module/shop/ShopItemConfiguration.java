@@ -71,33 +71,6 @@ class ShopItemConfiguration extends ManagedConfiguration {
         return fromFile(file, behaviour, plugin);
     }
 
-    private void loadItems() {
-        shopItems.clear();
-        itemAliases.clear();
-
-        getKeys(false).stream()
-                .map(this::getConfigurationSection)
-                .filter(Objects::nonNull)
-                .map(sec -> {
-                    try {
-                        return ShopItem.deserialize(sec);
-                    } catch (Exception ex) {
-                        plugin.getLogger().log(Level.WARNING, "Couldn't deserialize an invalid shop item at " + sec.getName() + ", omitting: ", ex);
-                    }
-                    return null;
-                }).filter(Objects::nonNull)
-                .forEach(item -> {
-                    storeItem(item);
-                    shopItems.put(item.getMaterial(), item.getDataValue(), item);
-                    item.getAliases().stream()
-                            .forEach(alt -> itemAliases.put(alt, item));
-                });
-    }
-
-    private void saveItems() {
-        shopItems.values().forEach(msi -> msi.serializeToSection(this)); //Sets stuff directly
-    }
-
     /**
      * Attempts to get an item by its name. This respects any aliases which may have been set. Furthermore, this allows
      * for items to be queried by their material name. Spaces are replaced by underscores and the whole string is
@@ -218,5 +191,32 @@ class ShopItemConfiguration extends ManagedConfiguration {
     public String saveToString() {
         saveItems();
         return super.saveToString();
+    }
+
+    private void loadItems() {
+        shopItems.clear();
+        itemAliases.clear();
+
+        getKeys(false).stream()
+                .map(this::getConfigurationSection)
+                .filter(Objects::nonNull)
+                .map(sec -> {
+                    try {
+                        return ShopItem.deserialize(sec);
+                    } catch (Exception ex) {
+                        plugin.getLogger().log(Level.WARNING, "Couldn't deserialize an invalid shop item at " + sec.getName() + ", omitting: ", ex);
+                    }
+                    return null;
+                }).filter(Objects::nonNull)
+                .forEach(item -> {
+                    storeItem(item);
+                    shopItems.put(item.getMaterial(), item.getDataValue(), item);
+                    item.getAliases().stream()
+                            .forEach(alt -> itemAliases.put(alt, item));
+                });
+    }
+
+    private void saveItems() {
+        shopItems.values().forEach(msi -> msi.serializeToSection(this)); //Sets stuff directly
     }
 }

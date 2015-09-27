@@ -27,12 +27,8 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     public boolean canBeEnabled(MTC plugin) {
-        if (!plugin.getServer().getPluginManager().isPluginEnabled("Vault")) {
-            getPlugin().getLogger().warning("[" + NAME + "] Could not be enabled because Vault is not installed or enabled.");
-            return false;
-        }
-        if (!plugin.getVaultHook().isEconomyHooked()) {
-            getPlugin().getLogger().warning("[" + NAME + "] Could not be enabled because Vault did not hooked Economy. Make sure you use a money/economy plugin supported by Vault.");
+        if (!plugin.getVaultHook().isEconomyHooked()) { //this also checks if Vault is installed at all
+            getPlugin().getLogger().info("ShopModule requires Vault and a running economy provider, skipping.");
             return false;
         }
         return super.canBeEnabled(plugin);
@@ -48,7 +44,7 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-        //TODO (re-)read from cfg
+        //FIXME reload item config
     }
 
     @Override
