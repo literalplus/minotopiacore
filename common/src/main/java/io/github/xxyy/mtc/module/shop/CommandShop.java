@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * @author Janmm14, Literallie
  */ //FIXME: this class is too long, should use more abstraction layers, that we could then unit-test
-class CommandShop implements MTCCommandExecutor { //TODO add help messages, test (integration test)
+class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (integration test)
     private final ShopModule module;
 
     public CommandShop(ShopModule module) {
