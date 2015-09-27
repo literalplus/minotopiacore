@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.shop;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -23,17 +24,15 @@ public class ShopItem {
     public static final String ALIASES_PATH = "aliases";
     public static final String BUY_COST_PATH = "buy";
     public static final String SELL_WORTH_PATH = "sell";
-    public static final String DISPLAY_NAME_PATH = "display";
 
     private final Material material;
     private final byte dataValue;
     private final String serialisationName;
     private final List<String> aliases;
-    private float buyCost;
-    private float sellWorth;
-    private String displayName;
+    private double buyCost;
+    private double sellWorth;
 
-    protected ShopItem(float buyCost, float sellWorth, Material material, byte dataValue, List<String> aliases, String displayName) {
+    protected ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
         Validate.notNull(material, "material");
         Validate.notNull(aliases, "aliases");
         Validate.isTrue(buyCost > 0, "buyCost must be greater than 0"); //FIXME: should be possible to be negative to disable buy/sell separately
@@ -44,7 +43,6 @@ public class ShopItem {
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
-        this.displayName = displayName;
 
         this.serialisationName = dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
     }
@@ -67,9 +65,8 @@ public class ShopItem {
         List<String> aliases = section.getStringList(ALIASES_PATH);
         int cost = section.getInt(BUY_COST_PATH);
         int worth = section.getInt(SELL_WORTH_PATH);
-        String displayName = section.getString(DISPLAY_NAME_PATH);
 
-        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases, displayName);
+        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases);
     }
 
     /**
@@ -96,7 +93,7 @@ public class ShopItem {
     /**
      * @return the amount of virtual money that players have to pay in order to be sold this item
      */
-    public float getBuyCost() {
+    public double getBuyCost() {
         return buyCost;
     }
 
@@ -105,14 +102,14 @@ public class ShopItem {
      *
      * @param buyCost the cost of this item
      */
-    public void setBuyCost(float buyCost) {
+    public void setBuyCost(double buyCost) {
         this.buyCost = buyCost;
     }
 
     /**
      * @return the amount of virtual money that players get upon selling this item
      */
-    public float getSellWorth() {
+    public double getSellWorth() {
         return sellWorth;
     }
 
@@ -121,7 +118,7 @@ public class ShopItem {
      *
      * @param sellWorth the worth of this item
      */
-    public void setSellWorth(float sellWorth) {
+    public void setSellWorth(double sellWorth) {
         this.sellWorth = sellWorth;
     }
 
@@ -138,7 +135,6 @@ public class ShopItem {
         result.set(ALIASES_PATH, aliases);
         result.set(BUY_COST_PATH, buyCost);
         result.set(SELL_WORTH_PATH, sellWorth);
-        result.set(DISPLAY_NAME_PATH, displayName);
         return result;
     }
 
@@ -153,7 +149,12 @@ public class ShopItem {
      * @return the display name of this item to be used in output
      */
     public String getDisplayName() {
-        return displayName;
+        if (aliases.isEmpty()) {
+            String readableMaterialName = WordUtils.capitalizeFully(material.name().replace('_', ' '));
+            return dataValue < 0 ? (readableMaterialName + ":" + dataValue) : readableMaterialName;
+        } else {
+            return aliases.get(0);
+        }
     }
 
     @Override
@@ -186,7 +187,6 @@ public class ShopItem {
                 ", aliases=" + aliases +
                 ", buyCost=" + buyCost +
                 ", sellWorth=" + sellWorth +
-                ", displayName=" + displayName +
                 '}'; //IntelliJ says that this is "at least as efficient or more efficient" than StringBuilder
     }
 
