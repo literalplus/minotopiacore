@@ -9,6 +9,7 @@ public class PeaceModule extends ConfigurableMTCModule {
 
     public static final String NAME = "Peace";
     private PeaceInfoManager peaceInfoManager;
+    private PeaceMessenger messenger;
 
     public PeaceModule() {
         super(NAME, "modules/peace.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -42,8 +43,19 @@ public class PeaceModule extends ConfigurableMTCModule {
         return peaceInfoManager;
     }
 
-    public boolean areInPeace(Player plrDamager, Player plr) {
-        return peaceInfoManager.get(plrDamager.getUniqueId())
-                .getPeaceWith().contains(plr.getUniqueId());
+    /**
+     * TODO fill javadoc
+     * Abbreviation method for peace checks
+     *
+     * @param first
+     * @param second
+     * @return
+     */
+    public boolean areInPeace(Player first, Player second) {
+        return PlayerPeaceRelation.areInPeace(peaceInfoManager, peaceInfoManager.get(first.getUniqueId()), second.getUniqueId());
+    }
+
+    public PeaceMessenger getMessenger() {
+        return messenger;
     }
 }

@@ -13,14 +13,16 @@ import java.util.UUID;
 
 public class PeaceInfoManager {
 
+    private static final int MAXIMUM_CACHE_SIZE = 100;
+
     @NotNull
     private final PeaceModule module;
     private boolean disableFlush = false;
 
     private final LoadingCache<UUID, PeaceInfo> peaceInfoCache = CacheBuilder.newBuilder()
-            .initialCapacity(5)
-            .weakValues()
+            .initialCapacity(5) //TODO discuss CacheBuilder values in pull request
             .concurrencyLevel(2)
+            .maximumSize(MAXIMUM_CACHE_SIZE)
             .removalListener(new RemovalListener<UUID, PeaceInfo>() {
                 @Override
                 public void onRemoval(@NotNull RemovalNotification<UUID, PeaceInfo> notification) {
@@ -28,12 +30,11 @@ public class PeaceInfoManager {
                         return;
                     }
                     switch (notification.getCause()) {
-                        case COLLECTED:
                         case EXPIRED:
                         case EXPLICIT:
                         case SIZE: {
                             module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(),
-                                    () -> flush(notification.getValue()));
+                                    new FlushRunnable(notification.getKey(), notification.getValue())); //TODO use async worker thread for this
                             break;
                         }
                     }
@@ -93,6 +94,7 @@ public class PeaceInfoManager {
      */
     public void flush(UUID uuid) {
         peaceInfoCache.invalidate(uuid);
+        //TODO save async
     }
 
     /**
@@ -126,11 +128,37 @@ public class PeaceInfoManager {
         return null;
     }
 
-    private void flush(PeaceInfo value) { //TODO implement
+    private static PeaceInfo createNew(UUID uuid) {
+        return new PeaceInfo(uuid, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
-    private PeaceInfo createNew(UUID uuid) {
-        return new PeaceInfo(uuid, new ArrayList<>());
+    private final class FlushRunnable implements Runnable {
+
+        @Nullable
+        private final UUID uuid;
+        @Nullable
+        private final PeaceInfo peaceInfo;
+
+        private FlushRunnable(@Nullable UUID uuid, @Nullable PeaceInfo peaceInfo) {
+            this.uuid = uuid;
+            this.peaceInfo = peaceInfo;
+        }
+
+        @Override
+        public void run() {
+            if (peaceInfo != null) {
+                if (!peaceInfo.isDirty()) {
+                    return;
+                }
+            }
+            if (uuid != null) {
+                flush(uuid);
+            }
+        }
     }
 
+    @NotNull
+    public PeaceModule getModule() {
+        return module;
+    }
 }
