@@ -36,8 +36,9 @@ public final class CommandChatClear implements CommandExecutor { //REFACTOR
                 plr.sendMessage(String.format(LangHelper.localiseString("XU-ccex", plr.getName(), plugin.getName()), sender.getName()));
                 continue;
             }
-            for (int i = 0; i < 200; i++) {
-                plr.sendMessage("  ");
+            for (int i = 0; i < 150; i++) {
+                plr.sendMessage(" §r ");     //Apparently this helps with hack clients' message combining stuffs which are apparently 9001% exploits
+                plr.sendMessage("    §3  "); //Even though one could just use the logs, but yeah, it looks professional or something. Yell at Janmm14.
             }
         }
         String msg = LangHelper.localiseString("XU-ccglo", "CONSOLE", plugin.getName());
