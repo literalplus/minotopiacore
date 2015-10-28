@@ -7,9 +7,12 @@
 
 package io.github.xxyy.mtc.module.shop;
 
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * Manages the shop module, allowing players to buy
@@ -19,6 +22,9 @@ import io.github.xxyy.mtc.module.ConfigurableMTCModule;
  */
 public class ShopModule extends ConfigurableMTCModule {
     public static final String NAME = "Shop";
+    private final XyComponentBuilder prefixBuilder = new XyComponentBuilder("[").color(ChatColor.AQUA)
+            .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
+    private final String prefix = TextComponent.toLegacyText(new XyComponentBuilder(prefixBuilder).create());
     private ShopItemConfiguration itemConfig;
 
     public ShopModule() {
@@ -55,5 +61,19 @@ public class ShopModule extends ConfigurableMTCModule {
 
     public ShopItemConfiguration getItemConfig() {
         return itemConfig;
+    }
+
+    /**
+     * @return the module's chat prefix that should be used to indicated its messages
+     */
+    public String getChatPrefix() {
+        return prefix;
+    }
+
+    /**
+     * @return a component builder prefixed with the module's prefix to indicate where the message comes from
+     */
+    public XyComponentBuilder getPrefixBuilder() {
+        return new XyComponentBuilder(prefixBuilder);
     }
 }
