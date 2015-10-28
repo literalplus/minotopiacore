@@ -7,10 +7,12 @@
 
 package io.github.xxyy.mtc.module.shop;
 
-import org.apache.commons.lang.Validate;
+import com.google.common.base.Preconditions;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -33,11 +35,11 @@ public class ShopItem {
     private double sellWorth;
 
     protected ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
-        Validate.notNull(material, "material");
-        Validate.notNull(aliases, "aliases");
-        Validate.isTrue(buyCost >= 0, "buyCost must be greater than or equal to 0");
-        Validate.isTrue(sellWorth >= 0, "sellWorth must be greater than or equal to 0");
-        Validate.isTrue(dataValue >= -1, "dataValue must be greater than or equal to -1");
+        Preconditions.checkNotNull(material, "material");
+        Preconditions.checkNotNull(aliases, "aliases");
+        Preconditions.checkArgument(buyCost >= 0, "buyCost must be greater than or equal to 0");
+        Preconditions.checkArgument(sellWorth >= 0, "sellWorth must be greater than or equal to 0");
+        Preconditions.checkArgument(dataValue >= -1, "dataValue must be greater than or equal to -1");
         this.buyCost = buyCost;
         this.sellWorth = sellWorth;
         this.material = material;
@@ -58,6 +60,7 @@ public class ShopItem {
      * @throws ClassCastException    if anything else is not parsable
      */
     public static ShopItem deserialize(ConfigurationSection section) throws NumberFormatException, ClassCastException {
+        Preconditions.checkNotNull(section, "section");
         String[] arr = section.getName().split(":");
         String materialName = arr[0];
         byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : -1;
@@ -79,6 +82,20 @@ public class ShopItem {
         } else {
             return aliases.get(0);
         }
+    }
+
+    /**
+     * Creates an item stack from this item.
+     *
+     * @param amount the amount of items in the stack
+     * @return an item stack for this item
+     */
+    @SuppressWarnings("deprecation")
+    public ItemStack toItemStack(int amount) {
+        return new ItemStackFactory(material)
+                .amount(amount)
+                .legacyData(dataValue)
+                .produce();
     }
 
     /**
