@@ -5,13 +5,17 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package io.github.xxyy.mtc.module.shop;
+package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.common.util.math.NumberHelper;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
+import io.github.xxyy.mtc.module.shop.ShopItem;
+import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
+import io.github.xxyy.mtc.module.shop.TransactionType;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
@@ -32,11 +36,15 @@ import java.util.Set;
  *
  * @author Janmm14, Literallie
  */ //FIXME: this class is too long, should use more abstraction layers, that we could then unit-test
-class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (integration test)
+public class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (integration test)
     private final ShopModule module;
+    private final ShopMessager messager;
+    private final ShopPriceCalculator calculator;
 
     public CommandShop(ShopModule module) {
         this.module = module;
+        messager = new ShopMessager(module);
+        calculator = new ShopPriceCalculator(module);
     }
 
     @Override
@@ -151,8 +159,7 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
         }
         String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
         ShopItem item = module.getItemConfig().getItem(itemName);
-        if (item == null) {
-            plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
+        if (!messager.checkTradable(plr, item, "in deiner Hand")) {
             return true;
         }
         if (!checkHasAccountAndMsg(plr)) {
@@ -166,7 +173,7 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
                     .count();
         }
 
-        float worth = item.getSellWorth() * amount;
+        double worth = item.getSellWorth() * amount;
 
         EconomyResponse ecoResponse = module.getPlugin().getVaultHook().depositPlayer(plr, worth);
         if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
@@ -197,44 +204,25 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
 
     private void priceNamedItem(String[] args, Player plr) {
         String name = StringHelper.varArgsString(args, 2, false);
-        ShopItem item = module.getItemConfig().getItem(name);
-
-        if (item == null) {
-            plr.sendMessage("§cEs wurde kein Item mit dem Namen §6" + name + " §cgefunden oder es kann nicht im Shop gehandelt werden.");
-        } else {
-            plr.sendMessage("§e" + item.getDisplayName() + " §6kostet §e" + item.getBuyCost() + "§6 MineCoins.");
-            plr.sendMessage("§6Bei Verkauf bekommst du §e" + item.getSellWorth() + " §6MineCoins.");
-        }
+        messager.sendPriceInfo(plr, module.getItemConfig().getItem(name), "§e\"" + name + "\"§6");
     }
 
     private void priceInventory(Player plr) {
-        float worth = 0;
-        for (ItemStack stack : plr.getInventory()) {
-            ShopItem item = module.getItemConfig().getItem(stack.getType(), stack.getData().getData());
-            if (item != null) {
-                worth += item.getSellWorth();
-            }
-        }
-
-        plr.sendMessage("§6Dein Inventarinhalt ist §e" + worth + " §6MineCoins wert.");
+        plr.sendMessage("§6Dein Inventarinhalt ist §e" +
+                messager.getCurrencyString(
+                        calculator.sumInventoryPrices(plr, TransactionType.SELL)
+                ) +
+                " wert.");
     }
 
-    @Nullable
-    private Boolean priceHand(Player plr) {
-        ItemStack hand = plr.getItemInHand();
-        if (hand == null || hand.getType() == Material.AIR) {
-            return CommandHelper.msg("§cDu hast kein Item in der Hand!", plr);
+    private void priceHand(Player plr) {
+        ItemStack itemInHand = plr.getItemInHand();
+        if (itemInHand == null || itemInHand.getType() == Material.AIR) {
+            messager.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
+            return;
         }
 
-        ShopItem item = module.getItemConfig().getItem(hand);
-        if (item == null) {
-            plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
-            return true;
-        }
-        plr.sendMessage("§6Ein §e" + item.getDisplayName() + " §6kostet §e" + item.getBuyCost() + "§6 MineCoins.");
-        plr.sendMessage("§6Bei Verkauf bekommst du für eines §e" + item.getSellWorth() + " §6MineCoins.");
-        plr.sendMessage("§6Alle Items in deiner Hand sind §6" + (item.getSellWorth() * hand.getAmount()) + " §6MineCoins wert.");
-        return null;
+        messager.sendPriceInfo(plr, module.getItemConfig().getItem(itemInHand), "in deiner Hand");
     }
 
     @Nullable
@@ -253,10 +241,10 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
         String name = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
         ShopItem item = module.getItemConfig().getItem(name);
 
-        if (item == null) {
-            plr.sendMessage("§cEs wurde kein Item mit dem Namen §6" + name + " §cgefunden oder es kann nicht im Shop gehandelt werden.");
+        if (!messager.checkTradable(plr, item, name)) {
             return true;
         }
+
         VaultHook vault = module.getPlugin().getVaultHook();
         if (!checkHasAccountAndMsg(plr)) {
             return true;

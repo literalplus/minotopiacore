@@ -11,6 +11,7 @@ import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
