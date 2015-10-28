@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,6 +109,17 @@ class ShopItemConfiguration extends ManagedConfiguration {
         }
 
         return getItem(material, dataValue);
+    }
+
+    /**
+     * Attempts to get an item managed by this configuration matching given item stack.
+     *
+     * @param stack the stack to find the item for
+     * @return the found item for that stack, or {@code null} otherwise.
+     */
+    @SuppressWarnings("deprecation")
+    public ShopItem getItem(ItemStack stack) {
+        return getItem(stack.getType(), stack.getData().getData());
     }
 
     /**

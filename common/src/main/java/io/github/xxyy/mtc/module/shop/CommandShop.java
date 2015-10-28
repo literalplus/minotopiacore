@@ -67,7 +67,7 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
                     case "held":
                     case "h": {
                         Boolean x = priceHand(plr);
-                        if (x != null) {
+                        if (x != null) { //why
                             return x;
                         }
                     }
@@ -225,9 +225,8 @@ class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (i
         if (hand == null || hand.getType() == Material.AIR) {
             return CommandHelper.msg("§cDu hast kein Item in der Hand!", plr);
         }
-        @SuppressWarnings("deprecation") // no other way for data value available //@formatter:off
-                ShopItem item = module.getItemConfig().getItem(hand.getType(), hand.getData().getData()); //TODO maybe add ShopItemConfiguration#getItem(ItemStack)
-        //@formatter:on
+
+        ShopItem item = module.getItemConfig().getItem(hand);
         if (item == null) {
             plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
             return true;
