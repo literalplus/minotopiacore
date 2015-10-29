@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import io.github.xxyy.lib.guava17.collect.Table;
 import io.github.xxyy.mtc.MTC;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,6 +69,16 @@ public class ShopItemConfigurationTest {
     public void subTestGetByMaterial() {
         assertThat("Potato not mapped to material", config.getItem(Material.POTATO.name()), is(POTATO));
         assertThat("Diamond mapped to plain material", config.getItem(Material.DIAMOND.name()), is(nullValue()));
+    }
+
+    @SuppressWarnings("deprecation")
+    public void subTestGetByStack() {
+        assertThat("Potato not mapped to stack",
+                config.getItem(new ItemStack(Material.POTATO)), is(POTATO));
+        assertThat("Diamond wrongly mapped to arbitrary stack",
+                config.getItem(new ItemStack(Material.DIAMOND)), is(nullValue()));
+        assertThat("Diamond not mapped to stack with correct data value",
+                config.getItem(new ItemStack(Material.DIAMOND, 2, (short) 12, (byte) 42)), is(DIAMOND));
     }
 
     public void subTestGetByAliases() {

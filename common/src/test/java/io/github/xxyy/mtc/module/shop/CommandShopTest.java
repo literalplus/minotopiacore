@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.shop;
 
+import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.lang.mutable.MutableDouble;
 import org.bukkit.entity.Player;
@@ -17,12 +18,10 @@ import java.util.function.BiFunction;
  */
 public class CommandShopTest {
 
-    private CommandShop cmd;
     Player plr;
     MutableDouble playerCurrency = new MutableDouble(0);
     ShopItemConfiguration shopItemConfiguration;
     PlayerInventory playerInventory;
-
     BiConsumer<Player, String> playerMessagedHandler;
     /**
      * custom playerDepositHandler, if set, there is no update of {@link #playerCurrency}
@@ -32,6 +31,7 @@ public class CommandShopTest {
      * custom playerWithdrawHandler, if set, there is no update of {@link #playerCurrency}
      */
     BiFunction<Player, Integer, EconomyResponse> playerWithdrawHandler;
+    private CommandShop cmd;
 
     @Before
     public void setUp() throws Exception {
