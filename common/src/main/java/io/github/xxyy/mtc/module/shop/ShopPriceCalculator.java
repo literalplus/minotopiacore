@@ -1,6 +1,7 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,10 +16,10 @@ import java.util.Objects;
  * @since 28/10/15
  */
 public class ShopPriceCalculator {
-    private final ShopModule module;
+    private final ShopItemManager itemManager;
 
-    public ShopPriceCalculator(ShopModule module) {
-        this.module = module;
+    public ShopPriceCalculator(ShopItemManager itemManager) {
+        this.itemManager = itemManager;
     }
 
     /**
@@ -46,7 +47,7 @@ public class ShopPriceCalculator {
         Preconditions.checkNotNull(type, "type");
 
         return stacks.stream()
-                .map(module.getItemConfig()::getItem)
+                .map(itemManager::getItem)
                 .filter(Objects::nonNull)
                 .mapToDouble(type::getValue)
                 .sum();
@@ -78,7 +79,7 @@ public class ShopPriceCalculator {
     public double calculatePrice(ItemStack itemStack, TransactionType type) {
         Preconditions.checkNotNull(itemStack, "itemStack");
         Preconditions.checkNotNull(type, "type");
-        ShopItem item = module.getItemConfig().getItem(itemStack);
+        ShopItem item = itemManager.getItem(itemStack);
         if (!type.isTradable(item)) {
             return 0D;
         } else {

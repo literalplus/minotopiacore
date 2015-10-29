@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     public CommandShop(ShopModule module) {
         this.module = module;
         messager = new ShopMessager(module);
-        calculator = new ShopPriceCalculator(module);
+        calculator = new ShopPriceCalculator(module.getItemManager());
     }
 
     @Override
@@ -100,7 +99,6 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             case "s": {
                 if (args.length < 2) {
                     plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
-
                     plr.sendMessage("§6/shop <sell|verkaufen> <Itemname> <Anzahl|all> §c- §bItems verkaufen");
                     plr.sendMessage("§6/shop <sell|verkaufen> Inv §c- §bgesamtes Inventar verkaufen");
                     plr.sendMessage("§6/shop <sell|verkaufen> Hand §c- §bItems in deiner Hand verkaufen");
@@ -149,7 +147,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             amount = 1;
         }
         String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
-        ShopItem item = module.getItemConfig().getItem(itemName);
+        ShopItem item = module.getItemManager().getItem(itemName);
         if (!messager.checkTradable(plr, item, "in deiner Hand")) {
             return;
         }
@@ -194,7 +192,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
     private void priceNamedItem(String[] args, Player plr) {
         String name = StringHelper.varArgsString(args, 2, false);
-        messager.sendPriceInfo(plr, module.getItemConfig().getItem(name), "§e\"" + name + "\"§6");
+        messager.sendPriceInfo(plr, module.getItemManager().getItem(name), "§e\"" + name + "\"§6");
     }
 
     private void priceInventory(Player plr) {
@@ -212,7 +210,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             return;
         }
         
-        messager.sendPriceInfo(plr, module.getItemConfig().getItem(itemInHand), "in deiner Hand");
+        messager.sendPriceInfo(plr, module.getItemManager().getItem(itemInHand), "in deiner Hand");
     }
 
     private void buy(String[] args, Player plr) {
@@ -228,11 +226,11 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             amount = 1;
         }
         String name = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
-        ShopItem item = module.getItemConfig().getItem(name);
+        ShopItem item = module.getItemManager().getItem(name);
 
         if (!messager.checkTradable(plr, item, name)) {
             return;
-
+        }
         VaultHook vault = module.getPlugin().getVaultHook();
         if (!checkHasAccountAndMsg(plr)) {
             return;
@@ -259,7 +257,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     private void sellHand(String[] args, Player plr) {
         int amount_;
         ItemStack hand = plr.getItemInHand();
-        ShopItem item = module.getItemConfig().getItem(hand.getType(), hand.getData().getData());
+        ShopItem item = module.getItemManager().getItem(hand.getType(), hand.getData().getData());
         if (item == null) {
             plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
             return;

@@ -12,6 +12,7 @@ import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -34,7 +35,7 @@ import java.util.logging.Level;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19/01/15
  */
-class ShopItemConfiguration extends ManagedConfiguration {
+class ShopItemConfiguration extends ManagedConfiguration implements ShopItemManager {
     private final MTC plugin;
     private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
@@ -72,15 +73,7 @@ class ShopItemConfiguration extends ManagedConfiguration {
         return fromFile(file, behaviour, plugin);
     }
 
-    /**
-     * Attempts to get an item by its name. This respects any aliases which may have been set. Furthermore, this allows
-     * for items to be queried by their material name. Spaces are replaced by underscores and the whole string is
-     * converted to upper case to match material name declarations.
-     *
-     * @param input the string to check for, may be any of alias, material name or type id, optionally
-     *              followed by :&lt;data value&gt;
-     * @return the found item or null if there is no such item
-     */
+    @Override
     public ShopItem getItem(String input) {
         ShopItem item = itemAliases.get(input); //Check aliases first
         if (item != null) { // Note that we do *not* support data values for aliases since those may be specific to that
@@ -111,25 +104,13 @@ class ShopItemConfiguration extends ManagedConfiguration {
         return getItem(material, dataValue);
     }
 
-    /**
-     * Attempts to get an item managed by this configuration matching given item stack.
-     *
-     * @param stack the stack to find the item for
-     * @return the found item for that stack, or {@code null} otherwise.
-     */
+    @Override
     @SuppressWarnings("deprecation")
     public ShopItem getItem(ItemStack stack) {
         return getItem(stack.getType(), stack.getData().getData());
     }
 
-    /**
-     * Attempts to get an item managed by this configuration. The special data value {@code -1} represents a catch-all
-     * wildcard item that matches all data values of that material that do not have a specific item attached to them.
-     *
-     * @param material  the material to find the item for
-     * @param dataValue the data value to find the item for
-     * @return the found item for the specific data value, if found, the wildcard item, if found, or {@code null} otherwise.
-     */
+    @Override
     public ShopItem getItem(Material material, byte dataValue) {
         ShopItem item = shopItems.get(material, dataValue); //check specific values before wildcard
         if (item != null) {
@@ -185,6 +166,7 @@ class ShopItemConfiguration extends ManagedConfiguration {
         return ImmutableTable.copyOf(shopItems);
     }
 
+    @Override
     public Map<String, ShopItem> getItemAliases() {
         return itemAliases;
     }

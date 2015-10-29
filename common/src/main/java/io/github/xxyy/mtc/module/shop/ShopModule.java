@@ -11,6 +11,7 @@ import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -60,8 +61,21 @@ public class ShopModule extends ConfigurableMTCModule {
         super.save();
     }
 
+    /**
+     * Returns the configuration for this module. Note that this being the manager is considered an implementation
+     * detail and, as such, may change without notice. Use {@link #getItemManager()} where possible.
+     *
+     * @return the configuration for this module
+     */
     public ShopItemConfiguration getItemConfig() {
         return itemConfig;
+    }
+
+    /**
+     * @return the shop item manager managing items for this module
+     */
+    public ShopItemManager getItemManager() {
+        return getItemConfig();
     }
 
     /**

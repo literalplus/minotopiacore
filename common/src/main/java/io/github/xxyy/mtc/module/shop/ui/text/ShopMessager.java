@@ -3,6 +3,7 @@ package io.github.xxyy.mtc.module.shop.ui.text;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.TransactionType;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -41,11 +42,26 @@ public class ShopMessager {
      * @return whether the item is tradable
      */
     public boolean checkTradable(CommandSender receiver, ShopItem item, String queryInfo) {
-        if (item == null || (!item.canBeSold() && !item.canBeBought())) {
+        return checkTradable(receiver, item, queryInfo, null);
+    }
+
+    /**
+     * Checks whether a passed item is non-null and tradable for a given transaction type. Null values are recognised
+     * as untradable. If the item is not tradable, sends an informational message to passed command sender.
+     *
+     * @param receiver  the receiver of the possible message
+     * @param item      the item to check
+     * @param queryInfo an additional string describing the item, used when untradable, may be null
+     * @param type      the transaction type to check tradableness for
+     * @return whether the item is tradable
+     */
+    public boolean checkTradable(CommandSender receiver, ShopItem item, String queryInfo, TransactionType type) {
+        boolean tradable = type != null ? type.isTradable(item) : item.canBeBought() || item.canBeSold();
+        if (!tradable) {
             if (queryInfo == null) {
-                sendPrefixed(receiver, "Dieses Item kann nicht gehandelt werden.");
+                sendPrefixed(receiver, "Dieses Item kann nicht " + getVerbActionString(type) + " werden.");
             } else {
-                sendPrefixed(receiver, "Das Item " + queryInfo + " kann nicht gehandelt werden.");
+                sendPrefixed(receiver, "Das Item " + queryInfo + " kann nicht " + getVerbActionString(type) + " werden.");
             }
             return false;
         }
@@ -95,5 +111,26 @@ public class ShopMessager {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
                 amount + CURRENCY_PLURAL;
+    }
+
+    /**
+     * Returns a human-readable verb representation of given transaction type.
+     *
+     * @param type the type to get the verb for
+     * @return a human-readable verb representation of given type
+     */
+    public String getVerbActionString(TransactionType type) {
+        if (type == null) {
+            return "gehandelt";
+        }
+
+        switch (type) {
+            case SELL:
+                return "verkauft";
+            case BUY:
+                return "gekauft";
+            default:
+                throw new AssertionError("Unknown transaction type" + type);
+        }
     }
 }
