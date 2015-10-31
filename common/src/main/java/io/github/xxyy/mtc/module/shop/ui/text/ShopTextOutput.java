@@ -1,6 +1,7 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.TransactionType;
@@ -62,7 +63,7 @@ public class ShopTextOutput {
                     "Das Item " + queryInfo;
 
             sendPrefixed(receiver, itemSpecifier + " kann nicht " +
-                    ShopStringAdaptor.getVerbActionString(type) + " werden.");
+                    ShopStringAdaptor.getParticipleII(type) + " werden.");
             return false;
         }
         return true;
@@ -101,5 +102,7 @@ public class ShopTextOutput {
         }
     }
 
-
+    public void sendTransactionFailure(CommandSender receiver, TransactionType type, String errorMessage) {
+        receiver.sendMessage(new XyComponentBuilder("Konnte Item nicht "));
+    }
 }

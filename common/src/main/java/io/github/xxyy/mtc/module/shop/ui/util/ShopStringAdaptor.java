@@ -30,12 +30,12 @@ public class ShopStringAdaptor {
     }
 
     /**
-     * Returns a human-readable verb representation of given transaction type.
+     * Returns a human-readable verb representation of given transaction type as a Participle II.
      *
-     * @param type the type to get the verb for
-     * @return a human-readable verb representation of given type
+     * @param type the type to get the Participle II for
+     * @return a human-readable Participle II representation of given type
      */
-    public static String getVerbActionString(TransactionType type) {
+    public static String getParticipleII(TransactionType type) {
         if (type == null) {
             return "gehandelt";
         }
