@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * Calculates prices for items according to the associated shop module.
+ * Calculates prices for items according to the associated shop module. Stateless class.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 28/10/15

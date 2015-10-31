@@ -16,6 +16,7 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Material;
@@ -197,7 +198,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
     private void priceInventory(Player plr) {
         plr.sendMessage("§6Dein Inventarinhalt ist §e" +
-                output.getCurrencyString(
+                ShopStringAdaptor.getCurrencyString(
                         calculator.sumInventoryPrices(plr, TransactionType.SELL)
                 ) +
                 " wert.");

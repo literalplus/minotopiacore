@@ -4,6 +4,7 @@ import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.TransactionType;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -14,8 +15,6 @@ import org.bukkit.command.CommandSender;
  * @since 2015-10-28
  */
 public class ShopTextOutput {
-    public static final String CURRENCY_SINGULAR = "MineCoin";
-    public static final String CURRENCY_PLURAL = "MineCoins";
     private final ShopModule module;
 
     public ShopTextOutput(ShopModule module) {
@@ -58,11 +57,12 @@ public class ShopTextOutput {
     public boolean checkTradable(CommandSender receiver, ShopItem item, String queryInfo, TransactionType type) {
         boolean tradable = type != null ? type.isTradable(item) : item.canBeBought() || item.canBeSold();
         if (!tradable) {
-            if (queryInfo == null) {
-                sendPrefixed(receiver, "Dieses Item kann nicht " + getVerbActionString(type) + " werden.");
-            } else {
-                sendPrefixed(receiver, "Das Item " + queryInfo + " kann nicht " + getVerbActionString(type) + " werden.");
-            }
+            String itemSpecifier = queryInfo == null ?
+                    "Dieses Item" :
+                    "Das Item " + queryInfo;
+
+            sendPrefixed(receiver, itemSpecifier + " kann nicht " +
+                    ShopStringAdaptor.getVerbActionString(type) + " werden.");
             return false;
         }
         return true;
@@ -85,7 +85,7 @@ public class ShopTextOutput {
             ComponentSender.sendTo(
                     module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
                             .append(" kann für ", ChatColor.GOLD)
-                            .append(getCurrencyString(item.getBuyCost()), ChatColor.YELLOW)
+                            .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()), ChatColor.YELLOW)
                             .append(" gekauft werden.", ChatColor.GOLD),
                     receiver
             );
@@ -94,43 +94,12 @@ public class ShopTextOutput {
             ComponentSender.sendTo(
                     module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
                             .append(" kann für ", ChatColor.GOLD)
-                            .append(getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
+                            .append(ShopStringAdaptor.getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
                             .append(" verkauft werden.", ChatColor.GOLD),
                     receiver
             );
         }
     }
 
-    /**
-     * Returns a human-readable representation of given currency value. This respects singular and plural forms.
-     *
-     * @param amount the amount to format
-     * @return a human-readbale representation of given value, including currency name
-     */
-    public String getCurrencyString(double amount) {
-        return amount == 1 ?
-                "einen " + CURRENCY_SINGULAR :
-                amount + CURRENCY_PLURAL;
-    }
 
-    /**
-     * Returns a human-readable verb representation of given transaction type.
-     *
-     * @param type the type to get the verb for
-     * @return a human-readable verb representation of given type
-     */
-    public String getVerbActionString(TransactionType type) {
-        if (type == null) {
-            return "gehandelt";
-        }
-
-        switch (type) {
-            case SELL:
-                return "verkauft";
-            case BUY:
-                return "gekauft";
-            default:
-                throw new AssertionError("Unknown transaction type" + type);
-        }
-    }
 }
