@@ -59,6 +59,7 @@ public class ShopItemConfigurationTest {
         subTestGetByAliases();
         subTestGetByDataValues();
         subTestGetByMaterial();
+        subTestGetByStack();
     }
 
     public void subTestGetBySerializationName() {
