@@ -46,7 +46,28 @@ public class ShopStringAdaptor {
             case BUY:
                 return "gekauft";
             default:
-                throw new AssertionError("Unknown transaction type" + type);
+                throw new AssertionError("Unknown transaction type " + type);
+        }
+    }
+
+    /**
+     * Returns a human-readable verb representation of given transaction type as Infinitive.
+     *
+     * @param type the type to get the Infinitive for
+     * @return a human-readable Infinitive representation of given type
+     */
+    public static String getInfinitive(TransactionType type) {
+        if (type == null) {
+            return "handeln";
+        }
+
+        switch (type) {
+            case SELL:
+                return "verkaufen";
+            case BUY:
+                return "kaufen";
+            default:
+                throw new AssertionError("Unknown transaction type " + type);
         }
     }
 }
