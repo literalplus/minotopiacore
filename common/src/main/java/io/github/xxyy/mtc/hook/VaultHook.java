@@ -59,6 +59,17 @@ public class VaultHook extends SimpleHookWrapper {
         return unsafe.withdrawPlayer(offlinePlayer, amount);
     }
 
+    /**
+     * Checks with the Vault plugin whether given player can afford to pay a specified amount.
+     *
+     * @param offlinePlayer the player to check
+     * @param amount        the amount of money the player must own for this method to return true
+     * @return whether given player has given amount of money
+     */
+    public boolean canAfford(OfflinePlayer offlinePlayer, double amount) {
+        return unsafe.getBalance(offlinePlayer) >= amount;
+    }
+
     //// ACTIVITY METHODS //////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean arePermissionsHooked() {
