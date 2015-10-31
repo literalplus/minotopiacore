@@ -37,12 +37,12 @@ import java.util.Set;
  */ //FIXME: this class is too long, should use more abstraction layers, that we could then unit-test
 public class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (integration test)
     private final ShopModule module;
-    private final ShopMessager messager;
+    private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
 
     public CommandShop(ShopModule module) {
         this.module = module;
-        messager = new ShopMessager(module);
+        output = new ShopTextOutput(module);
         calculator = new ShopPriceCalculator(module.getItemManager());
     }
 
@@ -148,7 +148,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         }
         String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
         ShopItem item = module.getItemManager().getItem(itemName);
-        if (!messager.checkTradable(plr, item, "in deiner Hand")) {
+        if (!output.checkTradable(plr, item, "in deiner Hand")) {
             return;
         }
         if (!checkHasAccountAndMsg(plr)) {
@@ -192,12 +192,12 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
     private void priceNamedItem(String[] args, Player plr) {
         String name = StringHelper.varArgsString(args, 2, false);
-        messager.sendPriceInfo(plr, module.getItemManager().getItem(name), "§e\"" + name + "\"§6");
+        output.sendPriceInfo(plr, module.getItemManager().getItem(name), "§e\"" + name + "\"§6");
     }
 
     private void priceInventory(Player plr) {
         plr.sendMessage("§6Dein Inventarinhalt ist §e" +
-                messager.getCurrencyString(
+                output.getCurrencyString(
                         calculator.sumInventoryPrices(plr, TransactionType.SELL)
                 ) +
                 " wert.");
@@ -206,11 +206,11 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     private void priceHand(Player plr) {
         ItemStack itemInHand = plr.getItemInHand();
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
-            messager.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
+            output.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
             return;
         }
-        
-        messager.sendPriceInfo(plr, module.getItemManager().getItem(itemInHand), "in deiner Hand");
+
+        output.sendPriceInfo(plr, module.getItemManager().getItem(itemInHand), "in deiner Hand");
     }
 
     private void buy(String[] args, Player plr) {
@@ -228,7 +228,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         String name = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
         ShopItem item = module.getItemManager().getItem(name);
 
-        if (!messager.checkTradable(plr, item, name)) {
+        if (!output.checkTradable(plr, item, name)) {
             return;
         }
         VaultHook vault = module.getPlugin().getVaultHook();

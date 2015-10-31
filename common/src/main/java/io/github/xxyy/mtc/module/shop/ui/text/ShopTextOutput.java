@@ -8,17 +8,17 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
- * Provides user output for common messages used by the shop module.
+ * Handles text output for the shop module. Stateless.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-10-28
  */
-public class ShopMessager {
+public class ShopTextOutput {
     public static final String CURRENCY_SINGULAR = "MineCoin";
     public static final String CURRENCY_PLURAL = "MineCoins";
     private final ShopModule module;
 
-    public ShopMessager(ShopModule module) {
+    public ShopTextOutput(ShopModule module) {
         this.module = module;
     }
 
