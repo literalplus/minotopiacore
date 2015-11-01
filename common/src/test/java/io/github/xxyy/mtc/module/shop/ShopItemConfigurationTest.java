@@ -105,7 +105,7 @@ public class ShopItemConfigurationTest {
                 config.getItem(Material.DIAMOND.name() + ":" + DIAMOND.getDataValue()), is(DIAMOND));
 
         //test that the item is not wrongly mapped to -1 (special value)
-        assertThat("Potato mapped to data value -1", config.getItem(Material.POTATO.name() + ":-1"), is(nullValue()));
+        assertThat("Potato not mapped to data value -1", config.getItem(Material.POTATO.name() + ":-1"), is(POTATO));
         assertThat("Diamond mapped to data value -1", config.getItem(Material.DIAMOND.name() + ":-1"), is(nullValue()));
     }
 
