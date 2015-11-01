@@ -22,7 +22,7 @@ public class ShopTransactionExecutor {
     private final TransactionHandler inventoryHandler;
 
     public ShopTransactionExecutor(ShopModule module) {
-        this.output = new ShopTextOutput(module);
+        this.output = module.getTextOutput();
         this.economyHandler = new ShopEconomyHandler(module.getItemManager(), module.getPlugin().getVaultHook());
         this.inventoryHandler = new ShopInventoryHandler();
     }

@@ -12,7 +12,9 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
+import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
+import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -28,6 +30,8 @@ public class ShopModule extends ConfigurableMTCModule {
             .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
     private final String prefix = TextComponent.toLegacyText(new XyComponentBuilder(prefixBuilder).create());
     private ShopItemConfiguration itemConfig;
+    private ShopTextOutput textOutput;
+    private ShopTransactionExecutor transactionExecutor;
 
     public ShopModule() {
         super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD);
@@ -46,6 +50,8 @@ public class ShopModule extends ConfigurableMTCModule {
     public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, getPlugin());
+        textOutput = new ShopTextOutput(this);
+        transactionExecutor = new ShopTransactionExecutor(this);
 
         plugin.getCommand("shop").setExecutor(new CommandShop(this));
     }
@@ -90,5 +96,19 @@ public class ShopModule extends ConfigurableMTCModule {
      */
     public XyComponentBuilder getPrefixBuilder() {
         return new XyComponentBuilder(prefixBuilder);
+    }
+
+    /**
+     * @return the text output used by this module
+     */
+    public ShopTextOutput getTextOutput() {
+        return textOutput;
+    }
+
+    /**
+     * @return the transaction executor used by this module
+     */
+    public ShopTransactionExecutor getTransactionExecutor() {
+        return transactionExecutor;
     }
 }
