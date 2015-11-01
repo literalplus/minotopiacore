@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.shop.ui.util;
 
+import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 
 /**
@@ -27,6 +28,17 @@ public class ShopStringAdaptor {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
                 amount + CURRENCY_PLURAL;
+    }
+
+    /**
+     * Gets the human-readable display string of given item with given amount.
+     *
+     * @param item   the item to format
+     * @param amount the amount to format
+     * @return the human-readable display string
+     */
+    public static String getAdjustedDisplayName(ShopItem item, int amount) {
+        return amount + " " + item;
     }
 
     /**

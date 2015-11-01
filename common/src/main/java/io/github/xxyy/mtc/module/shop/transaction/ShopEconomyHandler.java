@@ -36,7 +36,9 @@ public class ShopEconomyHandler implements TransactionHandler {
         switch (type) {
             case BUY:
                 if (!vaultHook.canAfford(plr, price)) {
-                    return new FailedTransactionInfo("Du hast nicht genug Geld, um " + amount + " Stück für " +
+                    return new FailedTransactionInfo("Du hast nicht genug Geld, um " +
+                            ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
+                            " für " +
                             ShopStringAdaptor.getCurrencyString(amount) + " zu kaufen. Du hast " +
                             ShopStringAdaptor.getCurrencyString(vaultHook.getBalance(plr)) + ".");
                 }

@@ -3,6 +3,7 @@ package io.github.xxyy.mtc.module.shop.ui.text;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
@@ -16,9 +17,11 @@ import org.bukkit.command.CommandSender;
  */
 public class ShopTextOutput {
     private final ShopModule module;
+    private final ShopPriceCalculator calculator;
 
     public ShopTextOutput(ShopModule module) {
         this.module = module;
+        calculator = new ShopPriceCalculator(module.getItemManager());
     }
 
     /**
@@ -99,6 +102,27 @@ public class ShopTextOutput {
                     receiver
             );
         }
+    }
+
+    /**
+     * Notifies a command sender about a successful transaction initiated by them with information about what exactly
+     * happened.
+     *
+     * @param receiver the receiver of the message
+     * @param item     the item involved in the transaction
+     * @param amount   the amount of the item that was transferred
+     * @param type     the type of the transaction
+     */
+    public void sendTransactionSuccess(CommandSender receiver, ShopItem item, int amount, TransactionType type) {
+        ComponentSender.sendTo(
+                module.getPrefixBuilder()
+                        .append("Du hast erfolgreich ", ChatColor.GOLD)
+                        .append(ShopStringAdaptor.getAdjustedDisplayName(item, amount), ChatColor.YELLOW)
+                        .append(" für ", ChatColor.GOLD)
+                        .append(ShopStringAdaptor.getCurrencyString(calculator.calculatePrice(item, amount, type)), ChatColor.YELLOW)
+                        .append(" " + ShopStringAdaptor.getParticipleII(type), ChatColor.GOLD)
+                        .create(), receiver
+        );
     }
 
     /**

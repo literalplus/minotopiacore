@@ -99,6 +99,23 @@ public class ShopItem {
     }
 
     /**
+     * Checks if an item stack matches this shop item.
+     *
+     * @param stack the stack to check
+     * @return whether this item matches given stack
+     */
+    @SuppressWarnings("deprecation")
+    public boolean matches(ItemStack stack) {
+        Preconditions.checkNotNull(stack, "stack");
+        if (dataValue != -1 &&
+                stack.getData().getData() != dataValue) {
+            return false;
+        }
+
+        return material.equals(stack.getType());
+    }
+
+    /**
      * @return whether players are allowed to sell this item to the shop
      */
     public boolean canBeSold() {

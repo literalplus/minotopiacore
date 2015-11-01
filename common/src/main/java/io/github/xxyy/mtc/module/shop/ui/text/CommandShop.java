@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module.shop.ui.text;
 
+import com.sk89q.worldguard.internal.flywaydb.core.internal.util.StringUtils;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.common.util.math.NumberHelper;
@@ -16,6 +17,7 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
+import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.apache.commons.lang.math.NumberUtils;
@@ -40,11 +42,13 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     private final ShopModule module;
     private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
+    private final ShopTransactionExecutor transactionExecutor;
 
     public CommandShop(ShopModule module) {
         this.module = module;
         output = new ShopTextOutput(module);
         calculator = new ShopPriceCalculator(module.getItemManager());
+        transactionExecutor = new ShopTransactionExecutor(module);
     }
 
     @Override
@@ -137,58 +141,28 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
     //  /shop verkaufen <Item> <Anzahl|all>
     private void sellNamedItem(String[] args, Player plr) {
-        int amount;
-        if (args[args.length - 1].equalsIgnoreCase("all")) {
-            amount = -1;
-        } else {
-            amount = NumberHelper.tryParseInt(args[args.length - 1], Integer.MIN_VALUE);
-        }
-        boolean hasAmount = amount != Integer.MIN_VALUE;
-        if (!hasAmount) {
-            amount = 1;
-        }
-        String itemName = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
+        String itemName = StringHelper.varArgsString(args, 2, 1, false); //last arg is amount, ignore that
         ShopItem item = module.getItemManager().getItem(itemName);
-        if (!output.checkTradable(plr, item, "in deiner Hand")) {
-            return;
-        }
-        if (!checkHasAccountAndMsg(plr)) {
+        if (!output.checkTradable(plr, item, item.getDisplayName())) { //handles null
             return;
         }
 
-        if (amount == -1) { // 3rd argument is "all", -1 equals all items of that type
-            amount = (int) Arrays.stream(plr.getInventory().getContents())
-                    .filter(is -> is.getType() == item.getMaterial()
-                            && is.getData().getData() == item.getDataValue())
-                    .count();
-        }
-
-        double worth = item.getSellWorth() * amount;
-
-        EconomyResponse ecoResponse = module.getPlugin().getVaultHook().depositPlayer(plr, worth);
-        if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
-            return;
-        }
-
-        int amountToRemove = amount;
-
-        ItemStack[] contentsCopy = plr.getInventory().getContents();
-
-        for (int i = 0; i < contentsCopy.length; i++) {
-            ItemStack is = contentsCopy[i];
-            if (is.getType() == item.getMaterial()
-                    && is.getData().getData() == item.getDataValue()) {
-                if (is.getAmount() <= amountToRemove) {
-                    amountToRemove -= is.getAmount();
-                    plr.getInventory().setItem(i, null);
-                } else {
-                    is.setAmount(is.getAmount() - amountToRemove);
-                    plr.getInventory().setItem(i, is);
-                    break;
-                }
+        String lastArg = args[args.length - 1];
+        int amount;
+        if (lastArg.equalsIgnoreCase("all")) {
+            amount = Arrays.stream(plr.getInventory().getContents())
+                    .filter(item::matches)
+                    .mapToInt(ItemStack::getAmount)
+                    .sum();
+        } else {
+            if (!StringUtils.isNumeric(lastArg)) {
+                plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + lastArg + ")");
+                return;
             }
+            amount = Integer.parseInt(lastArg);
         }
-        plr.sendMessage("§6Das Item §e" + item.getDisplayName() + " wurde verkauft (§e" + amount + " §6Stück), dir wurden §e" + worth + " §6MineCoins gutgeschrieben.");
+
+        transactionExecutor.attemptTransaction(plr, item, amount, TransactionType.SELL);
     }
 
     private void priceNamedItem(String[] args, Player plr) {

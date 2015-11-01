@@ -5,6 +5,7 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.api.TransactionInfo;
 import io.github.xxyy.mtc.module.shop.impl.FailedTransactionInfo;
 import io.github.xxyy.mtc.module.shop.impl.RevokableTransactionInfo;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,7 +42,8 @@ public class ShopInventoryHandler implements TransactionHandler {
                 toRemove.setAmount(alreadyStored);
                 plr.getInventory().removeItem(toRemove); //remove that many
             } //back at the start now
-            return new FailedTransactionInfo("Du brauchst für " + amount + " " + item.getDisplayName() + " " +
+            return new FailedTransactionInfo("Du brauchst für " +
+                    ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
                     (int) Math.ceil((amount / 64)) + " freie Slots in deinem Inventar!");
         }
         return new RevokableTransactionInfo(() -> plr.getInventory().removeItem(stack));
@@ -50,7 +52,9 @@ public class ShopInventoryHandler implements TransactionHandler {
     private TransactionInfo executeSell(Player plr, ShopItem item, int amount) {
         ItemStack stack = item.toItemStack(amount);
         if (!plr.getInventory().containsAtLeast(stack, amount)) {
-            return new FailedTransactionInfo("Du hast nicht " + amount + " " + item.getDisplayName() + " in deinem Inventar!");
+            return new FailedTransactionInfo("Du hast nicht " +
+                    ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
+                    " in deinem Inventar!");
         }
         HashMap<Integer, ItemStack> unretrieved = plr.getInventory().removeItem(stack);
         if (!unretrieved.isEmpty()) {
@@ -62,7 +66,9 @@ public class ShopInventoryHandler implements TransactionHandler {
                 toReturn.setAmount(alreadyRetrieved);
                 plr.getInventory().removeItem(toReturn);
             }
-            return new FailedTransactionInfo("Du hast nicht " + amount + " " + item.getDisplayName() + " in deinem Inventar?!");
+            return new FailedTransactionInfo("Du hast nicht " +
+                    ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
+                    " in deinem Inventar?!");
         }
         return new RevokableTransactionInfo(() -> plr.getInventory().addItem(stack));
     }

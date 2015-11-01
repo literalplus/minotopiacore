@@ -17,13 +17,11 @@ import java.util.Set;
  * @since 29/10/15
  */
 public class ShopTransactionExecutor {
-    private final ShopModule module;
     private final ShopTextOutput output;
     private final TransactionHandler economyHandler;
     private final TransactionHandler inventoryHandler;
 
     public ShopTransactionExecutor(ShopModule module) {
-        this.module = module;
         this.output = new ShopTextOutput(module);
         this.economyHandler = new ShopEconomyHandler(module.getItemManager(), module.getPlugin().getVaultHook());
         this.inventoryHandler = new ShopInventoryHandler();
@@ -45,14 +43,24 @@ public class ShopTransactionExecutor {
         deliver, the action will be canceled right away. Us not being able to deliver is far less probable.
          */
 
+        TransactionHandler[] handlers;
         switch (type) {
             case BUY:
-                return callHandlers(plr, item, amount, type, economyHandler, inventoryHandler);
+                handlers = new TransactionHandler[]{economyHandler, inventoryHandler};
+                break;
             case SELL:
-                return callHandlers(plr, item, amount, type, inventoryHandler, economyHandler);
+                handlers = new TransactionHandler[]{inventoryHandler, economyHandler};
+                break;
             default:
                 throw new AssertionError("invalid type: " + type);
         }
+
+        if (callHandlers(plr, item, amount, type, handlers)) {
+            output.sendTransactionSuccess(plr, item, amount, type);
+            return true;
+        }
+
+        return false;
     }
 
     private boolean callHandlers(Player plr, ShopItem item, int amount, TransactionType type,
