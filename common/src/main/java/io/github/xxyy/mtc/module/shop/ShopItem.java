@@ -29,7 +29,6 @@ public class ShopItem {
 
     private final Material material;
     private final byte dataValue;
-    private final String serialisationName;
     private final List<String> aliases;
     private double buyCost;
     private double sellWorth;
@@ -45,8 +44,6 @@ public class ShopItem {
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
-
-        this.serialisationName = dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
     }
 
     /**
@@ -188,16 +185,7 @@ public class ShopItem {
      * @return a name which uniquely represents this item which can be used to save it in serialization
      */
     public String getSerializationName() {
-        return serialisationName;
-    }
-
-    /**
-     * @see #isBuyable()
-     * @see #isSellable()
-     * @return whether the item is at least sellable or buyable.
-     */
-    public boolean isTradable() {
-        return sellable || buyable;
+        return dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
     }
 
     /**
