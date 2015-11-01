@@ -1,7 +1,6 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.chat.ComponentSender;
-import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.TransactionType;
@@ -102,7 +101,19 @@ public class ShopTextOutput {
         }
     }
 
+    /**
+     * Notifies a command sender about a failed transaction initiated by them.
+     *
+     * @param receiver     the receiver of the message
+     * @param type         the type of the transaction that failed
+     * @param errorMessage the error message
+     */
     public void sendTransactionFailure(CommandSender receiver, TransactionType type, String errorMessage) {
-        receiver.sendMessage(new XyComponentBuilder("Konnte Item nicht "));
+        ComponentSender.sendTo(
+                module.getPrefixBuilder()
+                        .append("Konnte nicht " + ShopStringAdaptor.getInfinitive(type) + ": ", ChatColor.RED)
+                        .append(errorMessage, ChatColor.RED, ChatColor.ITALIC)
+                        .create(),
+                receiver);
     }
 }
