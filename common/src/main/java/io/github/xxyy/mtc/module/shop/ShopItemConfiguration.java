@@ -107,6 +107,9 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
     @Override
     @SuppressWarnings("deprecation")
     public ShopItem getItem(ItemStack stack) {
+        if (stack == null || stack.getType() == Material.AIR) {
+            return null;
+        }
         return getItem(stack.getType(), stack.getData().getData());
     }
 
