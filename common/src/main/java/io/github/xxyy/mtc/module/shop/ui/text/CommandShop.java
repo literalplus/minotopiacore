@@ -7,11 +7,8 @@
 
 package io.github.xxyy.mtc.module.shop.ui.text;
 
-import com.sk89q.worldguard.internal.flywaydb.core.internal.util.StringUtils;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.common.util.math.NumberHelper;
-import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
@@ -19,19 +16,16 @@ import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import net.milkbowl.vault.economy.EconomyResponse;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.material.MaterialData;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Provides a text-based front-end to the Shop module.
@@ -61,7 +55,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             return true;
         }
         if (args.length == 0) {
-            //TODO open gui instead of sending help
+            //TODO: open gui instead of sending help
             sendHelp(plr);
             return true;
         }
@@ -70,68 +64,68 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
             case "price":
             case "p": {
                 if (args.length < 2) {
-                    plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
-                    plr.sendMessage("§6/shop <price|preis> <Itemname|Hand|Inv> §c- §bPreise im Shop");
+                    plr.sendMessage("§cInvalide Syntax. Versuche:");
+                    plr.sendMessage("§6/shop preis <Item|hand|inv> §eFragt einen Preis ab.");
                     return true;
                 }
                 switch (args[1].toLowerCase()) {
                     case "hand":
                     case "held":
-                    case "h": {
+                    case "h":
                         priceHand(plr);
                         break;
-                    }
                     case "inv":
                     case "all":
-                    case "i": {
+                    case "i":
                         priceInventory(plr);
                         break;
-                    }
-                    default: {
+                    default:
                         priceNamedItem(args, plr);
                         break;
-                    }
                 }
                 break;
             }
             case "kaufen":
             case "buy":
-            case "b": {
+            case "b":
+                if (args.length < 3) {
+                    plr.sendMessage("§cInvalide Syntax. Versuche:");
+                    plr.sendMessage("§6/shop kaufen <Item> <Anzahl>");
+                    return true;
+                }
                 buy(args, plr);
-            }
+                break;
             case "verkaufen":
             case "sell":
-            case "s": {
+            case "s":
                 if (args.length < 2) {
                     plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
-                    plr.sendMessage("§6/shop <sell|verkaufen> <Itemname> <Anzahl|all> §c- §bItems verkaufen");
-                    plr.sendMessage("§6/shop <sell|verkaufen> Inv §c- §bgesamtes Inventar verkaufen");
-                    plr.sendMessage("§6/shop <sell|verkaufen> Hand §c- §bItems in deiner Hand verkaufen");
-                    plr.sendMessage("§6/shop <sell|verkaufen> Hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
+                    plr.sendMessage("§6/shop verkaufen <Itemname> <Anzahl|all> §c- §bItems verkaufen");
+                    plr.sendMessage("§6/shop verkaufen inv §c- §bgesamtes Inventar verkaufen");
+                    plr.sendMessage("§6/shop verkaufen hand <Anzahl>§c- §bItems in deiner Hand verkaufen");
+                    plr.sendMessage("§6/shop verkaufen hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
                     return true;
                 }
                 switch (args[1].toLowerCase()) {
                     case "hand":
                     case "held":
-                    case "h": {
+                    case "h":
                         sellHand(args, plr);
                         break;
-                    }
                     case "inv":
                     case "all":
-                    case "i": {
+                    case "i":
+                    case "a":
                         sellInventory(plr);
                         break;
-                    }
                     default:
                         sellNamedItem(args, plr);
                         break;
                 }
                 break;
-            }
             default:
-                plr.sendMessage(String.format("§cUnbekannte Aktion '%s'", args[0]));
-                //noinspection fallthrough //intended //nice one
+                plr.sendMessage("§cUnbekannte Aktion: " + args[0]);
+            //noinspection fallthrough //intended to send help if subcommand not found
             case "help":
                 sendHelp(plr);
                 break;
@@ -143,7 +137,7 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
     private void sellNamedItem(String[] args, Player plr) {
         String itemName = StringHelper.varArgsString(args, 2, 1, false); //last arg is amount, ignore that
         ShopItem item = module.getItemManager().getItem(itemName);
-        if (!output.checkTradable(plr, item, item.getDisplayName())) { //handles null
+        if (!output.checkTradable(plr, item, item.getDisplayName(), TransactionType.SELL)) { //handles null
             return;
         }
 
@@ -188,169 +182,72 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
         output.sendPriceInfo(plr, module.getItemManager().getItem(itemInHand), "in deiner Hand");
     }
 
+    //buy0 item1 amount2
     private void buy(String[] args, Player plr) {
-        if (args.length < 2) {
-            plr.sendMessage("§cFalsche Syntax. Nutze diese hier:");
-            plr.sendMessage("§6/shop <buy|kaufen> <Itemname> <Anzahl> §c- §bItems kaufen");
+        if (!StringUtils.isNumeric(args[2])) {
+            plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
             return;
         }
 
-        int amount = NumberHelper.tryParseInt(args[args.length - 1], Integer.MIN_VALUE);
-        boolean hasAmount = amount != Integer.MIN_VALUE;
-        if (!hasAmount) {
-            amount = 1;
-        }
-        String name = StringHelper.varArgsString(hasAmount ? Arrays.copyOf(args, args.length - 1) : args, 2, false);
-        ShopItem item = module.getItemManager().getItem(name);
+        int amount = Integer.parseInt(args[2]);
+        String itemName = StringHelper.varArgsString(args, 2, 1, false);
+        ShopItem item = module.getItemManager().getItem(itemName);
 
-        if (!output.checkTradable(plr, item, name)) {
-            return;
-        }
-        VaultHook vault = module.getPlugin().getVaultHook();
-        if (!checkHasAccountAndMsg(plr)) {
+        if (!output.checkTradable(plr, item, itemName, TransactionType.BUY)) {
             return;
         }
 
-        double totalCost = item.getBuyCost() * amount;
-        double balance = vault.getBalance(plr);
-        if (balance < totalCost) {
-            plr.sendMessage("§cDu hast nicht genügend Geld. Dir fehlen §6" + (totalCost - balance) + " §cMineCoins.");
-            return;
-        }
-        EconomyResponse ecoResponse = vault.withdrawPlayer(plr, totalCost);
-        if (!checkSuccessAndMsgLog(plr, ecoResponse, false, totalCost))
-            return;
-        ItemStack itemStack = new ItemStack(item.getMaterial(), amount);
-        MaterialData data = itemStack.getData();
-        //noinspection deprecation
-        data.setData(item.getDataValue());
-        itemStack.setData(data);
-        plr.getInventory().addItem(itemStack);
-        plr.sendMessage("§6Du hast §e" + amount + "x " + item.getDisplayName() + " für " + totalCost + " MineCoins erworben.");
+        transactionExecutor.attemptTransaction(plr, item, amount, TransactionType.BUY);
     }
 
     private void sellHand(String[] args, Player plr) {
-        int amount_;
-        ItemStack hand = plr.getItemInHand();
-        ShopItem item = module.getItemManager().getItem(hand.getType(), hand.getData().getData());
-        if (item == null) {
-            plr.sendMessage("§cDas Item in deiner Hand ist nicht im Shop handelbar.");
+        int amount;
+        ItemStack itemInHand = plr.getItemInHand();
+        ShopItem item = module.getItemManager().getItem(itemInHand);
+        if (!output.checkTradable(plr, item, "in deiner Hand", TransactionType.SELL)) {
             return;
         }
-        VaultHook vault = module.getPlugin().getVaultHook();
-        if (!checkHasAccountAndMsg(plr)) return;
-        if (args.length > 2) {
-            if (NumberUtils.isDigits(args[2])) {
-                amount_ = NumberHelper.tryParseInt(args[2], -2);
-            } else if (args[2].equalsIgnoreCase("all")) {
-                amount_ = -1;
-            } else {
-                plr.sendMessage("§chalp wip sell");
+
+        if (args.length < 3 || args[2].equalsIgnoreCase("all")) {
+            amount = itemInHand.getAmount();
+        } else {
+            if (!StringUtils.isNumeric(args[2])) {
+                plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
                 return;
             }
-        } else {
-            amount_ = hand.getAmount();
+            amount = Integer.parseInt(args[2]);
         }
-        if (amount_ == -2) { //3rd argument is digits, but cannot be parsed
-            plr.sendMessage("§chalp wip sell");
-            return;
-        }
-        if (amount_ == -1) { // 3rd argument is "all" -1 equals all items of that type
-            amount_ = (int) Arrays.stream(plr.getInventory().getContents())
-                    .filter(is -> is.getType() == hand.getType()
-                            && is.getData().getData() == hand.getData().getData())
-                    .count();
-        }
-        final int amount = amount_;
-        double worth = item.getSellWorth() * amount;
-        EconomyResponse ecoResponse = vault.depositPlayer(plr, worth);
-        if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth)) {
-            return;
-        }
-        int amountToRemove = amount;
-        if (hand.getAmount() >= amountToRemove) {
-            if (hand.getAmount() == amountToRemove) {
-                plr.setItemInHand(null);
-            } else {
-                hand.setAmount(hand.getAmount() - amountToRemove);
-                plr.setItemInHand(hand);
-            }
-        } else {
-            int handAmount = hand.getAmount();
-            plr.setItemInHand(null);
-            amountToRemove -= handAmount;
-            ItemStack[] iss = Arrays.copyOf(plr.getInventory().getContents(), plr.getInventory().getContents().length);
-            for (int i = 0; i < iss.length; i++) {
-                ItemStack is = iss[i];
-                if (is.getType() == hand.getType()
-                        && is.getData().getData() == hand.getData().getData()) {
-                    if (is.getAmount() <= amountToRemove) {
-                        amountToRemove -= is.getAmount();
-                        plr.getInventory().setItem(i, null);
-                    } else {
-                        is.setAmount(is.getAmount() - amountToRemove);
-                        plr.getInventory().setItem(i, is);
-                        break;
-                    }
-                }
-            }
-        }
-        plr.sendMessage("§6Das Item in deiner Hand wurde verkauft (§e" + amount + " §6Stück), dir wurden §e" + worth + " §6MineCoins gutgeschrieben.");
+
+        transactionExecutor.attemptTransaction(plr, item, amount, TransactionType.SELL);
     }
 
     private void sellInventory(Player plr) {
-        VaultHook vault = module.getPlugin().getVaultHook();
-        if (!checkHasAccountAndMsg(plr)) return;
-
-        float worth = 0;
-        ItemStack[] invContent = plr.getInventory().getContents();
-        Set<Integer> validItemPositions = new HashSet<>();
-
-        for (int i = 0; i < invContent.length; i++) {
-            final ItemStack stack = invContent[i];
-            ShopItem item = module.getItemConfig().getItem(stack.getType(), stack.getData().getData());
-            if (item != null) {
-                worth += item.getSellWorth();
-                validItemPositions.add(i);
+        Map<ShopItem, Integer> itemAmounts = new HashMap<>();
+        for (ItemStack stack : plr.getInventory().getContents()) {
+            ShopItem item = module.getItemManager().getItem(stack);
+            if (item.canBeSold()) { //add up current amount with this amount
+                itemAmounts.compute(item, (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount));
             }
         }
-        EconomyResponse ecoResponse = vault.depositPlayer(plr, worth);
-        if (!checkSuccessAndMsgLog(plr, ecoResponse, true, worth))
-            return;
 
-        PlayerInventory inventory = plr.getInventory();
-        validItemPositions.forEach(i -> inventory.setItem(i, null));
+        double totalProfit = itemAmounts.entrySet().stream()
+                .mapToDouble(e -> {
+                    transactionExecutor.attemptTransactionSilent(plr, e.getKey(), e.getValue(), TransactionType.SELL);
+                    return calculator.calculatePrice(e.getKey(), e.getValue(), TransactionType.SELL);
+                }).sum();
 
-        plr.sendMessage("§6Du hast dein Inventar verkauft. Es war §e" + worth + " §6MineCoins wert.");
-    }
-
-    private boolean checkSuccessAndMsgLog(Player plr, EconomyResponse ecoResponse, boolean withdraw, float amount) {
-        if (!ecoResponse.transactionSuccess()) {
-            plr.sendMessage("§cAuf dein Konto konnte nicht zugegriffen werden.");
-            module.getPlugin().getLogger().warning("[" + module.getName() + "] Konnte nicht auf Konto von " + plr + " zugreifen, um " + amount + " MineCoins " + (withdraw ? "gutzuschrieben" : "abzuziehen") + ".");
-            module.getPlugin().getLogger().warning("[" + module.getName() + "] Fehlertyp: " + ecoResponse.type + " Fehler: " + ecoResponse.errorMessage);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean checkHasAccountAndMsg(Player plr) {
-        VaultHook vault = module.getPlugin().getVaultHook();
-        if (!vault.assureHasAccount(plr)) {
-            plr.sendMessage("§cFehler bei der Verarbeitung. Dein Konto wurde nicht gefunden.");
-            return false;
-        }
-        return true;
+        output.sendPrefixed(plr, "Du hast alles in deinem Inventar verkauft, was nicht niet- und nagelfest (unverkäuflich) ist.");
+        output.sendPrefixed(plr, "Du hast dadurch §e" + ShopStringAdaptor.getCurrencyString(totalProfit) + "§6 eingenommen.");
     }
 
     private void sendHelp(Player plr) {
         plr.sendMessage("§b[]----- §5MinoTopia Shop Hilfe §b-----[]");
-        plr.sendMessage("§6/shop <price|preis> <Itemname|Hand|Inv> §c- §bPreise im Shop");
-        plr.sendMessage("§6/shop <buy|kaufen> <Itemname> <Anzahl> §c- §bItems kaufen");
-        plr.sendMessage("§6/shop <sell|verkaufen> <Itemname> <Anzahl|all> §c- §bItems verkaufen");
-        plr.sendMessage("§6/shop <sell|verkaufen> Inv §c- §bgesamtes Inventar verkaufen");
-        plr.sendMessage("§6/shop <sell|verkaufen> Hand §c- §bItems in deiner Hand verkaufen");
-        plr.sendMessage("§6/shop <sell|verkaufen> Hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
+        plr.sendMessage("§6/shop preis <Itemname|Hand|Inv> §c- §bPreise im Shop");
+        plr.sendMessage("§6/shop kaufen <Itemname> <Anzahl> §c- §bItems kaufen");
+        plr.sendMessage("§6/shop verkaufen <Itemname> <Anzahl|all> §c- §bItems verkaufen");
+        plr.sendMessage("§6/shop verkaufen inv §c- §bgesamtes Inventar verkaufen");
+        plr.sendMessage("§6/shop verkaufen hand §c- §bItems in deiner Hand verkaufen");
+        plr.sendMessage("§6/shop verkaufen hand all §c- §bAlle Items im Inventar der Art des Items in deiner Hand verkaufen");
         plr.sendMessage("§b[]----------------------------[]");
     }
 }

@@ -38,6 +38,29 @@ public class ShopTransactionExecutor {
      * @return whether the transaction was successful
      */
     public boolean attemptTransaction(Player plr, ShopItem item, int amount, TransactionType type) {
+        if (attemptTransactionInternal(plr, item, amount, type)) {
+            output.sendTransactionSuccess(plr, item, amount, type);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Attempts to execute a complete transaction. If any part of the transaction fails, anything already done will be
+     * reversed. No messages will be printed except in case of failure.
+     *
+     * @param plr    the player initiating the transaction
+     * @param item   the item involved in the transaction
+     * @param amount the amount of the item requested to be transferred
+     * @param type   the type of the transaction
+     * @return whether the transaction was successful
+     */
+    public boolean attemptTransactionSilent(Player plr, ShopItem item, int amount, TransactionType type) {
+        return attemptTransactionInternal(plr, item, amount, type);
+    }
+
+    private boolean attemptTransactionInternal(Player plr, ShopItem item, int amount, TransactionType type) {
         /*
         For simplicity reasons, the action that takes the player's payment is always called first. So if they cannot
         deliver, the action will be canceled right away. Us not being able to deliver is far less probable.
@@ -55,12 +78,7 @@ public class ShopTransactionExecutor {
                 throw new AssertionError("invalid type: " + type);
         }
 
-        if (callHandlers(plr, item, amount, type, handlers)) {
-            output.sendTransactionSuccess(plr, item, amount, type);
-            return true;
-        }
-
-        return false;
+        return callHandlers(plr, item, amount, type, handlers);
     }
 
     private boolean callHandlers(Player plr, ShopItem item, int amount, TransactionType type,
