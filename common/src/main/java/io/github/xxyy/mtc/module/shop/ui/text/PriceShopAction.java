@@ -1,10 +1,12 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -48,11 +50,21 @@ public class PriceShopAction extends AbstractShopAction {
     @Override
     public void sendHelpLines(Player plr) {
         sendHelpLine(plr, "<Item|hand|inv>", "Fragt einen Preis ab.");
+        sendHelpLine(plr, "<Item> <Anzahl>", "Berechnet einem Preis für eine bestimmte Anzahl.");
     }
 
     private void priceNamedItem(String[] args, Player plr) {
-        String name = StringHelper.varArgsString(args, 0, false);
-        output.sendPriceInfo(plr, module.getItemManager().getItem(name), "§e\"" + name + "\"§6");
+        String lastArg = args[args.length - 1];
+        int amount = 1;
+        int stripArgs = 0; //amount of arguments to ignore for item name, starting with the last one
+        if (StringUtils.isNumeric(lastArg)) {
+            amount = Integer.parseInt(lastArg);
+            stripArgs = 1;
+        }
+
+        String name = StringHelper.varArgsString(args, 0, stripArgs, false);
+        ShopItem item = module.getItemManager().getItem(name);
+        output.sendPriceInfo(plr, item, amount, "§e\"" + name + "\"§6");
     }
 
     private void priceInventory(Player plr) {
@@ -70,6 +82,7 @@ public class PriceShopAction extends AbstractShopAction {
             return;
         }
 
-        output.sendPriceInfo(plr, module.getItemManager().getItem(itemInHand), "in deiner Hand");
+        ShopItem item = module.getItemManager().getItem(itemInHand);
+        output.sendPriceInfo(plr, item, itemInHand.getAmount(), "in deiner Hand");
     }
 }

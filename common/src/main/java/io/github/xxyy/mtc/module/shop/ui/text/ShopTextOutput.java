@@ -72,6 +72,27 @@ public class ShopTextOutput {
     }
 
     /**
+     * Sends information about the price of specified amount of shop items. If amount is 1, sends only the price for
+     * a single item. Otherwise, sends the price for specified amount of items too.
+     *
+     * @param receiver  the receiver of the messages
+     * @param item      the item to display, may be null
+     * @param amount    the amount of the item to display
+     * @param queryInfo an additional string describing the item, used when item is null, may be null
+     */
+    public void sendPriceInfo(CommandSender receiver, ShopItem item, int amount, String queryInfo) {
+        if (!checkTradable(receiver, item, queryInfo)) {
+            return;
+        }
+
+        sendPriceInfoSingle(receiver, item, queryInfo);
+
+        if (amount != 1) {
+            sendPriceInfoMultiple(receiver, item, amount, queryInfo);
+        }
+    }
+
+    /**
      * Sends information about the price of a single piece of a shop item to a command sender. This handles null values
      * as untradable items.
      *
@@ -79,7 +100,7 @@ public class ShopTextOutput {
      * @param item      the item to display, may be null
      * @param queryInfo an additional string describing the item, used when item is null, may be null
      */
-    public void sendPriceInfo(CommandSender receiver, ShopItem item, String queryInfo) {
+    public void sendPriceInfoSingle(CommandSender receiver, ShopItem item, String queryInfo) {
         if (!checkTradable(receiver, item, queryInfo)) {
             return;
         }
@@ -100,6 +121,51 @@ public class ShopTextOutput {
                             .append(ShopStringAdaptor.getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
                             .append(" verkauft werden.", ChatColor.GOLD),
                     receiver
+            );
+        }
+    }
+
+    /**
+     * Sends information about the price of a specific amount of a specific shop item to a command sender. This handles
+     * null values as untradeable items.
+     *
+     * @param receiver  the receiver of the messages
+     * @param item      the item to display, may be null
+     * @param amount    the amount of the item to display
+     * @param queryInfo an additional string describing the item, used when item is null, may be null
+     */
+    public void sendPriceInfoMultiple(CommandSender receiver, ShopItem item, int amount, String queryInfo) {
+        if (!checkTradable(receiver, item, queryInfo)) {
+            return;
+        }
+
+        String displayName = ShopStringAdaptor.getAdjustedDisplayName(item, amount);
+
+        if (item.canBeBought()) {
+            double finalPrice = calculator.calculatePrice(item, amount, TransactionType.BUY);
+            ComponentSender.sendTo(
+                    module.getPrefixBuilder()
+                            .append(displayName, ChatColor.YELLOW)
+                            .append((amount == 1 ? " kostet " : " kosten "), ChatColor.GOLD)
+                            .append(ShopStringAdaptor.getCurrencyString(finalPrice), ChatColor.YELLOW)
+                            .append(". ", ChatColor.GOLD)
+                            .append("[" + displayName + " kaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                            .hintedCommand("/shop kaufen " + item.getSerializationName() + " " + amount)
+                            .create(), receiver
+            );
+        }
+
+        if (item.canBeSold()) {
+            double finalPrice = calculator.calculatePrice(item, amount, TransactionType.SELL);
+            ComponentSender.sendTo(
+                    module.getPrefixBuilder()
+                            .append(displayName, ChatColor.YELLOW)
+                            .append((amount == 1 ? " ist " : " sind "), ChatColor.GOLD)
+                            .append(ShopStringAdaptor.getCurrencyString(finalPrice), ChatColor.YELLOW)
+                            .append(" wert. ", ChatColor.GOLD)
+                            .append("[" + displayName + " verkaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                            .hintedCommand("/shop verkaufen " + item.getSerializationName() + " " + amount)
+                            .create(), receiver
             );
         }
     }
