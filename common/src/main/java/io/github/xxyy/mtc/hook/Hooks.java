@@ -7,10 +7,9 @@
 
 package io.github.xxyy.mtc.hook;
 
+import io.github.xxyy.mtc.hook.impl.Hook;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import io.github.xxyy.mtc.hook.impl.Hook;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -27,6 +26,10 @@ public final class Hooks {
     public static final String HOOK_IMPL_PACKAGE_NAME = Hooks.class.getPackage().getName() + ".impl";
 
     private Hooks() {
+    }
+
+    public static <T extends MTCHook> T newHook(Plugin plugin, Class<T> hookClass, T impl) {
+        return new SimpleMTCHookProxy<T>(plugin).wrap(impl, impl.getClass());
     }
 
     public static <T extends Hook> T tryHook(HookWrapper wrapper) {
