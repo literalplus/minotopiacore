@@ -7,22 +7,16 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.hook.PexHook;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.hook.PexHook;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CommandTeam extends MTCCommandExecutor {
@@ -47,7 +41,7 @@ public class CommandTeam extends MTCCommandExecutor {
 
                 plugin.getPexHook().getGroupList().stream()
                         .filter(group -> group.getOptionBoolean("team", null, false))
-                        .sorted((group, group2) -> group2.getOptionInteger("teamweight", null, 0) - group.getOptionInteger("teamweight", null, 0))
+                        .sorted(Comparator.comparing(g -> g.getOptionInteger("teamweight", null, 0)))
                         .forEach(group -> this.groups.add(new TeamGroup(group)));
 
                 groups.stream().forEach(grp -> allMembers.addAll(grp.getMembers()));
@@ -173,7 +167,7 @@ public class CommandTeam extends MTCCommandExecutor {
             this.name = permissionGroup.getName();
             this.prefix = permissionGroup.getPrefix();
 
-            this.members.addAll(permissionGroup.getUsers().parallelStream()
+            this.members.addAll(permissionGroup.getUsers().stream()
                     .map(TeamMember::new)
                     .collect(Collectors.toList()));
         }
@@ -201,7 +195,7 @@ public class CommandTeam extends MTCCommandExecutor {
 
             StringBuilder sb = new StringBuilder(ChatColor.translateAlternateColorCodes('&', getPrefix())).append(' ');
             String separator = MTCHelper.loc("XU-teamseperator", "CONSOLE", false);
-            this.members.stream().forEach(member -> sb.append(member.niceRepresentation()).append(separator));
+            this.members.forEach(member -> sb.append(member.niceRepresentation()).append(separator));
             sb.delete(sb.length() - separator.length(), sb.length()); //Remove trailing separator
             return sb.toString();
         }
