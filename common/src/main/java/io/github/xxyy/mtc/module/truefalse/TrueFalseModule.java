@@ -7,6 +7,10 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.EventHandler;
@@ -16,11 +20,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +35,17 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     public static final String MAGIC_WAND_NAME = "§3T/F Boundary Wand Melon";
     public static final Material MAGIC_WAND_MATERIAL = Material.MELON;
     public static final String NAME = "TrueFalse";
+    public static final String ADMIN_PERMISSION = "mtc.truefalse.admin";
     private static final String SPAWN_PATH = "spawn";
     private static final String QUESTION_PATH = "questions";
     private static final String BOUNDARY_1_PATH = "boundaries.first";
     private static final String BOUNDARY_2_PATH = "boundaries.second";
-    public static final String ADMIN_PERMISSION = "mtc.truefalse.admin";
+    List<UUID> boundarySessions = new ArrayList<>();
     private List<TrueFalseQuestion> questions = new ArrayList<>();
     private XyLocation firstBoundary;
     private XyLocation secondBoundary;
     private XyLocation spawn;
-
     private TrueFalseGame game;
-    List<UUID> boundarySessions = new ArrayList<>();
 
     public TrueFalseModule() {
         super(NAME, "modules/truefalse.conf.yml", ClearCacheBehaviour.SAVE);
@@ -58,6 +56,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
+        ConfigurationSerialization.registerClass(TrueFalseQuestion.class);
 
         plugin.getCommand("wahrfalsch").setExecutor(new CommandTrueFalse(this));
         plugin.getServer().getPluginManager().registerEvents(new EventListener(), plugin);
@@ -97,6 +96,11 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         return spawn;
     }
 
+    public void setSpawn(XyLocation spawn) {
+        this.spawn = spawn;
+        save();
+    }
+
     public List<TrueFalseQuestion> getQuestions() {
         return questions;
     }
@@ -121,11 +125,6 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public void setSecondBoundary(XyLocation secondBoundary) {
         this.secondBoundary = secondBoundary;
-        save();
-    }
-
-    public void setSpawn(XyLocation spawn) {
-        this.spawn = spawn;
         save();
     }
 
