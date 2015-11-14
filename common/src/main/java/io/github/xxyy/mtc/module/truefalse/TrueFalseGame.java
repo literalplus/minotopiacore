@@ -8,15 +8,15 @@
 package io.github.xxyy.mtc.module.truefalse;
 
 import com.google.common.collect.Lists;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
-
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.helper.MTCHelper;
 
 import java.util.List;
 
@@ -67,11 +67,12 @@ public class TrueFalseGame {
         DyeColor colorToRemove = question.getAnswer() ? DyeColor.RED : DyeColor.GREEN;
         @SuppressWarnings("deprecation") BlockReplacer blockReplacer = new BlockReplacer(
                 b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() == colorToRemove.getWoolData(),
-                b -> b.setType(Material.AIR),
+                b -> b.setType(Material.AIR, false),
                 b -> {
-                    b.setType(Material.WOOL);
-                    ((Wool) b.getState().getData()).setColor(colorToRemove);
-                    b.getState().update(true);
+                    b.setType(Material.WOOL, false);
+                    BlockState state = b.getState();
+                    ((Wool) state.getData()).setColor(colorToRemove);
+                    state.update(true, false);
                 },
                 module.getFirstBoundary(), module.getSecondBoundary(), 200
         );
