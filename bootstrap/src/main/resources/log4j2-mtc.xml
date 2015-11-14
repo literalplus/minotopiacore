@@ -28,7 +28,7 @@
         </RollingFile>
         <RollingFile name="ChatLogFile" fileName="${sys:mtc.logsdir}chat.log"
                      filePattern="${sys:mtc.logsdir}chat/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout pattern="[%d{HH:mm:ss} %3.-3p] %msg %xEx{filters(${filters})}%n"/>
+            <PatternLayout pattern="[%d{HH:mm:ss} %3.3p] %msg %xEx{filters(${filters})}%n"/>
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="400"/> <!-- keep chat logs for little more than a year -->
         </RollingFile>
