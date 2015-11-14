@@ -32,19 +32,19 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="400"/> <!-- keep chat logs for little more than a year -->
         </RollingFile>
+        <RollingFile name="FullTagLogFile" fileName="${sys:mtc.logsdir}fulltag.log"
+                     filePattern="${sys:mtc.logsdir}fulltag/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="60"/>
+        </RollingFile>
+        <RollingFile name="FullTagDistLogFile" fileName="${sys:mtc.logsdir}fulltag-dist.log"
+                     filePattern="${sys:mtc.logsdir}fulltag-cmd/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="60"/>
+        </RollingFile>
     </Appenders>
-    <RollingFile name="FullTagLogFile" fileName="${sys:mtc.logsdir}fulltag.log"
-                 filePattern="${sys:mtc.logsdir}fulltag/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
-        <PatternLayout pattern="${pattern}"/>
-        <TimeBasedTriggeringPolicy/>
-        <DefaultRolloverStrategy max="60"/>
-    </RollingFile>
-    <RollingFile name="FullTagDistLogFile" fileName="${sys:mtc.logsdir}fulltag-dist.log"
-                 filePattern="${sys:mtc.logsdir}fulltag-cmd/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
-        <PatternLayout pattern="${pattern}"/>
-        <TimeBasedTriggeringPolicy/>
-        <DefaultRolloverStrategy max="60"/>
-    </RollingFile>
     <Loggers>
         <Logger name="io.github.xxyy.mtc" level="info" additivity="false">
             <AppenderRef ref="MiscLogFile"/>
