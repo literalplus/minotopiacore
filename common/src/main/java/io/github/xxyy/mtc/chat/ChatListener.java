@@ -7,12 +7,18 @@
 
 package io.github.xxyy.mtc.chat;
 
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanInfo;
 import io.github.xxyy.mtc.clan.ClanMemberInfo;
 import io.github.xxyy.mtc.clan.ClanPermission;
+import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -20,12 +26,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.common.util.CommandHelper;
-
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.ClanHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +35,8 @@ import java.util.regex.Pattern;
 
 public final class ChatListener implements Listener {
 
+    private static final Logger LOGGER = LogManager.getLogger(ChatListener.class);
     private final MTC plugin;
-
     private Map<String, String> lastMessages = new HashMap<>();
 //	private Map<String,Boolean> plrAdCounts = new HashMap<>();
 
@@ -64,7 +64,7 @@ public final class ChatListener implements Listener {
         //lag
         if (Pattern.compile("\\b([lL]+[aA4]+[gG]+)\\b").matcher(finalMsg).find()) {
             if (!plr.hasPermission("mtc.ignore")) {
-                LogHelper.getChatLogger().log(Level.WARNING, "LAGMSG DETECTED=>" + plrName + "(" + plr.getAddress() + "): '" + finalMsg + "'");
+                LOGGER.warn("=>LAG MESSAGE=>{}({}): {}", plrName, plr.getAddress(), ChatColor.stripColor(finalMsg));
                 plr.sendMessage(MTC.chatPrefix + "Bitte keine Lagnachrichten :) §b/rules");
                 e.setCancelled(true);
                 return;
@@ -78,7 +78,7 @@ public final class ChatListener implements Listener {
                 (lastMessage.equalsIgnoreCase(finalMsg) || //If it's the same, that's faster than Levenshtein
                         (lastMessage.length() > 5 && finalMsg.length() > 5 && //messages shorter than 5 letters usually cause false positives and can't contain IPs etc
                                 StringUtils.getLevenshteinDistance(this.lastMessages.get(plrName), finalMsg) <= 2))) { //That's how many letters you have to change to get the other message
-            LogHelper.getChatLogger().log(Level.WARNING, "SPAM DETECTED=>" + plrName + "(" + plr.getAddress() + "): '" + finalMsg + "'");
+            LOGGER.warn("=>SPAM MESSAGE=>{}({}): {}", plrName, plr.getAddress(), ChatColor.stripColor(finalMsg));
             e.setCancelled(true);
             plr.sendMessage(MTC.chatPrefix + "Bitte nicht spammen :)");
             return;
@@ -89,7 +89,7 @@ public final class ChatListener implements Listener {
 
         //werbung
         if (MTCChatHelper.isAdvertisement(finalMsg)) {
-            LogHelper.getChatLogger().log(Level.WARNING, "ADVERTISEMENT DETECTED=>" + plrName + "(" + plr.getAddress() + "): '" + finalMsg + "'");
+            LOGGER.warn("=>AD MESSAGE=>{}({}): {}", plrName, plr.getAddress(), ChatColor.stripColor(finalMsg));
             if (plr.hasPermission("mtc.ignore")) {
                 plr.sendMessage(MTC.chatPrefix + "Du hast den Werbefilter ignoriert. Na toll!");
             } else {
@@ -160,7 +160,6 @@ public final class ChatListener implements Listener {
 
         //CAPSSSSS
         if (MTCChatHelper.isCaps(finalMsg)) {
-            LogHelper.getChatLogger().log(Level.WARNING, "CAPS DETECTED=>" + plrName + "(" + plr.getAddress() + "): '" + finalMsg + "'");
             if (plr.hasPermission("mtc.ignore")) {
                 plr.sendMessage(MTC.chatPrefix + "CAPS-Autodetection ignoriert.");
             } else {

@@ -7,6 +7,12 @@
 
 package io.github.xxyy.mtc.chat;
 
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -14,25 +20,17 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 
 public class MTCChatHelper extends ChatHelper {
-    public static Map<String, String> cfCache = new HashMap<>(); //chatfarbe cache
     public static List<String> spies = new ArrayList<>(); // /mtc spy
     public static volatile Map<Integer, PrivateChat> directChats = new HashMap<>();
+    public static Map<String, String> cfCache = new HashMap<>(); //chatfarbe cache
+    private static Logger LOGGER = LogManager.getLogger(MTCChatHelper.class);
 
     public static void clearPrivateChats() {
         if (MTCChatHelper.directChats.size() <= 0) {
@@ -155,7 +153,7 @@ public class MTCChatHelper extends ChatHelper {
 
     private static void sendMessage(String msg, Player sender, Collection<? extends Player> receivers) {
         int i = 0;
-        LogHelper.getChatLogger().log(Level.INFO, msg);
+        LOGGER.info(ChatColor.stripColor(msg));
         for (Player plr : receivers) {
             if (!PrivateChat.activeChats.containsKey(plr) && MTC.instance().getXLoginHook().isAuthenticated(sender)) {
                 plr.sendMessage(msg);
