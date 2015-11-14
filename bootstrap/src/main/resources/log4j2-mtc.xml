@@ -28,7 +28,13 @@
         </RollingFile>
         <RollingFile name="ChatLogFile" fileName="${sys:mtc.logsdir}chat.log"
                      filePattern="${sys:mtc.logsdir}chat/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
-            <PatternLayout pattern="[%d{HH:mm:ss} %20.20p]: %msg %xEx{filters(${filters})}%n"/>
+            <PatternLayout pattern="[%d{HH:mm:ss} %20.20p] %msg %xEx{filters(${filters})}%n"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="400"/> <!-- keep chat logs for little more than a year -->
+        </RollingFile>
+        <RollingFile name="ClanChatLogFile" fileName="${sys:mtc.logsdir}chat-clan.log"
+                     filePattern="${sys:mtc.logsdir}chat-clan/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="[%d{HH:mm:ss}] %msg%n"/>
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="400"/> <!-- keep chat logs for little more than a year -->
         </RollingFile>
@@ -39,6 +45,9 @@
         </Logger>
         <Logger name="io.github.xxyy.mtc.chat" level="info" additivity="false">
             <AppenderRef ref="ChatLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.chat__clan" level="info" additivity="false"> <!-- This is temporary -->
+            <AppenderRef ref="ClanChatLogFile"/>
         </Logger>
         <Root/>
     </Loggers>

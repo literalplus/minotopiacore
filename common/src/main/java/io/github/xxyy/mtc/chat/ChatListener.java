@@ -10,7 +10,6 @@ package io.github.xxyy.mtc.chat;
 import io.github.xxyy.common.util.ChatHelper;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanInfo;
@@ -29,13 +28,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 
 public final class ChatListener implements Listener {
 
     private static final Logger LOGGER = LogManager.getLogger(ChatListener.class);
+    private static final Logger CLAN_LOGGER = LogManager.getLogger("io.github.xxyy.mtc.chat__clan"); //This is temporary
     private final MTC plugin;
     private Map<String, String> lastMessages = new HashMap<>();
 //	private Map<String,Boolean> plrAdCounts = new HashMap<>();
@@ -125,7 +124,7 @@ public final class ChatListener implements Listener {
                         ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(plrName, cmi.getRank()),
                                 ClanHelper.parseChatMessage(finalMsg, cmi));
                         MTCChatHelper.sendClanSpyMsg(plrName + ": " + e.getMessage(), ci.prefix);
-                        LogHelper.getClanChatLogger().log(Level.INFO, "[C-" + ci.prefix + "=" + ci.name + "]" + plrName + ": " + e.getMessage());
+                        CLAN_LOGGER.info("[C-{}={}] {}: {}", ci.prefix, ci.id, plrName, ChatColor.stripColor(finalMsg));
                         return;
                     }
                     clanTag = ClanHelper.getFormattedPrefix(ci) + ClanHelper.getStarsByRank(cmi.getRank());
