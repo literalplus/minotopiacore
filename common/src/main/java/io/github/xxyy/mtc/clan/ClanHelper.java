@@ -7,31 +7,28 @@
 
 package io.github.xxyy.mtc.clan;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.mtc.Const;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.helper.LaterMessageHelper;
 import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.logging.LogManager;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public final class ClanHelper { //REFACTOR
 
+    private static final Logger CHAT_LOGGER = LogManager.getLogger("io.github.xxyy.mtc.chat__clan"); //This is temporary
     public static Map<Integer, ClanInfo> cacheById = new HashMap<>(); //TODO uuids
     public static Map<String, ClanInfo> cacheByName = new HashMap<>();
     public static Map<String, ClanMemberInfo> memberCache = new HashMap<>();
@@ -68,6 +65,22 @@ public final class ClanHelper { //REFACTOR
     }
     
     /////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Sends a chat message to a clan's member chat.
+     *
+     * @param clanInfo   the clan to send to
+     * @param message    the message to send
+     * @param senderInfo the member who sent the message
+     */
+    public static void sendChatMessage(ClanInfo clanInfo, String message, ClanMemberInfo senderInfo) {
+        ClanHelper.broadcast(clanInfo.id, "XC-chatformat", false,
+                ClanHelper.getNameFormatByRank(senderInfo.userName, senderInfo.getRank()),
+                ClanHelper.parseChatMessage(message, senderInfo));
+        MTCChatHelper.sendClanSpyMsg(senderInfo.userName + ": " + message, clanInfo.prefix);
+        CHAT_LOGGER.info("[C-{}={}] {}: {}",
+                clanInfo.prefix, clanInfo.id, senderInfo.userName, ChatColor.stripColor(message));
+    }
     
     /**
      * Broadcasts a message to all clan members.

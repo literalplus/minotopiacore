@@ -7,29 +7,19 @@
 
 package io.github.xxyy.mtc.clan.ui;
 
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.*;
+import io.github.xxyy.mtc.helper.LaterMessageHelper;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.clan.ClanInfo;
-import io.github.xxyy.mtc.clan.ClanMemberInfo;
-import io.github.xxyy.mtc.clan.ClanPermission;
-import io.github.xxyy.mtc.clan.InvitationInfo;
-import io.github.xxyy.mtc.clan.RunnableTpClanBase;
-import io.github.xxyy.mtc.helper.LaterMessageHelper;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
-
-import java.util.logging.Level;
 
 
 public class CommandClan extends MTCCommandExecutor { //REFACTOR
@@ -38,6 +28,12 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
 
     public CommandClan(MTC plugin) {
         this.plugin = plugin;
+    }
+
+    private static boolean printHelpTo(CommandSender sender, String label, String page) {
+        //TODO like a factions
+        ClanHelpManager.tryPrintHelp("xclan", sender, label, page, "clan help");
+        return true;
     }
 
     @Override
@@ -398,10 +394,7 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             if(cmi.clanId < 0) {
                 return MTCHelper.sendLocArgs("XC-cmifetcherr", sender, true, cmi.clanId);
             }
-            ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(senderName, cmi.getRank()),
-                    ClanHelper.parseChatMessage(msg, cmi));
-            MTCChatHelper.sendClanSpyMsg(senderName + ": " + msg, ci.prefix);
-            LogHelper.getClanChatLogger().log(Level.INFO, "[C-"+ci.prefix+"="+ci.name+"]"+senderName+": "+msg);
+            ClanHelper.sendChatMessage(ci, msg, cmi);
         }else if(args[0].equalsIgnoreCase("revoke")){
             if(!ClanHelper.isInAnyClan(senderName)) {
                 return MTCHelper.sendLoc("XC-notinclan", sender, true);
@@ -605,12 +598,6 @@ public class CommandClan extends MTCCommandExecutor { //REFACTOR
             MTCHelper.sendLoc("XC-wrongusage", sender, true);
             CommandClan.printHelpTo(sender, label, "1");
         }
-        return true;
-    }
-
-    private static boolean printHelpTo(CommandSender sender, String label, String page){
-        //TODO like a factions
-        ClanHelpManager.tryPrintHelp("xclan", sender, label, page, "clan help");
         return true;
     }
 

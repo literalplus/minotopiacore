@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 public final class ChatListener implements Listener {
 
     private static final Logger LOGGER = LogManager.getLogger(ChatListener.class);
-    private static final Logger CLAN_LOGGER = LogManager.getLogger("io.github.xxyy.mtc.chat__clan"); //This is temporary
     private final MTC plugin;
     private Map<String, String> lastMessages = new HashMap<>();
 //	private Map<String,Boolean> plrAdCounts = new HashMap<>();
@@ -121,10 +120,7 @@ public final class ChatListener implements Listener {
                         if (!ClanPermission.hasAndMessage(plr, ClanPermission.USECHAT)) {
                             return;
                         }
-                        ClanHelper.broadcast(ci.id, "XC-chatformat", false, ClanHelper.getNameFormatByRank(plrName, cmi.getRank()),
-                                ClanHelper.parseChatMessage(finalMsg, cmi));
-                        MTCChatHelper.sendClanSpyMsg(plrName + ": " + e.getMessage(), ci.prefix);
-                        CLAN_LOGGER.info("[C-{}={}] {}: {}", ci.prefix, ci.id, plrName, ChatColor.stripColor(finalMsg));
+                        ClanHelper.sendChatMessage(ci, finalMsg, cmi);
                         return;
                     }
                     clanTag = ClanHelper.getFormattedPrefix(ci) + ClanHelper.getStarsByRank(cmi.getRank());
