@@ -181,6 +181,10 @@ public class CommandTrueFalse implements CommandExecutor {
                         module.getGame().nextQuestion();
                         return true;
                     case "spawn":
+                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+                            return true;
+                        }
+                        //noinspection ConstantConditions
                         module.setSpawn(new XyLocation(((Player) sender).getLocation()));
                         sender.sendMessage("§aDer Spawn wurde auf deine Position gesetzt!");
                         return true;
