@@ -7,7 +7,11 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
-import com.google.common.collect.Lists;
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import mkremins.fanciful.FancyMessage;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -16,11 +20,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.helper.MTCHelper;
+import java.util.Arrays;
 
 /**
  * Provides a text-based front-end for true/false, with admin and player features.
@@ -63,7 +63,7 @@ public class CommandTrueFalse implements CommandExecutor {
                         ((Player) sender).getInventory().addItem(
                                 new ItemStackFactory(TrueFalseModule.MAGIC_WAND_MATERIAL)
                                         .displayName(TrueFalseModule.MAGIC_WAND_NAME)
-                                        .lore(Lists.newArrayList("§7Right-click a block to set the 1.boundary.", "§7Left-click a block to set the 2.boundary."))
+                                        .lore(Arrays.asList("§7Right-click a block to set the 1.boundary.", "§7Left-click a block to set the 2.boundary."))
                                         .produce()
                         );
                         module.boundarySessions.add(((Player) sender).getUniqueId());
