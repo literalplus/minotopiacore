@@ -70,7 +70,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private WorldGuardHook worldGuardHook;
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
-    private boolean showDisableMsg = true;
     private PlayerGameManager gameManager;
     private ModuleManager moduleManager = new ModuleManager(this);
     private Logger logger;
@@ -91,7 +90,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
 
     @Override
     public void reloadConfig() {
-        log(Level.INFO, "Reloading MTC config...");
+        log(Level.INFO, "(Re)loading MTC config...");
         super.reloadConfig();
         ConfigHelper.onConfigReload(this);
         log(Level.DEBUG, "Reloading MTC module configs...");
@@ -102,9 +101,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     @Override
     public void disable() {
         try {
-            log(Level.INFO, "Disabling modules...");
+            log(Level.DEBUG, "Disabling modules...");
             moduleManager.getEnabledModules().forEach(m -> moduleManager.setEnabled(m, false));
-            log(Level.INFO, "Disabled modules!");
+            log(Level.DEBUG, "Disabled modules!");
 
             //SQL
             if (this.ssql2 != null) {
@@ -159,8 +158,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
         try {
             LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
             logger = LogManager.getLogger(getClass());
-            logger.info("=================================================");
-            logger.info("Enabling {}...", PLUGIN_VERSION.toString());
+            logger.info("====== Enabling {}...", PLUGIN_VERSION.toString());
             logger.info("Container: {}", getServer().getVersion());
 
             this.reloadConfig();
@@ -186,7 +184,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             registerCommands();
 
             //MODULES
-            logger.info("Loading modules!");
+            logger.debug("Loading modules!");
             moduleManager.load(moduleManager.findShippedModules());
 
             //HELP
@@ -202,7 +200,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             }
 
             //HOOKS
-            logger.info("Hooking hooks!");
+            logger.debug("Hooking hooks!");
             this.xLoginHook = new XLoginHook(this);
             this.vaultHook = new VaultHook(this);
             this.worldGuardHook = new WorldGuardHook(this);
@@ -245,7 +243,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             this.serverName = this.getConfig().getString("servername", "UNKNOWN");
 
             //LOGS
-            logger.info("Initialising legacy logging system!");
+            logger.debug("Initialising legacy logging system!");
             logger.debug("Don't tell it, but I hate it. It's just ugly and stuff.");
             LogHelper.initLogs();
 
@@ -255,20 +253,17 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
             //API
             gameManager = new PlayerGameManagerImpl(this);
 
-            logger.info("Enabling modules!");
+            logger.debug("Enabling modules!");
             moduleManager.enableLoaded();
             saveConfig(); //Save here so that changes from modules also apply to the config file
             logger.debug("Enabled MTC modules!");
-
-            //PREPARING FOR BEING DISABLED
-            this.showDisableMsg = this.getConfig().getBoolean("enable.msg.disablePlug", true);
 
             MTC.useHologram = pluginManager.getPlugin("HolographicDisplays") != null;
 
             if (this.getConfig().getBoolean("enable.msg.enablePlug", true)) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_GRAY + "[MTC] MTC enabled!");
             }
-            logger.info("Fully enabled MTC, probably ready!");
+            logger.info("Hello world!");
         } catch (Exception e) {
             getLogger().warning("MTC encountered an exception at enable!");
             e.printStackTrace();
