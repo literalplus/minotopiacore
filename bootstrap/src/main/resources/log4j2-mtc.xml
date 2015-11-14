@@ -16,23 +16,29 @@
 <Configuration status="trace" monitorInterval="60" name="MTC">
     <properties>
         <property name="filters">com.mysql,sun.reflect,java.lang.reflect,net.minecraft</property>
-        <property name="pattern">[%d{HH:mm:ss} %p]: %-20.20c{1.} || %m %xEx{filters(${filters})}%n</property>
+        <property name="pattern">[%d{HH:mm:ss} %p]: %-20.20c{1.} || %msg %xEx{filters(${filters})}%n</property>
     </properties>
 
     <Appenders>
-        <File name="MiscLogFile" fileName="${sys:mtc.logsdir}misc.log">
-            <PatternLayout pattern="${pattern}"/>
-        </File>
-        <RollingFile name="ChatLogFile" fileName="${sys:mtc.logsdir}chat.log"
-                     filePattern="${sys:mtc.logsdir}chat/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+        <RollingFile name="MiscLogFile" fileName="${sys:mtc.logsdir}misc.log"
+                     filePattern="${sys:mtc.logsdir}misc/$${date:yyyy-MM}/%d{yyyy-MM}.log.gz">
             <PatternLayout pattern="${pattern}"/>
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="60"/>
+        </RollingFile>
+        <RollingFile name="ChatLogFile" fileName="${sys:mtc.logsdir}chat.log"
+                     filePattern="${sys:mtc.logsdir}chat/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="[%d{HH:mm:ss} %20.20p]: %msg %xEx{filters(${filters})}%n"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="400"/> <!-- keep chat logs for little more than a year -->
         </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="io.github.xxyy.mtc" level="info" additivity="false">
             <AppenderRef ref="MiscLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.chat" level="info" additivity="false">
+            <AppenderRef ref="ChatLogFile"/>
         </Logger>
         <Root/>
     </Loggers>
