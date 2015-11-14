@@ -60,7 +60,7 @@ public class MTCChatHelper extends ChatHelper {
             rs.next();
             return rs.getString("chatfarbe");
         } catch (SQLException e) {
-            sql.formatAndPrintException(e, "[MTC] Could not fetch plyer chat color.");
+            sql.formatAndPrintException(e, "[MTC] Could not fetch player chat color.");
             return defaultCol;
         }
     }
@@ -194,6 +194,11 @@ public class MTCChatHelper extends ChatHelper {
             }
             ((Player) plr).sendMessage(msg);
         }
+    }
+
+    public static void logClanChatMessage(String message, String clanPrefix, String playerName) {
+        LOGGER.info("clan {} - {}: {}",
+                clanPrefix, playerName, ChatColor.stripColor(message));
     }
 
     public static void setChatColorByName(String plrName, String newChatColor) {

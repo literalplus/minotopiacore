@@ -13,9 +13,7 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.helper.LaterMessageHelper;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +26,6 @@ import java.util.*;
 
 public final class ClanHelper { //REFACTOR
 
-    private static final Logger CHAT_LOGGER = LogManager.getLogger("io.github.xxyy.mtc.chat__clan"); //This is temporary
     public static Map<Integer, ClanInfo> cacheById = new HashMap<>(); //TODO uuids
     public static Map<String, ClanInfo> cacheByName = new HashMap<>();
     public static Map<String, ClanMemberInfo> memberCache = new HashMap<>();
@@ -74,12 +71,18 @@ public final class ClanHelper { //REFACTOR
      * @param senderInfo the member who sent the message
      */
     public static void sendChatMessage(ClanInfo clanInfo, String message, ClanMemberInfo senderInfo) {
+        message = message.replaceFirst("#", "");
+        if (ClanPermission.has(senderInfo, ClanPermission.CHATCOLSPECIAL)) {
+            message = ChatColor.translateAlternateColorCodes('&', message);
+        } else if (ClanPermission.has(senderInfo, ClanPermission.CHATCOL)) {
+            message = MTCChatHelper.convertStandardColors(message);
+        }
+        String strippedMessage = ChatColor.stripColor(message);
+
         ClanHelper.broadcast(clanInfo.id, "XC-chatformat", false,
-                ClanHelper.getNameFormatByRank(senderInfo.userName, senderInfo.getRank()),
-                ClanHelper.parseChatMessage(message, senderInfo));
-        MTCChatHelper.sendClanSpyMsg(senderInfo.userName + ": " + message, clanInfo.prefix);
-        CHAT_LOGGER.info("[C-{}={}] {}: {}",
-                clanInfo.prefix, clanInfo.id, senderInfo.userName, ChatColor.stripColor(message));
+                ClanHelper.getNameFormatByRank(senderInfo.userName, senderInfo.getRank()), message);
+        MTCChatHelper.sendClanSpyMsg(senderInfo.userName + ": " + strippedMessage, clanInfo.prefix);
+        MTCChatHelper.logClanChatMessage(strippedMessage, clanInfo.prefix, senderInfo.userName);
     }
     
     /**
@@ -367,18 +370,6 @@ public final class ClanHelper { //REFACTOR
         }
         ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(plrName);
         return cmi.clanId >= 0 && cmi.getRank().equals(ClanMemberInfo.ClanRank.LEADER);
-    }
-    
-    /////////////////////////////////////////////////////////////////////////////////
-    
-    public static String parseChatMessage(String msg, ClanMemberInfo cmi){
-        msg = msg.replaceFirst("#", "");
-        if(ClanPermission.has(cmi, ClanPermission.CHATCOLSPECIAL)) {
-            msg = ChatColor.translateAlternateColorCodes('&', msg);
-        } else if(ClanPermission.has(cmi, ClanPermission.CHATCOL)) {
-            msg = MTCChatHelper.convertStandardColors(msg);
-        }
-        return msg;
     }
     
     /////////////////////////////////////////////////////////////////////////////////   
