@@ -14,19 +14,21 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class CommandPiece extends MTCPlayerOnlyCommandExecutor implements TabExecutor {
+public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExecutor {
 
     public static final int PEACE_LIST_PAGE_SIZE = 15;
 
     @NotNull
     private final PeaceModule module;
 
-    public CommandPiece(@NotNull PeaceModule module) {
+    public CommandPeace(@NotNull PeaceModule module) {
         this.module = module;
     }
 
@@ -83,39 +85,103 @@ public class CommandPiece extends MTCPlayerOnlyCommandExecutor implements TabExe
         return true;
     }
 
+    private final List<String> subCommands = Arrays.asList("list", "status", "ja", "nein", "request", "help");
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
         Player plr = (Player) sender;
-        if (args.length == 0) {
-            List<String> list = new ArrayList<>();
-            list.add("list");
-            list.add("status");
-            list.add("help");
-            list.add("revoke");
-            list.addAll(CommandHelper.getOnlinePlayerNames());
-            return list;
+        if (args.length == 0) { //should not happen; api behaviour not document enough to remove
+            return null;
         }
-        switch (args[0].toLowerCase()) {
-            case "revoke": {
-                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(plr.getUniqueId());
+        UUID uuid = plr.getUniqueId();
+        switch (args[0].toLowerCase().trim()) {
+            case "": {
+                return subCommands;
+            }
+            case "yes":
+            case "ja": {
+                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(uuid);
                 if (peaceInfo == null) {
                     return null;
                 }
-                //TODO remove because it could lag on main thread if you have many friends?
-                return peaceInfo.getPeaceWithInternal().stream()
-                        .map(uuid -> module.getPlugin().getXLoginHook().getBestProfile(uuid.toString()).getName())
-                        .collect(Collectors.toList());
+                return getTabCompleteMatches(args, 1, getNamesFromUuid(Stream.concat(peaceInfo.getRequestsGotInternal().stream(), Bukkit.getOnlinePlayers().stream().map(Player::getUniqueId))));
+            }
+            case "status": {
+                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(uuid);
+                if (peaceInfo == null) {
+                    return null;
+                }
+                return getTabCompleteMatches(args, 1, CommandHelper.getOnlinePlayerNames());
+            }
+            case "nein":
+            case "no": {
+                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(uuid);
+                if (peaceInfo == null) {
+                    return null;
+                }
+                return getTabCompleteMatches(args, 1, getNamesFromUuid(Stream.concat(peaceInfo.getPeaceWithInternal().stream(), peaceInfo.getRequestsSent().stream())));
+            }
+            case "request": {
+                PeaceInfo peaceInfo = module.getPeaceInfoManager().get(uuid);
+                if (peaceInfo == null) {
+                    return null;
+                }
+                List<UUID> peaceWith = peaceInfo.getPeaceWithInternal();
+
+                return getNamesFromUuid(
+                    Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getUniqueId)
+                        .filter(((Predicate<UUID>) peaceWith::contains).negate()));
             }
             default: {
+                if (args.length == 1) {
+                    String startedSubCmd = args[0].toLowerCase();
+                    return subCommands.stream()
+                        .filter(subCmd -> subCmd.startsWith(startedSubCmd))
+                        .collect(Collectors.toList());
+                }
                 return ImmutableList.of();
             }
         }
     }
 
-    private String getPlayerString(UUID uuid) {
+    private Stream<String> getNamesFromUuidStream(List<UUID> uuids) {
+        return mapStreamUuidsToNames(uuids.stream());
+    }
+
+    private Stream<String> mapStreamUuidsToNames(Stream<UUID> uuidStream) {
+        return uuidStream.map(uuid -> module.getPlugin().getXLoginHook().getDisplayString(uuid));
+    }
+
+    private List<String> getNamesFromUuid(List<UUID> uuids) {
+        return getNamesFromUuidStream(uuids)
+            .collect(Collectors.toList());
+    }
+
+    private List<String> getNamesFromUuid(Stream<UUID> uuids) {
+        return mapStreamUuidsToNames(uuids)
+            .collect(Collectors.toList());
+    }
+
+    private List<String> getTabCompleteMatches(String[] args, int namePos, Stream<String> names) {
+        if (args.length <= namePos + 1) {
+            String startedPlayerName = args[namePos].toLowerCase();
+
+            return names
+                .filter(s -> s.toLowerCase().startsWith(startedPlayerName))
+                .collect(Collectors.toList());
+        }
+        return ImmutableList.of();
+    }
+
+    private List<String> getTabCompleteMatches(String[] args, int namePos, List<String> names) {
+        return getTabCompleteMatches(args, namePos, names.stream());
+    }
+
+    private String getPlayerStringColoredByOnlineState(UUID uuid) {
         String plrName = module.getPlugin().getXLoginHook().getDisplayString(uuid);
         if (Bukkit.getPlayer(uuid) == null) {
             return MTCHelper.locArgs("XC-membersoff", "CONSOLE", false, plrName);//continuity
@@ -127,7 +193,7 @@ public class CommandPiece extends MTCPlayerOnlyCommandExecutor implements TabExe
         String toSend = "";
         int max = rowStart + perPage;
         for (int i = 0; (i < max && uuids.size() > i); i++) {
-            toSend += " ► " + getPlayerString(uuids.get(i)) + "\n";
+            toSend += " ► " + getPlayerStringColoredByOnlineState(uuids.get(i)) + "\n";
         }
         if (toSend.isEmpty()) {
             toSend = MTCHelper.loc("XU-ppageempty", sender, false);

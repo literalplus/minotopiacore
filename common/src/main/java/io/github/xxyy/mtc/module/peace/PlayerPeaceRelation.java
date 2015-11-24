@@ -2,6 +2,8 @@ package io.github.xxyy.mtc.module.peace;
 
 import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -104,7 +106,10 @@ public class PlayerPeaceRelation {
         initiator.setDirty();
         target.setDirty();
 
-        module.getMessenger().notifyRequestSent(initiator, target.getUuid());
+        Player plr = Bukkit.getPlayer(initiator.getUuid());
+        if (plr != null) {
+            module.getMessenger().notifyRequestSent(plr, target.getUuid());
+        }
         return true;
     }
 }

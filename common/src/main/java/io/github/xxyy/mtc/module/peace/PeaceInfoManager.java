@@ -5,45 +5,70 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 public class PeaceInfoManager {
 
-    private static final int MAXIMUM_CACHE_SIZE = 100;
+    private static final int MAXIMUM_CACHE_SIZE = 200;
 
     @NotNull
     private final PeaceModule module;
+    private final ExecutorService asyncSaverThread = Executors
+        .newSingleThreadScheduledExecutor(
+            new ThreadFactoryBuilder()
+                .setNameFormat("PeaceInfo Save Thread #%d")
+                .build());
     private boolean disableFlush = false;
 
     private final LoadingCache<UUID, PeaceInfo> peaceInfoCache = CacheBuilder.newBuilder()
-            .initialCapacity(5) //TODO discuss CacheBuilder values in pull request
-            .concurrencyLevel(2)
-            .maximumSize(MAXIMUM_CACHE_SIZE)
-            .removalListener(new RemovalListener<UUID, PeaceInfo>() {
-                @Override
-                public void onRemoval(@NotNull RemovalNotification<UUID, PeaceInfo> notification) {
-                    if (disableFlush) {
-                        return;
-                    }
-                    switch (notification.getCause()) {
-                        case EXPIRED:
-                        case EXPLICIT:
-                        case SIZE: {
-                            module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(),
-                                    new FlushRunnable(notification.getKey(), notification.getValue())); //TODO use async worker thread for this
-                            break;
+        .initialCapacity(30)
+        .concurrencyLevel(2)
+        .maximumSize(MAXIMUM_CACHE_SIZE)
+        .removalListener(new RemovalListener<UUID, PeaceInfo>() {
+            @Override
+            public void onRemoval(@NotNull RemovalNotification<UUID, PeaceInfo> notification) {
+                if (disableFlush) {
+                    return;
+                }
+                switch (notification.getCause()) {
+                    case EXPIRED:
+                    case COLLECTED: //<- should not happen, but to be sure
+                    case EXPLICIT:
+                    case SIZE: {
+                        PeaceInfo value = notification.getValue();
+                        if (value != null && value.isDirty()) {
+                            asyncSaverThread.execute(new FlushRunnable(value));
                         }
+                        break;
                     }
                 }
-            })
-            .build(CacheLoader.from(this::fetch));
+            }
+        })
+        .build(CacheLoader.from(this::fetch));
 
     public PeaceInfoManager(@NotNull PeaceModule module) {
         this.module = module;
+    }
+
+    /**
+     * Waits until all save tasks are stopped or 10 seconds elapsed
+     * (if really 10 seconds elapse, there is an error somewhere)
+     */
+    void syncStop() {
+        try {
+            asyncSaverThread.awaitTermination(10, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -134,26 +159,19 @@ public class PeaceInfoManager {
 
     private final class FlushRunnable implements Runnable {
 
-        @Nullable
-        private final UUID uuid;
-        @Nullable
+        @NotNull
         private final PeaceInfo peaceInfo;
 
-        private FlushRunnable(@Nullable UUID uuid, @Nullable PeaceInfo peaceInfo) {
-            this.uuid = uuid;
+        private FlushRunnable(@NotNull PeaceInfo peaceInfo) {
             this.peaceInfo = peaceInfo;
         }
 
         @Override
         public void run() {
-            if (peaceInfo != null) {
-                if (!peaceInfo.isDirty()) {
-                    return;
-                }
+            if (!peaceInfo.isDirty()) {
+                return;
             }
-            if (uuid != null) {
-                flush(uuid);
-            }
+            //TODO save peaceInfo
         }
     }
 

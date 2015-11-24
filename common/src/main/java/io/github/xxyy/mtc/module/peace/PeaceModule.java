@@ -5,6 +5,8 @@ import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class PeaceModule extends ConfigurableMTCModule {
 
     public static final String NAME = "Peace";
@@ -19,7 +21,8 @@ public class PeaceModule extends ConfigurableMTCModule {
     public void enable(MTC plugin) throws Exception {
         super.enable(plugin);
         peaceInfoManager = new PeaceInfoManager(this);
-        plugin.setExecAndCompleter(new LegacyCommandPeace(), "frieden");
+        messenger = new PeaceMessenger(this);
+        plugin.setExecAndCompleter(new CommandPeace(this), "frieden");
     }
 
     @Override
@@ -27,7 +30,9 @@ public class PeaceModule extends ConfigurableMTCModule {
         super.disable(plugin);
         plugin.setExecAndCompleter(null, "frieden");
         peaceInfoManager.flushAll();
+        peaceInfoManager.syncStop();
         peaceInfoManager = null;
+        messenger.stopAll();
     }
 
     @Override
@@ -50,6 +55,7 @@ public class PeaceModule extends ConfigurableMTCModule {
      * @param first
      * @param second
      * @return
+     * @see PlayerPeaceRelation#areInPeace(PeaceInfoManager, PeaceInfo, UUID)
      */
     public boolean areInPeace(Player first, Player second) {
         return PlayerPeaceRelation.areInPeace(peaceInfoManager, peaceInfoManager.get(first.getUniqueId()), second.getUniqueId());
