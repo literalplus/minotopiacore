@@ -16,9 +16,9 @@ import org.bukkit.entity.Player;
 public class BuyShopAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected BuyShopAction(ShopModule module) {
+    protected BuyShopAction(CommandShop baseCommand) {
         super("shop", "kaufen", 2, null, "buy");
-        this.module = module;
+        this.module = baseCommand.getModule();
     }
 
     @Override

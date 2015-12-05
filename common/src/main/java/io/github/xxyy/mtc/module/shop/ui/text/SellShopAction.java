@@ -25,9 +25,9 @@ public class SellShopAction extends AbstractShopAction {
     private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
 
-    protected SellShopAction(ShopModule module) {
+    protected SellShopAction(CommandShop baseCommand) {
         super("shop", "verkaufen", 1, null, "sell", "vk");
-        this.module = module;
+        this.module = baseCommand.getModule();
         output = module.getTextOutput();
         calculator = new ShopPriceCalculator(module.getItemManager());
     }

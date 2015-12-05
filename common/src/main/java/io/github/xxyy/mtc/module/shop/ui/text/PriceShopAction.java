@@ -22,9 +22,9 @@ public class PriceShopAction extends AbstractShopAction {
     private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
 
-    protected PriceShopAction(ShopModule module) {
+    protected PriceShopAction(CommandShop baseCommand) {
         super("shop", "preis", 1, null, "price");
-        this.module = module;
+        this.module = baseCommand.getModule();
         output = module.getTextOutput();
         calculator = new ShopPriceCalculator(module.getItemManager());
     }

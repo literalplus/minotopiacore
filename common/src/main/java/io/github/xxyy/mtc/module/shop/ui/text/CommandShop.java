@@ -29,9 +29,9 @@ public class CommandShop extends MTCCommandExecutor { //TODO test (integration t
 
     public CommandShop(ShopModule module) {
         this.module = module;
-        actionList.add(new BuyShopAction(module));
-        actionList.add(new SellShopAction(module));
-        actionList.add(new PriceShopAction(module));
+        actionList.add(new BuyShopAction(this));
+        actionList.add(new SellShopAction(this));
+        actionList.add(new PriceShopAction(this));
     }
 
     @Override
@@ -81,5 +81,9 @@ public class CommandShop extends MTCCommandExecutor { //TODO test (integration t
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));
         plr.sendMessage("§b[]---------------------------------------------[]");
+    }
+
+    public ShopModule getModule() {
+        return module;
     }
 }
