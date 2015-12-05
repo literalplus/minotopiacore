@@ -70,7 +70,9 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
 
     private void sendHelp(Player plr) {
         plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]");
-        actionList.forEach(action -> action.sendHelpLines(plr));
+        actionList.stream()
+            .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
+            .forEach(action -> action.sendHelpLines(plr));
         plr.sendMessage("§b[]---------------------------------------------[]");
     }
 }

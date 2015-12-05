@@ -2,6 +2,8 @@ package io.github.xxyy.mtc.module.shop.ui.text;
 
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
+
 /**
  * Handles a subcommand of a shop command.
  *
@@ -45,5 +47,6 @@ public interface ShopAction {
     /**
      * @return the permission required to use this action, or null if none
      */
+    @Nullable
     String getPermission();
 }
