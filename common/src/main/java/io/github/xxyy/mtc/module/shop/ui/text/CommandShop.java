@@ -22,8 +22,8 @@ import java.util.List;
  * Provides a text-based front-end to the Shop module.
  *
  * @author Janmm14, Literallie
- */ //FIXME: this class is too long, should use more abstraction layers, that we could then unit-test
-public class CommandShop extends MTCCommandExecutor { //TODO add help messages, test (integration test)
+ */
+public class CommandShop extends MTCCommandExecutor { //TODO test (integration test)
     private final ShopModule module;
     private final List<ShopAction> actionList = new ArrayList<>();
 
