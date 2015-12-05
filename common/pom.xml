@@ -60,6 +60,10 @@
             <artifactId>reflections</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.flozano.statsd-netty</groupId>
+            <artifactId>statsd-netty</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
         </dependency>

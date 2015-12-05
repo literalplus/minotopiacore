@@ -161,6 +161,11 @@
                 <artifactId>reflections</artifactId>
                 <version>0.9.10</version>
             </dependency>
+            <dependency>
+                <groupId>com.flozano.statsd-netty</groupId>
+                <artifactId>statsd-netty</artifactId>
+                <version>0.2.1</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.github.xxyy.mtc</groupId>

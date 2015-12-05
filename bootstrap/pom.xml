@@ -132,6 +132,7 @@
                             <include>org.reflections:reflections</include>
                             <include>org.javassist:javassist</include>
                             <include>com.lmax:disruptor</include>
+                            <include>com.flozano.statsd-netty:statsd-netty</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -146,6 +147,10 @@
                         <relocation>
                             <pattern>org.javassist</pattern>
                             <shadedPattern>io.github.xxyy.lib.org.javassist</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.flozano.statsd</pattern>
+                            <shadedPattern>io.github.xxyy.lib.com.flozano.statsd</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
