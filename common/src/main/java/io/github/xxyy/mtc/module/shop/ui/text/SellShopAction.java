@@ -60,6 +60,9 @@ public class SellShopAction extends AbstractShopAction {
     private void sellHand(String[] args, Player plr) {
         int amount;
         ItemStack itemInHand = plr.getItemInHand();
+        if (!output.extraCheckStackTradable(plr, itemInHand, "in deiner Hand")) {
+            return;
+        }
         ShopItem item = module.getItemManager().getItem(itemInHand);
         if (!output.checkTradable(plr, item, "in deiner Hand", TransactionType.SELL)) {
             return;
@@ -81,6 +84,9 @@ public class SellShopAction extends AbstractShopAction {
     private void sellInventory(Player plr) {
         Map<ShopItem, Integer> itemAmounts = new HashMap<>();
         for (ItemStack stack : plr.getInventory().getContents()) {
+            if (module.getItemManager().isSellForbidden(stack)) {
+                continue;
+            }
             ShopItem item = module.getItemManager().getItem(stack);
             if (item.canBeSold()) { //add up current amount with this amount
                 itemAmounts.compute(item, (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount));

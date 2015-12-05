@@ -8,6 +8,7 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Handles text output for the shop module. Stateless.
@@ -66,6 +67,34 @@ public class ShopTextOutput {
 
             sendPrefixed(receiver, itemSpecifier + " kann nicht " +
                     ShopStringAdaptor.getParticipleII(type) + " werden.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * This method does not replace {@link #checkTradable(CommandSender, ShopItem, String)} or {@link #checkTradable(CommandSender, ShopItem, String, TransactionType)}, its an additional check
+     *
+     * @return whether selling that specific itemStack is forbidden
+     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
+     */
+    public boolean extraCheckStackTradable(CommandSender reciever, ItemStack itemStack) {
+        if (module.getItemManager().isSellForbidden(itemStack)) {
+            sendPrefixed(reciever, "§cDieses Item kann nicht verkauft werden.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * This method does not replace {@link #checkTradable(CommandSender, ShopItem, String)} or {@link #checkTradable(CommandSender, ShopItem, String, TransactionType)}, its an additional check
+     *
+     * @return whether selling that specific itemStack is forbidden
+     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
+     */
+    public boolean extraCheckStackTradable(CommandSender reciever, ItemStack itemStack, String queryInfo) {
+        if (module.getItemManager().isSellForbidden(itemStack)) {
+            sendPrefixed(reciever, "§cDas Item " + queryInfo + " kann nicht verkauft werden.");
             return false;
         }
         return true;

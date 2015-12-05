@@ -11,6 +11,7 @@ import io.github.xxyy.lib.guava17.collect.HashBasedTable;
 import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.fulltag.FullTagHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
@@ -111,6 +112,11 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
             return null;
         }
         return getItem(stack.getType(), stack.getData().getData());
+    }
+
+    @Override
+    public boolean isSellForbidden(ItemStack stack) {
+        return FullTagHelper.isFull(stack);
     }
 
     @Override

@@ -82,6 +82,10 @@ public class PriceShopAction extends AbstractShopAction {
             return;
         }
 
+        if (!output.extraCheckStackTradable(plr, itemInHand, "in deiner Hand")) {
+            return;
+        }
+
         ShopItem item = module.getItemManager().getItem(itemInHand);
         output.sendPriceInfo(plr, item, itemInHand.getAmount(), "in deiner Hand");
     }

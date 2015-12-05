@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
+import static io.github.xxyy.mtc.misc.JavaUtils.not;
+
 /**
  * Calculates prices for items according to the associated shop module. Stateless class.
  *
@@ -47,6 +49,7 @@ public class ShopPriceCalculator {
         Preconditions.checkNotNull(type, "type");
 
         return stacks.stream()
+                .filter(not(itemManager::isSellForbidden))
                 .map(itemManager::getItem)
                 .filter(Objects::nonNull)
                 .mapToDouble(type::getValue)
@@ -79,6 +82,9 @@ public class ShopPriceCalculator {
     public double calculatePrice(ItemStack itemStack, TransactionType type) {
         Preconditions.checkNotNull(itemStack, "itemStack");
         Preconditions.checkNotNull(type, "type");
+        if (itemManager.isSellForbidden(itemStack)) {
+            return 0D;
+        }
         ShopItem item = itemManager.getItem(itemStack);
         if (!type.isTradable(item)) {
             return 0D;

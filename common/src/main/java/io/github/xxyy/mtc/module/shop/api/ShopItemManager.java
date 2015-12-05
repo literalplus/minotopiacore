@@ -34,6 +34,16 @@ public interface ShopItemManager extends CacheHelper.Cache {
     ShopItem getItem(ItemStack stack);
 
     /**
+     * Checks the item stack whether it may not be sold
+     *
+     * Currently it checks whether it is a full item and if, returns false
+     *
+     * @param stack the stack to check
+     * @return True if forbidden to sell
+     */
+    boolean isSellForbidden(ItemStack stack); //TODO does it fit here?
+
+    /**
      * Attempts to get an item managed by this configuration. The special data value {@code -1} represents a catch-all
      * wildcard item that matches all data values of that material that do not have a specific item attached to them.
      *
