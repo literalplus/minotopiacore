@@ -63,6 +63,13 @@ public class CommandShop extends MTCCommandExecutor { //TODO add help messages, 
                 return true;
             }
         }
+        //no action found
+
+        //if user was not asking for help, send unknown action before help
+        if (!args[0].equalsIgnoreCase("help") && !args[0].equals("?")) {
+
+            plr.sendMessage("§cUnbekannte Aktion §6" + args[0]);
+        }
 
         sendHelp(plr);
         return true;
