@@ -37,8 +37,9 @@ public abstract class AbstractShopAction implements ShopAction {
 
     @Override
     public boolean matches(String actionName) {
+        actionName = actionName.toLowerCase();
         for (String alias : aliases) {
-            if (alias.startsWith(actionName)) {
+            if (alias.toLowerCase().startsWith(actionName)) {
                 return true; //This assumes we have only actions with different first letters
             }
         }
