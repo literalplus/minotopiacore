@@ -33,6 +33,7 @@ public class StatsdModule extends ConfigurableMTCModule {
 
     private void enable0() {
         statsdCfg = new StatsdConfiguration(configuration);
+        statsdCfg.setDefaults();
 
         metrics = MetricsBuilder.create()
             .withClient(ClientBuilder.create()
@@ -61,6 +62,7 @@ public class StatsdModule extends ConfigurableMTCModule {
         onlineCountReporter = null;
         metrics.close();
         metrics = null;
+        statsdCfg = null;
     }
 
     @Override

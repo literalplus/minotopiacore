@@ -5,7 +5,7 @@ import io.github.xxyy.mtc.module.statsd.StatsdModule;
 import lombok.Getter;
 import org.bukkit.scheduler.BukkitTask;
 
-public class TpsReporter {
+public class TpsReporter implements StatsReporter {
 
     private static final double MILLIS_TO_TPS_FACTOR = 20 / 50; //tps / time
 
@@ -27,11 +27,13 @@ public class TpsReporter {
 
     }
 
+    @Override
     public void start() {
         tpsProvider.start();
         task = module.getPlugin().getServer().getScheduler().runTaskTimer(module.getPlugin(), tpsProvider::reportNow, 1L, 1L);
     }
 
+    @Override
     public void stop() {
         tpsProvider.stop();
         task.cancel();

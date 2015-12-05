@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class OnlineCountReporter implements Listener {
+public class OnlineCountReporter implements Listener , StatsReporter {
 
     private final StatsdModule module;
     private final Metrics metrics;
@@ -20,10 +20,12 @@ public class OnlineCountReporter implements Listener {
         this.metrics = metrics;
     }
 
+    @Override
     public void start() {
         module.getPlugin().getServer().getPluginManager().registerEvents(this, module.getPlugin());
     }
 
+    @Override
     public void stop() {
         HandlerList.unregisterAll(this);
     }

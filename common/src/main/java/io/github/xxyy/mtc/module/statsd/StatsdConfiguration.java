@@ -2,6 +2,8 @@ package io.github.xxyy.mtc.module.statsd;
 
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 
+import java.io.IOException;
+
 public class StatsdConfiguration {
 
     private final ManagedConfiguration cfg;
@@ -16,6 +18,15 @@ public class StatsdConfiguration {
 
         cfg.addDefault("flushrate", 1);
         cfg.addDefault("metrics-prefix", "pvp");
+        try {
+            cfg.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ManagedConfiguration getConfiguration() {
+        return cfg;
     }
 
     public String getConnectionHost() {
