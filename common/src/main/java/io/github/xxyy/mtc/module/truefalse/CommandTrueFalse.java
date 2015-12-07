@@ -174,13 +174,21 @@ public class CommandTrueFalse implements CommandExecutor {
                         }
                         module.getGame().nextQuestion();
                         return true;
-                    case "spawn":
+                    case "setspawn":
                         if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                             return true;
                         }
                         //noinspection ConstantConditions
                         module.setSpawn(new XyLocation(((Player) sender).getLocation()));
                         sender.sendMessage("§aDer Spawn wurde auf deine Position gesetzt!");
+                        return true;
+                    case "spawn":
+                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
+                            return true;
+                        }
+                        //noinspection ConstantConditions
+                        ((Player) sender).teleport(module.getSpawn());
+                        sender.sendMessage("§eDu wurdest zum W/F-Spawn teleportiert! §7(Setzen mit /wf setspawn)");
                         return true;
                     case "debug":
                         sender.sendMessage(module.getFirstBoundary() + ", " + module.getSecondBoundary());
@@ -199,7 +207,8 @@ public class CommandTrueFalse implements CommandExecutor {
             sender.sendMessage("§9/wf remq <Index> §2Fügt eine Frage hinzu");
             sender.sendMessage("§9/wf listq §2Zeigt alle Fragen im Backlog an");
             sender.sendMessage("§9/wf next §2Stellt die nächste Frage");
-            sender.sendMessage("§9/wf spawn §2Setzt den W/F-Spawn");
+            sender.sendMessage("§9/wf setspawn §2Setzt den W/F-Spawn");
+            sender.sendMessage("§9/wf spawn §2Teleportiert dich zum W/F-Spawn");
         }
         return true;
     }
