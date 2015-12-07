@@ -7,13 +7,12 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.task.NonAsyncBukkitRunnable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
-
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.task.NonAsyncBukkitRunnable;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedTransferQueue;
@@ -21,10 +20,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Class for replacing lots of blocks.
+ * Replaces huge amounts of blocks with the possibility to divide the workload into multiple steps.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 4.9.14
+ * @since 2014-09-04
  */
 public class BlockReplacer {
 
