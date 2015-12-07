@@ -8,7 +8,6 @@
 package io.github.xxyy.mtc.module.truefalse;
 
 import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.LocationHelper;
 import io.github.xxyy.common.util.task.NonAsyncBukkitRunnable;
 import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.commons.lang.Validate;
@@ -82,11 +81,7 @@ public class BlockReplacer {
      * @param previousState the previous state to revert the corresponding block to
      */
     public static void defaultReverter(BlockState previousState) {
-        if (!previousState.update(true, false)) {
-            previousState.getBlock().setType(previousState.getType(), false);
-            LOGGER.warn("Could not revert %s at %s: Update failed!",
-                    previousState.getType(), LocationHelper.prettyPrint(previousState.getLocation()));
-        }
+        previousState.update(true, false);
     }
 
     public void scheduleTransform(Plugin plugin) {
@@ -124,8 +119,8 @@ public class BlockReplacer {
                     for (; curY <= maxY; curY++) {
                         Block block = world.getBlockAt(curX, curY, curZ);
                         if (sourceFilter.test(block)) {
-                            transformer.accept(block);
                             transformedBlocks.add(block.getState());
+                            transformer.accept(block);
 
                             if (++processed >= blocksPerExecution) {
                                 return; //Done for now, wait for next execution
