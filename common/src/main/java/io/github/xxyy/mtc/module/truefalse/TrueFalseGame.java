@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Wool;
 
 import java.util.List;
 
@@ -67,11 +66,7 @@ public class TrueFalseGame {
         @SuppressWarnings("deprecation") BlockReplacer blockReplacer = new BlockReplacer(
                 b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() == colorToRemove.getWoolData(),
                 b -> b.setType(Material.AIR, false),
-                b -> {
-                    b.setType(Material.WOOL);
-                    ((Wool) b.getData()).setColor(colorToRemove);
-                    b.update(true, false);
-                },
+                BlockReplacer::defaultReverter,
                 module.getFirstBoundary(), module.getSecondBoundary(), 200
         );
 
