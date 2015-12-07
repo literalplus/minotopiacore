@@ -25,7 +25,9 @@ import java.util.List;
  * @since 4.9.14
  */
 public class TrueFalseGame {
-    private final List<Material> floorMaterials = Lists.newArrayList(Material.WOOL, Material.STAINED_CLAY, Material.STAINED_GLASS, Material.CARPET);
+    private final List<Material> floorMaterials = Lists.newArrayList(
+            Material.WOOL, Material.STAINED_CLAY, Material.STAINED_GLASS, Material.CARPET, Material.BARRIER
+    );
     private final TrueFalseModule module;
     private TrueFalseQuestion currentQuestion;
     private State state = State.TELEPORT;
