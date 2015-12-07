@@ -8,8 +8,11 @@
 package io.github.xxyy.mtc.module.truefalse;
 
 import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.LocationHelper;
 import io.github.xxyy.common.util.task.NonAsyncBukkitRunnable;
+import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.commons.lang.Validate;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -27,6 +30,7 @@ import java.util.function.Predicate;
  * @since 2014-09-04
  */
 public class BlockReplacer {
+    private static final Logger LOGGER = LogManager.getLogger(BlockReplacer.class);
 
     private final World world;
     private final int blocksPerExecution;
@@ -78,7 +82,11 @@ public class BlockReplacer {
      * @param previousState the previous state to revert the corresponding block to
      */
     public static void defaultReverter(BlockState previousState) {
-        previousState.update(true, false);
+        if (!previousState.update(true, false)) {
+            previousState.getBlock().setType(previousState.getType(), false);
+            LOGGER.warn("Could not revert %s at %s: Update failed!",
+                    previousState.getType(), LocationHelper.prettyPrint(previousState.getLocation()));
+        }
     }
 
     public void scheduleTransform(Plugin plugin) {
