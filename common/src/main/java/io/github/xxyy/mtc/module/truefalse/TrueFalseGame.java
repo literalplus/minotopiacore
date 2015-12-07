@@ -64,9 +64,9 @@ public class TrueFalseGame {
 
     public void setQuestion(TrueFalseQuestion question) {
         Validate.isTrue(currentQuestion == null, "Cannot override question!");
-        DyeColor colorToRemove = question.getAnswer() ? DyeColor.RED : DyeColor.GREEN;
+        DyeColor colorToKeep = question.getAnswer() ? DyeColor.GREEN : DyeColor.RED;
         @SuppressWarnings("deprecation") BlockReplacer blockReplacer = new BlockReplacer(
-                b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() == colorToRemove.getWoolData(),
+                b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() != colorToKeep.getWoolData(),
                 b -> b.setType(Material.AIR, false),
                 BlockReplacer::defaultReverter,
                 module.getFirstBoundary(), module.getSecondBoundary(), 200
