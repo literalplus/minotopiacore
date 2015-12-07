@@ -12,6 +12,7 @@ import io.github.xxyy.common.util.task.NonAsyncBukkitRunnable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Queue;
@@ -27,15 +28,13 @@ import java.util.function.Predicate;
  */
 public class BlockReplacer {
 
-    private final XyLocation firstBoundary;
-    private final XyLocation secondBoundary;
     private final World world;
     private final int blocksPerExecution;
     private final Predicate<Block> sourceFilter;
     private final Consumer<Block> transformer;
-    private final Consumer<Block> reverter;
+    private final Consumer<BlockState> reverter;
 
-    private final Queue<Block> transformedBlocks = new LinkedTransferQueue<>();
+    private final Queue<BlockState> transformedBlocks = new LinkedTransferQueue<>();
 
     private final int maxX;
     private final int maxY;
@@ -51,13 +50,11 @@ public class BlockReplacer {
     private TransformTask transformTask;
     private RevertTask revertTask;
 
-    public BlockReplacer(Predicate<Block> sourceFilter, Consumer<Block> transformer, Consumer<Block> reverter,
+    public BlockReplacer(Predicate<Block> sourceFilter, Consumer<Block> transformer, Consumer<BlockState> reverter,
                          XyLocation firstBoundary, XyLocation secondBoundary, int blocksPerExecution) {
         Validate.isTrue(firstBoundary.getWorld().equals(secondBoundary.getWorld()), "Both boundaries must be in the same world!");
         Validate.isTrue(!firstBoundary.softEquals(secondBoundary), "Boundaries can't be same block!");
 
-        this.firstBoundary = firstBoundary;
-        this.secondBoundary = secondBoundary;
         this.world = firstBoundary.getWorld();
         this.blocksPerExecution = blocksPerExecution;
 
@@ -72,6 +69,16 @@ public class BlockReplacer {
         minX = curX = Math.min(firstBoundary.getBlockX(), secondBoundary.getBlockX());
         minY = curY = Math.min(firstBoundary.getBlockY(), secondBoundary.getBlockY());
         minZ = curZ = Math.min(firstBoundary.getBlockZ(), secondBoundary.getBlockZ());
+    }
+
+    /**
+     * Static utility method for reverting a block to a previous state. This method works by forcing an update on the
+     * previous state, changing the block (back) to it.
+     *
+     * @param previousState the previous state to revert the corresponding block to
+     */
+    public static void defaultReverter(BlockState previousState) {
+        previousState.update(true, false);
     }
 
     public void scheduleTransform(Plugin plugin) {
@@ -110,7 +117,7 @@ public class BlockReplacer {
                         Block block = world.getBlockAt(curX, curY, curZ);
                         if (sourceFilter.test(block)) {
                             transformer.accept(block);
-                            transformedBlocks.add(block);
+                            transformedBlocks.add(block.getState());
 
                             if (++processed >= blocksPerExecution) {
                                 return; //Done for now, wait for next execution
@@ -121,6 +128,7 @@ public class BlockReplacer {
                 }
                 curZ = minZ;
             }
+            curX = minX;
 
             done = true;
             tryCancel();
@@ -134,11 +142,11 @@ public class BlockReplacer {
     private class RevertTask extends NonAsyncBukkitRunnable {
         @Override
         public void run() {
-            for(int processed = 0; processed < blocksPerExecution && !transformedBlocks.isEmpty(); processed++) {
+            for (int processed = 0; processed < blocksPerExecution && !transformedBlocks.isEmpty(); processed++) {
                 reverter.accept(transformedBlocks.poll());
             }
 
-            if(isDone()) {
+            if (isDone()) {
                 tryCancel();
             }
         }

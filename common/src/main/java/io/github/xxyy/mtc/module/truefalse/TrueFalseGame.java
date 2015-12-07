@@ -14,7 +14,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Wool;
 
@@ -69,10 +68,9 @@ public class TrueFalseGame {
                 b -> floorMaterials.contains(b.getType()) && b.getState().getData().getData() == colorToRemove.getWoolData(),
                 b -> b.setType(Material.AIR, false),
                 b -> {
-                    b.setType(Material.WOOL, false);
-                    BlockState state = b.getState();
-                    ((Wool) state.getData()).setColor(colorToRemove);
-                    state.update(true, false);
+                    b.setType(Material.WOOL);
+                    ((Wool) b.getData()).setColor(colorToRemove);
+                    b.update(true, false);
                 },
                 module.getFirstBoundary(), module.getSecondBoundary(), 200
         );
