@@ -66,7 +66,7 @@ public class CommandTrueFalse implements CommandExecutor {
                                         .lore(Arrays.asList("§7Right-click a block to set the 1.boundary.", "§7Left-click a block to set the 2.boundary."))
                                         .produce()
                         );
-                        module.boundarySessions.add(((Player) sender).getUniqueId());
+                        module.startBoundarySession(((Player) sender).getUniqueId());
                         sender.sendMessage("§eHier ist deine Zaubermelone!");
                         return true;
                 }

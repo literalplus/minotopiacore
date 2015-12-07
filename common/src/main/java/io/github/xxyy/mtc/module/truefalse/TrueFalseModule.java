@@ -13,13 +13,7 @@ import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.HandlerList;
 
 import java.util.*;
 
@@ -38,7 +32,8 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     private static final String QUESTION_PATH = "questions";
     private static final String BOUNDARY_1_PATH = "boundaries.first";
     private static final String BOUNDARY_2_PATH = "boundaries.second";
-    Set<UUID> boundarySessions = new HashSet<>();
+    private final TrueFalseWandListener wandListener = new TrueFalseWandListener(this);
+    private Set<UUID> boundarySessions = new HashSet<>();
     private List<TrueFalseQuestion> questions = new ArrayList<>();
     private XyLocation firstBoundary;
     private XyLocation secondBoundary;
@@ -56,7 +51,6 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         super.enable(plugin);
 
         plugin.getCommand("wahrfalsch").setExecutor(new CommandTrueFalse(this));
-        plugin.getServer().getPluginManager().registerEvents(new EventListener(), plugin);
     }
 
     @Override
@@ -137,30 +131,21 @@ public class TrueFalseModule extends ConfigurableMTCModule {
         this.game = game;
     }
 
-    private class EventListener implements Listener {
-        @EventHandler(priority = EventPriority.LOWEST)
-        public void onInteract(PlayerInteractEvent evt) {
-            ItemStack item = evt.getPlayer().getItemInHand();
-            if (!boundarySessions.contains(evt.getPlayer().getUniqueId()) ||
-                    (evt.getAction() != Action.RIGHT_CLICK_BLOCK && evt.getAction() !=  Action.LEFT_CLICK_BLOCK) ||
-                    item == null || item.getType() != MAGIC_WAND_MATERIAL) {
-                return;
-            }
+    public boolean hasBoundarySession(UUID uuid) {
+        return boundarySessions.contains(uuid);
+    }
 
-            ItemMeta meta = item.getItemMeta();
-            if (item.hasItemMeta() && meta.hasDisplayName() &&
-                    meta.getDisplayName().equals(MAGIC_WAND_NAME)) {
-                if (evt.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-                    setSecondBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
-                    evt.getPlayer().sendMessage("§aZweiter Eckpunkt gesetzt!");
-                    evt.getPlayer().setItemInHand(new ItemStack(Material.AIR));
-                } else {
-                    setFirstBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
-                    evt.getPlayer().sendMessage("§aErster Eckpunkt gesetzt!");
-                }
+    public void startBoundarySession(UUID uuid) {
+        if (boundarySessions.isEmpty()) {
+            plugin.getServer().getPluginManager().registerEvents(wandListener, plugin);
+        }
+        boundarySessions.add(uuid);
+    }
 
-                evt.setCancelled(true);
-            }
+    public void endBoundarySession(UUID uuid) {
+        boundarySessions.remove(uuid);
+        if (boundarySessions.isEmpty()) {
+            HandlerList.unregisterAll(wandListener);
         }
     }
 }
