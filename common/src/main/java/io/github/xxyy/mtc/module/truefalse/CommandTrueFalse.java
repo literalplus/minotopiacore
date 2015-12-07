@@ -114,21 +114,15 @@ public class CommandTrueFalse implements CommandExecutor {
                         boolean answer;
                         switch (args[1]) {
                             case "true":
-                            case "ja":
                             case "wahr":
-                            case "yes":
-                            case "yea":
-                            case "y":
                                 answer = true;
                                 break;
                             case "false":
-                            case "nein":
                             case "falsch":
-                            case "no":
                                 answer = false;
                                 break;
                             default:
-                                sender.sendMessage("§cDie Antwort kann nur 'ja' oder 'nein' sein!");
+                                sender.sendMessage("§cDie Antwort kann nur 'wahr' oder 'falsch' sein!");
                                 return true;
                         }
 

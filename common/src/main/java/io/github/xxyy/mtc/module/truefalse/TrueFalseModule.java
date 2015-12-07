@@ -21,9 +21,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The root of all evil caused by the True-False event minigame thing.
@@ -40,7 +38,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     private static final String QUESTION_PATH = "questions";
     private static final String BOUNDARY_1_PATH = "boundaries.first";
     private static final String BOUNDARY_2_PATH = "boundaries.second";
-    List<UUID> boundarySessions = new ArrayList<>();
+    Set<UUID> boundarySessions = new HashSet<>();
     private List<TrueFalseQuestion> questions = new ArrayList<>();
     private XyLocation firstBoundary;
     private XyLocation secondBoundary;
