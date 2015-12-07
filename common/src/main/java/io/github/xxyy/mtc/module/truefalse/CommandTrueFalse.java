@@ -90,7 +90,7 @@ public class CommandTrueFalse implements CommandExecutor {
                             return true;
                         }
 
-                        module.getGame().start();
+                        module.startGame();
                         return true;
                     case "abort":
                         if (module.getGame() == null) {
@@ -98,7 +98,7 @@ public class CommandTrueFalse implements CommandExecutor {
                             return true;
                         }
 
-                        if (module.getGame().abort()) {
+                        if (module.abortGame()) {
                             sender.sendMessage("§aDas Spiel wurde abgebrochen.");
                         } else {
                             sender.sendMessage("§aDas Spiel wird nach dieser Frage beendet!");

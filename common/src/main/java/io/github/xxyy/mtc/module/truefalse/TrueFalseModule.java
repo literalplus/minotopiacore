@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
+import com.google.common.base.Preconditions;
 import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
@@ -33,6 +34,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     private static final String BOUNDARY_1_PATH = "boundaries.first";
     private static final String BOUNDARY_2_PATH = "boundaries.second";
     private final TrueFalseWandListener wandListener = new TrueFalseWandListener(this);
+    private TrueFalseExploitListener exploitListener = null;
     private Set<UUID> boundarySessions = new HashSet<>();
     private List<TrueFalseQuestion> questions = new ArrayList<>();
     private XyLocation firstBoundary;
@@ -129,6 +131,27 @@ public class TrueFalseModule extends ConfigurableMTCModule {
 
     public void setGame(TrueFalseGame game) {
         this.game = game;
+    }
+
+    public void startGame() {
+        Preconditions.checkState(game != null, "no game!");
+        Preconditions.checkState(game.getState() == TrueFalseGame.State.TELEPORT, "must be in teleport state!");
+
+        if (exploitListener == null) {
+            exploitListener = new TrueFalseExploitListener(this);
+            getPlugin().getServer().getPluginManager().registerEvents(exploitListener, getPlugin());
+        }
+        getGame().start();
+    }
+
+    public boolean abortGame() {
+        Preconditions.checkState(game != null, "no game!");
+
+        if (exploitListener != null) {
+            HandlerList.unregisterAll(exploitListener);
+            exploitListener = null;
+        }
+        return getGame().abort();
     }
 
     public boolean hasBoundarySession(UUID uuid) {
