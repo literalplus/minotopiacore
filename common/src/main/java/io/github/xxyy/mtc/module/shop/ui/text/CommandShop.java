@@ -29,9 +29,10 @@ public class CommandShop extends MTCCommandExecutor { //TODO test (integration t
 
     public CommandShop(ShopModule module) {
         this.module = module;
-        actionList.add(new BuyShopAction(this));
-        actionList.add(new SellShopAction(this));
-        actionList.add(new PriceShopAction(this));
+        actionList.add(new BuyShopAction(getModule()));
+        actionList.add(new SellShopAction(getModule()));
+        actionList.add(new PriceShopAction(getModule()));
+        //actionList.add(new SearchShopAction(getModule()));
     }
 
     @Override
