@@ -112,7 +112,7 @@ public class FullDistributionManager implements CacheHelper.Cache {
                             .append(" Fullteile! ", ChatColor.YELLOW)
                             .append("/fulls ", ChatColor.GOLD)
                             .append("[Mehr Info... (klick)]", ChatColor.DARK_GREEN, ChatColor.BOLD, ChatColor.UNDERLINE)
-                            .command("/canhasfull info")
+                            .command("/canhasfull list")
                             .create()
             );
         } else {

@@ -55,7 +55,7 @@ commands:
   fulls:
     description: "FullTag item retrieval command for players"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [canhasfull]
+    aliases: [canhasfull, fullreturn]
   xclan:
     description: "Clan UI"
     usage: "/<command> nicht geladen. Ausgeschaltet?"

@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module.fulltag;
 
+import io.github.xxyy.common.lib.com.mojang.api.profiles.HttpProfileRepository;
 import io.github.xxyy.common.util.UUIDHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.logging.LogManager;
@@ -17,6 +18,7 @@ import io.github.xxyy.mtc.module.fulltag.dist.FullDistributionManager;
 import io.github.xxyy.mtc.module.fulltag.model.FullDataRepository;
 import io.github.xxyy.mtc.module.fulltag.model.FullInfo;
 import io.github.xxyy.mtc.module.fulltag.model.FullRegistry;
+import io.github.xxyy.mtc.module.fulltag.model.LegacyFullDataRepository;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +44,7 @@ public class FullTagModule extends ConfigurableMTCModule {
     private static final String ALLOWED_PLAYERS_PATH = "allowed-players";
     private FullDistributionManager distributionManager;
     private FullDataRepository repository;
+    private LegacyFullDataRepository legacyRepository;
     private FullRegistry registry;
     private Set<UUID> allowedPlayerIds = new HashSet<>();
 
@@ -155,6 +158,12 @@ public class FullTagModule extends ConfigurableMTCModule {
         }
     }
 
+    public LegacyFullDataRepository getLegacyRepository() {
+        if (legacyRepository == null) {
+            legacyRepository = new LegacyFullDataRepository(this, new HttpProfileRepository("minecraft"));
+        }
+        return legacyRepository;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

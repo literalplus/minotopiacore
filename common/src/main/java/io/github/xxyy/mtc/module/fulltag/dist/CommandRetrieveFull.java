@@ -8,18 +8,26 @@
 package io.github.xxyy.mtc.module.fulltag.dist;
 
 import com.google.common.collect.ImmutableList;
+import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
+import io.github.xxyy.mtc.module.fulltag.model.FullData;
 import io.github.xxyy.mtc.module.fulltag.model.FullInfo;
-import net.md_5.bungee.api.ChatColor;
+import io.github.xxyy.mtc.module.fulltag.model.LegacyFullData;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static net.md_5.bungee.api.ChatColor.*;
 
@@ -31,6 +39,7 @@ import static net.md_5.bungee.api.ChatColor.*;
  * @since 16/09/15
  */
 public class CommandRetrieveFull extends MTCCommandExecutor {
+    private static final Logger LOGGER = LogManager.getLogger(CommandRetrieveFull.class);
     private final FullTagModule module;
 
     public CommandRetrieveFull(FullTagModule module) {
@@ -47,46 +56,13 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
         if (args.length != 0) {
             switch (args[0].toLowerCase()) {
                 case "list":
-                    module.getDistributionManager().requestRetrievableFulls(plr, fullInfos -> {
-                        fullInfos.removeIf(fi -> fi.getData() == null);
-                        //noinspection ConstantConditions
-                        fullInfos.forEach(fi -> plr.sendMessage(String.format("§e -> #%d: %s (\"%s\")",
-                                fi.getId(), fi.getData().getPart().getAlias(), fi.getData().getComment())));
-                        if (fullInfos.isEmpty()) {
-                            plr.sendMessage("§eAuf dich warten leider keine Fullteile. =(");
-                        } else {
-                            plr.sendMessage("§aAuf dich warten §2" + fullInfos.size() + " §aFullteile!");
-                            plr.spigot().sendMessage(
-                                    new XyComponentBuilder("Tippe ").color(YELLOW)
-                                            .append("/fulls get", GOLD, UNDERLINE)
-                                            .append(" oder klicke ", YELLOW, ComponentBuilder.FormatRetention.NONE)
-                                            .append("[hier]", DARK_GREEN, UNDERLINE)
-                                            .command("/fulls get")
-                                            .tooltip("/fulls get")
-                                            .append(", um sie zu erhalten!", YELLOW, ComponentBuilder.FormatRetention.NONE)
-                                            .create()
-                            );
-                        }
-                    });
-                    return true;
+                    return interpretList(plr);
                 case "get":
-                    module.getDistributionManager().requestRetrievableFulls(plr, fullInfos -> {
-                        int remaining = fullInfos.size();
-                        for (FullInfo info : ImmutableList.copyOf(fullInfos)) { //dunno why this is necessary
-                            if (!module.getDistributionManager().attemptStore(info, plr)) {
-                                plr.sendMessage("§cDu hast keinen Platz mehr in deinem Inventar.");
-                                plr.sendMessage(String.format("§2%d §aFullteile übrig.", remaining));
-                                plr.sendMessage("§eBitte leere dein Inventar und tippe dann erneut §6/fulls get");
-                                break;
-                            }
-                            remaining--;
-                        }
-                        if (remaining == 0) {
-                            plr.sendMessage("§aDu hast alle verfügbaren Fullteile erhalten. Viel Spaß damit!");
-                        }
-                        module.getDistributionManager().saveStorage();
-                    });
-                    return true;
+                    return interpretGet(plr);
+                case "info": //fullreturn command
+                    return interpretInfo(plr);
+                case "accept": //fullreturn
+                    return interpretAccept(plr);
                 case "help":
                     break;
                 default:
@@ -94,12 +70,24 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
             }
         }
 
+        if ("fullreturn".equalsIgnoreCase(label)) { //legacy behaviour - need to keep consistency
+            plr.spigot().sendMessage(
+                    new XyComponentBuilder("§eMit diesem Befehl kannst du Fulls von früheren Maps erneut anfordern.")
+                            .color(YELLOW).create()
+            );
+            plr.spigot().sendMessage(
+                    new XyComponentBuilder("/fullreturn info").color(GOLD)
+                            .append(" - Zeigt an, ob du Fulls erstattet bekommen kannst.").color(YELLOW).create()
+            );
+            return true;
+        }
+
         plr.sendMessage("§eMit diesem Befehl kannst du für dich bereitgestellte Fulls abholen.");
         plr.spigot().sendMessage(
                 new XyComponentBuilder("/" + label + " list ").color(YELLOW)
                         .command("/canhasfull list")
                         .tooltip("§eHier klicken zum Ausführen:", "/" + label + " list")
-                        .append("Zeigt für dich bereitgestellte Fulls an.", ChatColor.GOLD)
+                        .append("Zeigt für dich bereitgestellte Fulls an.", GOLD)
                         .create()
         );
         plr.spigot().sendMessage(
@@ -107,10 +95,140 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
                         .command("/canhasfull get")
                         .tooltip("§eHier klicken zum Ausführen:", "/" + label + " get")
                         .append("Gibt dir so viele für dich bereitgestellte Fulls, wie in dein Inventar passen.",
-                                ChatColor.GOLD)
+                                GOLD)
                         .create()
         );
 
+        return true;
+    }
+
+    private boolean interpretAccept(Player plr) {
+        module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
+            List<LegacyFullData> legacyData = module.getLegacyRepository()
+                    .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
+            int initialSize = legacyData.size();
+
+            legacyData.forEach(ld -> LOGGER.info("Attempting to return {} to {}.", ld, plr.getName()));
+
+            ComponentSender.sendToSync(new XyComponentBuilder("Du bekommst ", YELLOW)
+                    .append(String.valueOf(legacyData.size()), GOLD)
+                    .append(" Fullitems... (Bitte warten)", YELLOW)
+                    .create(), plr, module.getPlugin());
+
+            List<FullInfo> migratedInfos = new ArrayList<>(legacyData).stream()
+                    .map(ld -> {
+                        try {
+                            FullData fullData = ld.toFullData(module.getRepository());
+                            return module.getRegistry().create(fullData, plr.getLocation());
+                        } catch (RuntimeException e) {
+                            LOGGER.info(String.format(
+                                    "Encountered exception while returning legacy full %s: ",
+                                    ld == null ? "null?!" : ld.getId()), e);
+                            legacyData.remove(ld); //Prevent it from being deleted
+                        }
+                        return null;
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            legacyData.forEach(module.getLegacyRepository()::delete);
+
+            module.getPlugin().getServer().getScheduler().runTask(module.getPlugin(), () -> {
+                migratedInfos.forEach(info -> module.getDistributionManager().requestStore(info, plr));
+
+                module.getDistributionManager().notifyWaiting(plr);
+                plr.sendMessage(String.format("§a%d Fullitems erstellt.", legacyData.size()));
+                if (legacyData.size() != initialSize) {
+                    plr.spigot().sendMessage(new XyComponentBuilder("Konnte ", RED)
+                            .append(String.valueOf(initialSize - legacyData.size()), DARK_RED)
+                            .append(" Fullitems nicht zurückgeben, interner Fehler. Bitte versuche es erneut. " +
+                                    "Sollte das Problem bestehen bleiben, wende dich an den Support.", RED)
+                            .create());
+                }
+                LOGGER.info("Returned legacy ids {} to {}.",
+                        legacyData.stream()
+                                .map(LegacyFullData::getId)
+                                .map(String::valueOf)
+                                .collect(Collectors.joining(", ", "[", "]")),
+                        plr.getName());
+            });
+        });
+        return true;
+    }
+
+    private boolean interpretGet(Player plr) {
+        module.getDistributionManager().requestRetrievableFulls(plr, fullInfos -> {
+            int remaining = fullInfos.size();
+            for (FullInfo info : ImmutableList.copyOf(fullInfos)) { //dunno why this is necessary
+                if (!module.getDistributionManager().attemptStore(info, plr)) {
+                    plr.sendMessage("§cDu hast keinen Platz mehr in deinem Inventar.");
+                    plr.sendMessage(String.format("§2%d §aFullteile übrig.", remaining));
+                    plr.sendMessage("§eBitte leere dein Inventar und tippe dann erneut §6/fulls get");
+                    break;
+                }
+                remaining--;
+            }
+            if (remaining == 0) {
+                plr.sendMessage("§aDu hast alle verfügbaren Fullteile erhalten. Viel Spaß damit!");
+            }
+            module.getDistributionManager().saveStorage();
+        });
+        return true;
+    }
+
+    private boolean interpretList(Player plr) {
+        module.getDistributionManager().requestRetrievableFulls(plr, fullInfos -> {
+            fullInfos.removeIf(fi -> fi.getData() == null);
+            //noinspection ConstantConditions
+            fullInfos.forEach(fi -> plr.sendMessage(String.format("§e -> #%d: %s (\"%s\")",
+                    fi.getId(), fi.getData().getPart().getAlias(), fi.getData().getComment())));
+            if (fullInfos.isEmpty()) {
+                plr.sendMessage("§eAuf dich warten leider keine Fullteile. =(");
+            } else {
+                plr.sendMessage("§aAuf dich warten §2" + fullInfos.size() + " §aFullteile!");
+                plr.spigot().sendMessage(new XyComponentBuilder(
+                        "Tippe ").color(YELLOW)
+                        .append("/fulls get", GOLD, UNDERLINE)
+                        .append(" oder klicke ", YELLOW, ComponentBuilder.FormatRetention.NONE)
+                        .append("[hier]", DARK_GREEN, UNDERLINE)
+                        .hintedCommand("/fulls get")
+                        .append(", um sie zu erhalten!", GOLD, ComponentBuilder.FormatRetention.NONE)
+                        .create()
+                );
+            }
+        });
+        return true;
+    }
+
+    private boolean interpretInfo(Player plr) {
+        List<LegacyFullData> legacyData = module.getLegacyRepository()
+                .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
+
+        legacyData.forEach(ld -> plr.spigot().sendMessage(new XyComponentBuilder(
+                " -> ", YELLOW)
+                .append("#" + ld.getId() + ": ", GRAY)
+                .append(ld.getPartName())
+                .append(" (" + ld.getSenderName() + "->" + ld.getReceiverName() + ") ")
+                .append(ld.getComment(), YELLOW)
+                .create())
+        );
+        plr.spigot().sendMessage(new XyComponentBuilder(
+                "Auf dich warten ", GREEN)
+                .append(legacyData.isEmpty() ? "keine" : String.valueOf(legacyData.size()), DARK_GREEN)
+                .append(" Fullitems.", GREEN)
+                .create());
+        if (!legacyData.isEmpty()) {
+            plr.spigot().sendMessage(new XyComponentBuilder(
+                    "Tippe ", GOLD)
+                    .append("/fullreturn accept", YELLOW)
+                    .hintedCommand("/fullreturn accept")
+                    .append(" oder klicke ", GOLD)
+                    .append("[hier]", DARK_GREEN, UNDERLINE)
+                    .hintedCommand("/fullreturn accept")
+                    .append(", um die Items anzufordern.", GOLD, ComponentBuilder.FormatRetention.NONE)
+                    .create()
+            );
+        }
         return true;
     }
 }
