@@ -33,7 +33,7 @@ public class ShopItem {
     private double buyCost;
     private double sellWorth;
 
-    protected ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
+    public ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
         Preconditions.checkNotNull(material, "material");
         Preconditions.checkNotNull(aliases, "aliases");
         Preconditions.checkArgument(buyCost >= 0, "buyCost must be greater than or equal to 0");
