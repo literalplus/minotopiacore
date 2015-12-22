@@ -212,13 +212,13 @@ public class PeaceInfoManager {
     private void save(PeaceInfo pi) {
         UUID uuid = pi.getUuid();
 
-        List<UUID> peaceWith = pi.getPeaceWithInternal();
+        List<UUID> peaceWith = pi.getPeaceWith();
         String peaceWithStr = SEMICOLON_JOINER.join(peaceWith);
 
-        List<UUID> requestsGot = pi.getRequestsGotInternal();
+        List<UUID> requestsGot = pi.getRequestsGot();
         String requestsGotStr = SEMICOLON_JOINER.join(requestsGot);
 
-        List<UUID> requestsSent = pi.getRequestsSentInternal();
+        List<UUID> requestsSent = pi.getRequestsSent();
         String requestsSentStr = SEMICOLON_JOINER.join(requestsSent);
 
         try {

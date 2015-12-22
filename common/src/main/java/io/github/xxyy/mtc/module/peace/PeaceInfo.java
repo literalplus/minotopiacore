@@ -39,53 +39,47 @@ public class PeaceInfo {
     }
 
     /**
-     * Returns a copy, fele free to edit that list
-     *
-     * @return uuid's of the friends of the player associated with this instance, namely see {@link #getUuid()}
-     */
-    @NotNull
-    public List<UUID> getPeaceWith() {
-        return new ArrayList<>(peaceWith);
-    }
-
-    /**
      * This method exists to get the peace info without the overhead of copying the list.
      *
      * @return uuid's of the friends of the player associated with this instance, namely see {@link #getUuid()}
      */
     @NotNull
-    List<UUID> getPeaceWithInternal() {
+    List<UUID> getPeaceWith() {
         return peaceWith;
     }
 
     @NotNull
     public List<UUID> getRequestsGot() {
-        return new ArrayList<>(requestsGot);
-    }
-
-    @NotNull
-    public List<UUID> getRequestsGotInternal() {
         return requestsGot;
     }
 
     @NotNull
     public List<UUID> getRequestsSent() {
-        return new ArrayList<>(requestsSent);
-    }
-
-    @NotNull
-    public List<UUID> getRequestsSentInternal() {
         return requestsSent;
     }
 
+    /**
+     * Dirty means that something has changed in this object, but is not yet reflected in the sql table
+     * @return Whether this PeaceInfo is dirty right now
+     */
     public boolean isDirty() {
         return dirty;
     }
 
+    /**
+     * Changes current dirty status
+     * @param dirty the new dirty state
+     * @see #isDirty()
+     */
     void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
 
+    /**
+     * {@code setDirty(true)}
+     * @see #setDirty(boolean)
+     * @see #isDirty()
+     */
     void setDirty() {
         this.dirty = true;
     }

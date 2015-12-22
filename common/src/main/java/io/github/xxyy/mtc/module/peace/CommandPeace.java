@@ -59,15 +59,15 @@ public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExe
                         return CommandHelper.msg("§cDas ist keine gültige Zahl!", plr);
                     }
                     page = Integer.parseInt(args[1]);
-                    if (page <= 0) {// if 0, rowstart would be negative
+                    if (page < 1) {// if 0, rowstart would be negative
                         page = 1;
                     }
-                    if (page > (peaceInfo.getPeaceWithInternal().size() / PEACE_LIST_PAGE_SIZE + 1)) {
+                    if (page > (peaceInfo.getPeaceWith().size() / PEACE_LIST_PAGE_SIZE + 1)) {
                         return CommandHelper.msg("§cDas ist keine gültige Seitenzahl!", plr);
                     }
                     rowstart = (page - 1) * PEACE_LIST_PAGE_SIZE;
                 }
-                return sendPeaceList(plr, peaceInfo.getPeaceWithInternal(), rowstart, PEACE_LIST_PAGE_SIZE, label, page + 1);
+                return sendPeaceList(plr, peaceInfo.getPeaceWith(), rowstart, PEACE_LIST_PAGE_SIZE, label, page + 1);
             }
             case "status": {
                 if (args.length < 2) {
@@ -111,9 +111,9 @@ public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExe
                 if (PlayerPeaceRelation.isRequestSent(manager, initiator, targetUuid)) {
                     PeaceInfo targetPi = manager.get(targetUuid);
 
-                    targetPi.getRequestsGotInternal().remove(initiatorUuid);
+                    targetPi.getRequestsGot().remove(initiatorUuid);
                     targetPi.setDirty();
-                    initiator.getRequestsSentInternal().remove(targetUuid);
+                    initiator.getRequestsSent().remove(targetUuid);
                     initiator.setDirty();
 
                     MTCHelper.sendLocArgs("XU-preqrevoked", plr, true, args[1]);
@@ -150,17 +150,17 @@ public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExe
             }
             case "accept":
             case "annehmnen": {
-                return getTabCompleteMatchesAndGetPeaceInfoList(uuid, args, 1, PeaceInfo::getRequestsGotInternal);
+                return getTabCompleteMatchesAndGetPeaceInfoList(uuid, args, 1, PeaceInfo::getRequestsGot);
             }
             case "status": {
                 return getTabCompleteMatchesAndGetPeaceInfo(uuid, args, 1, peaceInfo ->
                     Stream.concat(
                         Stream.concat(
                             Bukkit.getOnlinePlayers().stream().map(Player::getUniqueId),
-                            peaceInfo.getPeaceWithInternal().stream()),
+                            peaceInfo.getPeaceWith().stream()),
                         Stream.concat(
-                            peaceInfo.getRequestsGotInternal().stream(),
-                            peaceInfo.getRequestsSentInternal().stream())));
+                            peaceInfo.getRequestsGot().stream(),
+                            peaceInfo.getRequestsSent().stream())));
             }
             case "deny":
             case "ablehnen": {
@@ -170,7 +170,7 @@ public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExe
             case "zurückrufen": {
                 return getTabCompleteMatchesAndGetPeaceInfo(uuid, args, 1, peaceInfo ->
                     Stream.concat(
-                        peaceInfo.getPeaceWithInternal().stream(),
+                        peaceInfo.getPeaceWith().stream(),
                         peaceInfo.getRequestsSent().stream()));
             }
             case "request":
@@ -178,7 +178,7 @@ public class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabExe
                 return getTabCompleteMatchesAndGetPeaceInfo(uuid, args, 1, peaceInfo ->
                     Bukkit.getOnlinePlayers().stream()
                         .map(Player::getUniqueId)
-                        .filter(((Predicate<UUID>) peaceInfo.getPeaceWithInternal()::contains).negate()));
+                        .filter(((Predicate<UUID>) peaceInfo.getPeaceWith()::contains).negate()));
             }
             default: {
                 if (args.length == 1) {

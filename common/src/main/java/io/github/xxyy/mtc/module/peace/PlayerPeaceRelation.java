@@ -21,10 +21,10 @@ public class PlayerPeaceRelation {
     }
 
     public static boolean areInPeace(@NotNull PeaceInfoManager manager, @NotNull PeaceInfo initiator, @NotNull UUID targetUuid) {
-        boolean initiatorPeace = initiator.getPeaceWithInternal().contains(targetUuid);
+        boolean initiatorPeace = initiator.getPeaceWith().contains(targetUuid);
         if (CONSISTENCY_CHECKS) {
             PeaceInfo target = manager.get(targetUuid);
-            boolean targetPeace = target.getPeaceWithInternal().contains(initiator.getUuid());
+            boolean targetPeace = target.getPeaceWith().contains(initiator.getUuid());
             if (initiatorPeace && targetPeace) {
                 return true;
             }
@@ -33,12 +33,12 @@ public class PlayerPeaceRelation {
             }
             if (initiatorPeace) {
                 LOG.warn("Data inconsistency found! " + initiator + " has peace with " + target + ", but not the other way round! Setting second to have peace with first.");
-                target.getPeaceWithInternal().add(initiator.getUuid());
+                target.getPeaceWith().add(initiator.getUuid());
                 target.setDirty();
             } else {
                 LOG.warn("Data inconsistency found! " + target + " has peace with " + initiator + ", but not the other way round! Setting second to have peace with first.");
 
-                initiator.getPeaceWithInternal().add(targetUuid);
+                initiator.getPeaceWith().add(targetUuid);
                 initiator.setDirty();
             }
             return true;
@@ -47,10 +47,10 @@ public class PlayerPeaceRelation {
     }
 
     public static boolean isRequestSent(@NotNull PeaceInfoManager manager, @NotNull PeaceInfo initiator, @NotNull UUID targetUuid) {
-        boolean initiatorSent = initiator.getRequestsSentInternal().contains(targetUuid);
+        boolean initiatorSent = initiator.getRequestsSent().contains(targetUuid);
         if (CONSISTENCY_CHECKS) {
             PeaceInfo target = manager.get(targetUuid);
-            boolean targetGot = target.getRequestsGotInternal().contains(initiator.getUuid());
+            boolean targetGot = target.getRequestsGot().contains(initiator.getUuid());
             if (initiatorSent && targetGot) {
                 return true;
             }
@@ -58,10 +58,10 @@ public class PlayerPeaceRelation {
                 return false;
             }
             if (initiatorSent) { //TODO log inconsistency
-                target.getRequestsGotInternal().add(initiator.getUuid());
+                target.getRequestsGot().add(initiator.getUuid());
                 target.setDirty();
             } else {
-                initiator.getRequestsSentInternal().add(targetUuid);
+                initiator.getRequestsSent().add(targetUuid);
                 initiator.setDirty();
             }
             return true;
@@ -71,10 +71,10 @@ public class PlayerPeaceRelation {
 
 
     public static boolean isRequestRecieved(@NotNull PeaceInfoManager manager, @NotNull PeaceInfo initiator, @NotNull UUID targetUuid) {
-        boolean initiatorGot = initiator.getRequestsGotInternal().contains(targetUuid);
+        boolean initiatorGot = initiator.getRequestsGot().contains(targetUuid);
         if (CONSISTENCY_CHECKS) {
             PeaceInfo target = manager.get(targetUuid);
-            boolean targetSent = target.getRequestsSentInternal().contains(initiator.getUuid());
+            boolean targetSent = target.getRequestsSent().contains(initiator.getUuid());
             if (initiatorGot && targetSent) {
                 return true;
             }
@@ -82,10 +82,10 @@ public class PlayerPeaceRelation {
                 return false;
             }
             if (initiatorGot) { //TODO log inconsistency
-                target.getRequestsSentInternal().add(initiator.getUuid());
+                target.getRequestsSent().add(initiator.getUuid());
                 target.setDirty();
             } else {
-                initiator.getRequestsSentInternal().add(targetUuid);
+                initiator.getRequestsSent().add(targetUuid);
                 initiator.setDirty();
             }
             return true;
@@ -100,8 +100,8 @@ public class PlayerPeaceRelation {
         if (isRequestSent(module.getPeaceInfoManager(), initiator, target.getUuid())) {
             return false;
         }
-        initiator.getRequestsSentInternal().add(target.getUuid());
-        target.getRequestsGotInternal().add(initiator.getUuid());
+        initiator.getRequestsSent().add(target.getUuid());
+        target.getRequestsGot().add(initiator.getUuid());
 
         initiator.setDirty();
         target.setDirty();

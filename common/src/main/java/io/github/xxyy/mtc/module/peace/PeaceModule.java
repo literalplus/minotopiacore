@@ -37,7 +37,7 @@ public class PeaceModule extends ConfigurableMTCModule {
 
     @Override
     public void clearCache(boolean forced, MTC plugin) {
-        peaceInfoManager.flushAll(); //TODO save cache or not on clearCache?
+        peaceInfoManager.flushAll();
     }
 
     @Override
