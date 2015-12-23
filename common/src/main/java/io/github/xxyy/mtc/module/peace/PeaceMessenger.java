@@ -28,47 +28,6 @@ public class PeaceMessenger {
     }
 
     /**
-     * Checks if the joined player got requests and starts scheduling messages
-     *
-     * @param toNotify the player joined
-     */
-    public void startAllNotifications(Player toNotify) {
-        //TODO implement
-    }
-
-    /**
-     * Stops notifying specified player fully
-     * <p>
-     * This may be used when the notified player leaves the game
-     *
-     * @param notified the uuid of the player to stop notifying
-     */
-    public void stopNotify(UUID notified) {
-        //TODO implement
-    }
-
-    /**
-     * Stops notifying specified player about the request by the requestFrom player
-     * <p>
-     * This may be used if the notified player accepted the peace
-     *
-     * @param notified    the uuid of the player to stop notifying
-     * @param requestFrom the uuid of the one sent the request
-     */
-    public void stopNotifyAbout(UUID notified, UUID requestFrom) {
-        //TODO implement
-    }
-
-    /**
-     * Stops notifying all players.
-     * <p>
-     * This should be used when the module is going to be disabled.
-     */
-    public void stopAll() {
-        //TODO implement
-    }
-
-    /**
      * Notifies the initiator the request is sent
      *
      * @param initiator the {@link PeaceInfo} of the one sent the request
@@ -88,7 +47,7 @@ public class PeaceMessenger {
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new XyComponentBuilder("")
                         .append("Friedensanfrage zurückziehen?", ChatColor.GOLD)
                         .create()))
-                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/frieden nein " + target))
+                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/frieden zurückziehen " + target))
                     .create()));
         //TODO implement
     }

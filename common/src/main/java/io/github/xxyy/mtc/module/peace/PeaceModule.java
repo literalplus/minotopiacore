@@ -32,7 +32,7 @@ public class PeaceModule extends ConfigurableMTCModule {
         peaceInfoManager.flushAll();
         peaceInfoManager.syncStop();
         peaceInfoManager = null;
-        messenger.stopAll();
+        messenger = null;
     }
 
     @Override
@@ -49,12 +49,13 @@ public class PeaceModule extends ConfigurableMTCModule {
     }
 
     /**
-     * TODO fill javadoc
-     * Abbreviation method for peace checks
+     * Abbreviation method for peace check
+     * <br><br>
+     * This method checks whether the two given players are currently in peace.
      *
-     * @param first
-     * @param second
-     * @return
+     * @param first the first player
+     * @param second the second players
+     * @return Whether the two players are currently in peace.
      * @see PlayerPeaceRelation#areInPeace(PeaceInfoManager, PeaceInfo, UUID)
      */
     public boolean areInPeace(Player first, Player second) {

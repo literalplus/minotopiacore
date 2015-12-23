@@ -104,6 +104,6 @@ public class PeaceInfo {
 
     @Override
     public String toString() {
-        return "PeaceInfo{" + "uuid=" + uuid + ", dirty=" + dirty + '}';
+        return "PeaceInfo{" + "uuid=" + uuid + ", dirty=" + dirty + '}'; //TODO output list contents?
     }
 }

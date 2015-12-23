@@ -31,11 +31,11 @@ public class PlayerPeaceRelation {
             if (!initiatorPeace && !targetPeace) {
                 return false;
             }
-            if (initiatorPeace) {
+            if (initiatorPeace) { // targetPeace = false
                 LOG.warn("Data inconsistency found! " + initiator + " has peace with " + target + ", but not the other way round! Setting second to have peace with first.");
                 target.getPeaceWith().add(initiator.getUuid());
                 target.setDirty();
-            } else {
+            } else { // initiatorPeace = false, targetPeace = true
                 LOG.warn("Data inconsistency found! " + target + " has peace with " + initiator + ", but not the other way round! Setting second to have peace with first.");
 
                 initiator.getPeaceWith().add(targetUuid);
@@ -57,10 +57,12 @@ public class PlayerPeaceRelation {
             if (!initiatorSent && !targetGot) {
                 return false;
             }
-            if (initiatorSent) { //TODO log inconsistency
+            if (initiatorSent) { // targetGot = false
+                LOG.warn("Data inconsistency found! " + initiator + " has sent a request to " + target + ", but request target got no request! Setting second to have recieved a request from first.");
                 target.getRequestsGot().add(initiator.getUuid());
                 target.setDirty();
-            } else {
+            } else { // initiatorSent = false, targetGot = true
+                LOG.warn("Data inconsistency found! " + target + " has sent a request to " + initiator + ", but request target got no request! Setting second to have recieved a request from first.");
                 initiator.getRequestsSent().add(targetUuid);
                 initiator.setDirty();
             }
@@ -81,35 +83,17 @@ public class PlayerPeaceRelation {
             if (!initiatorGot && !targetSent) {
                 return false;
             }
-            if (initiatorGot) { //TODO log inconsistency
+            if (initiatorGot) { // targetSent = false
+                LOG.warn("Data inconsistency found! " + initiator + " has got a request from " + target + ", but request origin has not sent! Setting second to have sent a request to first.");
                 target.getRequestsSent().add(initiator.getUuid());
                 target.setDirty();
-            } else {
+            } else { //initiatorGot = false, targetSent = true
+                LOG.warn("Data inconsistency found! " + target + " has got a request from " + initiator + ", but request origin has not sent! Setting second to have sent a request to first.");
                 initiator.getRequestsSent().add(targetUuid);
                 initiator.setDirty();
             }
             return true;
         }
         return initiatorGot;
-    }
-
-    /**
-     * @return success state
-     */
-    public boolean sendRequest(@NotNull PeaceModule module, @NotNull PeaceInfo initiator, @NotNull PeaceInfo target) { //TODO implement
-        if (isRequestSent(module.getPeaceInfoManager(), initiator, target.getUuid())) {
-            return false;
-        }
-        initiator.getRequestsSent().add(target.getUuid());
-        target.getRequestsGot().add(initiator.getUuid());
-
-        initiator.setDirty();
-        target.setDirty();
-
-        Player plr = Bukkit.getPlayer(initiator.getUuid());
-        if (plr != null) {
-            module.getMessenger().notifyRequestSent(plr, target.getUuid());
-        }
-        return true;
     }
 }
