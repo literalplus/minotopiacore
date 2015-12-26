@@ -7,6 +7,8 @@
 
 package io.github.xxyy.mtc.logging;
 
+import io.github.xxyy.lib.guava17.base.Preconditions;
+import io.github.xxyy.mtc.MTC;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.spi.LoggerContext;
 import org.bukkit.Bukkit;
@@ -15,9 +17,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import io.github.xxyy.lib.guava17.base.Preconditions;
-import io.github.xxyy.mtc.MTC;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,6 +29,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * This class helps with registering and managing loggers for MTC modules, as well as initialising a custom Log4J
@@ -135,17 +136,23 @@ public class LogManager {
 
     private static File extractResource(String filename) throws IOException {
         File file = new File(plugin.getDataFolder(), filename);
+        Path filePath = file.toPath();
 
         if (!file.exists()) {
+            Files.createFile(filePath);
             try (InputStream is = plugin.getResource(filename)) {
-                Files.copy(is, file.toPath());
+                Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
             }
         }
 
         return file;
     }
 
-    private static void saveXML(Document doc, File file) throws TransformerException {
+    private static void saveXML(Document doc, File file) throws TransformerException, IOException {
+        if(!file.exists()) {
+            Files.createFile(file.toPath());
+        }
+
         doc.normalizeDocument();
 
         TransformerFactory.newInstance().newTransformer()
