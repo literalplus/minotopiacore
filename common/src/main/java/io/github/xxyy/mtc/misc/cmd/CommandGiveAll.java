@@ -86,7 +86,7 @@ public final class CommandGiveAll extends MTCCommandExecutor {
             }
             BaseComponent[] components =
                     new XyComponentBuilder("[").color(GOLD).tooltip("§6Edler Spender:", "§7" + senderName)
-                            .append("MTS", BLUE).append("] ", GOLD)
+                            .append("MTC", BLUE).append("] ", GOLD)
                             .append("Alle Spieler haben ", GOLD)
                             .append(getISString(finalStack), BLUE)
                             .append(" erhalten!", GOLD).create();
