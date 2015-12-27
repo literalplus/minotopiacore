@@ -40,7 +40,7 @@ public class XLoginHook extends SimpleHookWrapper {
     }
 
     public Location getSpawnLocation() {
-        if(!isActive()) {
+        if (!isActive()) {
             return null;
         }
 
@@ -48,19 +48,19 @@ public class XLoginHook extends SimpleHookWrapper {
     }
 
     public void resetSpawnLocation() {
-        if(isActive()) {
+        if (isActive()) {
             unsafe.resetSpawnLocation();
         }
     }
 
     public String getDisplayString(UUID uuid) {
         Player onlinePlayer = Bukkit.getPlayer(uuid);
-        if(onlinePlayer != null) {
+        if (onlinePlayer != null) {
             return onlinePlayer.getName();
         }
 
         String foundName = unsafe.getName(uuid);
-        if(foundName != null) {
+        if (foundName != null) {
             return foundName;
         }
 
@@ -74,11 +74,21 @@ public class XLoginHook extends SimpleHookWrapper {
     public Profile getBestProfile(String nameOrId) {
         List<Profile> profiles = unsafe.getProfiles(nameOrId);
 
-        if(profiles.size() == 1) {
+        if (profiles.size() == 1) {
             return profiles.get(0); //If there's only one premium player, xLogin only returns that one
         } else {
             return null;
         }
+    }
+
+    /**
+     * Gets the xLogin profile for a given unique id, or null if there is no known profile for that id.
+     *
+     * @param uuid the unique id
+     * @return the profile or null
+     */
+    public Profile getProfile(UUID uuid) {
+        return unsafe.getProfile(uuid);
     }
 
     public UUID getBestUniqueId(String nameOrId) {
@@ -93,8 +103,11 @@ public class XLoginHook extends SimpleHookWrapper {
 
     public interface Profile {
         boolean isPremium();
+
         String getName();
+
         UUID getUniqueId();
+
         String getLastIp();
     }
 }
