@@ -7,6 +7,12 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.common.chat.ItemComponentBuilder;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,9 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
+import static net.md_5.bungee.api.ChatColor.*;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
 
@@ -81,11 +85,26 @@ public final class CommandGiveAll extends MTCCommandExecutor {
                 sender.sendMessage(MTC.chatPrefix + "Es sind keine Spieler online.");
                 return true;
             }
-            Bukkit.broadcastMessage(MTCHelper.locArgs("XU-giveallbroadcast", senderName, false, CommandGiveAll.getISString(finalStack)));
+            BaseComponent[] itemComponents = new ItemComponentBuilder(finalStack).create();
+            XyComponentBuilder componentBuilder =
+                    new XyComponentBuilder("[").color(GOLD).append("MTS", BLUE).append("] ", GOLD)
+                            .append("Alle Spieler haben ", GOLD)
+                            .append(getISString(finalStack), BLUE)
+                            .event(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemComponents))
+                            .append(" erhalten!", GOLD);
+            BaseComponent[] userComponents = componentBuilder.create();
+            BaseComponent[] adminComponents = componentBuilder.append(" [Info]", GRAY, UNDERLINE)
+                    .tooltip("§6Edler Spender:", "§7" + senderName)
+                    .create();
+
             for (Player plr : Bukkit.getOnlinePlayers()) {
                 plr.getInventory().addItem(finalStack.clone());
+                if(plr.hasPermission("mtc.ignore")) {
+                    plr.spigot().sendMessage(adminComponents);
+                } else {
+                    plr.spigot().sendMessage(userComponents);
+                }
             }
-            CommandHelper.broadcast(MTCHelper.locArgs("XU-givealladmin", senderName, false, senderName), "mtc.ignore");
         } else {
             return CommandGiveAll.printHelpTo(sender);
         }
