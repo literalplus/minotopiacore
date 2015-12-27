@@ -12,7 +12,6 @@ import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -85,12 +84,11 @@ public final class CommandGiveAll extends MTCCommandExecutor {
                 sender.sendMessage(MTC.chatPrefix + "Es sind keine Spieler online.");
                 return true;
             }
-            BaseComponent[] itemComponents = new ItemComponentBuilder(finalStack).create();
+            BaseComponent[] itemComponents = new ItemComponentBuilder(finalStack, getISString(finalStack)).create();
             XyComponentBuilder componentBuilder =
                     new XyComponentBuilder("[").color(GOLD).append("MTS", BLUE).append("] ", GOLD)
                             .append("Alle Spieler haben ", GOLD)
-                            .append(getISString(finalStack), BLUE)
-                            .event(new HoverEvent(HoverEvent.Action.SHOW_ITEM, itemComponents))
+                            .append(itemComponents, BLUE)
                             .append(" erhalten!", GOLD);
             BaseComponent[] userComponents = componentBuilder.create();
             BaseComponent[] adminComponents = componentBuilder.append(" [Info]", GRAY, UNDERLINE)
