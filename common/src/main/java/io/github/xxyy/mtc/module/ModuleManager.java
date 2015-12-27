@@ -166,6 +166,13 @@ public class ModuleManager {
      * @return whether given module should be loaded
      */
     public boolean shouldLoad(MTCModule module, boolean def) {
+        //TODO: Legacy conversion code - Remove after 2016-02-28
+        String legacyPath = "enable." + module.getName();
+        if (plugin.getConfig().contains(legacyPath)) {
+            def = plugin.getConfig().getBoolean(legacyPath, def); //soft conversion from legacy format
+            plugin.getConfig().set(legacyPath, null);
+        }
+
         String path = "enable." + module.getClass().getSimpleName();
         enabledModulesConfig.addDefault(path, def);
         return enabledModulesConfig.getBoolean(path);
