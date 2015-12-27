@@ -34,7 +34,7 @@ public class ShopModule extends ConfigurableMTCModule {
     private ShopTransactionExecutor transactionExecutor;
 
     public ShopModule() {
-        super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD);
+        super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD, false);
     }
 
     @Override
