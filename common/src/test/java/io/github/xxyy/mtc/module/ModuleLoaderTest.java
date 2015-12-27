@@ -7,22 +7,20 @@
 
 package io.github.xxyy.mtc.module;
 
+import io.github.xxyy.mtc.MTC;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.github.xxyy.mtc.MTC;
-
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -41,7 +39,7 @@ public class ModuleLoaderTest {
     @BeforeClass
     public static void initClass() {
         mtc = mock(MTC.class);
-        moduleManager = new ModuleManager(mtc);
+        moduleManager = new ModuleManager(mtc, new File("./target/"));
         loader = new ModuleLoader(moduleManager);
     }
 

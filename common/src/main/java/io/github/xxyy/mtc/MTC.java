@@ -71,7 +71,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable {
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
     private PlayerGameManager gameManager;
-    private ModuleManager moduleManager = new ModuleManager(this);
+    private ModuleManager moduleManager = new ModuleManager(this, this.getDataFolder());
     private Logger logger;
 
     /**

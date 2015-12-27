@@ -37,13 +37,20 @@ public class ModuleManager {
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
-    private final File enabledModulesFile;
     private final ManagedConfiguration enabledModulesConfig;
 
-    public ModuleManager(MTC plugin) {
+    /**
+     * Constructs a new module manager.
+     *
+     * @param plugin     the plugin to manage modules for
+     * @param dataFolder the data folder where configuration can be stored
+     */
+    public ModuleManager(MTC plugin, File dataFolder) {
         this.plugin = plugin;
-        enabledModulesFile = new File(plugin.getDataFolder(), "enabled_modules.yml");
-        enabledModulesConfig = ManagedConfiguration.fromFile(enabledModulesFile, ClearCacheBehaviour.SAVE);
+        enabledModulesConfig = ManagedConfiguration.fromFile(
+                new File(dataFolder, "enabled_modules.yml"),
+                ClearCacheBehaviour.SAVE
+        );
         enabledModulesConfig.options()
                 .copyDefaults(true)
                 .copyHeader(true)
