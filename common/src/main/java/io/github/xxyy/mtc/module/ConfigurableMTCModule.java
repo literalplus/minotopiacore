@@ -25,9 +25,30 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     private final String filePath;
     protected ManagedConfiguration configuration;
 
-    public ConfigurableMTCModule(String name, String filePath, ClearCacheBehaviour clearCacheBehaviour) {
+    /**
+     * Creates a new configurable module and enables it by default.
+     *
+     * @param name                the name of this module, may not contain spaces
+     * @param filePath            the path of the config file, relative to the plugin's data folder
+     * @param clearCacheBehaviour the behaviour of the config file on a cache clear
+     */
+    protected ConfigurableMTCModule(String name, String filePath, ClearCacheBehaviour clearCacheBehaviour) {
         super(name);
         this.clearCacheBehaviour = clearCacheBehaviour;
+        this.filePath = filePath;
+    }
+
+    /**
+     * Creates a new configurable module.
+     *
+     * @param name             the name of this module, may not contain spaces
+     * @param filePath         the path of the config file, relative to the plugin's data folder
+     * @param behaviour        the behaviour of the config file on a cache clear
+     * @param enabledByDefault whether the module should be enabled by default
+     */
+    protected ConfigurableMTCModule(String name, String filePath, ClearCacheBehaviour behaviour, boolean enabledByDefault) {
+        super(name, enabledByDefault);
+        this.clearCacheBehaviour = behaviour;
         this.filePath = filePath;
     }
 

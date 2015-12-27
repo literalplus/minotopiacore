@@ -22,8 +22,24 @@ public abstract class MTCModuleAdapter implements MTCModule {
     protected MTC plugin;
     protected boolean enabledByDefault = true;
 
+    /**
+     * Creates a new adapter and enables it by default.
+     *
+     * @param name the name of this module, may not contain spaces
+     */
     protected MTCModuleAdapter(String name) {
         this.name = name;
+    }
+
+    /**
+     * Creates a new adapter.
+     *
+     * @param name             the name of this module, may not contain spaces
+     * @param enabledByDefault whether this module should be enabled by default
+     */
+    protected MTCModuleAdapter(String name, boolean enabledByDefault) {
+        this.name = name;
+        this.enabledByDefault = enabledByDefault;
     }
 
     @Override
@@ -48,8 +64,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
 
     @Override
     public boolean canBeEnabled(MTC plugin) {
-        plugin.getConfig().addDefault("enable." + name, enabledByDefault);
-        return plugin.getConfig().getBoolean("enable." + name);
+        return plugin.getModuleManager().shouldLoad(this, enabledByDefault);
     }
 
     @Override

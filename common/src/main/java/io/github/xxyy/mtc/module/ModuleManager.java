@@ -7,15 +7,17 @@
 
 package io.github.xxyy.mtc.module;
 
-import org.bukkit.plugin.Plugin;
-import org.reflections.Reflections;
-
 import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.yaml.ManagedConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.reflections.Reflections;
 
+import java.io.File;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,9 +37,17 @@ public class ModuleManager {
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
+    private final File enabledModulesFile;
+    private final ManagedConfiguration enabledModulesConfig;
 
     public ModuleManager(MTC plugin) {
         this.plugin = plugin;
+        enabledModulesFile = new File(plugin.getDataFolder(), "enabled_modules.yml");
+        enabledModulesConfig = ManagedConfiguration.fromFile(enabledModulesFile, ClearCacheBehaviour.SAVE);
+        enabledModulesConfig.options()
+                .copyDefaults(true)
+                .copyHeader(true)
+                .header("Choose which modules to load. Note that modules may have dependencies.");
     }
 
     /**
@@ -125,6 +135,7 @@ public class ModuleManager {
         loader.getLoadedModules().stream()
                 .filter(m -> m.getModule().canBeEnabled(plugin))
                 .forEach(m -> loader.setEnabled(m, true));
+        enabledModulesConfig.trySave();
     }
 
     /**
@@ -145,6 +156,19 @@ public class ModuleManager {
                     (enabled ? "en" : "dis") + "abled:", e);
             return null;
         }
+    }
+
+    /**
+     * Checks if a module should load according to the administrator's choice defined in a config file.
+     *
+     * @param module the module to check
+     * @param def    the default value if there is no choice defined
+     * @return whether given module should be loaded
+     */
+    public boolean shouldLoad(MTCModule module, boolean def) {
+        String path = "enable." + module.getClass().getSimpleName();
+        enabledModulesConfig.addDefault(path, def);
+        return enabledModulesConfig.getBoolean(path);
     }
 
     void registerEnabled(MTCModule module, boolean enabled) {
