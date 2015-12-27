@@ -19,8 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import static net.md_5.bungee.api.ChatColor.BLUE;
-import static net.md_5.bungee.api.ChatColor.GOLD;
+import static net.md_5.bungee.api.ChatColor.*;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
 
@@ -86,7 +85,7 @@ public final class CommandGiveAll extends MTCCommandExecutor {
             }
             BaseComponent[] components =
                     new XyComponentBuilder("[").color(GOLD).tooltip("§6Edler Spender:", "§7" + senderName)
-                            .append("MTC", BLUE).append("] ", GOLD)
+                            .append("MTC", AQUA).append("] ", GOLD)
                             .append("Alle Spieler haben ", GOLD)
                             .append(getISString(finalStack), BLUE)
                             .append(" erhalten!", GOLD).create();
