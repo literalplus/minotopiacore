@@ -7,6 +7,12 @@
 
 package io.github.xxyy.mtc.module.chal;
 
+import io.github.xxyy.lib.guava17.collect.ListMultimap;
+import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,20 +26,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import io.github.xxyy.lib.guava17.collect.ListMultimap;
-import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,19 +38,18 @@ import java.util.stream.Collectors;
  */
 public class ChalModule extends ConfigurableMTCModule {
     public static final String NAME = "Chal";
-    private static final String LOCATIONS_PATH = "locations";
-    private static final String USED_PATH = "used";
     public static final String ADMIN_PERMISSION = "mtc.chal.admin";
     public static final String DATE_BYPASS_PERMISSION = "mtc.chal.bypass";
     public static final String DATE_BYPASS_PAST_PERMISSION = "mtc.chal.bypass-past";
     public static final String METADATA_KEY = "chal-metadata";
-
+    private static final String LOCATIONS_PATH = "locations";
+    private static final String USED_PATH = "used";
     private List<ChestLocation> locations;
     private ListMultimap<String, UUID> chestsUsed = MultimapBuilder.hashKeys().arrayListValues().build();
     private Map<UUID, ChalDate> chestSelectors = new HashMap<>();
 
     public ChalModule() {
-        super(NAME, "modules/chal/data.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "modules/chal/data.yml", ClearCacheBehaviour.SAVE, false);
         ConfigurationSerialization.registerClass(ChestLocation.class);
     }
 
@@ -104,7 +96,7 @@ public class ChalModule extends ConfigurableMTCModule {
             ChestLocation location = it.next();
             Block block = location.getBlock();
             if (block == null || block.getType() != Material.CHEST) {
-                plugin.getLogger().info("Removing invalid Chal chest at " + location.pretyPrint());
+                plugin.getLogger().info("Removing invalid Chal chest at " + location.prettyPrint());
                 it.remove();
                 continue;
             }

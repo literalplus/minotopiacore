@@ -6,11 +6,10 @@
  */
 package io.github.xxyy.mtc.module.repeater;
 
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +23,13 @@ import java.util.Objects;
  */
 public class RepeaterModule extends ConfigurableMTCModule {
     public static final String NAME = "Repeater";
-    private static final String MESSAGES_PATH = "messages";
     public static final String ADMIN_PERMISSION = "mtc.repeater.admin";
     public static final int SECONDS_PER_TICK = 5;
+    private static final String MESSAGES_PATH = "messages";
     private List<RepeatingMessage> messages = new ArrayList<>();
 
     public RepeaterModule() {
-        super(NAME, "modules/messages.conf.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "modules/messages.conf.yml", ClearCacheBehaviour.SAVE, true);
         ConfigurationSerialization.registerClass(RepeatingMessage.class);
     }
 

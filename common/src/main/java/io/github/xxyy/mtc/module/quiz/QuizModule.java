@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.module.quiz;
 
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -15,16 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -35,14 +29,14 @@ import java.util.regex.Matcher;
  */
 public class QuizModule extends ConfigurableMTCModule {
     public static final String NAME = "Quiz";
-    private static final String QUESTION_PATH = "questions";
     public static final String ADMIN_PERMISSION = "mtc.quiz.admin";
+    private static final String QUESTION_PATH = "questions";
     private final Map<UUID, QuizQuestion.Builder> questionSessions = Collections.synchronizedMap(new HashMap<>());
     private List<QuizQuestion> questions = Collections.synchronizedList(new LinkedList<>());
     private QuizGame game;
 
     public QuizModule() {
-        super(NAME, "modules/quiz.conf.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "modules/quiz.conf.yml", ClearCacheBehaviour.SAVE, false);
         ConfigurationSerialization.registerClass(QuizQuestion.class);
     }
 

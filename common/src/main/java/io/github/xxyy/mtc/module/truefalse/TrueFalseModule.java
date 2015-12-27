@@ -43,7 +43,7 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     private TrueFalseGame game;
 
     public TrueFalseModule() {
-        super(NAME, "modules/truefalse.conf.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "modules/truefalse.conf.yml", ClearCacheBehaviour.SAVE, false);
         ConfigurationSerialization.registerClass(XyLocation.class); //Ensure the class is loaded - double call doesn't hurt (https://github.com/SpigotMC/Spigot-API/blob/master/src/main/java/org/bukkit/configuration/serialization/ConfigurationSerialization.java#L218)
         ConfigurationSerialization.registerClass(TrueFalseQuestion.class);
     }

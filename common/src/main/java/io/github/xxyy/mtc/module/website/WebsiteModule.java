@@ -7,13 +7,12 @@
 
 package io.github.xxyy.mtc.module.website;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -44,7 +43,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     private WebsiteListener listener;
 
     public WebsiteModule() {
-        super(NAME, "website_config.yml", ClearCacheBehaviour.RELOAD);
+        super(NAME, "website_config.yml", ClearCacheBehaviour.RELOAD, true);
     }
 
     @Override

@@ -5,8 +5,15 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package io.github.xxyy.mtc.module;
+package io.github.xxyy.mtc.module.infbl;
 
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,30 +38,23 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.Set;
 
 public final class InfiniteBlockModule extends ConfigurableMTCModule implements Listener {
     public static final String NAME = "InfiniteDispensers"; //keeping legacy constant for backwards compatibility
     public static final String INFINITY_TAG = "mtc.infinite";
-    private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
     public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //keeping legacy constant for backwards compatibility
+    private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
     private List<XyLocation> infiniteBlockLocations;
 
     public InfiniteBlockModule() {
-        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE); //keeping legacy constant for backwards compatibility
+        super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE, false); //keeping legacy constant for backwards compatibility
     }
 
     @Override
@@ -78,7 +78,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
             if (canBeMadeInfinite(blk.getType())) {
                 addInfiniteMetadata(blk);
             } else {
-                plugin.getLogger().info("Removing infinite tag at " + location.pretyPrint() + " because the block changed to " + blk.getType() + "!");
+                plugin.getLogger().info("Removing infinite tag at " + location.prettyPrint() + " because the block changed to " + blk.getType() + "!");
                 it.remove();
             }
         }
@@ -141,7 +141,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         if (evt.getInventory().getType() != InventoryType.ANVIL) {
             doIfInfinite(evt.getInventory().getHolder(), val -> {
                 evt.setCancelled(true);
-                MTCHelper.sendLoc("XU-infdispclk", (Player) evt.getPlayer(), true); //keeping legacy constant for backwards compatibility
+                MTCHelper.sendLoc("XU-infdispclk", evt.getPlayer(), true); //keeping legacy constant for backwards compatibility
             });
         }
     }
@@ -181,6 +181,23 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
     /////////////////////////// COMMAND HANDLER ////////////////////////////////////////////////////////////////////////
 
+    private boolean canBeMadeInfinite(Material material) {
+        switch (material) {
+            case ANVIL:
+            case BEACON:
+            case BREWING_STAND:
+            case CHEST:
+            case DISPENSER:
+            case DROPPER:
+            case FURNACE:
+            case BURNING_FURNACE:
+            case HOPPER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public class CommandHandler extends MTCCommandExecutor {
         @Override
         @SuppressWarnings("ConstantConditions")
@@ -215,7 +232,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                         AtomicInteger i = new AtomicInteger(0);
                         if (sender instanceof ConsoleCommandSender) {
                             infiniteBlockLocations.stream().forEach(loc -> {
-                                sender.sendMessage("" + ChatColor.GOLD + loc.getBlock().getType() + " @ " + loc.pretyPrint());
+                                sender.sendMessage("" + ChatColor.GOLD + loc.getBlock().getType() + " @ " + loc.prettyPrint());
                                 i.addAndGet(1);
                             });
                         } else {
@@ -223,7 +240,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                                 //@formatter:off
                                 new FancyMessage(loc.getBlock().getType() + " @ ")
                                             .color(ChatColor.GOLD)
-                                        .then(loc.pretyPrint() +" [klick]")
+                                        .then(loc.prettyPrint() + " [klick]")
                                             .color(ChatColor.YELLOW)
                                             .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
                                             .command(loc.toTpCommand(null))
@@ -250,23 +267,6 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
             } else {
                 return blk;
             }
-        }
-    }
-
-    private boolean canBeMadeInfinite(Material material) {
-        switch (material) {
-            case ANVIL:
-            case BEACON:
-            case BREWING_STAND:
-            case CHEST:
-            case DISPENSER:
-            case DROPPER:
-            case FURNACE:
-            case BURNING_FURNACE:
-            case HOPPER:
-                return true;
-            default:
-                return false;
         }
     }
 
