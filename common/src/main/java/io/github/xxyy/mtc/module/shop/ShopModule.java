@@ -40,7 +40,7 @@ public class ShopModule extends ConfigurableMTCModule {
     @Override
     public boolean canBeEnabled(MTC plugin) {
         if (!plugin.getVaultHook().isEconomyHooked()) { //this also checks if Vault is installed at all
-            getPlugin().getLogger().info("ShopModule requires Vault and a running economy provider, skipping.");
+            plugin.getLogger().info("ShopModule requires Vault and a running economy provider, skipping.");
             return false;
         }
         return super.canBeEnabled(plugin);
