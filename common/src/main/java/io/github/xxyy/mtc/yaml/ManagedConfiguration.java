@@ -8,22 +8,16 @@
 package io.github.xxyy.mtc.yaml;
 
 import com.google.common.base.Charsets;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.misc.CacheHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.misc.CacheHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -267,5 +261,9 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
 
     public void setSaveHandler(Consumer<ManagedConfiguration> saveHandler) {
         this.saveHandler = saveHandler;
+    }
+
+    public File getFile() {
+        return file;
     }
 }
