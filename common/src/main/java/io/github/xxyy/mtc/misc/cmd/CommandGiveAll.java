@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
-import io.github.xxyy.common.chat.ItemComponentBuilder;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.MTC;
@@ -20,7 +19,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import static net.md_5.bungee.api.ChatColor.*;
+import static net.md_5.bungee.api.ChatColor.BLUE;
+import static net.md_5.bungee.api.ChatColor.GOLD;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
 
@@ -84,24 +84,18 @@ public final class CommandGiveAll extends MTCCommandExecutor {
                 sender.sendMessage(MTC.chatPrefix + "Es sind keine Spieler online.");
                 return true;
             }
-            BaseComponent[] itemComponents = new ItemComponentBuilder(finalStack, getISString(finalStack)).create();
-            XyComponentBuilder componentBuilder =
-                    new XyComponentBuilder("[").color(GOLD).append("MTS", BLUE).append("] ", GOLD)
+            BaseComponent[] components =
+                    new XyComponentBuilder("[").color(GOLD).tooltip("§6Edler Spender:", "§7" + senderName)
+                            .append("MTS", BLUE).append("] ", GOLD)
                             .append("Alle Spieler haben ", GOLD)
-                            .append(itemComponents, BLUE)
-                            .append(" erhalten!", GOLD);
-            BaseComponent[] userComponents = componentBuilder.create();
-            BaseComponent[] adminComponents = componentBuilder.append(" [Info]", GRAY, UNDERLINE)
-                    .tooltip("§6Edler Spender:", "§7" + senderName)
-                    .create();
+                            .append(getISString(finalStack), BLUE)
+                            .append(" erhalten!", GOLD).create();
 
             for (Player plr : Bukkit.getOnlinePlayers()) {
-                plr.getInventory().addItem(finalStack.clone());
-                if(plr.hasPermission("mtc.ignore")) {
-                    plr.spigot().sendMessage(adminComponents);
-                } else {
-                    plr.spigot().sendMessage(userComponents);
+                if (!plr.hasPermission("mtc.giveall.noitems")) {
+                    plr.getInventory().addItem(finalStack.clone());
                 }
+                plr.spigot().sendMessage(components);
             }
         } else {
             return CommandGiveAll.printHelpTo(sender);
