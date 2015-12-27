@@ -25,15 +25,13 @@ public final class AntiFreeCamListener implements Listener {
     @EventHandler
     public void onInvOpenFreeCam(InventoryOpenEvent e) {
         HumanEntity he = e.getPlayer();
-        List<Block> lineOfSight = he.getLineOfSight((Set<Material>) null, 50); //perfectionists!
+        if (!(he instanceof Player) || he.hasPermission("mtc.ignore")) {
+            return;
+        }
+        List<Block> lineOfSight = he.getLineOfSight((Set<Material>) null, 8); //perfectionists!
         for (Block aLineOfSight : lineOfSight) {
             if (aLineOfSight.getType() == Material.BEDROCK) {
-                Player plr = (Player) e.getPlayer(); //Bukkit.getPlayerExact(e.getPlayer().getName()); TODO Find out wtf this was for
-                if (plr == null) {
-                    e.setCancelled(true);
-                    return;
-                }
-                plr.sendMessage(MTC.chatPrefix + "Wie kannst du eine Kiste öffnen, die hinter Bedrock ist?!");
+                he.sendMessage(MTC.chatPrefix + "Wie kannst du eine Kiste öffnen, die hinter Bedrock ist?!");
                 e.setCancelled(true);
                 return;
             }
