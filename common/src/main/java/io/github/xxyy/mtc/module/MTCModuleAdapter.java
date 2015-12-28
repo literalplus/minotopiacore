@@ -73,8 +73,8 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public boolean isEnabled() {
-        return plugin == null || plugin.getModuleManager().isEnabled(this);
+    public final boolean isEnabled() {
+        return plugin == null || (plugin.isEnabled() && plugin.getModuleManager().isEnabled(this));
     }
 
     @Override
