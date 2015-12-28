@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.misc.CacheHelper;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents a MTC module.
@@ -41,6 +42,11 @@ public interface MTCModule extends CacheHelper.Cache {
     void reload(MTC plugin);
 
     /**
+     * @return whether this module is currently enabled
+     */
+    boolean isEnabled();
+
+    /**
      * @return a hopefully unique and definitely static name describing this module
      */
     String getName();
@@ -54,4 +60,9 @@ public interface MTCModule extends CacheHelper.Cache {
      * @see ModuleManager#isEnabled(MTCModule)
      */
     boolean canBeEnabled(MTC plugin);
+
+    /**
+     * @return the plugin associated with this module
+     */
+    JavaPlugin getPlugin();
 }
