@@ -8,7 +8,7 @@
 package io.github.xxyy.mtc.logging;
 
 import io.github.xxyy.lib.guava17.base.Preconditions;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.spi.LoggerContext;
 import org.bukkit.Bukkit;
@@ -42,7 +42,7 @@ import java.nio.file.StandardCopyOption;
  */
 public class LogManager {
     private static LoggerContext context;
-    private static MTC plugin;
+    private static MTCPlugin plugin;
 
     private LogManager() {
 
@@ -75,11 +75,11 @@ public class LogManager {
     /**
      * Sets the plugin used by the log manager. Once set, it cannot be re-set.
      *
-     * @param mtc the plugin to use
+     * @param mtcPlugin the plugin to use
      */
-    public static void setPlugin(MTC mtc) {
-        Preconditions.checkState(plugin == null || mtc == null || mtc == plugin, "Cannot re-set singleton plugin!");
-        plugin = mtc;
+    public static void setPlugin(MTCPlugin mtcPlugin) {
+        Preconditions.checkState(plugin == null || mtcPlugin == null || mtcPlugin == plugin, "Cannot re-set singleton plugin!");
+        plugin = mtcPlugin;
     }
 
     /**

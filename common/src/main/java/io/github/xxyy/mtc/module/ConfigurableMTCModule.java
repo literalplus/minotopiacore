@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 
@@ -64,7 +65,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     }
 
     @Override
-    public void reload(MTC plugin) {
+    public void reload(MTCPlugin plugin) {
         reloadConfig();
     }
 

@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
@@ -182,7 +183,7 @@ public class ModuleLoaderTest {
         }
 
         @Override
-        public void disable(MTC plugin) {
+        public void disable(MTCPlugin plugin) {
             throw new NullPointerException("random exception in disable");
         }
     }

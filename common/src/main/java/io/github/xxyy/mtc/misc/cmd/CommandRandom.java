@@ -7,24 +7,23 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
 public final class CommandRandom extends MTCCommandExecutor {
 
-    private final MTC plugin;
+    private final MTCPlugin plugin;
 
-    public CommandRandom(MTC plugin) {
+    public CommandRandom(MTCPlugin plugin) {
         this.plugin = plugin;
     }
 

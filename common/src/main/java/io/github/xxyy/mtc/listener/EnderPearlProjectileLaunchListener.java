@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.common.localisation.LangHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -17,18 +20,24 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
-import io.github.xxyy.common.localisation.LangHelper;
-import io.github.xxyy.mtc.MTC;
-
 import java.util.List;
 import java.util.Set;
 
 public final class EnderPearlProjectileLaunchListener implements Listener {
 
-    private final MTC plugin;
+    private final MTCPlugin plugin;
 
-    public EnderPearlProjectileLaunchListener(MTC plugin) {
+    public EnderPearlProjectileLaunchListener(MTCPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    private static void returnPearl(Player plr) {
+        if (plr.getItemInHand().getType() != Material.ENDER_PEARL) {
+            return;
+        }
+        ItemStack is = plr.getItemInHand();
+        is.setAmount(plr.getItemInHand().getAmount() + 1);
+        plr.setItemInHand(is);
     }
 
     @EventHandler
@@ -58,14 +67,5 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
                 return;
             }
         }
-    }
-
-    private static void returnPearl(Player plr) {
-        if (plr.getItemInHand().getType() != Material.ENDER_PEARL) {
-            return;
-        }
-        ItemStack is = plr.getItemInHand();
-        is.setAmount(plr.getItemInHand().getAmount() + 1);
-        plr.setItemInHand(is);
     }
 }

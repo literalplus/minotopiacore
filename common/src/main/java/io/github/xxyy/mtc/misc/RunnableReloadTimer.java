@@ -7,14 +7,14 @@
 
 package io.github.xxyy.mtc.misc;
 
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.misc.cmd.CommandBReload;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.misc.cmd.CommandBReload;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,12 +26,21 @@ public final class RunnableReloadTimer implements Runnable {
     public static Iterator<Integer> iSeconds;
     public static List<Long> delays;
     public static Iterator<Long> iDelays;
+    private final MTCPlugin plugin;
     public CommandSender sender = null;
-    private final MTC plugin;
 
-    public RunnableReloadTimer(CommandSender sender, MTC plugin) {
+    public RunnableReloadTimer(CommandSender sender, MTCPlugin plugin) {
         this.sender = sender;
         this.plugin = plugin;
+    }
+
+    private static String getFormattedTime(int seconds) {
+        if (seconds < 60) {
+            return "§l" + seconds + " §dSekunde" + ((seconds == 1) ? "" : "n");
+        }
+        int minutes = (seconds / 60);
+        seconds = seconds - (60 * minutes);
+        return minutes + " Minute" + ((minutes == 1) ? "" : "n") + ((seconds == 0) ? "" : " und " + seconds + " Sekunde" + ((seconds == 1) ? "" : "n"));
     }
 
     @Override
@@ -76,14 +85,5 @@ public final class RunnableReloadTimer implements Runnable {
             }
             plr.closeInventory();
         }
-    }
-
-    private static String getFormattedTime(int seconds) {
-        if (seconds < 60) {
-            return "§l" + seconds + " §dSekunde" + ((seconds == 1) ? "" : "n");
-        }
-        int minutes = (seconds / 60);
-        seconds = seconds - (60 * minutes);
-        return minutes + " Minute" + ((minutes == 1) ? "" : "n") + ((seconds == 0) ? "" : " und " + seconds + " Sekunde" + ((seconds == 1) ? "" : "n"));
     }
 }

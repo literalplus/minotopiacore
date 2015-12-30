@@ -8,20 +8,15 @@
 package io.github.xxyy.mtc.module;
 
 import com.google.common.collect.ImmutableList;
-
 import io.github.xxyy.common.util.PredicateHelper;
 import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -82,14 +77,14 @@ class ModuleLoader {
     /**
      * Changes a module's enable state. If the module is being enabled, it will be injected into other modules that
      * depend on it and also its dependencies will be instantiated, if possible. If it is being disabled, all
-     * injections are undone. {@link MTCModule#canBeEnabled(MTC)} is respected.
+     * injections are undone. {@link MTCModule#canBeEnabled(MTCPlugin)} is respected.
      *
      * @param module  the module to enable
      * @param enabled the new enable state
      * @return a list of MTC modules whose states have changed as result of this method call
      * @throws IllegalArgumentException if a module not managed by this loader is passed
      * @throws IllegalArgumentException if the module is not ready to be enabled according to
-     *                                  {@link MTCModule#canBeEnabled(MTC)}
+     *                                  {@link MTCModule#canBeEnabled(MTCPlugin)}
      * @throws IllegalStateException    if dependency injection fails
      */
     public List<MTCModule> setEnabled(@NotNull MTCModule module, boolean enabled) {

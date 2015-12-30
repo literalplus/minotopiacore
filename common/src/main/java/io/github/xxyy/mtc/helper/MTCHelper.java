@@ -7,6 +7,14 @@
 
 package io.github.xxyy.mtc.helper;
 
+import io.github.xxyy.common.localisation.LangHelper;
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.ToShortStringable;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.clan.ui.ClanHelpManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,20 +23,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.localisation.LangHelper;
-import io.github.xxyy.common.misc.HelpManager;
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.ToShortStringable;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.ui.ClanHelpManager;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class MTCHelper { //FIXME wtf is this
@@ -266,7 +261,7 @@ public class MTCHelper { //FIXME wtf is this
      * @return boolean
      * @see #isEnabled(String)
      */
-    public static boolean isEnabledAndMsg(String path, CommandSender sender, MTC instance) {
+    public static boolean isEnabledAndMsg(String path, CommandSender sender, MTCPlugin instance) {
         boolean value = instance.getConfig().getBoolean("enable" + path);
 
         if (!value) {

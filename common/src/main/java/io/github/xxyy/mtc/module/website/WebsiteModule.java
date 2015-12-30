@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.website;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.entity.Player;
@@ -69,7 +70,7 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     }
 
     @Override
-    public void disable(MTC plugin) {
+    public void disable(MTCPlugin plugin) {
         HandlerList.unregisterAll(listener); //We'll get some reload functionality working for modules eventually
 
         playerJoinTimes.keySet().forEach(this::saveTimePlayed);

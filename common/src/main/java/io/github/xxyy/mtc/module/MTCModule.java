@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,14 +33,14 @@ public interface MTCModule extends CacheHelper.Cache {
      *
      * @param plugin the plugin managing your module, again
      */
-    void disable(MTC plugin);
+    void disable(MTCPlugin plugin);
 
     /**
      * Reloads this module's configurations and related facilities.
      *
      * @param plugin the plugin issuing the reload
      */
-    void reload(MTC plugin);
+    void reload(MTCPlugin plugin);
 
     /**
      * @return whether this module is currently enabled

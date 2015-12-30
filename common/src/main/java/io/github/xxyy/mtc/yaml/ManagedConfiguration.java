@@ -8,7 +8,7 @@
 package io.github.xxyy.mtc.yaml;
 
 import com.google.common.base.Charsets;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import org.apache.commons.lang.Validate;
@@ -95,7 +95,7 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
      * @return Resulting configuration
      * @throws IllegalArgumentException Thrown if file is null or it didn't exist and couldn't be created
      */
-    public static ManagedConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, MTC plugin) {
+    public static ManagedConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, MTCPlugin plugin) {
         File file = new File(plugin.getDataFolder(), filePath);
         return fromFile(file, behaviour);
     }
@@ -208,7 +208,7 @@ public class ManagedConfiguration extends YamlConfiguration implements CacheHelp
     }
 
     @Override
-    public void clearCache(boolean forced, MTC plugin) {
+    public void clearCache(boolean forced, MTCPlugin plugin) {
         switch (clearCacheBehaviour) {
             case RELOAD:
                 tryLoad();

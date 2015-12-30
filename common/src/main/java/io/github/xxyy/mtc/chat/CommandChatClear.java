@@ -7,22 +7,21 @@
 
 package io.github.xxyy.mtc.chat;
 
+import io.github.xxyy.common.localisation.LangHelper;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import io.github.xxyy.common.localisation.LangHelper;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-
 
 public final class CommandChatClear implements CommandExecutor { //REFACTOR
 
-    private final MTC plugin;
+    private final MTCPlugin plugin;
 
-    public CommandChatClear(MTC plugin) {
+    public CommandChatClear(MTCPlugin plugin) {
         this.plugin = plugin;
     }
 

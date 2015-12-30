@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 
 /**
  * Abstract base class for MTC modules. Note when implementing that the Reflection-based loading facility expects your
@@ -48,17 +49,17 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public void disable(MTC plugin) {
+    public void disable(MTCPlugin plugin) {
 
     }
 
     @Override
-    public void clearCache(boolean forced, MTC plugin) {
+    public void clearCache(boolean forced, MTCPlugin plugin) {
 
     }
 
     @Override
-    public void reload(MTC plugin) {
+    public void reload(MTCPlugin plugin) {
 
     }
 

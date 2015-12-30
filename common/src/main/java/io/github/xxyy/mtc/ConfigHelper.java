@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc;
 
 import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -211,7 +212,7 @@ public class ConfigHelper {
         ConfigHelper.brewStackCheckpoints = brewStackCheckpoints;
     }
 
-    protected static void onConfigReload(MTC plugin) {
+    protected static void onConfigReload(MTCPlugin plugin) {
         ConfigHelper.initClassProperties(plugin.getConfig());
     }
 

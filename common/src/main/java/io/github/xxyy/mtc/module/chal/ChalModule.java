@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.chal;
 import io.github.xxyy.lib.guava17.collect.ListMultimap;
 import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
@@ -63,7 +64,7 @@ public class ChalModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void disable(MTC plugin) {
+    public void disable(MTCPlugin plugin) {
         super.disable(plugin);
 
         locations.stream()

@@ -7,6 +7,12 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.clan.InvitationInfo;
+import io.github.xxyy.mtc.helper.LaterMessageHelper;
+import io.github.xxyy.mtc.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,20 +22,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.InvitationInfo;
-import io.github.xxyy.mtc.helper.LaterMessageHelper;
-import io.github.xxyy.mtc.helper.StatsHelper;
-
 import java.util.Iterator;
 import java.util.UUID;
 
 public final class MainJoinListener implements Listener {
     //TODO merge in BanJoinListener
-    private final MTC plugin;
+    private final MTCPlugin plugin;
 
-    public MainJoinListener(MTC plugin) {
+    public MainJoinListener(MTCPlugin plugin) {
         this.plugin = plugin;
     }
 

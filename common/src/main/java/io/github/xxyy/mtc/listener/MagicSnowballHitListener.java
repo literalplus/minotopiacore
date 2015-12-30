@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -20,10 +23,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,10 +30,10 @@ import java.util.Random;
 
 public final class MagicSnowballHitListener implements Listener {
 
+    private final MTCPlugin plugin;
     protected List<String> deniedPlayers = new ArrayList<>();
-    private final MTC plugin;
 
-    public MagicSnowballHitListener(MTC plugin) {
+    public MagicSnowballHitListener(MTCPlugin plugin) {
         this.plugin = plugin;
     }
 

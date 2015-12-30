@@ -14,6 +14,7 @@ import io.github.xxyy.common.sql.SqlConnectable;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.PlayerGameManager;
 import io.github.xxyy.mtc.chat.*;
 import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
@@ -49,7 +50,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
-public class MTC extends SqlXyPlugin implements XyLocalizable {
+public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
     public static SqlConsts2 tMconsts; //TODO

@@ -7,7 +7,7 @@
 
 package io.github.xxyy.mtc.misc;
 
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 
 import java.util.Collections;
 import java.util.Set;
@@ -21,11 +21,11 @@ import java.util.WeakHashMap;
  * @see ClearCacheEvent
  */
 public final class CacheHelper {
+    private static Set<Cache> caches = Collections.newSetFromMap(new WeakHashMap<>());
+
     private CacheHelper() {
 
     }
-
-    private static Set<Cache> caches = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static void registerCache(Cache cache) {
         caches.add(cache);
@@ -35,12 +35,12 @@ public final class CacheHelper {
         return caches.remove(cache);
     }
 
-    public static void clearCaches(boolean forced, MTC plugin) {
+    public static void clearCaches(boolean forced, MTCPlugin plugin) {
         caches.stream().forEach(c -> c.clearCache(forced, plugin));
     }
 
     public interface Cache {
-        default void clearCache(boolean forced, MTC plugin) {
+        default void clearCache(boolean forced, MTCPlugin plugin) {
 
         }
     }
