@@ -36,6 +36,7 @@ public class AliasShopAdminAction extends AbstractShopAction {
                     return;
                 }
                 item.getAliases().add(split[1]);
+                module.getItemConfig().asyncSave(module.getPlugin());
                 plr.sendMessage("§aItem §6" + item.getDisplayName() + "$a wurde Alias §6" + split[1] + "§a hinzugefügt.");
                 break;
             }
@@ -45,6 +46,7 @@ public class AliasShopAdminAction extends AbstractShopAction {
                     return;
                 }
                 item.getAliases().remove(split[1]);
+                module.getItemConfig().asyncSave(module.getPlugin());
                 plr.sendMessage("§aItem §6" + item.getDisplayName() + "$a wurde Alias §6" + split[1] + "§a entfernt.");
                 break;
             }

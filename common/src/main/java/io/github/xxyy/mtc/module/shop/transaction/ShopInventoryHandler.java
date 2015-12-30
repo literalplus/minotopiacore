@@ -9,7 +9,7 @@ import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles interaction with players' inventories in transactions.
@@ -32,7 +32,7 @@ public class ShopInventoryHandler implements TransactionHandler {
 
     private TransactionInfo executeBuy(Player plr, ShopItem item, int amount) {
         ItemStack stack = item.toItemStack(amount);
-        HashMap<Integer, ItemStack> unstored = plr.getInventory().addItem(stack);
+        Map<Integer, ItemStack> unstored = plr.getInventory().addItem(stack);
         if (!unstored.isEmpty()) { //We did not store everything
             int alreadyStored = amount - unstored.values().stream() //Find out how many we already stored, since the
                     .mapToInt(ItemStack::getAmount)                 // amount may exceed the max stack size and Bukkit
@@ -44,7 +44,7 @@ public class ShopInventoryHandler implements TransactionHandler {
             } //back at the start now
             return new FailedTransactionInfo("Du brauchst für " +
                     ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
-                    (int) Math.ceil((amount / 64)) + " freie Slots in deinem Inventar!");
+                    (int) Math.ceil(((double) amount) / 64D) + " freie Slots in deinem Inventar!");
         }
         return new RevokableTransactionInfo(() -> plr.getInventory().removeItem(stack));
     }
@@ -56,7 +56,7 @@ public class ShopInventoryHandler implements TransactionHandler {
                     ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
                     " in deinem Inventar!");
         }
-        HashMap<Integer, ItemStack> unretrieved = plr.getInventory().removeItem(stack);
+        Map<Integer, ItemStack> unretrieved = plr.getInventory().removeItem(stack);
         if (!unretrieved.isEmpty()) {
             int alreadyRetrieved = amount - unretrieved.values().stream()
                     .mapToInt(ItemStack::getAmount)
