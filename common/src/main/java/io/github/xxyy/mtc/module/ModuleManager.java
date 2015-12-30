@@ -12,8 +12,12 @@ import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.command.CommandBehaviour;
+import io.github.xxyy.mtc.api.command.CommandRegistrationManager;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.command.MTCModuleCommand;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.Plugin;
 import org.reflections.Reflections;
 
@@ -36,6 +40,7 @@ public class ModuleManager {
     private final MTC plugin;
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
+    private final CommandRegistrationManager commandRegistrationManager = new CommandRegistrationManager();
     private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
     private final ManagedConfiguration enabledModulesConfig;
 
@@ -184,6 +189,29 @@ public class ModuleManager {
 
         enabledModulesConfig.addDefault(path, def);
         return enabledModulesConfig.getBoolean(path);
+    }
+
+    /**
+     * Registers a command managed by a MTC module with the corresponding server's command map.
+     *
+     * @param module   the module to register the command for
+     * @param executor the executor for the command
+     * @param name     the name of the command, used to invoke it
+     * @param aliases  alias names of the command that can be used alternatively
+     * @return the created command, for modification and adding of {@link CommandBehaviour}s.
+     */
+    public MTCModuleCommand registerModuleCommand(MTCModule module, CommandExecutor executor, String name,
+                                                  String... aliases) {
+        Preconditions.checkNotNull(module, "module");
+        Preconditions.checkNotNull(executor, "executor");
+        Preconditions.checkNotNull(name, "name");
+        Preconditions.checkNotNull(aliases, "aliases");
+
+        MTCModuleCommand command = new MTCModuleCommand(module, name, executor, aliases);
+
+        commandRegistrationManager.registerCommand(command);
+
+        return command;
     }
 
     void registerEnabled(MTCModule module, boolean enabled) {

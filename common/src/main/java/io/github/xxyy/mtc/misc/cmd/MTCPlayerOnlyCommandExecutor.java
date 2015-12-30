@@ -8,7 +8,6 @@
 package io.github.xxyy.mtc.misc.cmd;
 
 import io.github.xxyy.common.util.CommandHelper;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,9 +15,6 @@ import org.bukkit.entity.Player;
 
 public abstract class MTCPlayerOnlyCommandExecutor extends MTCCommandExecutor
 {
-    /**
-     * DO NOT OVERRIDE
-     */
     @Override
     public final boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args)
     {
