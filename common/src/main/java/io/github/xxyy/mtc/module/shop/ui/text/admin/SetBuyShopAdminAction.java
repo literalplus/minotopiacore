@@ -14,7 +14,7 @@ public class SetBuyShopAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
     protected SetBuyShopAdminAction(ShopModule module) {
-        super("shopadmin", "buyset", 2, null);
+        super("shopadmin", "setbuy", 2, null);
         this.module = module;
     }
 

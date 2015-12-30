@@ -79,6 +79,10 @@ commands:
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
   shop:
-    description: Adnmin shop module for MTC
+    description: Shop module text ui
     usage: "/<command> help"
     aliases: [xshop]
+  shopadmin:
+    description: Shop module admin text ui
+    usage: "/<command> help"
+    aliases: [sa, xshopadmin]
