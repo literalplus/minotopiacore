@@ -9,6 +9,9 @@ package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.module.MTCModule;
+import io.github.xxyy.mtc.api.module.ModuleCommand;
+import org.bukkit.command.CommandExecutor;
 
 /**
  * Abstract base class for MTC modules. Note when implementing that the Reflection-based loading facility expects your
@@ -44,8 +47,8 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
-        this.plugin = plugin;
+    public void enable(MTCPlugin plugin) throws Exception {
+        this.plugin = (MTC) plugin; //FIXME: This needs to be removed once we have moved required APIs over
     }
 
     @Override
@@ -64,7 +67,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
-    public boolean canBeEnabled(MTC plugin) {
+    public boolean canBeEnabled(MTCPlugin plugin) {
         return plugin.getModuleManager().shouldLoad(this, enabledByDefault);
     }
 
@@ -81,5 +84,18 @@ public abstract class MTCModuleAdapter implements MTCModule {
     @Override
     public MTC getPlugin() {
         return plugin;
+    }
+
+    /**
+     * Registers a command managed by this module with the corresponding server.
+     *
+     * @param executor the executor for the command
+     * @param name     the name used to invoke the command, excluding '/'
+     * @param aliases  the aliases alternatively used to access the command
+     * @return the registered command
+     * @see io.github.xxyy.mtc.api.module.ModuleManager#registerModuleCommand(MTCModule, CommandExecutor, String, String...)
+     */
+    protected ModuleCommand registerCommand(CommandExecutor executor, String name, String... aliases) {
+        return plugin.getModuleManager().registerModuleCommand(this, executor, name, aliases);
     }
 }

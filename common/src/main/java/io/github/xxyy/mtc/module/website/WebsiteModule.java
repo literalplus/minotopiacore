@@ -7,8 +7,8 @@
 
 package io.github.xxyy.mtc.module.website;
 
-import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.entity.Player;
@@ -48,12 +48,13 @@ public final class WebsiteModule extends ConfigurableMTCModule implements Listen
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
         listener = new WebsiteListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
-        plugin.getCommand("website").setExecutor(new CommandWebsite(this));
+        registerCommand(new CommandWebsite(this), "website", "hp")
+                .behaviour(CommandBehaviours.playerOnly());
 
         plugin.getServer().getOnlinePlayers().forEach(p -> {
             registerJoinTime(p);

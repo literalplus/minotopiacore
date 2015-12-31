@@ -36,11 +36,6 @@ class CommandRepeat implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission(RepeaterModule.ADMIN_PERMISSION)) {
-            sender.sendMessage("§cSorry no ur not AUTHORIZE!!!!");
-            return true;
-        }
-
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "list":

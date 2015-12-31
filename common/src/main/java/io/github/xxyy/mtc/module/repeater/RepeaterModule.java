@@ -6,7 +6,8 @@
  */
 package io.github.xxyy.mtc.module.repeater;
 
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -34,10 +35,11 @@ public class RepeaterModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        plugin.getCommand("repeat").setExecutor(new CommandRepeat(this));
+        registerCommand(new CommandRepeat(this), "repeat", "rpt")
+                .behaviour(CommandBehaviours.permissionChecking(RepeaterModule.ADMIN_PERMISSION));
         plugin.getServer().getScheduler().runTaskTimer(plugin, new RepeaterTask(this), 5 * SECONDS_PER_TICK * 20L, SECONDS_PER_TICK * 20L);
     }
 

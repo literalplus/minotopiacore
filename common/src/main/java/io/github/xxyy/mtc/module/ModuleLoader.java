@@ -13,6 +13,7 @@ import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.module.MTCModule;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -27,11 +28,11 @@ import java.util.stream.Collectors;
  * @since 18/06/15
  */
 class ModuleLoader {
-    private final ModuleManager manager;
+    private final MTCModuleManager manager;
 
     private final Set<MTCModuleRuntimeMeta<?>> moduleMetas = new HashSet<>(); //not necessarily initialised
 
-    ModuleLoader(ModuleManager manager) {
+    ModuleLoader(MTCModuleManager manager) {
         this.manager = manager;
     }
 

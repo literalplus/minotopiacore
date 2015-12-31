@@ -7,15 +7,15 @@
 
 package io.github.xxyy.mtc.module.website;
 
+import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.common.util.math.NumberHelper;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.common.util.math.NumberHelper;
-import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +30,7 @@ import java.util.UUID;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 11/10/14
  */
-public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
+public class CommandWebsite implements CommandExecutor {
     private final WebsiteModule module;
     //Player UUIDs to confirmation codes used for /hp (de)?activate
     private final Map<UUID, String> playerCodes = new HashMap<>();
@@ -39,8 +39,11 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
         this.module = module;
     }
 
+
     @Override
-    public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player plr = (Player) sender;
+
         if (args.length > 0 && !args[0].equalsIgnoreCase("help")) {
             switch (args[0].toLowerCase()) {
                 case "aktivieren":
@@ -63,8 +66,7 @@ public class CommandWebsite extends MTCPlayerOnlyCommandExecutor {
             }
         }
 
-        //This is where a help listing would be if this command were more advanced.
-
+        plr.sendMessage("§c/<command> [aktivieren|pw|deaktivieren]");
         return false;
     }
 

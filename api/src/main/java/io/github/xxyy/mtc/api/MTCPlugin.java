@@ -1,6 +1,7 @@
 package io.github.xxyy.mtc.api;
 
 import io.github.xxyy.common.xyplugin.XyPluggable;
+import io.github.xxyy.mtc.api.module.ModuleManager;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -11,4 +12,8 @@ import org.bukkit.plugin.Plugin;
  */
 public interface MTCPlugin extends Plugin, XyPluggable {
 
+    /**
+     * @return the module manager used by this plugin
+     */
+    ModuleManager getModuleManager();
 }

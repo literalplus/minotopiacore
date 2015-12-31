@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.yaml;
 
 import com.google.common.base.Charsets;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.misc.Cache;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import org.apache.commons.lang.Validate;
@@ -30,7 +31,7 @@ import java.util.logging.Level;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19/01/15
  */
-public class ManagedConfiguration extends YamlConfiguration implements CacheHelper.Cache {
+public class ManagedConfiguration extends YamlConfiguration implements Cache {
     private static final Consumer<ManagedConfiguration> NOOP_CONSUMER = (mc) -> {
     }; //formatter puts this on the next line and I can't really blame it tbh
     private final File file;

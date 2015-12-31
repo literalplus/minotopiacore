@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.misc.cmd;
 import io.github.xxyy.common.cmd.XYCCommandExecutor;
 import io.github.xxyy.mtc.api.command.CommandBehaviour;
 import io.github.xxyy.mtc.api.command.CommandBehaviours;
+import io.github.xxyy.mtc.api.misc.Cache;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.module.command.MTCBehaviours;
 import org.bukkit.command.Command;
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @author xxyy
  */
-public abstract class MTCCommandExecutor extends XYCCommandExecutor implements CacheHelper.Cache {
+public abstract class MTCCommandExecutor extends XYCCommandExecutor implements Cache {
     private final List<CommandBehaviour> behaviours = new ArrayList<>(Arrays.asList(
             MTCBehaviours.messagesChecking(), MTCBehaviours.mtcCrediting()
     ));

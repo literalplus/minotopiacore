@@ -8,8 +8,8 @@
 package io.github.xxyy.mtc.module.infbl;
 
 import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
@@ -58,11 +58,12 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getCommand("infiniteblocks").setExecutor(new CommandHandler());
+        registerCommand(new CommandHandler(), "infiniteblocks", "infdisp", "infb")
+                .behaviour(CommandBehaviours.permissionChecking(INFINITE_PERMISSION));
     }
 
     @SuppressWarnings("unchecked")
@@ -202,9 +203,6 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         @Override
         @SuppressWarnings("ConstantConditions")
         public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-            if (!CommandHelper.checkPermAndMsg(sender, INFINITE_PERMISSION, label)) {
-                return true;
-            }
             if (args.length > 0) {
                 if (!(sender instanceof Player) && !args[0].equalsIgnoreCase("list")) {
                     sender.sendMessage("§cNur Spieler können andere Befehle als /" + label + " list verwenden!");

@@ -78,31 +78,7 @@ commands:
     description: "Schliesse Frieden mit deinen allerbesten Freunden! <3"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [nichtangriffspakt, peace, fr, friede]
-  infiniteblocks:
-    description: "Mache Dispenser unendlich, Ambosse unkaputtbar bzw Truhen unantastbar!!11!"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [infb, infdisp]
   random:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
-  wahrfalsch:
-    description: "WahrFalsch Event Minigame"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [wf, tf, truefalse, dummefragen]
-  website:
-    description: "Verwaltet deinen Websiteaccount"
-    usage: "/<command> [aktivieren|pw|deaktivieren]"
-    aliases: [hp]
-  quiz:
-    description: "such quiz. many quest. such difficult. wow."
-    usage: "/<command> help"
-    aliases: [qz]
-  repeat:
-    description: Repeats messages. Advance.
-    usage: "/<command> help"
-    aliases: [rpt, blitzwiederholung]
-  chal:
-    description: Admin tools for the advent calendar module
-    usage: "/<command> help"
-    aliases: [adventskalender, letchestsbedoors]

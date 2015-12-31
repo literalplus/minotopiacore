@@ -7,7 +7,7 @@
 
 package io.github.xxyy.mtc.module.quiz;
 
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.ChatColor;
@@ -41,10 +41,10 @@ public class QuizModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        plugin.getCommand("quiz").setExecutor(new CommandQuiz(this));
+        registerCommand(new CommandQuiz(this), "quiz", "qz");
         plugin.getServer().getPluginManager().registerEvents(new EventListener(), plugin);
     }
 

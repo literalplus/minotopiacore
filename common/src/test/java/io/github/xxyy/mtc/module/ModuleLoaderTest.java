@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.module.MTCModule;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
@@ -33,14 +34,14 @@ import static org.mockito.Mockito.mock;
  * @since 18/06/15
  */
 public class ModuleLoaderTest {
-    private static ModuleManager moduleManager;
+    private static MTCModuleManager moduleManager;
     private static ModuleLoader loader;
     private static MTC mtc;
 
     @BeforeClass
     public static void initClass() {
         mtc = mock(MTC.class);
-        moduleManager = new ModuleManager(mtc, new File("./target/"));
+        moduleManager = new MTCModuleManager(mtc, new File("./target/"));
         loader = new ModuleLoader(moduleManager);
     }
 
@@ -116,7 +117,7 @@ public class ModuleLoaderTest {
         }
 
         @Override
-        public boolean canBeEnabled(MTC plugin) {
+        public boolean canBeEnabled(MTCPlugin plugin) {
             return true;
         }
     }
@@ -178,7 +179,7 @@ public class ModuleLoaderTest {
         }
 
         @Override
-        public void enable(MTC plugin) throws Exception {
+        public void enable(MTCPlugin plugin) throws Exception {
             throw new Exception("random exception in enable");
         }
 

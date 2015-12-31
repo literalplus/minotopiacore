@@ -16,6 +16,7 @@ import io.github.xxyy.common.version.PluginVersion;
 import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.PlayerGameManager;
+import io.github.xxyy.mtc.api.module.ModuleManager;
 import io.github.xxyy.mtc.chat.*;
 import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
@@ -37,7 +38,7 @@ import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
 import io.github.xxyy.mtc.misc.cmd.*;
-import io.github.xxyy.mtc.module.ModuleManager;
+import io.github.xxyy.mtc.module.MTCModuleManager;
 import me.minotopia.mitoscb.SBHelper;
 import me.minotopia.mitoscb.SqlConsts2;
 import org.apache.logging.log4j.Level;
@@ -72,7 +73,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
     private PlayerGameManager gameManager;
-    private ModuleManager moduleManager = new ModuleManager(this, this.getDataFolder());
+    private MTCModuleManager moduleManager = new MTCModuleManager(this, this.getDataFolder());
     private Logger logger;
 
     /**
@@ -430,6 +431,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         return gameManager;
     }
 
+    @Override
     public ModuleManager getModuleManager() {
         return moduleManager;
     }

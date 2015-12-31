@@ -5,11 +5,10 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package io.github.xxyy.mtc.module;
+package io.github.xxyy.mtc.api.module;
 
-import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
-import io.github.xxyy.mtc.misc.CacheHelper;
+import io.github.xxyy.mtc.api.misc.Cache;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -18,14 +17,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 22.8.14
  */
-public interface MTCModule extends CacheHelper.Cache {
+public interface MTCModule extends Cache {
     /**
      * Enables this module.
      *
      * @param plugin the plugin managing your module today
      * @throws Exception thrown if anything fails, meaning the module did not get enabled
      */
-    void enable(MTC plugin) throws Exception;
+    void enable(MTCPlugin plugin) throws Exception;
 
     /**
      * Disables this module. This does not allow exceptions since plugins should disable when asked and not be able to
@@ -60,7 +59,7 @@ public interface MTCModule extends CacheHelper.Cache {
      * @return whether this plugin wants to be enabled (modules have feelings, too)
      * @see ModuleManager#isEnabled(MTCModule)
      */
-    boolean canBeEnabled(MTC plugin);
+    boolean canBeEnabled(MTCPlugin plugin);
 
     /**
      * @return the plugin associated with this module

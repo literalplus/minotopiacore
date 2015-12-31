@@ -9,8 +9,8 @@ package io.github.xxyy.mtc.module.chal;
 
 import io.github.xxyy.lib.guava17.collect.ListMultimap;
 import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
-import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
@@ -55,10 +55,11 @@ public class ChalModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        plugin.getCommand("chal").setExecutor(new CommandChal(this));
+        registerCommand(new CommandChal(this), "chal", "adventskalender")
+                .behaviour(CommandBehaviours.permissionChecking(ChalModule.ADMIN_PERMISSION));
         plugin.getServer().getPluginManager().registerEvents(new EventListener(), plugin);
         plugin.getServer().getScheduler().runTaskTimer(plugin, this::save, 60 * 20L, 5 * 60 * 20L); //Don't wanna save every time somebody opens a chest
     }

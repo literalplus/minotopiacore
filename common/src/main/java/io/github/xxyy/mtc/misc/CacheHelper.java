@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.misc;
 
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.misc.Cache;
 
 import java.util.Collections;
 import java.util.Set;
@@ -39,9 +40,4 @@ public final class CacheHelper {
         caches.stream().forEach(c -> c.clearCache(forced, plugin));
     }
 
-    public interface Cache {
-        default void clearCache(boolean forced, MTCPlugin plugin) {
-
-        }
-    }
 }

@@ -9,7 +9,7 @@ package io.github.xxyy.mtc.module.truefalse;
 
 import com.google.common.base.Preconditions;
 import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.Material;
@@ -49,10 +49,10 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        plugin.getCommand("wahrfalsch").setExecutor(new CommandTrueFalse(this));
+        registerCommand(new CommandTrueFalse(this), "wahrfalsch", "wf", "dummefragen");
     }
 
     @Override

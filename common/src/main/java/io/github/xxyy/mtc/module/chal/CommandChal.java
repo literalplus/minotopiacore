@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.module.chal;
 
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.UUIDHelper;
+import io.github.xxyy.mtc.hook.XLoginHook;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,19 +17,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.UUIDHelper;
-import io.github.xxyy.mtc.hook.XLoginHook;
-
 import java.util.List;
 import java.util.UUID;
 
-import static org.bukkit.ChatColor.BLUE;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.UNDERLINE;
-import static org.bukkit.ChatColor.YELLOW;
+import static org.bukkit.ChatColor.*;
 
 /**
  * Provides a text-based admin front-end to the Chal module.
@@ -43,11 +37,6 @@ class CommandChal implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission(ChalModule.ADMIN_PERMISSION)) {
-            sender.sendMessage("§cSorry no ur not AUTHORIZE!!!!");
-            return true;
-        }
-
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "list":

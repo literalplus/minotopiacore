@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import io.github.xxyy.lib.guava17.base.Preconditions;
+import io.github.xxyy.mtc.api.module.MTCModule;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -25,6 +26,10 @@ import java.util.stream.Stream;
  * @since 23/06/15
  */
 class MTCModuleRuntimeMeta<T extends MTCModule> {
+    static {
+        InjectionTarget.class.getName(); //Prevents a NoClassDefFoundError on disable if MTC jar is replaced
+    }
+
     private final Class<T> clazz;
     private final Set<InjectionTarget> injectionTargets = new HashSet<>();
     private final Map<MTCModuleRuntimeMeta<?>, Boolean> dependants = new HashMap<>();
@@ -32,10 +37,6 @@ class MTCModuleRuntimeMeta<T extends MTCModule> {
     private final Map<MTCModuleRuntimeMeta<?>, Boolean> dependencies = new HashMap<>();
     private T module;
     private boolean initialised = false;
-
-    static {
-        InjectionTarget.class.getName(); //Prevents a NoClassDefFoundError on disable if MTC jar is replaced
-    }
 
     public MTCModuleRuntimeMeta(Class<T> clazz) {
         this.clazz = clazz;

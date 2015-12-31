@@ -12,8 +12,10 @@ import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.api.command.CommandBehaviour;
 import io.github.xxyy.mtc.api.command.CommandRegistrationManager;
+import io.github.xxyy.mtc.api.module.MTCModule;
+import io.github.xxyy.mtc.api.module.ModuleCommand;
+import io.github.xxyy.mtc.api.module.ModuleManager;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.command.MTCModuleCommand;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
@@ -36,7 +38,7 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 18/06/15
  */
-public class ModuleManager {
+public class MTCModuleManager implements ModuleManager {
     private final MTC plugin;
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
@@ -50,7 +52,7 @@ public class ModuleManager {
      * @param plugin     the plugin to manage modules for
      * @param dataFolder the data folder where configuration can be stored
      */
-    public ModuleManager(MTC plugin, File dataFolder) {
+    public MTCModuleManager(MTC plugin, File dataFolder) {
         this.plugin = plugin;
         enabledModulesConfig = ManagedConfiguration.fromFile(
                 new File(dataFolder, "enabled_modules.yml"),
@@ -62,53 +64,31 @@ public class ModuleManager {
                 .header("Choose which modules to load. Note that modules may have dependencies.");
     }
 
-    /**
-     * @return a view of the set of currently enabled modules
-     */
+    @Override
     public Collection<MTCModule> getEnabledModules() {
         return ImmutableSet.copyOf(enabledModules.values());
     }
 
-    /**
-     * Checks whether a module instance is enabled currently.
-     *
-     * @param module the module to check
-     * @return whether that instance is enabled currently
-     */
+    @Override
     public boolean isEnabled(@NotNull MTCModule module) {
         Preconditions.checkNotNull(module, "module");
         return module.equals(enabledModules.get(module.getClass()));
     }
 
-    /**
-     * Checks whether a module instance is enabled currently.
-     *
-     * @param clazz the module to check
-     * @return whether that instance is enabled currently
-     */
+    @Override
     public boolean isEnabled(@NotNull Class<? extends MTCModule> clazz) {
         Preconditions.checkNotNull(clazz, "clazz");
         return getModule(clazz) != null;
     }
 
-    /**
-     * Retrieves a module instance by a name.
-     *
-     * @param moduleName the name to seek
-     * @return a module by that name or null if there is no such module
-     */
+    @Override
     public MTCModule getModule(String moduleName) {
         return enabledModules.values().stream()
                 .filter(m -> m.getName().equalsIgnoreCase(moduleName))
                 .findFirst().orElse(null);
     }
 
-    /**
-     * Retrieves a module instance by class.
-     *
-     * @param clazz the class to seek
-     * @return a module of that type or null if there is no such module
-     */
+    @Override
     public <T extends MTCModule> T getModule(Class<T> clazz) {
         //noinspection unchecked
         return (T) enabledModules.get(clazz);
@@ -125,12 +105,7 @@ public class ModuleManager {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Attempts to load MTC modules from a list of classes. If any error occurs, it will be logged to
-     * {@link Plugin#getLogger()}.
-     *
-     * @param moduleClasses the classes to be loaded
-     */
+    @Override
     public void load(List<Class<? extends MTCModule>> moduleClasses) {
         loader.loadAll(moduleClasses,
                 (meta, thrown) ->
@@ -150,15 +125,7 @@ public class ModuleManager {
         enabledModulesConfig.trySave();
     }
 
-    /**
-     * Changes a module's enable state. If the module is being enabled, it will be injected into other modules that
-     * depend on it and also its dependencies will be instantiated, if possible. If it is being disabled, all
-     * injections are undone. {@link MTCModule#canBeEnabled(MTC)} is respected.
-     *
-     * @param module  the module to enable
-     * @param enabled the new enable state
-     * @return a list of MTC modules whose states have changed as result of this method call or null if an error occurred
-     */
+    @Override
     @Nullable
     public List<MTCModule> setEnabled(MTCModule module, boolean enabled) {
         try {
@@ -170,13 +137,7 @@ public class ModuleManager {
         }
     }
 
-    /**
-     * Checks if a module should load according to the administrator's choice defined in a config file.
-     *
-     * @param module the module to check
-     * @param def    the default value if there is no choice defined
-     * @return whether given module should be loaded
-     */
+    @Override
     public boolean shouldLoad(MTCModule module, boolean def) {
         //TODO: Legacy conversion code - Remove after 2016-02-28
         String legacyPath = "enable." + module.getName();
@@ -191,17 +152,9 @@ public class ModuleManager {
         return enabledModulesConfig.getBoolean(path);
     }
 
-    /**
-     * Registers a command managed by a MTC module with the corresponding server's command map.
-     *
-     * @param module   the module to register the command for
-     * @param executor the executor for the command
-     * @param name     the name of the command, used to invoke it
-     * @param aliases  alias names of the command that can be used alternatively
-     * @return the created command, for modification and adding of {@link CommandBehaviour}s.
-     */
-    public MTCModuleCommand registerModuleCommand(MTCModule module, CommandExecutor executor, String name,
-                                                  String... aliases) {
+    @Override
+    public ModuleCommand registerModuleCommand(MTCModule module, CommandExecutor executor, String name,
+                                               String... aliases) {
         Preconditions.checkNotNull(module, "module");
         Preconditions.checkNotNull(executor, "executor");
         Preconditions.checkNotNull(name, "name");
@@ -228,9 +181,7 @@ public class ModuleManager {
         }
     }
 
-    /**
-     * @return the plugin this manager belongs to
-     */
+    @Override
     public MTC getPlugin() {
         return plugin;
     }
