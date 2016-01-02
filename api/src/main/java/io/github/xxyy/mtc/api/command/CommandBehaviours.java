@@ -62,7 +62,14 @@ public class CommandBehaviours {
      * @return the behaviour
      */
     public static CommandBehaviour playerOnly() {
-        return (sender, label, cmd, args) -> sender instanceof Player;
+        return (sender, label, cmd, args) -> {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("§cNur Spieler können diesen Befehl verwenden!");
+                return false;
+            } else {
+                return true;
+            }
+        };
     }
 
     private static boolean checkPermissionWithMessage(CommandSender sender, String permission) {
