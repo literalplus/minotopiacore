@@ -66,7 +66,7 @@ public class CommandWebsite implements CommandExecutor {
             }
         }
 
-        plr.sendMessage("§c/<command> [aktivieren|pw|deaktivieren]");
+        plr.sendMessage("§c/hp [aktivieren|pw|deaktivieren]");
         return true;
     }
 
