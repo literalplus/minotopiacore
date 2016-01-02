@@ -42,7 +42,7 @@ public class CommandRegistrationManager {
         Preconditions.checkArgument(this.server == null || server == this.server, "Server does not match manager's server!");
         if (commandMap == null) {
             try {
-                Field commandMapField = server.getClass().getField("commandMap");
+                Field commandMapField = server.getClass().getDeclaredField("commandMap");
                 commandMapField.setAccessible(true);
                 commandMap = (CommandMap) commandMapField.get(server);
             } catch (NoSuchFieldException | IllegalAccessException e) {
