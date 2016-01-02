@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,15 +7,13 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.common.misc.HelpManager;
 import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.LoreManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import io.github.xxyy.common.misc.HelpManager;
-
-import io.github.xxyy.mtc.misc.LoreManager;
 
 
 public final class CommandLore implements CommandExecutor{

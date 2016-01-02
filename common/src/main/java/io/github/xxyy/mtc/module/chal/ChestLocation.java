@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,17 +7,16 @@
 
 package io.github.xxyy.mtc.module.chal;
 
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.common.util.inventory.InventoryHelper;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.common.util.inventory.InventoryHelper;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.helper.MTCHelper;
 
 import java.time.LocalDate;
 import java.util.Arrays;

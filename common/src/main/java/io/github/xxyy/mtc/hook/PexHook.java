@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -8,9 +8,8 @@
 package io.github.xxyy.mtc.hook;
 
 import com.google.common.collect.ImmutableList;
-import org.bukkit.plugin.Plugin;
-
 import io.github.xxyy.mtc.hook.impl.PexHookImpl;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,14 +43,14 @@ public class PexHook extends SimpleHookWrapper {
         return unsafe != null && unsafe.isHooked();
     }
 
-    public static interface User {
+    public interface User {
         String getIdentifier();
         boolean hasUniqueId();
         UUID getUniqueId();
         String getName();
     }
 
-    public static interface Group {
+    public interface Group {
         String getName();
         String getPrefix();
         List<User> getUsers();

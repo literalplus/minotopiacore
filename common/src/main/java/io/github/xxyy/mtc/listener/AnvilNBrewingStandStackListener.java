@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.mtc.ConfigHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -16,8 +17,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-
-import io.github.xxyy.mtc.ConfigHelper;
 
 public class AnvilNBrewingStandStackListener implements Listener {
 

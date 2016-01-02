@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.listener;
 
+import io.github.xxyy.mtc.MTC;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Projectile;
@@ -15,8 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.projectiles.ProjectileSource;
-
-import io.github.xxyy.mtc.MTC;
 
 /**
  * This class listens for players throwing exp bottles at nether portals and actively prevents that behaviour, since

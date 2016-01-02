@@ -1,14 +1,11 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
 package io.github.xxyy.mtc.cron;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SpigotSql;
@@ -22,6 +19,8 @@ import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.mtc.helper.StatsHelper;
 import io.github.xxyy.mtc.misc.CacheHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,8 +36,8 @@ import java.util.Map;
 public class RunnableCronjob5Minutes implements Runnable {
     private static int fullInfoExCount = 0;
     private static byte cacheExCount = 0;
-    private boolean forced = false;
     private final MTC plugin;
+    private boolean forced = false;
 
     public RunnableCronjob5Minutes(boolean forced, MTC plugin) {
         this.forced = forced;

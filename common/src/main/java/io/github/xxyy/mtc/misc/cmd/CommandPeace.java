@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -24,6 +24,29 @@ import java.util.List;
 public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements TabCompleter {
 
     public static final int PEACE_LIST_PAGE_SIZE = 15;
+
+    public static String getPlayerString(String plrName) {
+        Player plr = Bukkit.getPlayerExact(plrName); //REFACTOR
+        if (plr == null) {
+            return MTCHelper.locArgs("XC-membersoff", "CONSOLE", false, plrName);//continuity
+        }
+        return MTCHelper.locArgs("XC-memberson", "CONSOLE", false, plrName);
+    }
+
+    private static boolean sendPeaceList(CommandSender sender, List<String> lst, int rowstart, int perPage, String label, int nextPage) {
+        String toSend = "";
+        int i = rowstart; //needed for later use :/
+        for (; (i < (rowstart + perPage) && lst.size() > i); i++) {
+            toSend += " ► " + CommandPeace.getPlayerString(lst.get(i)) + "\n";
+        }
+        if (toSend.equals("")) {
+            toSend = MTCHelper.loc("XU-ppageempty", sender, false);
+        }
+        if (i < lst.size()) {
+            return MTCHelper.sendLocArgs("XU-pmorepages", sender, false, label, nextPage);
+        }
+        return CommandHelper.msg(toSend, sender);
+    }
 
     @Override
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
@@ -141,28 +164,5 @@ public final class CommandPeace extends MTCPlayerOnlyCommandExecutor implements 
             return pi.peacedPlrs;
         }
         return null;
-    }
-
-    public static String getPlayerString(String plrName) {
-        Player plr = Bukkit.getPlayerExact(plrName); //REFACTOR
-        if (plr == null) {
-            return MTCHelper.locArgs("XC-membersoff", "CONSOLE", false, plrName);//continuity
-        }
-        return MTCHelper.locArgs("XC-memberson", "CONSOLE", false, plrName);
-    }
-
-    private static boolean sendPeaceList(CommandSender sender, List<String> lst, int rowstart, int perPage, String label, int nextPage) {
-        String toSend = "";
-        int i = rowstart; //needed for later use :/
-        for (; (i < (rowstart + perPage) && lst.size() > i); i++) {
-            toSend += " ► " + CommandPeace.getPlayerString(lst.get(i)) + "\n";
-        }
-        if (toSend.equals("")) {
-            toSend = MTCHelper.loc("XU-ppageempty", sender, false);
-        }
-        if (i < lst.size()) {
-            return MTCHelper.sendLocArgs("XU-pmorepages", sender, false, label, nextPage);
-        }
-        return CommandHelper.msg(toSend, sender);
     }
 }

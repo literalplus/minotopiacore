@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -52,37 +52,6 @@ public class PrivateChat { //REFACTOR
         }
         PrivateChat.updateActiveChat(leader, this);
         LogHelper.getPrivChatLogger().log(Level.INFO, leader.getName() + " CREATED: " + recipients);
-    }
-
-    public String getFormattedPlayerListAsString() {
-        String recs = "";
-        int i = 0;
-        for (Player rec : this.recipients) {
-            recs += ((PrivateChat.isActiveChat(rec, this)) ? "§a" : "§c") + rec.getName() + ((i == (this.recipients.size() - 1)) ? "" : "§6,");
-            i++;
-        }
-        if (recs.isEmpty()) {
-            return "leer";
-        }
-        return recs;
-    }
-
-    public boolean isLeader(Player plr) {
-        return this.leader.equals(plr);
-    }
-
-    public void sendMessage(String msg) {
-        if (this.activeRecipients.size() == 0) {
-            return;
-        }
-        for (Player plr : this.activeRecipients) {
-            plr.sendMessage(msg);
-        }
-    }
-
-    public void removeRecipient(Player plr) {
-        this.activeRecipients.remove(plr);
-        this.recipients.remove(plr);
     }
 
     public static PrivateChat getActiveChat(Player plr) {
@@ -151,5 +120,36 @@ public class PrivateChat { //REFACTOR
         previousChat.activeRecipients.remove(plr);
         previousChat.sendMessage(MTC.chatPrefix + "§b" + plr.getName() + " §6hat den Chat gewechselt.");
         return null;
+    }
+
+    public String getFormattedPlayerListAsString() {
+        String recs = "";
+        int i = 0;
+        for (Player rec : this.recipients) {
+            recs += ((PrivateChat.isActiveChat(rec, this)) ? "§a" : "§c") + rec.getName() + ((i == (this.recipients.size() - 1)) ? "" : "§6,");
+            i++;
+        }
+        if (recs.isEmpty()) {
+            return "leer";
+        }
+        return recs;
+    }
+
+    public boolean isLeader(Player plr) {
+        return this.leader.equals(plr);
+    }
+
+    public void sendMessage(String msg) {
+        if (this.activeRecipients.size() == 0) {
+            return;
+        }
+        for (Player plr : this.activeRecipients) {
+            plr.sendMessage(msg);
+        }
+    }
+
+    public void removeRecipient(Player plr) {
+        this.activeRecipients.remove(plr);
+        this.recipients.remove(plr);
     }
 }

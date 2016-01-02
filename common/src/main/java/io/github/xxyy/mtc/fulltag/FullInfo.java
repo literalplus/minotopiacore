@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -59,71 +59,6 @@ public class FullInfo implements ToShortStringable {
         this.lastCode = lastCode;
         this.partId = partId;
         this.lastOwnerName = lastOwnerName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof FullInfo)) {
-            return false;
-        }
-        FullInfo other = (FullInfo) obj;
-        return this.id == other.id;
-    }
-
-    public void flush() {
-        SafeSql sql = MTC.instance().getSql();
-        if (sql == null) {
-            System.out.println("Tried flush FullInfo before reload was complete!");
-            return;
-        }
-        sql.safelyExecuteUpdate("UPDATE " + sql.dbName + ".mtc_fulls SET sender_name=?, " +
-                        "receiver_name=?, timestamp=" + this.timestamp + ", comment=?, " +
-                        "thorns=" + this.thorns + ",x=" + this.x + ",y=" + this.y + ",z=" + this.z + ",enderchest=" + this.inEnderchest + ", " +
-                        "lastseen=" + this.lastseen + ", lastCode=?, part=" + this.partId + ",lastowner=? WHERE id=" + this.id, this.senderName, this.receiverName,
-                this.comment, this.lastCode, this.lastOwnerName);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + this.id;
-        return result;
-    }
-
-    public void nullify() {
-        SafeSql sql = MTC.instance().ssql;
-        if (sql == null) {
-            System.out.println("Tried nullify FullInfo before reload was complete!");
-            return;
-        }
-        sql.executeUpdate("DELETE FROM " + sql.dbName + ".mtc_fulls WHERE id=" + this.id + " LIMIT 1");
-    }
-
-    public String toLogString() {
-        return "#" + this.id + "=" + this.partId + "|" + this.senderName + "->" + this.receiverName + "@op:" + this.lastCode;
-    }
-
-    @Override
-    public String toShortString() {
-        return "§3#§5" + this.id + "§3|§a" + this.senderName + "§3->§b" + this.receiverName + "§3@§6" + (new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(this.timestamp * 1000) + "§3");
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public String toString() {
-        return "{FullInfo id=" + this.id + ",sender=" + this.senderName + ",rec=" + this.receiverName + "," +
-                "comment=" + this.comment + ",thorns=" + this.thorns + ",part=" + FullInfo.getPartNameById(this.partId) + ",lastowner=" + this.lastOwnerName +
-                ",lastCode='" + this.lastCode + "',lastseen=" + this.lastseen + "}";
     }
 
     public static FullInfo create(String senderName, String receiverName,
@@ -197,5 +132,70 @@ public class FullInfo implements ToShortStringable {
             default:
                 return "{UNKNOWN_ITEM id=" + partId + "}";
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof FullInfo)) {
+            return false;
+        }
+        FullInfo other = (FullInfo) obj;
+        return this.id == other.id;
+    }
+
+    public void flush() {
+        SafeSql sql = MTC.instance().getSql();
+        if (sql == null) {
+            System.out.println("Tried flush FullInfo before reload was complete!");
+            return;
+        }
+        sql.safelyExecuteUpdate("UPDATE " + sql.dbName + ".mtc_fulls SET sender_name=?, " +
+                        "receiver_name=?, timestamp=" + this.timestamp + ", comment=?, " +
+                        "thorns=" + this.thorns + ",x=" + this.x + ",y=" + this.y + ",z=" + this.z + ",enderchest=" + this.inEnderchest + ", " +
+                        "lastseen=" + this.lastseen + ", lastCode=?, part=" + this.partId + ",lastowner=? WHERE id=" + this.id, this.senderName, this.receiverName,
+                this.comment, this.lastCode, this.lastOwnerName);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.id;
+        return result;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void nullify() {
+        SafeSql sql = MTC.instance().ssql;
+        if (sql == null) {
+            System.out.println("Tried nullify FullInfo before reload was complete!");
+            return;
+        }
+        sql.executeUpdate("DELETE FROM " + sql.dbName + ".mtc_fulls WHERE id=" + this.id + " LIMIT 1");
+    }
+
+    public String toLogString() {
+        return "#" + this.id + "=" + this.partId + "|" + this.senderName + "->" + this.receiverName + "@op:" + this.lastCode;
+    }
+
+    @Override
+    public String toShortString() {
+        return "§3#§5" + this.id + "§3|§a" + this.senderName + "§3->§b" + this.receiverName + "§3@§6" + (new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(this.timestamp * 1000) + "§3");
+    }
+
+    @Override
+    public String toString() {
+        return "{FullInfo id=" + this.id + ",sender=" + this.senderName + ",rec=" + this.receiverName + "," +
+                "comment=" + this.comment + ",thorns=" + this.thorns + ",part=" + FullInfo.getPartNameById(this.partId) + ",lastowner=" + this.lastOwnerName +
+                ",lastCode='" + this.lastCode + "',lastseen=" + this.lastseen + "}";
     }
 }

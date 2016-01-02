@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,17 +7,16 @@
 
 package me.minotopia.mitoscb;
 
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.StatsHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

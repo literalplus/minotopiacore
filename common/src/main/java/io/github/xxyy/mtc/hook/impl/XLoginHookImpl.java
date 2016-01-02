@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,15 +7,14 @@
 
 package io.github.xxyy.mtc.hook.impl;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-
 import io.github.xxyy.mtc.hook.HookWrapper;
 import io.github.xxyy.mtc.hook.Hooks;
 import io.github.xxyy.mtc.hook.XLoginHook;
 import io.github.xxyy.xlogin.common.PreferencesHolder;
 import io.github.xxyy.xlogin.common.api.SpawnLocationHolder;
 import io.github.xxyy.xlogin.common.api.XLoginProfile;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.util.List;
 import java.util.UUID;

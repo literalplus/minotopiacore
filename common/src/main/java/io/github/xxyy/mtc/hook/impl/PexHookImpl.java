@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -8,15 +8,14 @@
 package io.github.xxyy.mtc.hook.impl;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.Validate;
-import ru.tehkode.permissions.PermissionGroup;
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.PermissionUser;
-
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.hook.HookWrapper;
 import io.github.xxyy.mtc.hook.Hooks;
 import io.github.xxyy.mtc.hook.PexHook;
+import org.apache.commons.lang.Validate;
+import ru.tehkode.permissions.PermissionGroup;
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.PermissionUser;
 
 import java.util.List;
 import java.util.UUID;

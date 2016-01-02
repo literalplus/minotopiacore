@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,16 +7,15 @@
 
 package io.github.xxyy.mtc.test.cmdspy;
 
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.github.xxyy.common.test.util.MockHelper;
 import io.github.xxyy.lib.guava17.collect.ImmutableList;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilter;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.chat.cmdspy.RegExCommandSpyFilter;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;

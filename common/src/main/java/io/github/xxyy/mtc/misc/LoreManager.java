@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,14 +7,13 @@
 
 package io.github.xxyy.mtc.misc;
 
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.misc.cmd.CommandLore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.misc.cmd.CommandLore;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -9,6 +9,10 @@ package io.github.xxyy.mtc.listener;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,17 +25,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.AntiLogoutHandler;
-
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     public static final SimpleDateFormat SIMPLE_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");

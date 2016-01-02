@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -49,45 +49,6 @@ public class ClanInfo {
         this.level = level;
         this.kills = kills;
         this.deaths = deaths;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Writes values of this {@link ClanInfo} into the corresponding row
-     * in MySQL. Safe.
-     */
-    public void flush() {
-        SafeSql sql = MTC.instance().ssql;
-        if (sql == null) {
-            return;
-        }
-        sql.safelyExecuteUpdate("UPDATE " + sql.dbName + "." + Const.TABLE_CLANS + " " +
-                        "SET name=?, prefix=?, leader_name=?," +
-                        "base_x=" + this.base.getBlockX() + "," +
-                        "base_y=" + this.base.getBlockY() + "," +
-                        "base_z=" + this.base.getBlockZ() + "," +
-                        "base_yaw=" + (int) this.base.getYaw() + "," +
-                        "base_pitch=" + (int) this.base.getPitch() + "," +
-                        "base_world=?, motd=?, bank_amount=" + this.money + "," +
-                        "level=" + this.level + ", kills=" + this.kills + "," +
-                        "deaths=" + this.deaths +
-                        " WHERE id=" + this.id, this.name, this.prefix, this.leaderName,
-                this.base.getWorld().getName(), this.motd);
-    }
-
-    public void nullify() {
-        SafeSql sql = MTC.instance().getSql();
-        ClanHelper.getAllMemberNames(this.id).stream()
-                .filter(ClanHelper.memberCache::containsKey)
-                .forEach(ClanHelper.memberCache::remove);
-
-        if (ClanHelper.cacheById.containsKey(this.id)) {//will always be in both maps
-            ClanHelper.cacheById.remove(this.id);
-            ClanHelper.cacheByName.remove(this.name);
-        }
-        sql.safelyExecuteUpdate("DELETE FROM " + sql.dbName + "." + Const.TABLE_CLANS + " WHERE id=? LIMIT 1", this.id);
-        sql.safelyExecuteUpdate("DELETE FROM " + sql.dbName + "." + Const.TABLE_CLAN_MEMBERS + " WHERE clan_id=?", this.id);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +120,8 @@ public class ClanInfo {
         ClanHelper.cacheByName.put(rtrn.name, rtrn);
         return rtrn;
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     protected static ClanInfo getById(int id) {
         if (id < 0) {
@@ -189,7 +151,6 @@ public class ClanInfo {
         }
     }
 
-
     protected static ClanInfo getByName(String name) {
         SafeSql sql = MTC.instance().getSql();
         if (sql == null) {
@@ -214,6 +175,7 @@ public class ClanInfo {
             return new ClanInfo(-4);
         }
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected static ClanInfo getByPlayerName(String plrName) {
         ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(plrName);
@@ -249,6 +211,43 @@ public class ClanInfo {
             sql.formatAndPrintException(e, "ClanInfo.getByPrefix()");
             return new ClanInfo(-4);
         }
+    }
+
+    /**
+     * Writes values of this {@link ClanInfo} into the corresponding row
+     * in MySQL. Safe.
+     */
+    public void flush() {
+        SafeSql sql = MTC.instance().ssql;
+        if (sql == null) {
+            return;
+        }
+        sql.safelyExecuteUpdate("UPDATE " + sql.dbName + "." + Const.TABLE_CLANS + " " +
+                        "SET name=?, prefix=?, leader_name=?," +
+                        "base_x=" + this.base.getBlockX() + "," +
+                        "base_y=" + this.base.getBlockY() + "," +
+                        "base_z=" + this.base.getBlockZ() + "," +
+                        "base_yaw=" + (int) this.base.getYaw() + "," +
+                        "base_pitch=" + (int) this.base.getPitch() + "," +
+                        "base_world=?, motd=?, bank_amount=" + this.money + "," +
+                        "level=" + this.level + ", kills=" + this.kills + "," +
+                        "deaths=" + this.deaths +
+                        " WHERE id=" + this.id, this.name, this.prefix, this.leaderName,
+                this.base.getWorld().getName(), this.motd);
+    }
+
+    public void nullify() {
+        SafeSql sql = MTC.instance().getSql();
+        ClanHelper.getAllMemberNames(this.id).stream()
+                .filter(ClanHelper.memberCache::containsKey)
+                .forEach(ClanHelper.memberCache::remove);
+
+        if (ClanHelper.cacheById.containsKey(this.id)) {//will always be in both maps
+            ClanHelper.cacheById.remove(this.id);
+            ClanHelper.cacheByName.remove(this.name);
+        }
+        sql.safelyExecuteUpdate("DELETE FROM " + sql.dbName + "." + Const.TABLE_CLANS + " WHERE id=? LIMIT 1", this.id);
+        sql.safelyExecuteUpdate("DELETE FROM " + sql.dbName + "." + Const.TABLE_CLAN_MEMBERS + " WHERE clan_id=?", this.id);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////

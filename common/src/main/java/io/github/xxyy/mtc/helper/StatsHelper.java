@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,14 +7,12 @@
 
 package io.github.xxyy.mtc.helper;
 
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.clan.ClanInfo;
-
 import io.github.xxyy.common.sql.SafeSql;
-
+import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.Const;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.resources;
 
+import io.github.xxyy.common.test.util.MockHelper;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -14,20 +15,13 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.xxyy.common.test.util.MockHelper;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.contains;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tries to parse the plugin.yml to find errors fast.

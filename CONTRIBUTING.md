@@ -14,11 +14,11 @@ Some special code style guidelines are delivered with the project. Just press `C
 All commit messages **must** comply to the following standards:
 
  - Commit messages start with an uppercase letter, like a sentence. This is very important.
- - If a commit introduces multiple changes, thosemust all be in the first line, separated by commas and
+ - If a commit introduces multiple changes, those must all be in the first line, separated by commas and
      all starting with a new uppercase letter. If that would be too long, a meaningful summary must be found.
 	 *Example:* `Add yolo module, Remove old yolo code`
  - The first line is a *meaningful* summary of the changes and should not be any longer than 72 characters
- - After two linebreaks, additional description of the changes can be added, if the first line does not 
+ - After two line breaks, additional description of the changes can be added, if the first line does not 
     fully and clearly describe everything the commit does and why it does it that way.
  - The first line must be written in **present tense**. 
  - An additional `[x.x.x]` tag may be added to indicate that that commit changes the project version.
@@ -26,7 +26,7 @@ All commit messages **must** comply to the following standards:
     runtime or development environments. This tag may also be used for major API changes, to help 
 	with writing new code.
  - Any related tickets must be noted using the following format: (regex) `#\d{1,6}`. 
-    Multiple tickets must be separated by commas. To make the bugtracker automatically mark the ticket
+    Multiple tickets must be separated by commas. To make the Bug Tracker automatically mark the ticket
 	as fixed, use the following format: `Fixes #358`.
 	
 Here are some examples of complying ("good") commit messages:

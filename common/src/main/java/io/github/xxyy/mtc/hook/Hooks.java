@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,10 +7,9 @@
 
 package io.github.xxyy.mtc.hook;
 
+import io.github.xxyy.mtc.hook.impl.Hook;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import io.github.xxyy.mtc.hook.impl.Hook;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;

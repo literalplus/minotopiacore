@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -39,6 +39,12 @@ public class QuizQuestion implements ConfigurationSerializable {
         this.pattern = Pattern.compile("(?<!\\w)" + Pattern.quote(answer) + "(?!\\w|-)", Pattern.CASE_INSENSITIVE);
     }
 
+    public static QuizQuestion deserialize(Map<String, Object> input) {
+        Validate.isTrue(input.containsKey("text") && input.containsKey("answer"), "Missing either one of text or answer");
+
+        return new QuizQuestion(input.get("text").toString(), input.get("answer").toString());
+    }
+
     public String getText() {
         return text;
     }
@@ -57,12 +63,6 @@ public class QuizQuestion implements ConfigurationSerializable {
         rtrn.put("text", text);
         rtrn.put("answer", answer);
         return rtrn;
-    }
-
-    public static QuizQuestion deserialize(Map<String, Object> input) {
-        Validate.isTrue(input.containsKey("text") && input.containsKey("answer"), "Missing either one of text or answer");
-
-        return new QuizQuestion(input.get("text").toString(), input.get("answer").toString());
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -9,13 +9,12 @@ package io.github.xxyy.mtc.hook.impl;
 
 import io.github.xxyy.mtc.hook.HookWrapper;
 import io.github.xxyy.mtc.hook.Hooks;
+import io.github.xxyy.mtc.hook.VaultHook;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
-
-import io.github.xxyy.mtc.hook.VaultHook;
 
 /**
  * Implements unsafe parts of the Vault API.

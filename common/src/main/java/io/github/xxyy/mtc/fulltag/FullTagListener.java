@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,10 @@
 
 package io.github.xxyy.mtc.fulltag;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.helper.MTCHelper;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -20,11 +24,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.LogHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.MTCHelper;
 
 import java.util.Calendar;
 

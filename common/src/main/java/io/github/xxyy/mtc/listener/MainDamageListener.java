@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,25 +7,20 @@
 
 package io.github.xxyy.mtc.listener;
 
-import org.bukkit.DyeColor;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Wolf;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
-
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.clan.ClanMemberInfo;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.PeaceInfo;
+import org.bukkit.DyeColor;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -43,6 +38,17 @@ public final class MainDamageListener implements Listener {
 
     public MainDamageListener(MTC plugin) {
         this.plugin = plugin;
+    }
+
+    private static void cancelAndStopWolves(EntityDamageByEntityEvent e) {
+        e.setCancelled(true);
+        if (e.getDamager().getType() == EntityType.WOLF) {
+            Wolf wolf = (Wolf) e.getDamager();
+            wolf.setCollarColor(DyeColor.ORANGE);
+            AnimalTamer prevOwner = wolf.getOwner();
+            wolf.setOwner((Player) e.getEntity());
+            wolf.setOwner(prevOwner);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -118,16 +124,5 @@ public final class MainDamageListener implements Listener {
         plugin.getLogoutHandler().setFighting(plr, plrDamager, Calendar.getInstance()); //ANTILOGOUT
         MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clanPrefix,
                 plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
-    }
-
-    private static void cancelAndStopWolves(EntityDamageByEntityEvent e) {
-        e.setCancelled(true);
-        if (e.getDamager().getType() == EntityType.WOLF) {
-            Wolf wolf = (Wolf) e.getDamager();
-            wolf.setCollarColor(DyeColor.ORANGE);
-            AnimalTamer prevOwner = wolf.getOwner();
-            wolf.setOwner((Player) e.getEntity());
-            wolf.setOwner(prevOwner);
-        }
     }
 }

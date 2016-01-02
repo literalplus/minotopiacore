@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,10 +7,9 @@
 
 package io.github.xxyy.mtc.module.repeater;
 
+import io.github.xxyy.common.util.CommandHelper;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Bukkit;
-
-import io.github.xxyy.common.util.CommandHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

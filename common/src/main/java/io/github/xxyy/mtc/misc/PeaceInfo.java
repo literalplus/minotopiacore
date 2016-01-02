@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -39,32 +39,6 @@ public class PeaceInfo {
 
     private PeaceInfo(String plrName, String peacedPlrs) {
         this(plrName, new ArrayList<>(Arrays.asList(peacedPlrs.split(",")))); //returned list is fixed-size
-    }
-
-    public void create() {
-        MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace SET player_name=?, peace_players=?",
-                this.plrName, CommandHelper.CSCollection(this.peacedPlrs, ""));
-        this.errCode = 2;
-        PeaceInfo.CACHE.put(this.plrName, this);
-    }
-
-    public void flush() {
-        if (this.peacedPlrs.isEmpty()) {
-            this.nullify();
-            return;
-        }
-        if (this.errCode < 0) {
-            this.create();
-            return;
-        }
-        MTC.instance().getSql().safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?",
-                CommandHelper.CSCollection(this.peacedPlrs, ""), this.plrName);
-        PeaceInfo.CACHE.put(this.plrName, this);
-    }
-
-    public void nullify() {
-        MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
-        PeaceInfo.CACHE.remove(this.plrName);
     }
 
     public static PeaceInfo get(String plrName) {
@@ -118,5 +92,31 @@ public class PeaceInfo {
             e.printStackTrace();
             return new PeaceInfo(-3, plrName);
         }
+    }
+
+    public void create() {
+        MTC.instance().ssql.safelyExecuteUpdate("INSERT INTO mtc_peace SET player_name=?, peace_players=?",
+                this.plrName, CommandHelper.CSCollection(this.peacedPlrs, ""));
+        this.errCode = 2;
+        PeaceInfo.CACHE.put(this.plrName, this);
+    }
+
+    public void flush() {
+        if (this.peacedPlrs.isEmpty()) {
+            this.nullify();
+            return;
+        }
+        if (this.errCode < 0) {
+            this.create();
+            return;
+        }
+        MTC.instance().getSql().safelyExecuteUpdate("UPDATE mtc_peace SET peace_players=? WHERE player_name=?",
+                CommandHelper.CSCollection(this.peacedPlrs, ""), this.plrName);
+        PeaceInfo.CACHE.put(this.plrName, this);
+    }
+
+    public void nullify() {
+        MTC.instance().getSql().safelyExecuteUpdate("DELETE FROM mtc_peace WHERE player_name=?", this.plrName);
+        PeaceInfo.CACHE.remove(this.plrName);
     }
 }

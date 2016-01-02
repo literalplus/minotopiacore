@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -22,6 +22,15 @@ import org.bukkit.inventory.ItemStack;
 import static net.md_5.bungee.api.ChatColor.*;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
+
+    private static String getISString(ItemStack is) {
+        return is.getType().toString() + " * " + is.getAmount();
+    }
+
+    private static boolean printHelpTo(CommandSender sender) {
+        return CommandHelper.msg("§e/giveall hand <Anzahl>\n§e/giveall [ITEM_NAME]:<Damage> [Anzahl]\n"
+                + "§e/giveall [Item-ID]:<Damage>", sender);
+    }
 
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
@@ -100,14 +109,5 @@ public final class CommandGiveAll extends MTCCommandExecutor {
             return CommandGiveAll.printHelpTo(sender);
         }
         return true;
-    }
-
-    private static String getISString(ItemStack is) {
-        return is.getType().toString() + " * " + is.getAmount();
-    }
-
-    private static boolean printHelpTo(CommandSender sender) {
-        return CommandHelper.msg("§e/giveall hand <Anzahl>\n§e/giveall [ITEM_NAME]:<Damage> [Anzahl]\n"
-                + "§e/giveall [Item-ID]:<Damage>", sender);
     }
 }

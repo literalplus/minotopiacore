@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -27,6 +27,15 @@ public class PlayerHeadManager {
     public PlayerHeadManager(String[] args, String label) {
         this.args = args;
         this.label = label;
+    }
+
+    public static ItemMeta setSkullOwner(SkullMeta meta, String owner) {
+        meta.setOwner(owner);
+        return meta;
+    }
+
+    private static boolean kickConsoleFromMethod(CommandSender sender, String label) {
+        return CommandHelper.kickConsoleFromMethod(sender, label);
     }
 
     public boolean getAllHead(CommandSender sender) {
@@ -70,6 +79,7 @@ public class PlayerHeadManager {
 
         return true;
     }
+    //UTIL METHODS
 
     public boolean setHead(CommandSender sender) {
         if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.playerhead.set." + this.args[1], this.label)) {
@@ -89,15 +99,5 @@ public class PlayerHeadManager {
         plr.sendMessage("§7Du besitzt nun den Kopf von §3" + this.args[1] + "§7! Viel Spass damit :)");
 
         return true;
-    }
-
-    public static ItemMeta setSkullOwner(SkullMeta meta, String owner) {
-        meta.setOwner(owner);
-        return meta;
-    }
-    //UTIL METHODS
-
-    private static boolean kickConsoleFromMethod(CommandSender sender, String label) {
-        return CommandHelper.kickConsoleFromMethod(sender, label);
     }
 }

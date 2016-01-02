@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,16 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.chat.MTCChatHelper;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.CacheHelper;
+import io.github.xxyy.mtc.misc.ClearCacheEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,17 +31,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
-
-import io.github.xxyy.common.misc.HelpManager;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.CacheHelper;
-import io.github.xxyy.mtc.misc.ClearCacheEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -183,8 +182,8 @@ public final class CommandMTC extends MTCCommandExecutor {
                         rnePlayer.sendMessage("§8Das ist tot.");
                         return true;
                     }
-                    ((LivingEntity) ent).setCustomName(StringHelper.varArgsString(args, 1, true));
-                    ((LivingEntity) ent).setCustomNameVisible(true);
+                    ent.setCustomName(StringHelper.varArgsString(args, 1, true));
+                    ent.setCustomNameVisible(true);
                     rnePlayer.sendMessage("§7Der Name des/der " + ent.getType().toString() + " in deiner Nähe wurde geändert.");
                     return true;
                 case "spy":
