@@ -41,6 +41,7 @@ public class CommandRegistrationManager {
     public CommandMap getCommandMap(Server server) throws IllegalStateException {
         Preconditions.checkArgument(this.server == null || server == this.server, "Server does not match manager's server!");
         if (commandMap == null) {
+            this.server = server;
             try {
                 Field commandMapField = server.getClass().getDeclaredField("commandMap");
                 commandMapField.setAccessible(true);
