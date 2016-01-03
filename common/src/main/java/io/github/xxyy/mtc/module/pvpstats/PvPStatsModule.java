@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.pvpstats;
 
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.hook.TitleManagerHook;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import io.github.xxyy.mtc.module.pvpstats.model.CachedPlayerStatsRepository;
@@ -25,6 +26,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     public static final String NAME = "PvPStats";
     public static final String ADMIN_PERMISSION = "mtc.stats.admin";
     private PlayerStatsRepository repository;
+    private TitleManagerHook titleManagerHook;
 
     public PvPStatsModule() {
         super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED);
@@ -39,6 +41,8 @@ public class PvPStatsModule extends ConfigurableMTCModule {
                 new QueuedPlayerStatsRepository(new PlayerStatsRepositoryImpl(this), this), this
         );
         repository.setDatabaseTable(configuration.getString("sql.database"), configuration.getString("sql.table"));
+
+        titleManagerHook = new TitleManagerHook(getPlugin());
     }
 
     @Override
@@ -55,12 +59,19 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     protected void reloadImpl() {
         configuration.addDefault("sql.database", "mt_pvp");
         configuration.addDefault("sql.table", "pvpstats");
-//        configuration.addDefault("enable.title.killer", true);
-//        configuration.addDefault("enable.title.victim", false);
-//        configuration.addDefault("enable.top-rank-notification", false);
+        configuration.addDefault("enable.title.killer", true);
+        configuration.addDefault("enable.title.victim", false);
+    }
+
+    public boolean isFeatureEnabled(String featureName) {
+        return configuration.getBoolean("enable." + featureName, false);
     }
 
     public PlayerStatsRepository getRepository() {
         return repository;
+    }
+
+    public TitleManagerHook getTitleManagerHook() {
+        return titleManagerHook;
     }
 }

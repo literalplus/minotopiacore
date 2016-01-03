@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.pvpstats;
 
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,11 +29,21 @@ public class StatsDeathListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onStatsDeath(PlayerDeathEvent evt) {
-        PlayerStats victimStats = module.getRepository().find(evt.getEntity());
+        Player victim = evt.getEntity();
+        PlayerStats victimStats = module.getRepository().find(victim);
         victimStats.addDeaths(1);
-        if (evt.getEntity().getKiller() != null) {
-            PlayerStats killerStats = module.getRepository().find(evt.getEntity().getKiller());
+        Player killer = victim.getKiller();
+        if (killer != null) {
+            PlayerStats killerStats = module.getRepository().find(killer);
             killerStats.addKills(1);
+
+            if (module.isFeatureEnabled("title.killer")) {
+                module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + " Kills!");
+            }
+        }
+
+        if (module.isFeatureEnabled("title.victim")) {
+            module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + " Deaths!");
         }
     }
 }
