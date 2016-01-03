@@ -13,6 +13,7 @@ import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.common.util.UUIDHelper;
 import io.github.xxyy.lib.guava17.collect.ImmutableList;
 import io.github.xxyy.mtc.hook.XLoginHook;
+import io.github.xxyy.mtc.module.pvpstats.PvPStatsModule;
 import org.bukkit.OfflinePlayer;
 
 import javax.annotation.Nullable;
@@ -34,7 +35,11 @@ public class PlayerStatsRepositoryImpl implements PlayerStatsRepository {
     private final XLoginHook xLoginHook;
     private String databaseTable = "`mt_pvp`.`pvpstats`";
 
-    public PlayerStatsRepositoryImpl(SpigotSql sql, XLoginHook xLoginHook) {
+    public PlayerStatsRepositoryImpl(PvPStatsModule module) {
+        this(module.getPlugin().getSql(), module.getPlugin().getXLoginHook());
+    }
+
+    protected PlayerStatsRepositoryImpl(SpigotSql sql, XLoginHook xLoginHook) {
         this.sql = sql;
         this.xLoginHook = xLoginHook;
     }

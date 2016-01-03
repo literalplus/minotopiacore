@@ -69,6 +69,18 @@ public class PlayerStats {
     }
 
     /**
+     * Returns the kill/death ratio of the associated player. This returns {@link Double#POSITIVE_INFINITY} if the
+     * player does not have any deaths yet. The mathematically more useful kills/lives approach has been turned down
+     * by management, so ranking is not possible. The user interface must not show the K/DR if it is equal to
+     * {@link Double#POSITIVE_INFINITY}.
+     *
+     * @return the ratio kills/deaths or {@link Double#POSITIVE_INFINITY} if deaths = 0
+     */
+    public double getKDRatio() {
+        return deaths == 0 ? Double.POSITIVE_INFINITY : (kills / deaths);
+    }
+
+    /**
      * @return the unique id of the player associated with this stats object
      */
     public UUID getUniqueId() {

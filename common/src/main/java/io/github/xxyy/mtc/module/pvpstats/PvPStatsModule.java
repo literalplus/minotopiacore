@@ -10,6 +10,10 @@ package io.github.xxyy.mtc.module.pvpstats;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.pvpstats.model.CachedPlayerStatsRepository;
+import io.github.xxyy.mtc.module.pvpstats.model.PlayerStatsRepository;
+import io.github.xxyy.mtc.module.pvpstats.model.PlayerStatsRepositoryImpl;
+import io.github.xxyy.mtc.module.pvpstats.model.QueuedPlayerStatsRepository;
 
 /**
  * Manages PvP stats and stores them in a MySQL database.
@@ -20,6 +24,7 @@ import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 public class PvPStatsModule extends ConfigurableMTCModule {
     public static final String NAME = "PvPStats";
     public static final String ADMIN_PERMISSION = "mtc.stats.admin";
+    private PlayerStatsRepository repository;
 
     public PvPStatsModule() {
         super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED);
@@ -30,20 +35,32 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         super.enable(plugin);
 
         registerCommand(new CommandStats(this), "stats");
+        repository = new CachedPlayerStatsRepository(
+                new QueuedPlayerStatsRepository(new PlayerStatsRepositoryImpl(this), this), this
+        );
+        repository.setDatabaseTable(configuration.getString("sql.database"), configuration.getString("sql.table"));
     }
 
     @Override
     public void disable(MTCPlugin plugin) {
-        super.disable(plugin); //TODO: not yet implemented overriden method
+        repository.cleanup();
     }
 
     @Override
     public void clearCache(boolean forced, MTCPlugin plugin) {
-        super.clearCache(forced, plugin); //TODO: not yet implemented overriden method
+        repository.cleanup();
     }
 
     @Override
     protected void reloadImpl() {
+        configuration.addDefault("sql.database", "mt_pvp");
+        configuration.addDefault("sql.table", "pvpstats");
+//        configuration.addDefault("enable.title.killer", true);
+//        configuration.addDefault("enable.title.victim", false);
+//        configuration.addDefault("enable.top-rank-notification", false);
+    }
 
+    public PlayerStatsRepository getRepository() {
+        return repository;
     }
 }

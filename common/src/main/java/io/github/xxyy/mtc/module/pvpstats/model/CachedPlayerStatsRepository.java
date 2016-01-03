@@ -13,6 +13,7 @@ import com.google.common.cache.RemovalNotification;
 import io.github.xxyy.common.shared.uuid.UUIDRepository;
 import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.mtc.hook.XLoginHook;
+import io.github.xxyy.mtc.module.pvpstats.PvPStatsModule;
 import org.bukkit.OfflinePlayer;
 
 import javax.annotation.Nullable;
@@ -36,13 +37,11 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
             .removalListener(this::onRemove)
             .build();
 
-    /**
-     * Creates a new cache wrapper for given repository
-     *
-     * @param proxied    the repository to proxy
-     * @param xLoginHook the xLogin hook to use for name->uuid mapping
-     */
-    public CachedPlayerStatsRepository(PlayerStatsRepository proxied, XLoginHook xLoginHook) {
+    public CachedPlayerStatsRepository(PlayerStatsRepository proxied, PvPStatsModule module) {
+        this(proxied, module.getPlugin().getXLoginHook());
+    }
+
+    protected CachedPlayerStatsRepository(PlayerStatsRepository proxied, XLoginHook xLoginHook) {
         this.proxied = proxied;
         this.xLoginHook = xLoginHook;
     }

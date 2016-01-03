@@ -9,6 +9,7 @@ package io.github.xxyy.mtc.module.pvpstats.model;
 
 import io.github.xxyy.common.shared.uuid.UUIDRepository;
 import io.github.xxyy.common.sql.SpigotSql;
+import io.github.xxyy.mtc.module.pvpstats.PvPStatsModule;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
@@ -29,7 +30,11 @@ public class QueuedPlayerStatsRepository implements PlayerStatsRepository {
     private final PlayerStatsRepository proxied;
     private final PlayerStatsSaveQueueExecutor queueExecutor;
 
-    public QueuedPlayerStatsRepository(PlayerStatsRepository proxied, SpigotSql sql, Plugin plugin) {
+    public QueuedPlayerStatsRepository(PlayerStatsRepository proxied, PvPStatsModule module) {
+        this(proxied, module.getPlugin());
+    }
+
+    protected QueuedPlayerStatsRepository(PlayerStatsRepository proxied, Plugin plugin) {
         this.proxied = proxied;
         this.queueExecutor = new PlayerStatsSaveQueueExecutor(plugin, proxied);
     }
