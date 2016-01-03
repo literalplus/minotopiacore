@@ -9,7 +9,6 @@ package io.github.xxyy.mtc.module.pvpstats.model;
 
 import io.github.xxyy.mtc.hook.XLoginHook;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -23,6 +22,7 @@ public class PlayerStats {
     private String name;
     private int kills;
     private int deaths;
+    private boolean dirty = false;
 
     /**
      * Constructs a new player stats object.
@@ -32,7 +32,7 @@ public class PlayerStats {
      * @param kills    the amount of kills the player currently has
      * @param deaths   the amount of deaths the player currently has
      */
-    public PlayerStats(UUID uniqueId, @Nullable String name, int kills, int deaths) {
+    public PlayerStats(UUID uniqueId, String name, int kills, int deaths) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.kills = kills;
@@ -40,15 +40,11 @@ public class PlayerStats {
     }
 
     /**
-     * Gets a display name for the player associated with this stats object, possibly querying the xLogin database for
-     * the name. If the name is unknown to the database, the unique id is returned.
+     * Gets a display name for the player associated with this stats object.
      *
      * @return a display name for the player associated with this stats object
      */
     public String getDisplayName(XLoginHook xLoginHook) {
-        if (name == null) {
-            name = xLoginHook.getDisplayString(uniqueId);
-        }
         return name;
     }
 
@@ -59,7 +55,7 @@ public class PlayerStats {
      * @return the new amount of kills
      */
     public int addKills(int modifier) {
-        return kills = kills + modifier;
+        return setKills(kills + modifier);
     }
 
     /**
@@ -69,7 +65,7 @@ public class PlayerStats {
      * @return the new amount of deaths
      */
     public int addDeaths(int modifier) {
-        return deaths = deaths + modifier;
+        return setDeaths(deaths + modifier);
     }
 
     /**
@@ -90,9 +86,13 @@ public class PlayerStats {
      * Sets the amount of kills the associated player has currently.
      *
      * @param kills the new amount of kills
+     * @return the new amount of kills
      */
-    public void setKills(int kills) {
-        this.kills = kills;
+    public int setKills(int kills) {
+        if (this.kills != kills) {
+            markDirty();
+        }
+        return this.kills = kills;
     }
 
     /**
@@ -106,9 +106,13 @@ public class PlayerStats {
      * Sets the amount of deaths the associated player has currently.
      *
      * @param deaths the new amount of deaths
+     * @return the new amount of deaths
      */
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
+    public int setDeaths(int deaths) {
+        if (this.deaths != deaths) {
+            markDirty();
+        }
+        return this.deaths = deaths;
     }
 
     @Override
@@ -122,14 +126,13 @@ public class PlayerStats {
         if (kills != that.kills) return false;
         if (deaths != that.deaths) return false;
         if (!uniqueId.equals(that.uniqueId)) return false;
-        return name != null ? name.equals(that.name) : that.name == null;
-
+        return name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
         int result = uniqueId.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + name.hashCode();
         result = 31 * result + kills;
         result = 31 * result + deaths;
         return result;
@@ -143,5 +146,17 @@ public class PlayerStats {
                 ", kills=" + kills +
                 ", deaths=" + deaths +
                 '}';
+    }
+
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    private void markDirty() {
+        setDirty(true);
+    }
+
+    protected void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 }
