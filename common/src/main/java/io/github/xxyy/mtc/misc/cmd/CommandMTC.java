@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.misc.HelpManager;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
@@ -17,6 +18,9 @@ import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheEvent;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -103,13 +107,17 @@ public final class CommandMTC extends MTCCommandExecutor {
                     }
 
                     String message = StringHelper.varArgsString(args, 1, true);
-                    String adminMessage = "§7(/" + label + " fm|" + sender.getName() + ")§f " + message;
+                    BaseComponent[] adminComponents = TextComponent.fromLegacyText(message);
+                    adminComponents[0].setHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            new XyComponentBuilder("/xyu fm - " + senderName).create()
+                    ));
 
                     for (Player plr : Bukkit.getOnlinePlayers()) {
                         if (plr.hasPermission("mtc.spy")) {
-                            plr.sendMessage(adminMessage);
+                            plr.spigot().sendMessage(adminComponents);
                         } else {
-                            plr.sendMessage(message);
+                            CommandHelper.msg(message, plr);
                         }
                     }
 
