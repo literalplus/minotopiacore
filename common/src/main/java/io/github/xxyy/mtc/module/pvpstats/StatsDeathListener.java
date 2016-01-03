@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.module.pvpstats;
 
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanInfo;
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,10 +35,12 @@ public class StatsDeathListener implements Listener {
         Player victim = evt.getEntity();
         PlayerStats victimStats = module.getRepository().find(victim);
         victimStats.addDeaths(1);
+        incrementClanDeaths(victim);
         Player killer = victim.getKiller();
         if (killer != null) {
             PlayerStats killerStats = module.getRepository().find(killer);
             killerStats.addKills(1);
+            incrementClanKills(killer);
 
             if (module.isFeatureEnabled("title.killer")) {
                 module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + " Kills!");
@@ -44,6 +49,26 @@ public class StatsDeathListener implements Listener {
 
         if (module.isFeatureEnabled("title.victim")) {
             module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + " Deaths!");
+        }
+    }
+
+    private void incrementClanKills(Player plr) {
+        if (ConfigHelper.isClanEnabled()) {
+            ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
+            if (ci.id > 0) {
+                ci.kills += 1;
+                ci.flush();
+            }
+        }
+    }
+
+    private void incrementClanDeaths(Player plr) {
+        if (ConfigHelper.isClanEnabled()) {
+            ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
+            if (ci.id > 0) {
+                ci.deaths += 1;
+                ci.flush();
+            }
         }
     }
 }

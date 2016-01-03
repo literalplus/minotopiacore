@@ -37,6 +37,8 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         super.enable(plugin);
 
         registerCommand(new CommandStats(this), "stats");
+        getPlugin().getServer().getPluginManager().registerEvents(new StatsDeathListener(this), getPlugin());
+
         repository = new CachedPlayerStatsRepository(
                 new QueuedPlayerStatsRepository(new PlayerStatsRepositoryImpl(this), this), this
         );
