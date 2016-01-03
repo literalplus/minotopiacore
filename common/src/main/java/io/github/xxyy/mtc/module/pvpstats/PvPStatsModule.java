@@ -59,6 +59,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
+        configuration.options().copyDefaults(true);
         configuration.addDefault("sql.database", "mt_pvp");
         configuration.addDefault("sql.table", "pvpstats");
         configuration.addDefault("enable.title.killer", true);
