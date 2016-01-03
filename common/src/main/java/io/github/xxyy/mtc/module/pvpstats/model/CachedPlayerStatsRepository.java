@@ -33,7 +33,7 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     private final PlayerStatsRepository proxied;
     private final XLoginHook xLoginHook;
     private final Cache<UUID, PlayerStats> statsCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(30, TimeUnit.MINUTES)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .removalListener(this::onRemove)
             .build();
 
