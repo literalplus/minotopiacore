@@ -45,12 +45,12 @@ public class StatsDeathListener implements Listener {
             module.getRepository().save(killerStats); //Only adds to queue
 
             if (module.isFeatureEnabled("title.killer")) {
-                module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + " Kills!");
+                module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + "§6 Kills!");
             }
         }
 
         if (module.isFeatureEnabled("title.victim")) {
-            module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + " Deaths!");
+            module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + "§6 Deaths!");
         }
     }
 
