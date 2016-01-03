@@ -7,8 +7,6 @@
 
 package io.github.xxyy.mtc.module.pvpstats.model;
 
-import io.github.xxyy.mtc.hook.XLoginHook;
-
 import java.util.UUID;
 
 /**
@@ -44,7 +42,7 @@ public class PlayerStats {
      *
      * @return a display name for the player associated with this stats object
      */
-    public String getDisplayName(XLoginHook xLoginHook) {
+    public String getDisplayName() {
         return name;
     }
 
