@@ -37,10 +37,12 @@ public class StatsDeathListener implements Listener {
         victimStats.addDeaths(1);
         incrementClanDeaths(victim);
         Player killer = victim.getKiller();
+        module.getRepository().save(victimStats); //Only adds to queue
         if (killer != null) {
             PlayerStats killerStats = module.getRepository().find(killer);
             killerStats.addKills(1);
             incrementClanKills(killer);
+            module.getRepository().save(killerStats); //Only adds to queue
 
             if (module.isFeatureEnabled("title.killer")) {
                 module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + " Kills!");
