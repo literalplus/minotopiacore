@@ -48,6 +48,10 @@
             <artifactId>fanciful</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.puharesource.mc</groupId>
+            <artifactId>TitleManager</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.xxyy.xlogin</groupId>
             <artifactId>xlogin-api</artifactId>
         </dependency>

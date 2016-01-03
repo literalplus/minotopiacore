@@ -89,6 +89,11 @@
             <!-- xLogin, etc. -->
             <url>https://repo.nowak-at.net/xxyy-private/</url>
         </repository>
+        <repository>
+            <id>puha-repo</id>
+            <!-- TitleManager -->
+            <url>http://repo.puha.io/nexus/content/repositories/releases/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -143,6 +148,11 @@
                 <groupId>mkremins</groupId>
                 <artifactId>fanciful</artifactId>
                 <version>0.3.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.puharesource.mc</groupId>
+                <artifactId>TitleManager</artifactId>
+                <version>1.5.11</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
