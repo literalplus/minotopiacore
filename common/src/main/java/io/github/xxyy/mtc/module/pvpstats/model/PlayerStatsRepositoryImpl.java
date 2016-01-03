@@ -85,7 +85,7 @@ public class PlayerStatsRepositoryImpl implements PlayerStatsRepository {
     }
 
     @Override
-    public CompletableFuture<List<PlayerStats>> findTopDeaths(int limit) {
+    public CompletableFuture<List<PlayerStats>> findWhoDiedMost(int limit) {
         return findTop("deaths", limit);
     }
 
@@ -146,10 +146,21 @@ public class PlayerStatsRepositoryImpl implements PlayerStatsRepository {
         databaseTable = "`" + database + "`.`" + table + "`";
     }
 
+    @Override
+    public String getDatabaseTable() {
+        return databaseTable;
+    }
+
+    @Override
+    public void cleanup() {
+
+    }
+
     public XLoginHook getXLoginHook() {
         return xLoginHook;
     }
 
+    @Override
     public SpigotSql getSql() {
         return sql;
     }

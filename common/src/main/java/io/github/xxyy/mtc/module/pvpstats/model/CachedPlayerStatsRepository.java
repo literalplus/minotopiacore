@@ -11,6 +11,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalNotification;
 import io.github.xxyy.common.shared.uuid.UUIDRepository;
+import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.mtc.hook.XLoginHook;
 import org.bukkit.OfflinePlayer;
 
@@ -21,13 +22,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A caching wrapper for a {@link PlayerStatsRepositoryImpl}, providing a cache for most find operations.
+ * A caching wrapper for a {@link PlayerStatsRepositoryImpl}, providing a cache for find operations with a single result.
+ * Cache entries expire after a set period of time and are saved if any changes have been made.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-03
  */
 public class CachedPlayerStatsRepository implements PlayerStatsRepository {
-    private final PlayerStatsRepositoryImpl proxied;
+    private final PlayerStatsRepository proxied;
+    private final XLoginHook xLoginHook;
     private final Cache<UUID, PlayerStats> statsCache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.MINUTES)
             .removalListener(this::onRemove)
@@ -36,10 +39,12 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     /**
      * Creates a new cache wrapper for given repository
      *
-     * @param proxied the repository to proxy
+     * @param proxied    the repository to proxy
+     * @param xLoginHook the xLogin hook to use for name->uuid mapping
      */
-    public CachedPlayerStatsRepository(PlayerStatsRepositoryImpl proxied) {
+    public CachedPlayerStatsRepository(PlayerStatsRepository proxied, XLoginHook xLoginHook) {
         this.proxied = proxied;
+        this.xLoginHook = xLoginHook;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
 
     @Override
     public PlayerStats findByName(String name) throws IllegalStateException, UUIDRepository.UnknownKeyException {
-        XLoginHook.Profile profile = proxied.getXLoginHook().getBestProfile(name);
+        XLoginHook.Profile profile = xLoginHook.getBestProfile(name);
         if (profile == null) {
             throw new UUIDRepository.UnknownKeyException();
         }
@@ -76,8 +81,8 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     }
 
     @Override
-    public CompletableFuture<List<PlayerStats>> findTopDeaths(int limit) {
-        return proxied.findTopDeaths(limit); //makes little sense to cache this
+    public CompletableFuture<List<PlayerStats>> findWhoDiedMost(int limit) {
+        return proxied.findWhoDiedMost(limit); //makes little sense to cache this
     }
 
     @Override
@@ -88,6 +93,27 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     @Override
     public void setDatabaseTable(String database, String table) {
         proxied.setDatabaseTable(database, table);
+    }
+
+    @Override
+    public void cleanup() {
+        statsCache.asMap().values().forEach(ps -> {
+            if (ps != null && ps.isDirty()) {
+                save(ps);
+            }
+        });
+        statsCache.asMap().clear();
+        proxied.cleanup();
+    }
+
+    @Override
+    public String getDatabaseTable() {
+        return proxied.getDatabaseTable();
+    }
+
+    @Override
+    public SpigotSql getSql() {
+        return proxied.getSql();
     }
 
     private void onRemove(RemovalNotification<UUID, PlayerStats> notification) {

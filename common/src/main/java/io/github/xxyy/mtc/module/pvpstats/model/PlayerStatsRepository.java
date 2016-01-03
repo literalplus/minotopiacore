@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.pvpstats.model;
 
 import io.github.xxyy.common.shared.uuid.UUIDRepository;
+import io.github.xxyy.common.sql.SpigotSql;
 import org.bukkit.OfflinePlayer;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,10 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * A repository connecting the PvP Stats application model with a database containing stat data.
+ * A repository connecting the PvP Stats application model with a database containing stat data. Note that
+ * implementations may choose to set in place caching and queueing systems to reduce database load. Such mechanisms
+ * are documented in class JavaDocs. If such system is in place, applications must call {@link #cleanup()} to write
+ * changes back to database before shutdown.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-03
@@ -86,8 +90,8 @@ public interface PlayerStatsRepository {
      *
      * @param limit how many players to return
      * @return a future for the list of players
-     */
-    CompletableFuture<List<PlayerStats>> findTopDeaths(int limit);
+     */ //This name sounds awful, but it doesn't look like there's a better name
+    CompletableFuture<List<PlayerStats>> findWhoDiedMost(int limit);
 
     /**
      * Saves some data to the database.
@@ -103,4 +107,20 @@ public interface PlayerStatsRepository {
      * @param table    the MySQL table where the data is stored
      */
     void setDatabaseTable(String database, String table);
+
+    /**
+     * @return a valid MySQL reference to the table used by this repository
+     */
+    String getDatabaseTable();
+
+    /**
+     * Cleans up any caches that this repository may have. This method must be called before application shutdown for
+     * guaranteed persistence of all data.
+     */
+    void cleanup();
+
+    /**
+     * @return the database manager associated with this repository
+     */
+    SpigotSql getSql();
 }
