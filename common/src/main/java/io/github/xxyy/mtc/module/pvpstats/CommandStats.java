@@ -154,13 +154,12 @@ public class CommandStats implements CommandExecutor {
         int killsRank = module.getRepository().getKillsRank(stats);
         int deathsRank = module.getRepository().getDeathsRank(stats);
         if (stats.getDeaths() != 0) {
-            receiver.sendMessage(String.format("§6Kills: §e%d §6(§e%d.§6) / Deaths: §e%d §6(§e%d.§6) = K/D: §e%.2f",
+            receiver.sendMessage(String.format("§6Kills: §e%d §6(%d.Platz) / Deaths: §e%d §6(%d.Platz) = K/D: §e%.2f",
                     stats.getKills(), killsRank, stats.getDeaths(), deathsRank, stats.getKDRatio()));
         } else {
-
-            receiver.sendMessage(String.format("§6Kills: §e%d §6/ Deaths: §e%d", stats.getKills(), stats.getDeaths()));
+            receiver.sendMessage(String.format("§6Kills: §e%d §6(%d.Platz) §6/ Deaths: §e%d §6(%d.Platz)",
+                    stats.getKills(), killsRank, stats.getDeaths(), deathsRank));
         }
-        receiver.sendMessage(String.format("§6Rang (Kills): §e%d. §6Rang (Deaths): §e%d.", killsRank, deathsRank));
 
         if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
