@@ -106,7 +106,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                         return true;
                     }
 
-                    String message = StringHelper.varArgsString(args, 1, true);
+                    String message = StringHelper.varArgsString(args, 1, true).replace("\\n", "\n");
                     BaseComponent[] adminComponents = TextComponent.fromLegacyText(message);
                     adminComponents[0].setHoverEvent(new HoverEvent(
                             HoverEvent.Action.SHOW_TEXT,
