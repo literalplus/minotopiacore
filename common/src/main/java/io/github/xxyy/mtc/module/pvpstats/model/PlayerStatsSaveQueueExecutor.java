@@ -42,7 +42,9 @@ class PlayerStatsSaveQueueExecutor extends ImprovedBukkitRunnable {
     }
 
     public void queueSave(PlayerStats playerStats) {
-        saveQueue.add(playerStats);
+        if (!saveQueue.contains(playerStats)) {
+            saveQueue.add(playerStats);
+        }
         if (taskId == -1 && plugin.isEnabled()) {
             taskId = runTaskTimerAsynchronously(plugin, EXECUTION_DELAY_TICKS, EXECUTION_DELAY_TICKS).getTaskId();
         }
