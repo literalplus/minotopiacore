@@ -149,22 +149,22 @@ public class CommandStats implements CommandExecutor {
     }
 
     private boolean sendPlayerStatsTo(CommandSender receiver, PlayerStats stats) {
-        receiver.sendMessage(String.format("§9────────── §eStats: &6%s §9──────────",
+        receiver.sendMessage(String.format("§9────────── §eStats: §6%s §9──────────",
                 stats.getDisplayName()));
-        if (stats.getDeaths() != 0) {
-            receiver.sendMessage(String.format("§6Kills: §e%d §6/ Deaths: §e%d §6= K/D: §e%.2f",
-                    stats.getKills(), stats.getDeaths(), stats.getKDRatio()));
-        } else {
-            receiver.sendMessage(String.format("§6Kills: §e%d §6/ Deaths: §e%d", stats.getKills(), stats.getDeaths()));
-        }
-
         int killsRank = module.getRepository().getKillsRank(stats);
         int deathsRank = module.getRepository().getDeathsRank(stats);
+        if (stats.getDeaths() != 0) {
+            receiver.sendMessage(String.format("§6Kills: §e%d §6(§e%d.§6) / Deaths: §e%d §6(§e%d.§6) = K/D: §e%.2f",
+                    stats.getKills(), killsRank, stats.getDeaths(), deathsRank, stats.getKDRatio()));
+        } else {
+
+            receiver.sendMessage(String.format("§6Kills: §e%d §6/ Deaths: §e%d", stats.getKills(), stats.getDeaths()));
+        }
         receiver.sendMessage(String.format("§6Rang (Kills): §e%d. §6Rang (Deaths): §e%d.", killsRank, deathsRank));
 
         if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
-                    .append("[zurücksetzen]", UNDERLINE, DARK_RED)
+                    .append("[zurücksetzen]", DARK_RED, UNDERLINE)
                     .hintedCommand("/stats admin reset " + stats.getUniqueId())
                     .create(), receiver);
         }

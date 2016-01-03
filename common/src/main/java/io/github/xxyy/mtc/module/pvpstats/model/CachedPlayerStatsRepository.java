@@ -69,8 +69,9 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     public PlayerStats findByUniqueId(UUID uuid, @Nullable String plrName) throws IllegalStateException {
         PlayerStats playerStats = statsCache.getIfPresent(uuid);
         if (playerStats == null) {
-            return proxied.findByUniqueId(uuid, plrName);
+            playerStats = proxied.findByUniqueId(uuid, plrName);
         }
+        statsCache.put(uuid, playerStats);
         return playerStats;
     }
 
