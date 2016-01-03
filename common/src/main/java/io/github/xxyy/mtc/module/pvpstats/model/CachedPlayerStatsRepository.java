@@ -85,6 +85,16 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
     }
 
     @Override
+    public int getDeathsRank(PlayerStats playerStats) {
+        return proxied.getDeathsRank(playerStats);
+    }
+
+    @Override
+    public int getKillsRank(PlayerStats playerStats) {
+        return proxied.getKillsRank(playerStats);
+    }
+
+    @Override
     public void save(PlayerStats playerStats) {
         proxied.save(playerStats);
     }

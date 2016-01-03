@@ -157,6 +157,11 @@ public class CommandStats implements CommandExecutor {
         } else {
             receiver.sendMessage(String.format("§6Kills: §e%d §6/ Deaths: §e%d", stats.getKills(), stats.getDeaths()));
         }
+
+        int killsRank = module.getRepository().getKillsRank(stats);
+        int deathsRank = module.getRepository().getDeathsRank(stats);
+        receiver.sendMessage(String.format("§6Rang (Kills): §e%d. §6Rang (Deaths): §e%d.", killsRank, deathsRank));
+
         if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
                     .append("[zurücksetzen]", UNDERLINE, DARK_RED)

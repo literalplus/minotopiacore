@@ -94,6 +94,24 @@ public interface PlayerStatsRepository {
     CompletableFuture<List<PlayerStats>> findWhoDiedMost(int limit);
 
     /**
+     * Gets the rank in the kills leaderboard for given player, that is the number of people that have more kills than
+     * that player plus one.
+     *
+     * @param playerStats the stats info for the player to calculate the rank for
+     * @return the rank in the kills leaderboard
+     */
+    int getKillsRank(PlayerStats playerStats);
+
+    /**
+     * Gets the rank in the deaths leaderboard for given player, that is the number of people that have more deaths than
+     * that player plus one.
+     *
+     * @param playerStats the stats info for the player to calculate the rank for
+     * @return the rank in the deaths leaderboard
+     */
+    int getDeathsRank(PlayerStats playerStats);
+
+    /**
      * Saves some data to the database.
      *
      * @param playerStats the data to save

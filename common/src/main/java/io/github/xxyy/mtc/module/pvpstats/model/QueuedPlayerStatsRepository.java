@@ -39,7 +39,6 @@ public class QueuedPlayerStatsRepository implements PlayerStatsRepository {
         this.queueExecutor = new PlayerStatsSaveQueueExecutor(plugin, proxied);
     }
 
-
     @Override
     public void save(PlayerStats playerStats) {
         queueExecutor.queueSave(playerStats);
@@ -49,6 +48,16 @@ public class QueuedPlayerStatsRepository implements PlayerStatsRepository {
     public void cleanup() {
         queueExecutor.flush();
         proxied.cleanup();
+    }
+
+    @Override
+    public int getKillsRank(PlayerStats playerStats) {
+        return proxied.getKillsRank(playerStats);
+    }
+
+    @Override
+    public int getDeathsRank(PlayerStats playerStats) {
+        return proxied.getDeathsRank(playerStats);
     }
 
     @Override

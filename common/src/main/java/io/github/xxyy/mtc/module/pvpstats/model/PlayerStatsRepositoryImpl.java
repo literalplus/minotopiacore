@@ -95,6 +95,30 @@ public class PlayerStatsRepositoryImpl implements PlayerStatsRepository {
     }
 
     @Override
+    public int getKillsRank(PlayerStats playerStats) {
+        return getRank(playerStats, "kills");
+    }
+
+    @Override
+    public int getDeathsRank(PlayerStats playerStats) {
+        return getRank(playerStats, "deaths");
+    }
+
+    private int getRank(PlayerStats playerStats, String whatToRank) {
+        try (QueryResult qr = sql.executeQueryWithResult(
+                "SELECT COUNT(" + whatToRank + ") + 1 FROM " + databaseTable + " WHERE (" + whatToRank + " > ?)",
+                playerStats.getKills()
+        ).vouchForResultSet()) {
+            if (!qr.rs().next()) {
+                throw new IllegalStateException("Couldn't rs.next()?!");
+            }
+            return qr.rs().getInt(1);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
     public void save(PlayerStats playerStats) {
         sql.asyncUpdate("INSERT INTO " + databaseTable + " SET uuid=?,kills=?,deaths=? " +
                         "ON DUPLICATE KEY UPDATE kills=?,deaths=?",
