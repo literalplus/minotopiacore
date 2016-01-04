@@ -177,7 +177,7 @@ public class CommandStats implements CommandExecutor {
             ComponentSender.sendTo(new XyComponentBuilder(i + ". ", ChatColor.GOLD)
                     .hintedCommand("/stats " + playerStats.getUniqueId().toString())
                     .append(playerStats.getDisplayName(), YELLOW)
-                    .append(" (" + playerStats.getKills() + "Kills, " + playerStats.getDeaths() + " Deaths)", ChatColor.BLUE)
+                    .append(" (" + playerStats.getKills() + " Kills, " + playerStats.getDeaths() + " Deaths)", ChatColor.BLUE)
                     .create(), receiver);
             i++;
         }
