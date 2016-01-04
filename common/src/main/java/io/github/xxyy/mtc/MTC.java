@@ -27,7 +27,6 @@ import io.github.xxyy.mtc.fulltag.CommandFull;
 import io.github.xxyy.mtc.fulltag.FullTagListener;
 import io.github.xxyy.mtc.gettime.CommandTime;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.helper.StatsHelper;
 import io.github.xxyy.mtc.hook.PexHook;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.hook.WorldGuardHook;
@@ -117,9 +116,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
             //CHAT
             MTCChatHelper.clearPrivateChats();
-
-            //CLEANING
-            StatsHelper.flushQueue();
 
             //SCOREBOARD
             for (Player plr : Bukkit.getOnlinePlayers()) {
@@ -345,9 +341,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         pm.registerEvents(new MainDamageListener(this), this);
         if (ConfigHelper.isProhibitCmdsInBoats()) {
             pm.registerEvents(new VehicleInventoryOpenListener(), this);
-        }
-        if (ConfigHelper.isStatsEnabled() || ConfigHelper.isClanEnabled()) {
-            pm.registerEvents(new StatsDeathListener(), this);
         }
         if (ConfigHelper.isMagicSnowballEnabled()) {
             pm.registerEvents(new MagicSnowballHitListener(this), this);

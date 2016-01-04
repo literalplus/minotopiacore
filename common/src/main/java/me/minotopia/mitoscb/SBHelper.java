@@ -10,7 +10,6 @@ package me.minotopia.mitoscb;
 import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -97,15 +96,6 @@ public final class SBHelper {
         int money = -4201;
         boolean fetchStats = true;
         boolean fetchMoney = true;
-        if (!selectStats) {
-            int tempKills = StatsHelper.getRealKills(plrName);
-            int tempDeaths = StatsHelper.getRealDeaths(plrName);
-            if (tempDeaths >= 0 && tempKills >= 0) {
-                fetchStats = false;
-                deaths = tempDeaths;
-                kills = tempKills;
-            }
-        }
         if (!selectMoney && plugin.getVaultHook().assureHasAccount(plr)) {
             money = (int) plugin.getVaultHook().getBalance(plr);
             fetchMoney = false;
