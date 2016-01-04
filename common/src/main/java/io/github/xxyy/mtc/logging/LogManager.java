@@ -90,6 +90,11 @@ public class LogManager {
      * need to call this manually since {@link #getLogger(Class)} calls this method on demand.
      */
     private static void initialiseContext() {
+        if(System.getProperty("io.github.xxyy.mtc.unittest") != null) { //Unit Tests
+            context = org.apache.logging.log4j.LogManager.getContext();
+            return;
+        }
+
         Preconditions.checkState(context == null, "Already initialised!");
         if (plugin == null) {
             Bukkit.getLogger().warning("[MTC] Initialising log4j2 context before plugin has been set!");
