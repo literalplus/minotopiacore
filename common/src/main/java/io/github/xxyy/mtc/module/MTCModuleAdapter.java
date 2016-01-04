@@ -13,6 +13,8 @@ import io.github.xxyy.mtc.api.module.MTCModule;
 import io.github.xxyy.mtc.api.module.ModuleCommand;
 import org.bukkit.command.CommandExecutor;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 /**
  * Abstract base class for MTC modules. Note when implementing that the Reflection-based loading facility expects your
  * class to have a constructor with no arguments. If you don't provide such, your module won't be able to be loaded
@@ -47,6 +49,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
+    @OverridingMethodsMustInvokeSuper
     public void enable(MTCPlugin plugin) throws Exception {
         this.plugin = (MTC) plugin; //FIXME: This needs to be removed once we have moved required APIs over
     }
@@ -67,6 +70,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     @Override
+    @OverridingMethodsMustInvokeSuper
     public boolean canBeEnabled(MTCPlugin plugin) {
         return plugin.getModuleManager().shouldLoad(this, enabledByDefault);
     }
