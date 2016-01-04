@@ -8,8 +8,9 @@
 package io.github.xxyy.mtc.chat;
 
 import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,10 +23,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 
 
 public final class CommandPrivateChat implements CommandExecutor {
+	private static final Logger LOGGER = LogManager.getLogger(CommandPrivateChat.class);
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label,String[] args) {
@@ -145,7 +146,7 @@ public final class CommandPrivateChat implements CommandExecutor {
 				plr.sendMessage(MTC.chatPrefix+"Du bist in keinem Chat! §b/chat switch <ID>");
 				return true;
 			}
-			LogHelper.getPrivChatLogger().log(Level.INFO, sender.getName()+" ADDED: "+args[1]+" TO: "+pc.chatId);
+            LOGGER.info("{} added {} to private chat {}", sender.getName(), args[1], pc.chatId);
 			if(pc.activeRecipients.contains(target)){
 				plr.sendMessage(MTC.chatPrefix+"Diese Person ist bereits in deinem Chat!");
 				return true;
@@ -293,7 +294,7 @@ public final class CommandPrivateChat implements CommandExecutor {
             }
 			pc.topic = txt+" <gesetzt von "+plr.getName()+";"+(new SimpleDateFormat("dd.MM. HH:mm").format(Calendar.getInstance().getTime()))+">";
 			pc.sendMessage("§6Neues Thema: §e"+pc.topic);
-			LogHelper.getPrivChatLogger().log(Level.INFO, sender.getName()+" SET TOPIC: "+pc.topic+" FOR: "+pc.chatId);
+            LOGGER.info("{} set topic for private chat {} to: {}", sender.getName(), pc.chatId, pc.topic);
 			return true;
 		}
 		else{

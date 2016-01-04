@@ -33,6 +33,12 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="60"/>
         </RollingFile>
+        <RollingFile name="BadCmdLogFile" fileName="${sys:mtc.logsdir}badcmd.log"
+                     filePattern="${sys:mtc.logsdir}badcmd/$${date:yyyy-MM}/%d{yyyy-MM}.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="60"/>
+        </RollingFile>
         <RollingFile name="ChatLogFile" fileName="${sys:mtc.logsdir}chat.log"
                      filePattern="${sys:mtc.logsdir}chat/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
             <PatternLayout pattern="[%d{HH:mm:ss} %3.3p] %msg %xEx{filters(${filters})}%n"/>
@@ -58,6 +64,9 @@
         </Logger>
         <Logger name="io.github.xxyy.mtc.chat" level="info" additivity="false">
             <AppenderRef ref="ChatLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.chat.cmdspy.BadCommandSpyFilter" level="info" additivity="false">
+            <AppenderRef ref="BadCmdLogFile"/>
         </Logger>
         <Root/>
     </Loggers>

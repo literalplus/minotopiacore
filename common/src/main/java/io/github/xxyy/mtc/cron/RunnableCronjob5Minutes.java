@@ -10,7 +10,6 @@ package io.github.xxyy.mtc.cron;
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.PrivateChat;
@@ -18,7 +17,10 @@ import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.mtc.helper.StatsHelper;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.CacheHelper;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -34,6 +36,7 @@ import java.util.Map;
  * @author xxyy98
  */
 public class RunnableCronjob5Minutes implements Runnable {
+    private static final Logger LOGGER = LogManager.getLogger(RunnableCronjob5Minutes.class);
     private static int fullInfoExCount = 0;
     private static byte cacheExCount = 0;
     private final MTC plugin;
@@ -118,7 +121,7 @@ public class RunnableCronjob5Minutes implements Runnable {
                 }
             }
         } catch (Exception e) {//always occurs on disable //TODO: wat
-            LogHelper.getMainLogger().throwing("RunnableCronJob5Minutes", "run()", e);
+            LOGGER.catching(Level.INFO, e);
             Bukkit.getConsoleSender().sendMessage("§7[MTC]Cronjob 5M generated an exception: " + e.getClass().getName() + " (see main log)");
         }
     }

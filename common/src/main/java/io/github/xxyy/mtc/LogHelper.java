@@ -24,10 +24,6 @@ import java.util.logging.Logger;
 public final class LogHelper {
 
     private static final Logger MAIN_LOGGER = Logger.getLogger("MTC");
-    private static final Logger BAD_CMD_LOGGER = Logger.getLogger("MTC.BCMD");
-    private static final Logger PRIV_CHAT_LOGGER = Logger.getLogger("MTC.PCHAT");
-    private static final Logger BAN_LOGGER = Logger.getLogger("MTC.BANS");
-    private static final Logger WARN_LOGGER = Logger.getLogger("MTC.WARNS");
     private static final Logger FULL_LOGGER = Logger.getLogger("MTC.FULLS");
 
     private LogHelper() {
@@ -36,15 +32,7 @@ public final class LogHelper {
 
     public static void flushAll() {
         LogHelper.flush(LogHelper.MAIN_LOGGER);
-        LogHelper.flush(LogHelper.BAD_CMD_LOGGER);
-        LogHelper.flush(LogHelper.PRIV_CHAT_LOGGER);
-        LogHelper.flush(LogHelper.BAN_LOGGER);
-        LogHelper.flush(LogHelper.WARN_LOGGER);
         LogHelper.flush(LogHelper.FULL_LOGGER);
-    }
-
-    public static Logger getBadCmdLogger() {
-        return LogHelper.BAD_CMD_LOGGER;
     }
 
     public static Logger getFullLogger() {
@@ -53,10 +41,6 @@ public final class LogHelper {
 
     public static Logger getMainLogger() {
         return LogHelper.MAIN_LOGGER;
-    }
-
-    public static Logger getPrivChatLogger() {
-        return LogHelper.PRIV_CHAT_LOGGER;
     }
 
     public static void initLogs() {
@@ -97,24 +81,10 @@ public final class LogHelper {
                 System.out.println(">>MTC exception when tryin to initialize cmd loggerz.");
             }
         }
-        if (MTC.instance().getConfig().getBoolean("enable.log.cmds", false)) {
-            LogHelper.tryInitLogger(LogHelper.BAD_CMD_LOGGER, MTC.instance().getDataFolder() + "/logs/badcmds.log", "BadCmdLogger", true);
-        }
-        if (MTC.instance().getConfig().getBoolean("enable.log.chat", true)) {
-            LogHelper.tryInitLogger(LogHelper.PRIV_CHAT_LOGGER, MTC.instance().getDataFolder() + "/logs/privatechats.log", "PrivChatLogger", true);
-        }
-        if (MTC.instance().getConfig().getBoolean("enable.log.bansNwarns", true)) {
-            LogHelper.tryInitLogger(LogHelper.WARN_LOGGER, MTC.instance().getDataFolder() + "/logs/warns.log", "WarnLogger", true);
-            LogHelper.tryInitLogger(LogHelper.BAN_LOGGER, MTC.instance().getDataFolder() + "/logs/bans.log", "BanLogger", true);
-        }
         if (ConfigHelper.isFullLogEnabled()) {
             LogHelper.tryInitLogger(LogHelper.FULL_LOGGER, MTC.instance().getDataFolder() + "/logs/fulls.log", "FullLogger", true);
         }
         LogHelper.MAIN_LOGGER.setUseParentHandlers(false);
-        LogHelper.BAD_CMD_LOGGER.setUseParentHandlers(false);
-        LogHelper.PRIV_CHAT_LOGGER.setUseParentHandlers(false);
-        LogHelper.BAN_LOGGER.setUseParentHandlers(false);
-        LogHelper.WARN_LOGGER.setUseParentHandlers(false);
         LogHelper.FULL_LOGGER.setUseParentHandlers(false);
     }
 

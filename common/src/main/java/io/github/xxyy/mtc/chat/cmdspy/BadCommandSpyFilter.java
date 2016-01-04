@@ -7,14 +7,13 @@
 
 package io.github.xxyy.mtc.chat.cmdspy;
 
-import io.github.xxyy.mtc.LogHelper;
+import io.github.xxyy.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -25,16 +24,15 @@ import java.util.stream.Collectors;
  * @since 20.6.14
  */
 public class BadCommandSpyFilter extends RegExCommandSpyFilter {
-    private final Logger logger;
+    private static final Logger LOGGER = LogManager.getLogger(BadCommandSpyFilter.class);
 
     public BadCommandSpyFilter() {
         super("§4[CmdSpy] §c{0}: §7§o/{1}", new ArrayList<>());
-        this.logger = LogHelper.getBadCmdLogger();
     }
 
     @Override
     protected String formatMatch(Matcher matcher, Player sender, String command) {
-        logger.log(Level.INFO, sender + "(" + sender.getAddress() + "): " + command);
+        LOGGER.info("{}({]): {}", sender, sender.getAddress(), command);
         return super.formatMatch(matcher, sender, command);
     }
 

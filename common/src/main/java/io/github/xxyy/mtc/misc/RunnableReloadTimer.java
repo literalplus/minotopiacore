@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.misc;
 
-import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.cmd.CommandBReload;
@@ -49,21 +48,8 @@ public final class RunnableReloadTimer implements Runnable {
         if (second == 0) {
             try {
 //                Bukkit.broadcastMessage(MTC.chatPrefix+"§dReload gestartet!");
-                for (Player plr : Bukkit.getOnlinePlayers()) {
-                    if (plr.getItemOnCursor() != null) {
-                        LogHelper.getMainLogger().fine("ItemOnCursor @" + plr.getName() + ": " + plr.getItemOnCursor());
-                        plr.setItemOnCursor(null);
-                    }
-                    plr.closeInventory();
-                }
                 Bukkit.reload();
-                for (Player plr : Bukkit.getOnlinePlayers()) {
-                    if (plr.getItemOnCursor() != null) {
-                        LogHelper.getMainLogger().fine("ItemOnCursor @" + plr.getName() + ": " + plr.getItemOnCursor());
-                        plr.setItemOnCursor(null);
-                    }
-                    plr.closeInventory();
-                }
+                Bukkit.getOnlinePlayers().forEach(Player::closeInventory);
                 Command.broadcastCommandMessage((this.sender == null) ? Bukkit.getConsoleSender() : this.sender, "§a§oReload complete.§7§o");
                 Bukkit.broadcastMessage(MTC.chatPrefix + "§aReload erfolgreich.");
             } catch (Exception e) {
@@ -78,12 +64,6 @@ public final class RunnableReloadTimer implements Runnable {
             long delay = RunnableReloadTimer.iDelays.next();
             CommandBReload.taskId = Bukkit.getScheduler().runTaskLater(plugin, this, delay).getTaskId();
         }
-        for (Player plr : Bukkit.getOnlinePlayers()) {
-            if (plr.getItemOnCursor() != null) {
-                LogHelper.getMainLogger().fine("ItemOnCursor @" + plr.getName() + ": " + plr.getItemOnCursor());
-                plr.setItemOnCursor(null);
-            }
-            plr.closeInventory();
-        }
+        Bukkit.getOnlinePlayers().forEach(Player::closeInventory);
     }
 }

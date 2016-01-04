@@ -7,15 +7,16 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.mtc.LogHelper;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.logging.Level;
 
 
 public class PrivateChat { //REFACTOR
+    private static final Logger LOGGER = LogManager.getLogger(PrivateChat.class);
     public static int currentId = 0;
     public static Map<Player, List<PrivateChat>> recChats = new HashMap<>();
     public static Map<Player, List<PrivateChat>> invitedChats = new HashMap<>();
@@ -51,7 +52,7 @@ public class PrivateChat { //REFACTOR
             }
         }
         PrivateChat.updateActiveChat(leader, this);
-        LogHelper.getPrivChatLogger().log(Level.INFO, leader.getName() + " CREATED: " + recipients);
+        LOGGER.info("{} created private chat with {}", leader.getName(), recipients);
     }
 
     public static PrivateChat getActiveChat(Player plr) {
