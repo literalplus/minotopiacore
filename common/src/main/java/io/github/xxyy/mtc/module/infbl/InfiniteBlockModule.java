@@ -14,6 +14,8 @@ import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.InjectModule;
+import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,9 +35,12 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -52,6 +57,8 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //keeping legacy constant for backwards compatibility
     private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
     private List<XyLocation> infiniteBlockLocations;
+    @InjectModule
+    private FullTagModule fullTagModule;
 
     public InfiniteBlockModule() {
         super(NAME, "infdisps.stor.yml", ClearCacheBehaviour.SAVE, false); //keeping legacy constant for backwards compatibility
@@ -100,27 +107,22 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     private void addInfiniteMetadata(Block blk) {
-        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, null));
+        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, INFINITY_TAG));
     }
 
     private void doIfInfinite(InventoryHolder possibleState, Consumer<MetadataValue> consumer) {
         if (possibleState instanceof BlockState) {
-            doIfInfinite((BlockState) possibleState, consumer);
+            doIfInfinite((Metadatable) possibleState, consumer);
         }
     }
 
-    private void doIfInfinite(BlockState state, Consumer<MetadataValue> consumer) {
-        state.getMetadata(INFINITY_TAG).stream() //If performance issues arise, make this an isEmpty() call - https://twitter.com/_xxyy/status/556618846401216512
-                .filter(val -> plugin.equals(val.getOwningPlugin()))
-                .limit(1)
-                .forEach(consumer);
-    }
-
-    private void doIfInfinite(Block blk, Consumer<MetadataValue> consumer) {
-        blk.getMetadata(INFINITY_TAG).stream() //If performance issues arise, make this an isEmpty() call - https://twitter.com/_xxyy/status/556618846401216512
-                .filter(val -> plugin.equals(val.getOwningPlugin()))
-                .limit(1)
-                .forEach(consumer);
+    private void doIfInfinite(Metadatable state, Consumer<MetadataValue> consumer) {
+        for (MetadataValue value : state.getMetadata(INFINITY_TAG)) {
+            if (plugin.equals(value.getOwningPlugin())) {
+                consumer.accept(value);
+                return;
+            }
+        }
     }
 
     ////////////// EVENT HANDLERS //////////////////////////////////////////////////////////////////////////////////////
@@ -128,12 +130,12 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteDispenserOrDropper(BlockDispenseEvent evt) {
         BlockState state = evt.getBlock().getState();
-        doIfInfinite(state, val -> ((InventoryHolder) state).getInventory().addItem(evt.getItem().clone()));
+        doIfInfinite(state, val -> addItem(((InventoryHolder) state).getInventory(), evt.getItem().clone()));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteHopper(InventoryMoveItemEvent evt) {
-        doIfInfinite(evt.getInitiator().getHolder(), val -> evt.getInitiator().addItem(evt.getItem().clone())); //Clone item if initiator is infinite
+        doIfInfinite(evt.getInitiator().getHolder(), val -> addItem(evt.getInitiator(), evt.getItem().clone())); //Clone item if initiator is infinite
         doIfInfinite(evt.getDestination().getHolder(), val -> evt.setCancelled(true)); //Cancel if destination is infinite - bugusing
     }
 
@@ -164,6 +166,13 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                 doIfInfinite(blk, val -> blk.setData(getUndamagedDataValueOfAnvil(blk.getData()), false)); //no possibility without using a deprecated method
             }
         }
+    }
+
+    private void addItem(Inventory inv, ItemStack stack) {
+        if (fullTagModule != null && fullTagModule.getFullId(stack) > 0) {
+            return; //Don't duplicate full items hrhrhr
+        }
+        inv.addItem(stack.clone());
     }
 
     private byte getUndamagedDataValueOfAnvil(byte dataValue) { //see http://minecraft.gamepedia.com/Anvil#Data_values section 'Block'
