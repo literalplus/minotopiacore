@@ -77,7 +77,7 @@ public class CommandStats implements CommandExecutor {
     }
 
     private boolean handleAdmin(CommandSender sender, String label, String[] args) {
-        if (CommandHelper.checkPermAndMsg(sender, PvPStatsModule.ADMIN_PERMISSION, label)) {
+        if (!CommandHelper.checkPermAndMsg(sender, PvPStatsModule.ADMIN_PERMISSION, label)) {
             return true;
         }
 
@@ -87,10 +87,10 @@ public class CommandStats implements CommandExecutor {
             return true;
         }
 
-        XLoginHook.Profile profile = module.getPlugin().getXLoginHook().getBestProfile(args[0]);
+        XLoginHook.Profile profile = module.getPlugin().getXLoginHook().getBestProfile(args[2]);
         if (profile == null) {
             return CommandHelper.msg(String.format(
-                    "§cKonnte keinen Spieler mit dem Namen '§4%s§c' finden.", args[0]
+                    "§cKonnte keinen Spieler mit dem Namen '§4%s§c' finden.", args[2]
             ), sender);
         }
 
@@ -164,7 +164,8 @@ public class CommandStats implements CommandExecutor {
         if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
                     .append("[zurücksetzen]", DARK_RED, UNDERLINE)
-                    .hintedCommand("/stats admin reset " + stats.getUniqueId())
+                    .tooltip("/stats admin reset " + stats.getUniqueId())
+                    .suggest("/stats admin reset " + stats.getUniqueId())
                     .create(), receiver);
         }
         return true;
