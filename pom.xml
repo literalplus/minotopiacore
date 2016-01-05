@@ -90,6 +90,11 @@
             <url>https://repo.nowak-at.net/xxyy-private/</url>
         </repository>
         <repository>
+            <id>dmulloy2-repo</id>
+            <!-- ProtocolLib -->
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>puha-repo</id>
             <!-- TitleManager -->
             <url>http://repo.puha.io/nexus/content/repositories/releases/</url>
@@ -127,6 +132,12 @@
                 <artifactId>HolographicDisplays</artifactId>
                 <!-- Actually the API, name kept for historic causes -->
                 <version>2.1.3</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.comphenix.protocol</groupId>
+                <artifactId>ProtocolLib</artifactId>
+                <version>3.6.4</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -334,7 +345,8 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
                 <configuration>
-                    <configLocation>${project.checkstyle-config-path}</configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
+                    <configLocation>${project.checkstyle-config-path}
+                    </configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
                 </configuration>
                 <dependencies>
                     <dependency>

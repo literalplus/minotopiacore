@@ -52,6 +52,10 @@
             <artifactId>TitleManager</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.github.xxyy.xlogin</groupId>
             <artifactId>xlogin-api</artifactId>
         </dependency>
