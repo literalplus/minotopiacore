@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2013-2016.
+ * This work is protected by international copyright laws and licensed
+ * under the license terms which can be found at src/main/resources/LICENSE.txt
+ * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
+ */
+
 package io.github.xxyy.mtc.module.villagertradepermission;
 
 import com.google.common.base.Preconditions;
@@ -5,6 +12,7 @@ import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.villagertradepermission.actions.ActionManager;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.HandlerList;
@@ -16,13 +24,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A module providing permission-based access to villager trades,
+ * but requires fully frozen locations of these villagers which is provided by nms.
+ *
+ * @author <a href="https://janmm14.de">Janmm14</a>
+ */
 public class VillagerTradePermissionModule extends ConfigurableMTCModule {
+    private static final String COMMAND_PERMISSION = "mtc.module.villagertradepermission.command";
     private static final String SHORT_NAME = "VillagerTradePermission";
     public static final String NAME = SHORT_NAME + "Module";
     private static final String VILLAGER_SPECIFICATIONS_PATH = "villagerSpecifications";
     private VillagerClickListener listener;
     private Set<VillagerInfo> villagerInfos;
     private VillagerPermissionCommand villagerPermissionCommand;
+    private ActionManager actionManager;
 
     protected VillagerTradePermissionModule() {
         super(NAME, "modules/" + SHORT_NAME.toLowerCase() + "/data.yml", ClearCacheBehaviour.SAVE);
@@ -32,19 +48,18 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         ConfigurationSerialization.registerClass(VillagerInfo.class);
-        configuration.options().copyDefaults(true);
-        configuration.addDefault(VILLAGER_SPECIFICATIONS_PATH, new ArrayList<VillagerInfo>());
         listener = new VillagerClickListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        actionManager = new ActionManager(this);
         villagerPermissionCommand = new VillagerPermissionCommand(this);
         registerCommand(villagerPermissionCommand, "villagerpermission", "vp")
-            .behaviour(CommandBehaviours.permissionChecking(villagerPermissionCommand.getPermission()));
+            .behaviour(CommandBehaviours.permissionChecking(getCommandPermission()));
     }
 
     @Override
     protected void reloadImpl() {
-        villagerPermissionCommand.clearCache();
-        configuration.options().copyDefaults(true);
+        actionManager.clearCache();
+        configuration.options().copyDefaults(true).copyHeader(true).header("If you edit this file, you need to disable mtc or shut down the server before to circumvent that changes are overwritten.");
         configuration.addDefault(VILLAGER_SPECIFICATIONS_PATH, new ArrayList<VillagerInfo>());
         villagerInfos = null;
         getVillagerInfos();
@@ -52,11 +67,12 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
 
     @Override
     public void disable(MTCPlugin plugin) {
-        villagerPermissionCommand.disable();
+        HandlerList.unregisterAll(listener);
+        actionManager.disable();
+        actionManager = null;
         villagerPermissionCommand = null;
         villagerInfos.clear();
         villagerInfos = null;
-        HandlerList.unregisterAll(listener);
         save();
         ConfigurationSerialization.unregisterClass(VillagerInfo.class);
     }
@@ -73,8 +89,8 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
         return null;
     }
 
-    public VillagerPermissionCommand getVillagerPermissionCommand() {
-        return villagerPermissionCommand;
+    public ActionManager getActionManager() {
+        return actionManager;
     }
 
     @NotNull
@@ -118,5 +134,9 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
             return true;
         }
         return false;
+    }
+
+    public static String getCommandPermission() {
+        return COMMAND_PERMISSION;
     }
 }

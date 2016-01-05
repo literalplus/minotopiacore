@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2013-2016.
+ * This work is protected by international copyright laws and licensed
+ * under the license terms which can be found at src/main/resources/LICENSE.txt
+ * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
+ */
+
 package io.github.xxyy.mtc.module.villagertradepermission;
 
 import org.bukkit.Location;
@@ -10,12 +17,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This class defines how to determine villagers and which permission is required for trading with villagrs matching the criteria.
+ * <p>
+ * Criterias to identitfy villagers (all have to match)
+ * <ul>
+ * <li>Display name</li>
+ * <li>Location</li>
+ * <li>Profession</li>
+ * </ul>
+ *
+ * @author <a href="https://janmm14.de">Janmm14</a>
+ */
 public class VillagerInfo implements ConfigurationSerializable {
     private static final String PROFESSION_PATH = "profession";
     private static final String DISPLAY_NAME_PATH = "displayName";
     private static final String LOCATION_PATH = "location";
     private static final String PERMISSION_PATH = "permission";
 
+    /**
+     * This location should have its yaw and pitch set to 0
+     */
     @NotNull
     private final Location location;
     @NotNull
@@ -26,21 +48,24 @@ public class VillagerInfo implements ConfigurationSerializable {
     private String permission = null;
 
     public VillagerInfo(@NotNull Location location, @NotNull Villager.Profession profession, @Nullable String displayName) {
-        this.location = location;
+        this.location = setYawPitchToZero(location);
         this.profession = profession;
         this.displayName = displayName;
     }
 
     public VillagerInfo(@NotNull Location location, @NotNull Villager.Profession profession, @Nullable String displayName, @Nullable String permission) {
-        this.location = location;
+        this.location = setYawPitchToZero(location);
         this.profession = profession;
         this.displayName = displayName;
         this.permission = permission;
     }
 
+    /**
+     * @return A newly creatd clone of this VillagerInfos location part
+     */
     @NotNull
     public Location getLocation() {
-        return location;
+        return location.clone();
     }
 
     @NotNull
@@ -62,12 +87,18 @@ public class VillagerInfo implements ConfigurationSerializable {
         this.permission = permission;
     }
 
+    /**
+     * Looks whether the given villager matches the criteria described in clas javadoc: {@link VillagerInfo}
+     *
+     * @param villager The villager to test for matching
+     * @return whether the villager matches all the criterias
+     */
     @SuppressWarnings("RedundantIfStatement")
     public boolean matches(@NotNull Villager villager) {
         if (villager.getProfession() != profession) {
             return false;
         }
-        if (villager.getLocation() != location) {
+        if (setYawPitchToZeroNoCopy(villager.getLocation()) != location) {
             return false;
         }
         if (!Objects.equals(displayName, villager.getCustomName())) {
@@ -96,7 +127,15 @@ public class VillagerInfo implements ConfigurationSerializable {
         return new VillagerInfo(location, profession, displayName);
     }
 
-    public static VillagerInfo createNewBy(@NotNull Villager villager) {
+    /**
+     * This creates a new VillagerInfo by the data from the provided Villager,
+     * not taking existing object of that villager into account
+     *
+     * @param villager The villager to get the data from
+     * @return A newly created VillagerInfo object
+     * @see VillagerTradePermissionModule#findVillagerInfo(Villager)
+     */
+    public static VillagerInfo forEntity(@NotNull Villager villager) {
         return new VillagerInfo(villager.getLocation(), villager.getProfession(), villager.getCustomName());
     }
 
@@ -119,6 +158,17 @@ public class VillagerInfo implements ConfigurationSerializable {
         result = 97 * result + profession.hashCode();
         result = 97 * result + (displayName != null ? displayName.hashCode() : 0);
         return result;
+    }
+
+    private static Location setYawPitchToZero(Location location) {
+        Location loc = location.clone();
+        return setYawPitchToZeroNoCopy(loc);
+    }
+
+    private static Location setYawPitchToZeroNoCopy(Location loc) {
+        loc.setYaw(0.0F);
+        loc.setPitch(0.0F);
+        return loc;
     }
 
     @Override
