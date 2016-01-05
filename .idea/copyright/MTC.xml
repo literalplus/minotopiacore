@@ -1,6 +1,7 @@
 <component name="CopyrightManager">
   <copyright>
     <option name="notice" value="Copyright (c) 2013-&amp;#36;today.year.&#10;This work is protected by international copyright laws and licensed&#10;under the license terms which can be found at src/main/resources/LICENSE.txt&#10;or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com." />
+    <option name="keyword" value="src/main/resources/LICENSE.txt" />
     <option name="myName" value="MTC" />
   </copyright>
 </component>
