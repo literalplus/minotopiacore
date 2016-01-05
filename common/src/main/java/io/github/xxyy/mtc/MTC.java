@@ -9,7 +9,6 @@ package io.github.xxyy.mtc;
 import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.misc.HelpManager;
-import io.github.xxyy.common.sql.SafeSql;
 import io.github.xxyy.common.sql.SqlConnectable;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.version.PluginVersion;
@@ -38,8 +37,6 @@ import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
 import io.github.xxyy.mtc.misc.cmd.*;
 import io.github.xxyy.mtc.module.MTCModuleManager;
-import me.minotopia.mitoscb.SBHelper;
-import me.minotopia.mitoscb.SqlConsts2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
@@ -53,18 +50,14 @@ import org.bukkit.plugin.PluginManager;
 public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
-    public static SqlConsts2 tMconsts; //TODO
     public static int speedOnJoinPotency = -1; //TODO <--
     public static String priChatCol = "§6";
     public static String codeChatCol = "§3";
     public static String chatPrefix = "§6[§bMTS§6] ";
     private static MTC instance;
     private static boolean useHologram = false;
-    public SafeSql ssql2 = null; //TODO
     public String serverName = "UnknownServer"; //TODO whatever
     public String warnBanServerSuffix = "§7§o[UnknownServer]"; //TODO lol?
-    public boolean pvpMode = true; //TODO otha clazz
-    public boolean cycle = true; //TODO store somewhere else
     //Hooks
     private VaultHook vaultHook;
     private XLoginHook xLoginHook;
@@ -105,11 +98,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             log(Level.DEBUG, "Disabling modules...");
             moduleManager.getEnabledModules().forEach(m -> moduleManager.setEnabled(m, false));
             log(Level.DEBUG, "Disabled modules!");
-
-            //SQL
-            if (this.ssql2 != null) {
-                this.ssql2.preReload();
-            }
 
             ///HELP
             HelpManager.clearHelpManagers();
@@ -203,33 +191,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             this.vaultHook = new VaultHook(this);
             this.worldGuardHook = new WorldGuardHook(this);
             this.pexHook = new PexHook(this);
-
-            //SCOREBOARD
-            if (ConfigHelper.isEnableScB()) {
-                String mode = ConfigHelper.getScBMode();
-                switch (mode) {
-                    case "PVP":
-                        this.pvpMode = true;
-                        this.cycle = false;
-                        break;
-                    case "TM":
-                        this.pvpMode = false;
-                        this.cycle = false;
-                        break;
-                    case "ALL":
-                    default:
-                        this.cycle = true;
-                }
-
-                MTC.tMconsts = new SqlConsts2();
-                if (!mode.equalsIgnoreCase("PVP") && !MTC.tMconsts.getSqlUser().equalsIgnoreCase("")) {
-                    this.ssql2 = new SafeSql(MTC.tMconsts);
-                }
-
-
-                Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new SBHelper(this).getUpdateTask(),
-                        ConfigHelper.getScBUpdateInterval(), ConfigHelper.getScBUpdateInterval());
-            }
 
             //BUNGEECORD
             if (this.getConfig().getBoolean("enable.bungeeapi", true)) {

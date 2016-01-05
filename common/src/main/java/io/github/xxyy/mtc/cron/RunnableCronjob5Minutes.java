@@ -16,6 +16,7 @@ import io.github.xxyy.mtc.chat.PrivateChat;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;

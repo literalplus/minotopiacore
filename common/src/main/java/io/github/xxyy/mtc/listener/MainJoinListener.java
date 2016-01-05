@@ -72,10 +72,6 @@ public final class MainJoinListener implements Listener {
                 plr.sendMessage(str);
             }
         }
-        if (ConfigHelper.isEnableScB()) {
-            plr.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-
-        }
         //playerhide
         if (plugin.getConfig().getBoolean("enable.playerhide", false)) {
             final Iterator<UUID> iterator = PlayerHideInteractListener.affectedPlayerIds.iterator();
