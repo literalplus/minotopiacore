@@ -49,13 +49,6 @@ commands:
   cmdspy:
     description: "CommandSpy."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-  full:
-    description: "Provides management tools for FullTag"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-  fulls:
-    description: "FullTag item retrieval command for players"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [canhasfull, fullreturn]
   xclan:
     description: "Clan UI"
     usage: "/<command> nicht geladen. Ausgeschaltet?"

@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 29/08/15
  */
-public class FullRegistry implements CacheHelper.Cache {
+public class FullRegistry implements io.github.xxyy.mtc.api.misc.Cache {
     public static final String TABLE_NAME = "mt_main.fullregistry";
     private static final Logger LOGGER = LogManager.getLogger(FullRegistry.class);
     @Nonnull

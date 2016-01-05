@@ -9,7 +9,8 @@ package io.github.xxyy.mtc.module.fulltag;
 
 import io.github.xxyy.common.lib.com.mojang.api.profiles.HttpProfileRepository;
 import io.github.xxyy.common.util.UUIDHelper;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
@@ -53,20 +54,21 @@ public class FullTagModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(@Nonnull MTC plugin) throws Exception {
+    public void enable(@Nonnull MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
         repository = new FullDataRepository(this);
         registry = new FullRegistry(this);
         distributionManager = new FullDistributionManager(this);
 
-        plugin.getCommand("full").setExecutor(new CommandFullTag(this));
-        plugin.getCommand("fulls").setExecutor(new CommandRetrieveFull(this));
+        registerCommand(new CommandFullTag(this), "full");
+        registerCommand(new CommandRetrieveFull(this), "fulls", "canhasfull", "fullreturn")
+                .behaviour(CommandBehaviours.playerOnly());
         plugin.getServer().getPluginManager().registerEvents(new FullTagListener(this), getPlugin());
     }
 
     @Override
-    public void disable(MTC plugin) {
+    public void disable(MTCPlugin plugin) {
         repository.clearCache(false, plugin);
         registry.clearCache(false, plugin);
 

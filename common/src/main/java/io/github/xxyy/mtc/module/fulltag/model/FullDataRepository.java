@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.xxyy.common.sql.QueryResult;
 import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.common.sql.UpdateResult;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 
@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 29/08/15
  */
-public class FullDataRepository implements CacheHelper.Cache {
+public class FullDataRepository implements io.github.xxyy.mtc.api.misc.Cache {
     public static final String TABLE_NAME = "mt_main.fulldata";
 
     private final SpigotSql sql;
@@ -181,7 +181,7 @@ public class FullDataRepository implements CacheHelper.Cache {
      * Flushes this repository's cache, writing all pending changes to database and removing expired entries.
      */
     @Override
-    public void clearCache(boolean forced, MTC plugin) {
+    public void clearCache(boolean forced, MTCPlugin plugin) {
         dataCache.cleanUp();
         dataCache.asMap().values().forEach(this::updateComment);
     }

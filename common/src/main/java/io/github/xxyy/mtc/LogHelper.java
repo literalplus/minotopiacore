@@ -29,6 +29,10 @@ public final class LogHelper {
 
     }
 
+    public static Logger getMainLogger() {
+        return MAIN_LOGGER;
+    }
+
     public static void flushAll() {
         LogHelper.flush(LogHelper.MAIN_LOGGER);
     }

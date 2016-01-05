@@ -12,9 +12,9 @@ import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.misc.Cache;
 import io.github.xxyy.mtc.logging.LogManager;
-import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.fulltag.model.FullData;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 10/09/15
  */
-public class FullDistributionManager implements CacheHelper.Cache {
+public class FullDistributionManager implements Cache {
     private static final Logger LOGGER = LogManager.getLogger(FullDistributionManager.class);
     private static final String STORAGE_PATH = "unstored";
 
@@ -188,7 +188,7 @@ public class FullDistributionManager implements CacheHelper.Cache {
     }
 
     @Override
-    public void clearCache(boolean forced, MTC plugin) {
+    public void clearCache(boolean forced, MTCPlugin plugin) {
         saveStorage();
     }
 

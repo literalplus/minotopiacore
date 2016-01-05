@@ -10,7 +10,6 @@ package io.github.xxyy.mtc.module.fulltag.dist;
 import com.google.common.collect.ImmutableList;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
@@ -48,9 +47,6 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
 
     @Override
     public boolean catchCommand(@Nonnull CommandSender sender, String senderName, Command cmd, String label, @Nonnull String[] args) {
-        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-            return true;
-        }
         Player plr = (Player) sender;
 
         if (args.length != 0) {
