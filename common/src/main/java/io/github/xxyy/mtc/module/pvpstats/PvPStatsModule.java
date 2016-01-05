@@ -52,7 +52,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
             if (!new ProtocolLibHook(getPlugin()).isActive()) {
                 getPlugin().getLogger().severe("If you wish to use PvP Stats with Scoreboards, please install ProtocolLib!");
             } else {
-                new PvPStatsBoardManager().enable(this);
+                new PvPStatsBoardManager(this).enable();
             }
         }
     }

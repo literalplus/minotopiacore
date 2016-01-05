@@ -7,19 +7,13 @@
 
 package io.github.xxyy.mtc.module.pvpstats.scoreboard;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.lib.packet.WrapperPlayServerScoreboardDisplayObjective;
-import io.github.xxyy.mtc.lib.packet.WrapperPlayServerScoreboardObjective;
-import io.github.xxyy.mtc.lib.packet.WrapperPlayServerScoreboardScore;
 import io.github.xxyy.mtc.module.pvpstats.PvPStatsModule;
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
+import io.github.xxyy.mtc.util.ScoreboardHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,16 +28,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-04
  */
-public class PvPStatsBoardManager {
+public class PvPStatsBoardManager extends ScoreboardHelper {
     private static final NumberFormat KD_FORMAT = new DecimalFormat("#,##");
-    private ProtocolManager protocolManager;
     private final Set<UUID> objectiveExistingPlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
     public static final String OBJECTIVE_NAME = "pvpstats-side";
-    private PvPStatsModule module;
+    private final PvPStatsModule module;
 
-    public void enable(PvPStatsModule module) {
+    public PvPStatsBoardManager(PvPStatsModule module) {
+        super(module.getPlugin());
         this.module = module;
-        protocolManager = ProtocolLibrary.getProtocolManager();
+    }
+
+    public void enable() {
         module.getPlugin().getServer().getPluginManager()
                 .registerEvents(new PvPStatsBoardListener(this), module.getPlugin());
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(
@@ -77,7 +73,7 @@ public class PvPStatsBoardManager {
 
     private void prepareData(Player plr) {
         if (!objectiveExistingPlayers.add(plr.getUniqueId())) { //may produce a client NPE on reload - Mojang logs & discards that
-            clearObjective(plr, OBJECTIVE_NAME);
+            removeObjective(plr, OBJECTIVE_NAME);
         }
 
         if (plr.getScoreboard() == null) {
@@ -87,62 +83,6 @@ public class PvPStatsBoardManager {
         createIntObjective(plr, OBJECTIVE_NAME,
                 CommandHelper.sixteenCharColorize(plr.getName(), "§e"),
                 DisplaySlot.SIDEBAR);
-    }
-
-    private void clearObjective(Player plr, String objectiveName) {
-        WrapperPlayServerScoreboardObjective packet = new WrapperPlayServerScoreboardObjective();
-        packet.setName(objectiveName);
-        packet.setMode(WrapperPlayServerScoreboardObjective.Mode.REMOVE_OBJECTIVE);
-        try {
-            protocolManager.sendServerPacket(plr, packet.getHandle());
-        } catch (InvocationTargetException e) {
-            e.printStackTrace(); //idk
-        }
-    }
-
-    private void createIntObjective(Player plr, String objectiveName, String title, DisplaySlot displaySlot) {
-        WrapperPlayServerScoreboardObjective createPacket = new WrapperPlayServerScoreboardObjective();
-        createPacket.setName(objectiveName);
-        createPacket.setMode(WrapperPlayServerScoreboardObjective.Mode.ADD_OBJECTIVE);
-        createPacket.setDisplayName(title);
-        createPacket.setHealthDisplay("INTEGER");
-
-        WrapperPlayServerScoreboardDisplayObjective displayPacket = new WrapperPlayServerScoreboardDisplayObjective();
-        displayPacket.setPosition(convertDisplaySlot(displaySlot));
-        displayPacket.setScoreName(objectiveName);
-
-        try {
-            protocolManager.sendServerPacket(plr, createPacket.getHandle());
-            protocolManager.sendServerPacket(plr, displayPacket.getHandle());
-        } catch (InvocationTargetException e) {
-            e.printStackTrace(); //idk
-        }
-    }
-
-    private void updateScore(Player plr, String objectiveName, String scoreName, int value) {
-        WrapperPlayServerScoreboardScore packet = new WrapperPlayServerScoreboardScore();
-        packet.setObjectiveName(objectiveName);
-        packet.setScoreboardAction(EnumWrappers.ScoreboardAction.CHANGE);
-        packet.setScoreName(scoreName);
-        packet.setValue(value);
-        try {
-            protocolManager.sendServerPacket(plr, packet.getHandle());
-        } catch (InvocationTargetException e) {
-            e.printStackTrace(); //idk
-        }
-    }
-
-    private int convertDisplaySlot(DisplaySlot displaySlot) {
-        switch (displaySlot) {
-            case PLAYER_LIST:
-                return 0;
-            case SIDEBAR:
-                return 1;
-            case BELOW_NAME:
-                return 2;
-            default:
-                throw new AssertionError(displaySlot.name());
-        }
     }
 
     public PvPStatsModule getModule() {
