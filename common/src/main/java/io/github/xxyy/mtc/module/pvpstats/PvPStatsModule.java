@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.pvpstats;
 
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.hook.ProtocolLibHook;
 import io.github.xxyy.mtc.hook.TitleManagerHook;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
@@ -15,6 +16,7 @@ import io.github.xxyy.mtc.module.pvpstats.model.CachedPlayerStatsRepository;
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStatsRepository;
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStatsRepositoryImpl;
 import io.github.xxyy.mtc.module.pvpstats.model.QueuedPlayerStatsRepository;
+import io.github.xxyy.mtc.module.pvpstats.scoreboard.PvPStatsBoardManager;
 
 /**
  * Manages PvP stats and stores them in a MySQL database.
@@ -45,6 +47,14 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         repository.setDatabaseTable(configuration.getString("sql.database"), configuration.getString("sql.table"));
 
         titleManagerHook = new TitleManagerHook(getPlugin());
+
+        if (isFeatureEnabled("scoreboard")) {
+            if (!new ProtocolLibHook(getPlugin()).isActive()) {
+                getPlugin().getLogger().severe("If you wish to use PvP Stats with Scoreboards, please install ProtocolLib!");
+            } else {
+                new PvPStatsBoardManager().enable(this);
+            }
+        }
     }
 
     @Override
@@ -64,6 +74,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         configuration.addDefault("sql.table", "pvpstats");
         configuration.addDefault("enable.title.killer", true);
         configuration.addDefault("enable.title.victim", false);
+        configuration.addDefault("enable.scoreboard", false);
     }
 
     public boolean isFeatureEnabled(String featureName) {
