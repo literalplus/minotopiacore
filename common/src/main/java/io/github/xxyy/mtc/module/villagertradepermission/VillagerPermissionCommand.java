@@ -43,17 +43,17 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
                 if (args.length != 2) { //require exact argument count to make sure everyone knows that permissions are spaceless
                     return CommandHelper.msg("§cFalsche Benutzung.\n§6Syntax: §c/" + label + ' ' + args[0].toLowerCase() + " <permission>", plr);
                 }
-                checkOverrideAndScheduleAction(plr, new SetPermissionAction(module, args[1]));
+                schedule(plr, new SetPermissionAction(module, args[1]));
                 break;
             }
             case "i":
             case "info": {
-                checkOverrideAndScheduleAction(plr, new PermissionInfoAction(module));
+                schedule(plr, new PermissionInfoAction(module));
                 break;
             }
             case "removeperm":
             case "removepermission": {
-                checkOverrideAndScheduleAction(plr, new RemovePermissionAction(module));
+                schedule(plr, new RemovePermissionAction(module));
                 break;
             }
             case "actioninfo": {
@@ -85,7 +85,14 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
         return true;
     }
 
-    private void checkOverrideAndScheduleAction(Player plr, Action action) {
+    /**
+     * Schedules the given action for the given player.
+     * <br><br>
+     * This also informes the player if it overrides their previous action and invokes {@link Action#sendActionInfo(Player)}
+     * @param plr the player to schedule the action for
+     * @param action the action to schedule
+     */
+    private void schedule(Player plr, Action action) {
         if (actionManager.hasAction(plr)) {
             plr.sendMessage("§cDeine zuvor gewählte Aktion wurde überschrieben.");
         }

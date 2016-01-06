@@ -14,7 +14,7 @@ import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Shows permisison information about the next clicked villager.
+ * Shows permission information about the next clicked villager.
  *
  * @author <a href="https://janmm14.de">Janmm14</a>
  */
@@ -43,7 +43,7 @@ public class PermissionInfoAction implements Action {
 
     @Override
     public void sendActionInfo(@NotNull Player plr) {
-        plr.sendMessage("§aDu erhälst Informationen über den nächsten angeklickten Villager.");
+        plr.sendMessage("§aDu erhältst Informationen über den nächsten angeklickten Villager.");
     }
 
     @Override

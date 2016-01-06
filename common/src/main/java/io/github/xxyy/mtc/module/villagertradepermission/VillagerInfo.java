@@ -19,7 +19,7 @@ import java.util.Objects;
 
 /**
  * This class defines how to determine villagers and which permission is required for trading with villagrs matching the criteria.
- * <p>
+ * <br><br>
  * Criterias to identitfy villagers (all have to match)
  * <ul>
  * <li>Display name</li>
@@ -48,20 +48,20 @@ public class VillagerInfo implements ConfigurationSerializable {
     private String permission = null;
 
     public VillagerInfo(@NotNull Location location, @NotNull Villager.Profession profession, @Nullable String displayName) {
-        this.location = setYawPitchToZero(location);
+        this.location = normaliseLocation(location);
         this.profession = profession;
         this.displayName = displayName;
     }
 
     public VillagerInfo(@NotNull Location location, @NotNull Villager.Profession profession, @Nullable String displayName, @Nullable String permission) {
-        this.location = setYawPitchToZero(location);
+        this.location = normaliseLocation(location);
         this.profession = profession;
         this.displayName = displayName;
         this.permission = permission;
     }
 
     /**
-     * @return A newly creatd clone of this VillagerInfos location part
+     * @return A newly created clone of this VillagerInfo's location
      */
     @NotNull
     public Location getLocation() {
@@ -88,9 +88,9 @@ public class VillagerInfo implements ConfigurationSerializable {
     }
 
     /**
-     * Looks whether the given villager matches the criteria described in clas javadoc: {@link VillagerInfo}
+     * Looks whether the given villager matches the criteria described {@link VillagerInfo}
      *
-     * @param villager The villager to test for matching
+     * @param villager the villager to test for matching
      * @return whether the villager matches all the criterias
      */
     @SuppressWarnings("RedundantIfStatement")
@@ -98,7 +98,7 @@ public class VillagerInfo implements ConfigurationSerializable {
         if (villager.getProfession() != profession) {
             return false;
         }
-        if (setYawPitchToZeroNoCopy(villager.getLocation()) != location) {
+        if (!normaliseLocationNoCopy(villager.getLocation()).equals(location)) {
             return false;
         }
         if (!Objects.equals(displayName, villager.getCustomName())) {
@@ -131,7 +131,7 @@ public class VillagerInfo implements ConfigurationSerializable {
      * This creates a new VillagerInfo by the data from the provided Villager,
      * not taking existing object of that villager into account
      *
-     * @param villager The villager to get the data from
+     * @param villager the villager to get the data from
      * @return A newly created VillagerInfo object
      * @see VillagerTradePermissionModule#findVillagerInfo(Villager)
      */
@@ -160,12 +160,12 @@ public class VillagerInfo implements ConfigurationSerializable {
         return result;
     }
 
-    private static Location setYawPitchToZero(Location location) {
+    private static Location normaliseLocation(Location location) {
         Location loc = location.clone();
-        return setYawPitchToZeroNoCopy(loc);
+        return normaliseLocationNoCopy(loc);
     }
 
-    private static Location setYawPitchToZeroNoCopy(Location loc) {
+    private static Location normaliseLocationNoCopy(Location loc) {
         loc.setYaw(0.0F);
         loc.setPitch(0.0F);
         return loc;

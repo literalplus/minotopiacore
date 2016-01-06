@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Manages actions
+ * Manages actions scheduled for players
  *
  * @author <a href="https://janmm14.de">Janmm14</a>
  */
@@ -41,9 +41,9 @@ public class ActionManager {
     }
 
     /**
-     * Remmoes the scheduled action for the given player
+     * Removes the scheduled action for the given player
      *
-     * @param plr the player which current scheduled action should be cancelled
+     * @param plr the player whose current scheduled action should be cancelled
      * @return the previously scheduled action
      * @see Map#remove(Object)
      */
@@ -80,7 +80,7 @@ public class ActionManager {
      * @return whether an action was scheduled (if yes, normal click behaviour should be cancelled)
      */
     public boolean doAction(@NotNull Player plr, @NotNull Villager selected) {
-        if (!plr.hasPermission(VillagerTradePermissionModule.getCommandPermission())) {
+        if (!plr.hasPermission(VillagerTradePermissionModule.COMMAND_PERMISSION)) {
             return false;
         }
         Action action = scheduledActions.get(plr.getUniqueId());

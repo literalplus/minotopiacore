@@ -12,7 +12,7 @@ import org.bukkit.entity.Villager;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Abstract interfac for different actions to be executed when a player clicks on a villager
+ * Interface for different actions to be executed when a player clicks on a villager
  *
  * @author <a href="https://janmm14.de">Janmm14</a>
  */

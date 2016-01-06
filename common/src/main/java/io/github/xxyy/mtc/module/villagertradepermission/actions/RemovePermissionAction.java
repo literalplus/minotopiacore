@@ -30,13 +30,13 @@ public class RemovePermissionAction implements Action {
     public void execute(@NotNull Player plr, @NotNull Villager selected) {
         VillagerInfo villagerInfo = module.findVillagerInfo(selected);
         if (villagerInfo == null) {
-            plr.sendMessage("§cDieser Villager ist bereits jedem zuägnglich.");
+            plr.sendMessage("§cDieser Villager ist bereits jedem zugänglich.");
             return;
         }
         String oldPermission = villagerInfo.getPermission();
         if (oldPermission == null) {
             module.removeVillagerInfo(villagerInfo);
-            plr.sendMessage("§cDieser Villager ist bereits jedem zuägnglich.");
+            plr.sendMessage("§cDieser Villager ist bereits jedem zugänglich.");
             return;
         }
         villagerInfo.setPermission(null);

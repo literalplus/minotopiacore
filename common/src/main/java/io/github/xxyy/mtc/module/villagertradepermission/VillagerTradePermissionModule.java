@@ -31,7 +31,7 @@ import java.util.Set;
  * @author <a href="https://janmm14.de">Janmm14</a>
  */
 public class VillagerTradePermissionModule extends ConfigurableMTCModule {
-    private static final String COMMAND_PERMISSION = "mtc.module.villagertradepermission.command";
+    public static final String COMMAND_PERMISSION = "mtc.vp.cmd";
     private static final String SHORT_NAME = "VillagerTradePermission";
     public static final String NAME = SHORT_NAME + "Module";
     private static final String VILLAGER_SPECIFICATIONS_PATH = "villagerSpecifications";
@@ -53,7 +53,7 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
         actionManager = new ActionManager(this);
         villagerPermissionCommand = new VillagerPermissionCommand(this);
         registerCommand(villagerPermissionCommand, "villagerpermission", "vp")
-            .behaviour(CommandBehaviours.permissionChecking(getCommandPermission()));
+            .behaviour(CommandBehaviours.permissionChecking(COMMAND_PERMISSION));
     }
 
     @Override
@@ -134,9 +134,5 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
             return true;
         }
         return false;
-    }
-
-    public static String getCommandPermission() {
-        return COMMAND_PERMISSION;
     }
 }
