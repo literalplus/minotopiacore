@@ -24,10 +24,12 @@ import java.lang.reflect.InvocationTargetException;
  * <p>Utility class for simulating Scoreboards at packet level. Note that this requires ProtocolLib whose presence should
  * be checked using {@link io.github.xxyy.mtc.hook.ProtocolLibHook} before instantiating this class.</p>
  * <p>This uses the player's current Scoreboard or the server's main Scoreboard, if the player has a null Scoreboard.</p>
+ * <p>If issues with flickering Scoreboards arise, implement the suggestion specified in
+ * <a href="https://www.spigotmc.org/threads/flickering-scoreboard.113841/">this thread</a>.</p>
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-05
- */
+ */ //thread: only update prefixes instead of objectives
 public class ScoreboardHelper {
     private final Plugin plugin;
     private final ProtocolManager protocolManager;
