@@ -48,6 +48,7 @@ public class FullTagModule extends ConfigurableMTCModule {
     private LegacyFullDataRepository legacyRepository;
     private FullRegistry registry;
     private Set<UUID> allowedPlayerIds = new HashSet<>();
+    private boolean fullReturnEnabled;
 
     public FullTagModule() {
         super(NAME, "modules/fulltag/fulltag.conf.yml", ClearCacheBehaviour.RELOAD_ON_FORCED);
@@ -78,6 +79,7 @@ public class FullTagModule extends ConfigurableMTCModule {
     @Override
     @SuppressWarnings("unchecked")
     protected void reloadImpl() {
+        configuration.options().copyDefaults(true);
         allowedPlayerIds = configuration.getStringList(ALLOWED_PLAYERS_PATH).stream()
                 .map(input -> {
                     if (UUIDHelper.isValidUUID(input)) {
@@ -93,6 +95,8 @@ public class FullTagModule extends ConfigurableMTCModule {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+        configuration.addDefault("enable.fullreturn", false);
+        fullReturnEnabled = configuration.getBoolean("enable.fullreturn");
         save();
     }
 
@@ -179,5 +183,9 @@ public class FullTagModule extends ConfigurableMTCModule {
 
     public FullDistributionManager getDistributionManager() {
         return distributionManager;
+    }
+
+    public boolean isFullReturnEnabled() {
+        return fullReturnEnabled;
     }
 }

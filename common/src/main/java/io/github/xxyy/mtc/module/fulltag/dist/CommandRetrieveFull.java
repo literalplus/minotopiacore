@@ -99,6 +99,10 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
     }
 
     private boolean interpretAccept(Player plr) {
+        if (!checkReturnAllowed(plr)) {
+            return true;
+        }
+
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
             List<LegacyFullData> legacyData = module.getLegacyRepository()
                     .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
@@ -197,6 +201,10 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
     }
 
     private boolean interpretInfo(Player plr) {
+        if (!checkReturnAllowed(plr)) {
+            return true;
+        }
+
         List<LegacyFullData> legacyData = module.getLegacyRepository()
                 .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
 
@@ -224,6 +232,15 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
                     .append(", um die Items anzufordern.", GOLD, ComponentBuilder.FormatRetention.NONE)
                     .create()
             );
+        }
+        return true;
+    }
+
+    private boolean checkReturnAllowed(CommandSender sender) {
+        if (!module.isFullReturnEnabled()) {
+            sender.sendMessage("§cDu kannst momentan noch keine Fullitems zurückerhalten. " +
+                    "Bitte gedulde dich, bis diese Option für alle Spieler freigeschalten wird.");
+            return false;
         }
         return true;
     }
