@@ -11,6 +11,7 @@ import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.logging.Level;
 
 /**
@@ -53,6 +54,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
     }
 
     @Override
+    @OverridingMethodsMustInvokeSuper
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         configuration = ManagedConfiguration.fromDataFolderPath(filePath, clearCacheBehaviour, plugin);
