@@ -41,7 +41,7 @@ class PlayerStatsSaveQueueExecutor extends ImprovedBukkitRunnable {
         this.sql = repository.getSql();
     }
 
-    public void queueSave(PlayerStats playerStats) {
+    public synchronized void queueSave(PlayerStats playerStats) {
         if (!saveQueue.contains(playerStats)) {
             saveQueue.add(playerStats);
         }
@@ -63,7 +63,7 @@ class PlayerStatsSaveQueueExecutor extends ImprovedBukkitRunnable {
 
         idleExecutions = 0;
         Collection<PlayerStats> toSave;
-        if (saveQueue.size() < MAX_WRITES_PER_EXECUTION) {
+        if (saveQueue.size() <= MAX_WRITES_PER_EXECUTION) {
             toSave = new ArrayList<>(saveQueue);
             saveQueue.clear();
         } else {
