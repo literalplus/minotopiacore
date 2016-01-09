@@ -41,7 +41,7 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     private VillagerPermissionCommand villagerPermissionCommand;
 
     protected VillagerTradePermissionModule() {
-        super(NAME, "modules/" + SHORT_NAME.toLowerCase() + "/data.yml", ClearCacheBehaviour.SAVE);
+        super(NAME, "modules/" + SHORT_NAME.toLowerCase() + "/data.yml", ClearCacheBehaviour.SAVE, false);
     }
 
     @Override

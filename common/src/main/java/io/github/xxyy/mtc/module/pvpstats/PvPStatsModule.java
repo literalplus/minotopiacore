@@ -31,7 +31,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     private TitleManagerHook titleManagerHook;
 
     public PvPStatsModule() {
-        super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED);
+        super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class FullTagModule extends ConfigurableMTCModule {
     private boolean fullReturnEnabled;
 
     public FullTagModule() {
-        super(NAME, "modules/fulltag/fulltag.conf.yml", ClearCacheBehaviour.RELOAD_ON_FORCED);
+        super(NAME, "modules/fulltag/fulltag.conf.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
     }
 
     @Override
