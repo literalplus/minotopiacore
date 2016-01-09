@@ -56,6 +56,7 @@ public class VillagerClickListener implements Listener {
         if (permission != null && !plr.hasPermission(permission)) {
             event.setCancelled(true);
             plr.closeInventory();
+            plr.sendMessage("§cDu kannst diesen Villager nicht benutzen.");
         }
     }
 }

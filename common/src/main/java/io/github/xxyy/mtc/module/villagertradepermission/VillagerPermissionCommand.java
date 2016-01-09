@@ -36,6 +36,7 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
         if (args.length == 0) {
             sendHelp(plr, label);
+            return true;
         }
         switch (args[0]) {
             case "setperm":
@@ -56,6 +57,7 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
                 schedule(plr, new RemovePermissionAction(module));
                 break;
             }
+            case "ai":
             case "actioninfo": {
                 Action action = actionManager.getScheduledAction(plr);
                 if (action == null) {

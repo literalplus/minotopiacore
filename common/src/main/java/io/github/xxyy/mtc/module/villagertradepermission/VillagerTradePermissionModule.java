@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
@@ -38,7 +38,6 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     private final ActionManager actionManager = new ActionManager(this); //must init here, or NPE in reloadImpl
     private VillagerClickListener listener;
     private Set<VillagerInfo> villagerInfos;
-    private VillagerPermissionCommand villagerPermissionCommand;
 
     protected VillagerTradePermissionModule() {
         super(NAME, "modules/" + SHORT_NAME.toLowerCase() + "/data.yml", ClearCacheBehaviour.SAVE, false);
@@ -46,13 +45,12 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
-        super.enable(plugin);
         ConfigurationSerialization.registerClass(VillagerInfo.class);
+        super.enable(plugin);
         listener = new VillagerClickListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         actionManager.onEnable();
-        villagerPermissionCommand = new VillagerPermissionCommand(this);
-        registerCommand(villagerPermissionCommand, "villagerpermission", "vp")
+        registerCommand(new VillagerPermissionCommand(this), "villagerpermission", "vp")
                 .behaviour(CommandBehaviours.permissionChecking(COMMAND_PERMISSION));
     }
 

@@ -38,7 +38,7 @@ public class PermissionInfoAction implements Action {
             plr.sendMessage("§aFür diesen Villager wurde keine Permission gesetzt.");
             return;
         }
-        plr.sendMessage("§aDieser Villager ist mit der Permission §6" + villagerInfo.getPermission() + " §6verfügbar.");
+        plr.sendMessage("§aDieser Villager ist mit der Permission §6" + villagerInfo.getPermission() + "§a verfügbar.");
     }
 
     @Override
