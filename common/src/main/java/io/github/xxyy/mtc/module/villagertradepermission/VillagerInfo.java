@@ -124,7 +124,7 @@ public class VillagerInfo implements ConfigurationSerializable {
         String displayName = (String) map.get(DISPLAY_NAME_PATH);
         Location location = (Location) map.get(LOCATION_PATH);
         String permission = (String) map.get(PERMISSION_PATH);
-        return new VillagerInfo(location, profession, displayName);
+        return new VillagerInfo(location, profession, displayName, permission);
     }
 
     /**
@@ -161,8 +161,7 @@ public class VillagerInfo implements ConfigurationSerializable {
     }
 
     private static Location normaliseLocation(Location location) {
-        Location loc = location.clone();
-        return normaliseLocationNoCopy(loc);
+        return normaliseLocationNoCopy(location.clone());
     }
 
     private static Location normaliseLocationNoCopy(Location loc) {

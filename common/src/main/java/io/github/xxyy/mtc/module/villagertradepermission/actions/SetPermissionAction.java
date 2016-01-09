@@ -34,6 +34,7 @@ public final class SetPermissionAction implements Action {
         VillagerInfo villagerInfo = module.findVillagerInfo(selected);
         if (villagerInfo == null) {
             villagerInfo = VillagerInfo.forEntity(selected);
+            module.addVillagerInfo(villagerInfo);
         }
         String oldPermission = villagerInfo.getPermission();
         villagerInfo.setPermission(newPermission);
