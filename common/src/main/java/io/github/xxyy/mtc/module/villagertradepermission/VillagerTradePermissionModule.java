@@ -35,10 +35,10 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     private static final String SHORT_NAME = "VillagerTradePermission";
     public static final String NAME = SHORT_NAME + "Module";
     private static final String VILLAGER_SPECIFICATIONS_PATH = "villagerSpecifications";
+    private final ActionManager actionManager = new ActionManager(this); //must init here, or NPE in reloadImpl
     private VillagerClickListener listener;
     private Set<VillagerInfo> villagerInfos;
     private VillagerPermissionCommand villagerPermissionCommand;
-    private ActionManager actionManager;
 
     protected VillagerTradePermissionModule() {
         super(NAME, "modules/" + SHORT_NAME.toLowerCase() + "/data.yml", ClearCacheBehaviour.SAVE);
@@ -50,10 +50,10 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
         ConfigurationSerialization.registerClass(VillagerInfo.class);
         listener = new VillagerClickListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
-        actionManager = new ActionManager(this);
+        actionManager.onEnable();
         villagerPermissionCommand = new VillagerPermissionCommand(this);
         registerCommand(villagerPermissionCommand, "villagerpermission", "vp")
-            .behaviour(CommandBehaviours.permissionChecking(COMMAND_PERMISSION));
+                .behaviour(CommandBehaviours.permissionChecking(COMMAND_PERMISSION));
     }
 
     @Override
@@ -69,10 +69,7 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     public void disable(MTCPlugin plugin) {
         HandlerList.unregisterAll(listener);
         actionManager.disable();
-        actionManager = null;
-        villagerPermissionCommand = null;
         villagerInfos.clear();
-        villagerInfos = null;
         save();
         ConfigurationSerialization.unregisterClass(VillagerInfo.class);
     }

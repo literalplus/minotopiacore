@@ -29,11 +29,15 @@ import java.util.UUID;
  */
 public class ActionManager {
     private final Map<UUID, Action> scheduledActions = Maps.newHashMapWithExpectedSize(2);
-    private final LeaveListener listener;
+    private final LeaveListener listener = new LeaveListener();
+    private final VillagerTradePermissionModule module;
 
     public ActionManager(VillagerTradePermissionModule module) {
-        listener = new LeaveListener();
-        module.getPlugin().getServer().getPluginManager().registerEvents(listener, module.getPlugin()); //anti memory leak //click listener not here as it interferes with permission check
+        this.module = module;
+    }
+
+    public void onEnable() {
+        module.getPlugin().getServer().getPluginManager().registerEvents(listener, module.getPlugin()); //click listener not here as it interferes with permission check
     }
 
     public Action getScheduledAction(Player plr) {
