@@ -35,15 +35,9 @@ public class ConfigHelper {
     private static boolean enableItemOnJoin;
     private static List<Integer> anvilAllowedItems;
     private static boolean clanEnabled;
-    private static boolean statsEnabled;
     private static int clanMaxUsers;
     private static int clanMaxUsersExtended;
     private static boolean chatUseClan;
-    private static boolean enableScB;
-    private static int scBUpdateInterval;
-    private static String scBMode;
-    private static boolean scBDisplayPlayerCount;
-    private static boolean scBReverseSql;
     private static ArrayList<PotionEffect> snowballEffects;
     private static boolean magicSnowballEnabled;
     private static boolean userStatisticsEnabled;
@@ -89,14 +83,6 @@ public class ConfigHelper {
 
     public static boolean getRemoveUnknownFulls() {
         return ConfigHelper.removeUnknownFulls;
-    }
-
-    public static String getScBMode() {
-        return ConfigHelper.scBMode;
-    }
-
-    public static int getScBUpdateInterval() {
-        return ConfigHelper.scBUpdateInterval;
     }
 
     /**
@@ -155,10 +141,6 @@ public class ConfigHelper {
         return ConfigHelper.enableItemOnJoin;
     }
 
-    public static boolean isEnableScB() {
-        return ConfigHelper.enableScB;
-    }
-
     public static boolean isEnableTablist() {
         return ConfigHelper.enableTablist;
     }
@@ -181,18 +163,6 @@ public class ConfigHelper {
 
     public static boolean isProhibitCmdsInBoats() {
         return ConfigHelper.prohibitCmdsInBoats;
-    }
-
-    public static boolean isScBDisplayPlayerCount() {
-        return ConfigHelper.scBDisplayPlayerCount;
-    }
-
-    public static boolean isScBReverseSql() {
-        return ConfigHelper.scBReverseSql;
-    }
-
-    public static boolean isStatsEnabled() {
-        return ConfigHelper.statsEnabled;
     }
 
     public static boolean isUserStatisticsEnabled() {
@@ -269,8 +239,6 @@ public class ConfigHelper {
         cfg.addDefault("enable.fixes.minecartPortal", true);
         cfg.addDefault("enable.fixes.boatCmds", true);
         cfg.addDefault("enable.clan", true);
-        cfg.addDefault("enable.stats", true);
-        cfg.addDefault("enable.scoreboard", false);
         cfg.addDefault("enable.snowball", true);
         cfg.addDefault("enable.userstatistics", true);
         cfg.addDefault("enable.signcolor", true);
@@ -297,11 +265,6 @@ public class ConfigHelper {
         cfg.addDefault("fulltag.allowedPlayers", Arrays.asList("xxyy98", "chris301234"));
         cfg.addDefault("fulltag.removeUnkownFulls", false);
         cfg.addDefault("fulltag.checkEveryInMinutes", 20);
-        cfg.addDefault("scoreboard.updateIntervalTicks", 100);
-        cfg.addDefault("scoreboard.mode", "ALL");
-        cfg.addDefault("scoreboard.modeExplanation", "ALL=cycle through; PVP=only PvP; TM=only TM");
-        cfg.addDefault("scoreboard.showPlayerCount", false);
-        cfg.addDefault("scoreboard.reversesql", false);
         cfg.addDefault("snowball.effects", new Integer[]{4, 15, 22});
         cfg.addDefault("snowball.timeoutTicks", 12000);
         cfg.addDefault("antilogout.secsInFight", 20);
@@ -315,11 +278,6 @@ public class ConfigHelper {
         cfg.addDefault("sql.user", "");
         cfg.addDefault("sql.db", "ni176987_1_DB");
         cfg.addDefault("sql.host", "jdbc:mysql://localhost:3306/");
-        cfg.addDefault("sql2.password", "");
-        cfg.addDefault("sql2.user", "");
-        cfg.addDefault("sql2.db", "troublemine");
-        cfg.addDefault("sql2.table", "tomt_users");
-        cfg.addDefault("sql2.host", "jdbc:mysql://localhost:3306/");
     }
 
     private static void initClassProperties(FileConfiguration cfg) {
@@ -336,15 +294,9 @@ public class ConfigHelper {
         ConfigHelper.enableItemOnJoin = cfg.getBoolean("enable.itemonjoin");
         ConfigHelper.anvilAllowedItems = cfg.getIntegerList("fixes.anvil-allowed-item-ids");
         ConfigHelper.clanEnabled = cfg.getBoolean("enable.clan", true);
-        ConfigHelper.statsEnabled = cfg.getBoolean("enable.stats", true);
         ConfigHelper.clanMaxUsers = cfg.getInt("clan.maxusers", 15);
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended", 25);
         ConfigHelper.chatUseClan = cfg.getBoolean("chat.useclan", true);
-        ConfigHelper.enableScB = cfg.getBoolean("enable.scoreboard", true);
-        ConfigHelper.scBUpdateInterval = cfg.getInt("scoreboard.updateIntervalTicks", 100);
-        ConfigHelper.scBMode = cfg.getString("scoreboard.mode", "ALL");
-        ConfigHelper.scBDisplayPlayerCount = cfg.getBoolean("scoreboard.showPlayerCount", false);
-        ConfigHelper.scBReverseSql = cfg.getBoolean("scoreboard.reversesql", false);
         ConfigHelper.initPotionProps(cfg);
         ConfigHelper.userStatisticsEnabled = cfg.getBoolean("enable.userstatistics", true);
         ConfigHelper.snowballTimeoutTicks = cfg.getLong("snowball.timeoutTicks", 12000L);

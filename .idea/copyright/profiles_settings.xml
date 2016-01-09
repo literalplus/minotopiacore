@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="MTC" />
+  <settings default="MTC">
+    <module2copyright>
+      <element module="PacketWrapper" copyright="PacketWrapper" />
+    </module2copyright>
+  </settings>
 </component>

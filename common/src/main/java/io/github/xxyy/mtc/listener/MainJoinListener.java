@@ -12,7 +12,6 @@ import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.clan.InvitationInfo;
 import io.github.xxyy.mtc.helper.LaterMessageHelper;
-import io.github.xxyy.mtc.helper.StatsHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,16 +71,6 @@ public final class MainJoinListener implements Listener {
             if (str != null) {
                 plr.sendMessage(str);
             }
-        }
-        //stats
-        if (StatsHelper.hasStats(plrName)) {
-            StatsHelper.fetchStats(plrName);
-        } else {
-            StatsHelper.createEntry(plrName);
-        }
-        if (ConfigHelper.isEnableScB()) {
-            plr.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-
         }
         //playerhide
         if (plugin.getConfig().getBoolean("enable.playerhide", false)) {

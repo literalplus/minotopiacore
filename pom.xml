@@ -39,7 +39,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <powermock.version>1.6.2</powermock.version>
-        <xyc.version>3.2.0.14-SNAPSHOT</xyc.version>
+        <xyc.version>3.2.1.1</xyc.version>
         <minecraft.version>1.8.3</minecraft.version>
         <spigot-api.release>R0.1</spigot-api.release>
         <rootDir>${project.basedir}</rootDir>
@@ -89,6 +89,16 @@
             <!-- xLogin, etc. -->
             <url>https://repo.nowak-at.net/xxyy-private/</url>
         </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <!-- ProtocolLib -->
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>puha-repo</id>
+            <!-- TitleManager -->
+            <url>http://repo.puha.io/nexus/content/repositories/releases/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -125,6 +135,12 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>com.comphenix.protocol</groupId>
+                <artifactId>ProtocolLib</artifactId>
+                <version>3.6.4</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.12.2</version>
@@ -143,6 +159,11 @@
                 <groupId>mkremins</groupId>
                 <artifactId>fanciful</artifactId>
                 <version>0.3.3-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>io.puharesource.mc</groupId>
+                <artifactId>TitleManager</artifactId>
+                <version>1.5.11</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -324,7 +345,8 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
                 <configuration>
-                    <configLocation>${project.checkstyle-config-path}</configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
+                    <configLocation>${project.checkstyle-config-path}
+                    </configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
                 </configuration>
                 <dependencies>
                     <dependency>

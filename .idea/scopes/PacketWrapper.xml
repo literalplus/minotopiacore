@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="PacketWrapper" pattern="file[mtc-common]:src/main/java/io/github/xxyy/mtc/module/pvpstats/scoreboard/packet/*||file[mtc-common]:src/main/java/io/github/xxyy/mtc/module/pvpstats/scoreboard/packet//*" />
+</component>

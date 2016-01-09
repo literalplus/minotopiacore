@@ -4,7 +4,7 @@ description: MinoTopiaCore - A collection of semi-essential stuff for MinoTopia.
 author: xxyy98/Literallie
 main: io.github.xxyy.mtc.MTC
 depend: [XYC]
-softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials, HolographicDisplays, HologrpahicDisplaysPatch]
+softdepend: [Vault, xLogin_Spigot, WorldGuard, Essentials, HolographicDisplays, ProtocolLib, TitleManager]
 website: http://xxyy.github.io/
 prefix: MTC
 
