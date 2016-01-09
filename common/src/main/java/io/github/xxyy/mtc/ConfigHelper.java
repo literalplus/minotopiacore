@@ -26,11 +26,7 @@ public class ConfigHelper {
     private static String tabListAllowedColors;
     private static boolean prohibitCmdsInBoats;
     private static boolean enableTablist;
-    private static boolean fullLogEnabled;
-    private static boolean fullTagEnabled;
     private static boolean mainLoggerEnabled;
-    private static List<String> fullTagAllowedPlayers;
-    private static boolean removeUnknownFulls;
     private static ItemStack itemOnJoin;
     private static boolean enableItemOnJoin;
     private static List<Integer> anvilAllowedItems;
@@ -45,7 +41,7 @@ public class ConfigHelper {
     private static boolean worldSpecificChat;
     private static boolean antiLogoutEnabled;
     private static int secsInFight;
-	private static int hologramTimeout;
+    private static int hologramTimeout;
     private static List<String> fightAllowedCmds;
     private static List<String> vehicleAllowedCmds;
     private static List<Integer> brewStackCheckpoints;
@@ -73,16 +69,8 @@ public class ConfigHelper {
         return ConfigHelper.fightAllowedCmds;
     }
 
-    public static List<String> getFullTagAllowedPlayers() {
-        return ConfigHelper.fullTagAllowedPlayers;
-    }
-
     public static ItemStack getItemOnJoin() {
         return ConfigHelper.itemOnJoin;
-    }
-
-    public static boolean getRemoveUnknownFulls() {
-        return ConfigHelper.removeUnknownFulls;
     }
 
     /**
@@ -92,12 +80,12 @@ public class ConfigHelper {
         return ConfigHelper.secsInFight;
     }
 
-	/**
-	 * @return the hologramTimeout
-	 */
-	public static int getHologramTimeout() {
-		return ConfigHelper.hologramTimeout;
-	}
+    /**
+     * @return the hologramTimeout
+     */
+    public static int getHologramTimeout() {
+        return ConfigHelper.hologramTimeout;
+    }
 
     public static ArrayList<PotionEffect> getSnowballEffects() {
         return ConfigHelper.snowballEffects;
@@ -143,14 +131,6 @@ public class ConfigHelper {
 
     public static boolean isEnableTablist() {
         return ConfigHelper.enableTablist;
-    }
-
-    public static boolean isFullLogEnabled() {
-        return ConfigHelper.fullLogEnabled;
-    }
-
-    public static boolean isFullTagEnabled() {
-        return ConfigHelper.fullTagEnabled;
     }
 
     public static boolean isMagicSnowballEnabled() {
@@ -229,7 +209,6 @@ public class ConfigHelper {
         cfg.addDefault("enable.betterdmgpotions", true);
         cfg.addDefault("enable.speedonjoin", false);
         cfg.addDefault("enable.cmdspy", true);
-        cfg.addDefault("enable.fulltag", true);
         cfg.addDefault("enable.log.main", true);
         cfg.addDefault("enable.log.cmds", true);
         cfg.addDefault("enable.log.chat", true);
@@ -262,13 +241,10 @@ public class ConfigHelper {
         cfg.addDefault("motd", "&6&lMinoTopia.me");
         cfg.addDefault("speedonjoin.potency", 5);
         cfg.addDefault("servername", "Unknown-" + (new File("").getAbsolutePath()));
-        cfg.addDefault("fulltag.allowedPlayers", Arrays.asList("xxyy98", "chris301234"));
-        cfg.addDefault("fulltag.removeUnkownFulls", false);
-        cfg.addDefault("fulltag.checkEveryInMinutes", 20);
         cfg.addDefault("snowball.effects", new Integer[]{4, 15, 22});
         cfg.addDefault("snowball.timeoutTicks", 12000);
         cfg.addDefault("antilogout.secsInFight", 20);
-	    cfg.addDefault("antilogout.hologramTimeout", 60);
+        cfg.addDefault("antilogout.hologramTimeout", 60);
         cfg.addDefault("antilogout.allowedCmds", new String[]{"msg", "m", "fix", "heal", "eat"});
         cfg.addDefault("vehicles.allowedCmds", new String[]{"msg", "m", "fix", "heal", "eat", "reply", "team"});
     }
@@ -285,11 +261,7 @@ public class ConfigHelper {
         ConfigHelper.tabListAllowedColors = cfg.getString("tablist.allowedColors", "7012345689abcdef");
         ConfigHelper.prohibitCmdsInBoats = cfg.getBoolean("enable.fixes.boatCmds", true);
         ConfigHelper.enableTablist = cfg.getBoolean("enable.tablist", true);
-        ConfigHelper.fullLogEnabled = cfg.getBoolean("enable.log.fulls", true);
-        ConfigHelper.fullTagEnabled = cfg.getBoolean("enable.fulltag", true);
         ConfigHelper.mainLoggerEnabled = cfg.getBoolean("enable.log.main", true);
-        ConfigHelper.fullTagAllowedPlayers = cfg.getStringList("fulltag.allowedPlayers");
-        ConfigHelper.removeUnknownFulls = cfg.getBoolean("fulltag.removeUnkownFulls", false);
         ConfigHelper.itemOnJoin = cfg.getItemStack("itemonjoin");
         ConfigHelper.enableItemOnJoin = cfg.getBoolean("enable.itemonjoin");
         ConfigHelper.anvilAllowedItems = cfg.getIntegerList("fixes.anvil-allowed-item-ids");
@@ -303,7 +275,7 @@ public class ConfigHelper {
         ConfigHelper.worldSpecificChat = cfg.getBoolean("enable.worldspecificchat", false);
         ConfigHelper.antiLogoutEnabled = cfg.getBoolean("enable.antilogout", false);
         ConfigHelper.secsInFight = cfg.getInt("antilogout.secsInFight", 20);
-	    ConfigHelper.hologramTimeout = cfg.getInt("antilogout.hologramTimeout", 60);
+        ConfigHelper.hologramTimeout = cfg.getInt("antilogout.hologramTimeout", 60);
         ConfigHelper.fightAllowedCmds = cfg.getStringList("antilogout.allowedCmds");
         ChatHelper.allowedChatColors = cfg.getString("chat.farbe.allowed", "012356789AaBbDdEeFfRr");
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");

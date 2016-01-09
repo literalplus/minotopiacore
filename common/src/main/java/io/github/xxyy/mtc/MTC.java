@@ -22,8 +22,6 @@ import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
 import io.github.xxyy.mtc.clan.ui.CommandClan;
 import io.github.xxyy.mtc.clan.ui.CommandClanAdmin;
 import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
-import io.github.xxyy.mtc.fulltag.CommandFull;
-import io.github.xxyy.mtc.fulltag.FullTagListener;
 import io.github.xxyy.mtc.gettime.CommandTime;
 import io.github.xxyy.mtc.helper.MTCHelper;
 import io.github.xxyy.mtc.hook.PexHook;
@@ -268,9 +266,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
         }
-        if (this.getConfig().getBoolean("enable.fulltag", true)) {
-            this.getCommand("full").setExecutor(new CommandFull());
-        }
         if (ConfigHelper.isClanEnabled()) {
             this.getCommand("xclan").setExecutor(new CommandClan(this));
             this.getCommand("clanadmin").setExecutor(new CommandClanAdmin());
@@ -312,7 +307,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         this.regEvents(pm, new AnvilNBrewingStandStackListener(), "enable.anvilNbrewingstandStackFix", true);
         this.regEvents(pm, new AntiInfPotionListener(), "enable.infPotionFix", true);
         this.regEvents(pm, new MoveNetherRoofListener(this), "enable.netherrooffix", true);
-        this.regEvents(pm, new FullTagListener(), "enable.fulltag", true);
         this.regEvents(pm, new ColoredSignListener(), "enable.signcolor", true);
         this.regEvents(pm, new PlayerHideInteractListener(), "enable.playerhide", false);
         this.regEvents(pm, new CommandSpyListener(), "enable.cmdspy", true);

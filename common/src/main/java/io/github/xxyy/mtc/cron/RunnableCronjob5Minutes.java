@@ -15,7 +15,6 @@ import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.PrivateChat;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.cron.fulls.RunnableCheckInvsForFull;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.CacheHelper;
 import org.apache.logging.log4j.Level;
@@ -36,7 +35,6 @@ import java.util.Map;
  */
 public class RunnableCronjob5Minutes implements Runnable {
     private static final Logger LOGGER = LogManager.getLogger(RunnableCronjob5Minutes.class);
-    private static int fullInfoExCount = 0;
     private static byte cacheExCount = 0;
     private final MTC plugin;
     private boolean forced = false;
@@ -74,14 +72,6 @@ public class RunnableCronjob5Minutes implements Runnable {
             CommandSpyFilters.removeDeadFilters();
 
             RunnableCronjob5Minutes.cacheExCount++;
-            RunnableCronjob5Minutes.fullInfoExCount++;
-
-            //Check Fulls
-            int checkEvery = plugin.getConfig().getInt("fulltag.checkEveryInMinutes", 20);
-            if (checkEvery > 0 && (RunnableCronjob5Minutes.fullInfoExCount * 5) >= checkEvery && ConfigHelper.isFullTagEnabled()) {
-                RunnableCronjob5Minutes.fullInfoExCount = 0;
-                (new RunnableCheckInvsForFull(plugin, Bukkit.getOnlinePlayers().iterator())).run();
-            }
 
             CacheHelper.clearCaches(forced, plugin);
 

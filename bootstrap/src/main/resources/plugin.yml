@@ -49,10 +49,6 @@ commands:
   cmdspy:
     description: "CommandSpy."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-  full:
-    description: "FullTag Main Command."
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [fulltag]
   xclan:
     description: "Clan UI"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
