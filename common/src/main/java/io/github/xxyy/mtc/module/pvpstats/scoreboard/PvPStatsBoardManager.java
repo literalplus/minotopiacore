@@ -63,12 +63,12 @@ public class PvPStatsBoardManager extends ScoreboardHelper {
     }
 
     private void updateScore(Player plr, PlayerStats data) {
-        updateScore(plr, OBJECTIVE_NAME, "§9Kills:", 6);
-        updateScore(plr, OBJECTIVE_NAME, "§0§e" + data.getKills(), 5); //color codes so that equal values don't get overridden
-        updateScore(plr, OBJECTIVE_NAME, "§9Deaths:", 4);
-        updateScore(plr, OBJECTIVE_NAME, "§1§e" + data.getDeaths(), 3);
-        updateScore(plr, OBJECTIVE_NAME, "§9K/D:", 2);
-        updateScore(plr, OBJECTIVE_NAME, "§2§e" + KD_FORMAT.format(data.getKDRatio()), 1);
+        updateScore(plr, OBJECTIVE_NAME, "§6Kills:", 6);
+        updateScore(plr, OBJECTIVE_NAME, "§0§f" + data.getKills(), 5); //color codes so that equal values don't get overridden
+        updateScore(plr, OBJECTIVE_NAME, "§6Deaths:", 4);
+        updateScore(plr, OBJECTIVE_NAME, "§1§f" + data.getDeaths(), 3);
+        updateScore(plr, OBJECTIVE_NAME, "§6K/D:", 2);
+        updateScore(plr, OBJECTIVE_NAME, "§2§f" + KD_FORMAT.format(data.getKDRatio()), 1);
     }
 
     private void prepareData(Player plr) {
