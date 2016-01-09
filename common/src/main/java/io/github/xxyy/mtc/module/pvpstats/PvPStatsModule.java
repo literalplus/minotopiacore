@@ -75,6 +75,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         configuration.addDefault("enable.title.killer", true);
         configuration.addDefault("enable.title.victim", false);
         configuration.addDefault("enable.scoreboard", false);
+        configuration.trySave();
     }
 
     public boolean isFeatureEnabled(String featureName) {
