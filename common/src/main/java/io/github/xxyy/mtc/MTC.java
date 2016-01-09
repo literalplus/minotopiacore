@@ -49,7 +49,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
@@ -75,6 +79,20 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     private PlayerGameManager gameManager;
     private MTCModuleManager moduleManager = new MTCModuleManager(this, this.getDataFolder());
     private Logger logger;
+
+    public MTC() {
+        initialise();
+    }
+
+    public MTC(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+        super(loader, descriptionFile, dataFolder, file);
+        initialise();
+    }
+
+    private void initialise() {
+        //Must be here because command spy filters need the logging system before #enable()
+        LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
+    }
 
     /**
      * @return an instance of MTC. No guarantees are made as to which and if it's actually usable.
@@ -158,7 +176,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     public void enable() {
         MTC.instance = this;
         try {
-            LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
             logger = LogManager.getLogger(getClass());
             logger.info("====== Enabling {}...", PLUGIN_VERSION.toString());
             logger.info("Container: {}", getServer().getVersion());
