@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.module.pvpstats.scoreboard;
 
-import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.module.pvpstats.PvPStatsModule;
 import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
 import io.github.xxyy.mtc.util.ScoreboardHelper;
@@ -81,7 +80,7 @@ public class PvPStatsBoardManager extends ScoreboardHelper {
         }
 
         createIntObjective(plr, OBJECTIVE_NAME,
-                CommandHelper.sixteenCharColorize(plr.getName(), "§e"),
+                "§8§l " + plr.getName(),
                 DisplaySlot.SIDEBAR);
     }
 
