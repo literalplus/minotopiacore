@@ -43,8 +43,12 @@ public class PvPStatsBoardManager extends ScoreboardHelper {
                 .registerEvents(new PvPStatsBoardListener(this), module.getPlugin());
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(
                 module.getPlugin(),
-                () -> new ArrayList<>(module.getPlugin().getServer().getOnlinePlayers())
-                        .forEach(this::updateScoreboard)
+                () -> {
+                    new ArrayList<>(module.getPlugin().getServer().getOnlinePlayers())
+                            .forEach(plr -> removeObjective(plr, OBJECTIVE_NAME));
+                    new ArrayList<>(module.getPlugin().getServer().getOnlinePlayers())
+                            .forEach(this::updateScoreboard);
+                }
         );
     }
 
