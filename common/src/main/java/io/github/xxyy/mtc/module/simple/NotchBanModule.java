@@ -15,6 +15,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Disallows the crafting of any kind of golden apple.
@@ -44,7 +46,14 @@ public class NotchBanModule extends MTCModuleAdapter {
 
     private class NotchListener implements Listener {
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-        public void onPrepareItemCraft(CraftItemEvent evt) {
+        public void onPrepareItemCraft(PrepareItemCraftEvent evt) {
+            if (evt.getRecipe().getResult().getType().equals(Material.GOLDEN_APPLE)) {
+                evt.getInventory().setItem(0, new ItemStack(Material.AIR));
+            }
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+        public void onCraftItem(CraftItemEvent evt) {
             if (evt.getRecipe().getResult().getType().equals(Material.GOLDEN_APPLE)) {
                 evt.getViewers().forEach(humanEntity ->
                         humanEntity.sendMessage("§cAuf MinoTopia kannst du keine goldenen Äpfel craften! " +
