@@ -43,7 +43,6 @@ public class MTCModuleManager implements ModuleManager {
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final CommandRegistrationManager commandRegistrationManager = new CommandRegistrationManager();
-    private final Reflections reflections = new Reflections("io.github.xxyy.mtc.module");
     private final ManagedConfiguration enabledModulesConfig;
 
     /**
@@ -100,7 +99,7 @@ public class MTCModuleManager implements ModuleManager {
      * @return a list of the discovered classes
      */
     public List<Class<? extends MTCModule>> findShippedModules() {
-        return reflections.getSubTypesOf(MTCModule.class).stream()
+        return new Reflections("io.github.xxyy.mtc.module").getSubTypesOf(MTCModule.class).stream()
                 .filter(clazz -> !Modifier.isAbstract(clazz.getModifiers()))
                 .collect(Collectors.toList());
     }
