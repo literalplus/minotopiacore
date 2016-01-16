@@ -197,7 +197,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             //RUNNABLES
             if (this.getConfig().getBoolean("enable.cron.5m", true)) {
                 Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableCronjob5Minutes(false, this), 2 * 60 * 20, 5 * 60 * 20);
-                getLogger().info("Automatically saving world every 5 minutes.");
             }
 
             //HOOKS

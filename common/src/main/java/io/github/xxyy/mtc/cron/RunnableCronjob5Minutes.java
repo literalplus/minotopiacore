@@ -7,9 +7,6 @@
 
 package io.github.xxyy.mtc.cron;
 
-import io.github.xxyy.common.sql.QueryResult;
-import io.github.xxyy.common.sql.SpigotSql;
-import io.github.xxyy.mtc.ConfigHelper;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.PrivateChat;
@@ -22,8 +19,6 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Map;
 
 
@@ -80,31 +75,6 @@ public class RunnableCronjob5Minutes implements Runnable {
                 RunnableCronjob5Minutes.cacheExCount = 0;
                 //clear clan caches
                 ClanHelper.clearCache();
-            }
-
-            //player stats
-            if (!this.forced && ConfigHelper.isUserStatisticsEnabled()) { //REFACTOR
-                Calendar cal = Calendar.getInstance();
-                SpigotSql sql = plugin.getSql();
-                String todayString = new SimpleDateFormat("YYYYMMdd").format(cal.getTime());
-                String hourString = new SimpleDateFormat("HHmm").format(cal.getTime());
-                String serverName = plugin.getConfig().getString("servername");
-                if (cal.get(Calendar.HOUR_OF_DAY) == 23 && cal.get(Calendar.MINUTE) > 45) {//there will have been 3 opportunities for the job to be executed, so safe
-
-                    try (QueryResult qr = sql.executeQueryWithResult("SELECT day FROM " + sql.dbName + ".mtc_userstats WHERE serverid=? AND day=?",
-                            serverName, todayString).vouchForResultSet()) {
-                        if (!qr.rs().isBeforeFirst()) {
-                            sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + ".mtc_userstats SET day=?,serverid=?,count=" +
-                                            "(SELECT AVG(count) FROM " + sql.dbName + ".mtc_userstats_day WHERE serverid=? AND dayid=?)",
-                                    todayString, serverName, serverName, todayString);
-                        }
-                    }
-                }
-
-                if (cal.get(Calendar.HOUR_OF_DAY) > 10 && cal.get(Calendar.HOUR_OF_DAY) < 23) {
-                    sql.safelyExecuteUpdate("INSERT INTO " + sql.dbName + ".mtc_userstats_day SET dayid=?, timeid=?, serverid=?, count=?",
-                            todayString, hourString, serverName, Bukkit.getOnlinePlayers().size());
-                }
             }
         } catch (Exception e) {//always occurs on disable //TODO: wat
             LOGGER.catching(Level.INFO, e);

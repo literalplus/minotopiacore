@@ -36,7 +36,6 @@ public class ConfigHelper {
     private static boolean chatUseClan;
     private static ArrayList<PotionEffect> snowballEffects;
     private static boolean magicSnowballEnabled;
-    private static boolean userStatisticsEnabled;
     private static long snowballTimeoutTicks;
     private static boolean worldSpecificChat;
     private static boolean antiLogoutEnabled;
@@ -145,10 +144,6 @@ public class ConfigHelper {
         return ConfigHelper.prohibitCmdsInBoats;
     }
 
-    public static boolean isUserStatisticsEnabled() {
-        return ConfigHelper.userStatisticsEnabled;
-    }
-
     public static boolean isWorldSpecificChat() {
         return ConfigHelper.worldSpecificChat;
     }
@@ -219,7 +214,6 @@ public class ConfigHelper {
         cfg.addDefault("enable.fixes.boatCmds", true);
         cfg.addDefault("enable.clan", true);
         cfg.addDefault("enable.snowball", true);
-        cfg.addDefault("enable.userstatistics", true);
         cfg.addDefault("enable.signcolor", true);
         cfg.addDefault("enable.playerhide", false);
         cfg.addDefault("enable.peace", false);
@@ -270,7 +264,6 @@ public class ConfigHelper {
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended", 25);
         ConfigHelper.chatUseClan = cfg.getBoolean("chat.useclan", true);
         ConfigHelper.initPotionProps(cfg);
-        ConfigHelper.userStatisticsEnabled = cfg.getBoolean("enable.userstatistics", true);
         ConfigHelper.snowballTimeoutTicks = cfg.getLong("snowball.timeoutTicks", 12000L);
         ConfigHelper.worldSpecificChat = cfg.getBoolean("enable.worldspecificchat", false);
         ConfigHelper.antiLogoutEnabled = cfg.getBoolean("enable.antilogout", false);
