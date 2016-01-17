@@ -215,13 +215,13 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
                 tryLoad();
                 break;
             case SAVE:
-                trySave();
+                asyncSave(plugin);
                 break;
             case RELOAD_ON_FORCED:
                 if (forced) {
                     tryLoad();
                 } else {
-                    trySave();
+                    asyncSave(plugin);
                 }
                 break;
             case NOTHING:
