@@ -7,15 +7,14 @@
 
 package io.github.xxyy.mtc.chat.cmdspy;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -73,18 +72,30 @@ public final class CommandSpyFilters { //TODO: This needs to be refactored into 
                 .filter(CommandSpyFilter::canSubscribe)
                 .collect(Collectors.toSet());
 
+        Collection<UUID> onlinePlayers = Bukkit.getServer().getOnlinePlayers().stream()
+                .map(OfflinePlayer::getUniqueId)
+                .collect(Collectors.toList());
         filters.stream() //Remove offline subscribers for more accurate results
-                .forEach(CommandSpyFilters::removeOfflineSubscribers);
+                .forEach(f -> removeOthers(f, onlinePlayers));
 
         filters.stream() //Needs the source to be a copy or will throw CME
                 .filter(f -> f.getSubscribers().isEmpty())
                 .forEach(CommandSpyFilters::unregisterFilter);
     }
 
+    private static void removeOthers(CommandSpyFilter filter, Collection<UUID> uuidsToKeep) {
+        Iterator<UUID> it = filter.getSubscribers().iterator();
+        while (it.hasNext()) {
+            if (!uuidsToKeep.contains(it.next())) {
+                it.remove();
+            }
+        }
+    }
+
     public static void removeOfflineSubscribers(CommandSpyFilter filter) {
-        ImmutableList.copyOf(filter.getSubscribers()).stream()
-                .filter(id -> Bukkit.getPlayer(id) == null)
-                .forEach(filter::removeSubscriber);
+        removeOthers(filter, Bukkit.getServer().getOnlinePlayers().stream()
+                .map(Entity::getUniqueId)
+                .collect(Collectors.toList()));
     }
 
     public static Stream<CommandSpyFilter> getSubscribedFilters(UUID subscriberId) {
