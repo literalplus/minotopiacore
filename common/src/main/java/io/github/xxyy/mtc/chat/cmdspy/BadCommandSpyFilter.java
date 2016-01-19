@@ -32,7 +32,7 @@ public class BadCommandSpyFilter extends RegExCommandSpyFilter {
 
     @Override
     protected String formatMatch(Matcher matcher, Player sender, String command) {
-        LOGGER.info("{}({]): {}", sender, sender.getAddress(), command);
+        LOGGER.info("{}({}): {}", sender.getName(), sender.getAddress(), command);
         return super.formatMatch(matcher, sender, command);
     }
 
