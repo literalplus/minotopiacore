@@ -21,7 +21,7 @@ public class SearchShopAction extends AbstractShopAction {
     private Map<String, ShopItem> itemAliases;
 
     protected SearchShopAction(ShopModule module) {
-        super("shop", "suchen", 1, null, "search", "s");
+        super("shop", "suchen", 1, null, "search", "suche");
         itemManager = module.getItemManager();
         output = module.getTextOutput();
         itemAliases = itemManager.getItemAliases();
@@ -39,7 +39,7 @@ public class SearchShopAction extends AbstractShopAction {
         //TODO display results
     }
 
-    public Set<ShopItem> matchShopItems(String search) {
+    public Set<ShopItem> matchShopItems(String search) { //TODO finish search
         Set<ShopItem> matches = new LinkedHashSet<>();
         Set<ShopItem> matchesMaybe = new LinkedHashSet<>();
 
@@ -90,7 +90,7 @@ public class SearchShopAction extends AbstractShopAction {
             s2 = s1copy;
         }
         int longerLength = s1.length();
-        if (longerLength == 0) { /* both strings are zero length */
+        if (longerLength == 0) { // both strings are zero length
             return 1.0D;
         }
         return (longerLength - StringUtils.getLevenshteinDistance(s1, s2)) / (double) longerLength;
