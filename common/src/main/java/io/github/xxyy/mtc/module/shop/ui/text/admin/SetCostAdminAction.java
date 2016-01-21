@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-public class SetSellShopAdminAction extends AbstractShopAction {
+public class SetCostAdminAction extends AbstractShopAction {
     private static final Joiner SPACE_JOINER = Joiner.on(' ');
     private final ShopModule module;
 
-    protected SetSellShopAdminAction(ShopModule module) {
-        super("shopadmin", "setsell", 2, null);
+    protected SetCostAdminAction(ShopModule module) {
+        super("shopadmin", "setcost", 2, null);
         this.module = module;
     }
 
@@ -28,13 +28,13 @@ public class SetSellShopAdminAction extends AbstractShopAction {
         }
         try {
             double price = Double.parseDouble(args[0]);
-            if (price >= item.getBuyCost()) {
+            if (price <= item.getSellWorth()) {
                 plr.sendMessage("§cDu kannst den Verkaufspreis nicht geringer als den Kaufpreis machen.");
                 return;
             }
             item.setBuyCost(price);
             module.getItemConfig().asyncSave(module.getPlugin());
-            plr.sendMessage("§aDas Item §6" + item.getDisplayName() + "§a kann nun für §6" + ShopStringAdaptor.getCurrencyString(price) + "§a verkauft werden.");
+            plr.sendMessage("§aDas Item §6" + item.getDisplayName() + "§a kann nun für §6" + ShopStringAdaptor.getCurrencyString(price) + "§a gekauft werden.");
         } catch (NumberFormatException ignored) {
             plr.sendMessage("§cDer Preis muss eine Zahl sein!");
         }
@@ -42,6 +42,6 @@ public class SetSellShopAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<preis> <shopitem>", "Setzt den Verkaufspreis eines Items");
+        sendHelpLine(plr, "<preis> <shopitem>", "Setzt den Kaufpreis eines Items");
     }
 }

@@ -24,8 +24,8 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
         this.module = module;
         actionList.add(new AddItemShopAdminAction(module));
         actionList.add(new AliasShopAdminAction(module));
-        actionList.add(new SetBuyShopAdminAction(module));
-        actionList.add(new SetSellShopAdminAction(module));
+        actionList.add(new SetCostAdminAction(module));
+        actionList.add(new SetWorthShopAdminAction(module));
     }
 
     @Override
