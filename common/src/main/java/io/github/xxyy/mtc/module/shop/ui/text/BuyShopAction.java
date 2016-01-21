@@ -17,7 +17,7 @@ public class BuyShopAction extends AbstractShopAction {
     private final ShopModule module;
 
     protected BuyShopAction(ShopModule module) {
-        super("shop", "kaufen", 2, null, "buy");
+        super("shop", "kaufen", 2, null, "buy", "b", "k");
         this.module = module;
     }
 
