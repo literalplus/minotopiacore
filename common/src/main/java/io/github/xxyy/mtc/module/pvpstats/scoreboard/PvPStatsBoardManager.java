@@ -84,7 +84,7 @@ public class PvPStatsBoardManager extends ScoreboardHelper {
         }
 
         createIntObjective(plr, OBJECTIVE_NAME,
-                "§8§l " + plr.getName(),
+                "§e§l " + plr.getName(),
                 DisplaySlot.SIDEBAR);
     }
 
