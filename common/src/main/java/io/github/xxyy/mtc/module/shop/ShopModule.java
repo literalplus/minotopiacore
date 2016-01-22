@@ -15,6 +15,7 @@ import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
+import io.github.xxyy.mtc.module.shop.ui.text.admin.CommandShopAdmin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -54,6 +55,7 @@ public class ShopModule extends ConfigurableMTCModule {
         transactionExecutor = new ShopTransactionExecutor(this);
 
         plugin.getCommand("shop").setExecutor(new CommandShop(this));
+        plugin.getCommand("shopadmin").setExecutor(new CommandShopAdmin(this));
     }
 
     @Override

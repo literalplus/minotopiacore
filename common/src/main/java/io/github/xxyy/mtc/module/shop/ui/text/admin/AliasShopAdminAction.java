@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.regex.Pattern;
 
 public class AliasShopAdminAction extends AbstractShopAction {
-    private static final Joiner SPACE_JOINER = Joiner.on(' ');
+    private static final Joiner ALIASES_JOINER = Joiner.on("§7, §a");
     private static final Pattern ITEM_NAME_ALIAS_DELIMITER = Pattern.compile("|", Pattern.LITERAL);
     private final ShopModule module;
 
@@ -51,7 +51,7 @@ public class AliasShopAdminAction extends AbstractShopAction {
                 break;
             }
             case "list": {
-                plr.sendMessage("§6Aliases of §a" + item.getDisplayName() + "§6: §a" + Joiner.on("§7, §a").join(item.getAliases()));
+                plr.sendMessage("§6Aliases of §a" + item.getDisplayName() + "§6: §a" + ALIASES_JOINER.join(item.getAliases()));
                 break;
             }
         }
