@@ -93,13 +93,14 @@ public final class CommandMTC extends MTCCommandExecutor {
                     renamePlayer.sendMessage("§7Der Name deines Items wurde auf §3" + text + "§7 gesetzt.");
                     return true;
                 case "reload":
-                    if (!CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.mtc.reload", "MTC reloaden")) {
-                        return true;
-                    }
-                    CommandHelper.sendImportantActionMessage(sender, "Reloading MTC..");
-                    Bukkit.getPluginManager().disablePlugin(plugin);
-                    Bukkit.getPluginManager().enablePlugin(plugin);
-                    CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC!");
+//                    if (!CommandHelper.checkActionPermAndMsg(sender, "mtc.cmd.mtc.reload", "MTC reloaden")) {
+//                        return true;
+//                    }
+//                    CommandHelper.sendImportantActionMessage(sender, "Reloading MTC..");
+//                    Bukkit.getPluginManager().disablePlugin(plugin);
+//                    Bukkit.getPluginManager().enablePlugin(plugin);
+//                    CommandHelper.sendImportantActionMessage(sender, "Reloaded MTC!");
+                    sender.sendMessage("§cNo longer supported due to general issues! (configs, etc)");
                     return true;
                 case "fm":
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.fm", label + " fm")) {
