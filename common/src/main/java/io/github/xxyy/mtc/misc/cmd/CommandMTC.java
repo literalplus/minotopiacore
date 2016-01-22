@@ -108,10 +108,13 @@ public final class CommandMTC extends MTCCommandExecutor {
 
                     String message = StringHelper.varArgsString(args, 1, true).replace("\\n", "\n");
                     BaseComponent[] adminComponents = TextComponent.fromLegacyText(message);
-                    adminComponents[0].setHoverEvent(new HoverEvent(
+                    HoverEvent adminHover = new HoverEvent(
                             HoverEvent.Action.SHOW_TEXT,
                             new XyComponentBuilder("/xyu fm - " + senderName).create()
-                    ));
+                    );
+                    for (BaseComponent adminComponent : adminComponents) {
+                        adminComponent.setHoverEvent(adminHover);
+                    }
 
                     for (Player plr : Bukkit.getOnlinePlayers()) {
                         if (plr.hasPermission("mtc.spy")) {
