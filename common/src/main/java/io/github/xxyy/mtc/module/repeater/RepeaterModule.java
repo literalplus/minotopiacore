@@ -31,16 +31,21 @@ public class RepeaterModule extends ConfigurableMTCModule {
 
     public RepeaterModule() {
         super(NAME, "modules/messages.conf.yml", ClearCacheBehaviour.SAVE, true);
-        ConfigurationSerialization.registerClass(RepeatingMessage.class);
     }
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
+        ConfigurationSerialization.registerClass(RepeatingMessage.class);
         super.enable(plugin);
 
         registerCommand(new CommandRepeat(this), "repeat", "rpt")
                 .behaviour(CommandBehaviours.permissionChecking(RepeaterModule.ADMIN_PERMISSION));
         plugin.getServer().getScheduler().runTaskTimer(plugin, new RepeaterTask(this), 5 * SECONDS_PER_TICK * 20L, SECONDS_PER_TICK * 20L);
+    }
+
+    @Override
+    public void disable(MTCPlugin plugin) {
+        ConfigurationSerialization.unregisterClass(RepeatingMessage.class);
     }
 
     @Override
