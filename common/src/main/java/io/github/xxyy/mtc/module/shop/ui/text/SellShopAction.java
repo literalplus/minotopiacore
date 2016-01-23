@@ -68,14 +68,19 @@ public class SellShopAction extends AbstractShopAction {
             return;
         }
 
-        if (args.length < 2 || args[1].equalsIgnoreCase("all")) { //FIXME collect all items of hand type and data in inventory and sell them all
+        if (args.length < 2 || args[1].equalsIgnoreCase("all")) { //FIXME collect all items of hand's type & data in inventory and sell them all
             amount = itemInHand.getAmount();
         } else {
             if (!StringUtils.isNumeric(args[1])) {
                 plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
                 return;
             }
-            amount = Integer.parseInt(args[1]);
+            try {
+                amount = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ignored) {
+                plr.sendMessage("§cDie Anzahl der Items sollte einen realistischen Rahmen haben.");
+                return;
+            }
         }
 
         module.getTransactionExecutor().attemptTransaction(plr, item, amount, TransactionType.SELL);
