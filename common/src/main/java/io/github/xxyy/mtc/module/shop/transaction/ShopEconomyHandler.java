@@ -39,7 +39,7 @@ public class ShopEconomyHandler implements TransactionHandler {
                     return new FailedTransactionInfo("Du hast nicht genug Geld, um " +
                             ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
                             " für " +
-                            ShopStringAdaptor.getCurrencyString(amount) + " zu kaufen. Du hast " +
+                            ShopStringAdaptor.getCurrencyString(price) + " zu kaufen. Du hast " +
                             ShopStringAdaptor.getCurrencyString(vaultHook.getBalance(plr)) + ".");
                 }
                 EconomyResponse responseBuy = vaultHook.withdrawPlayer(plr, price);

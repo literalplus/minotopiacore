@@ -44,7 +44,7 @@ public class ShopInventoryHandler implements TransactionHandler {
             } //back at the start now
             return new FailedTransactionInfo("Du brauchst für " +
                     ShopStringAdaptor.getAdjustedDisplayName(item, amount) +
-                    (int) Math.ceil(((double) amount) / 64D) + " freie Slots in deinem Inventar!");
+                    (int) Math.ceil(((double) amount) / ((double) stack.getMaxStackSize())) + " freie Slots in deinem Inventar!");
         }
         return new RevokableTransactionInfo(() -> plr.getInventory().removeItem(stack));
     }

@@ -28,7 +28,13 @@ public class BuyShopAction extends AbstractShopAction {
             return;
         }
 
-        int amount = Integer.parseInt(args[2]);
+        int amount;
+        try {
+            amount = Integer.parseInt(args[2]);
+        } catch (NumberFormatException ignored) {
+            plr.sendMessage("§cDie Anzahl der Items sollte einen realistischen Rahmen haben.");
+            return;
+        }
         String itemName = StringHelper.varArgsString(args, 1, 1, false);
         ShopItem item = module.getItemManager().getItem(itemName);
 
