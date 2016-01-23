@@ -28,8 +28,8 @@ public class SetWorthShopAdminAction extends AbstractShopAction {
         }
         try {
             double price = Double.parseDouble(args[0]);
-            if (price >= item.getBuyCost()) {
-                plr.sendMessage("§cDu kannst den Verkaufspreis nicht geringer als den Kaufpreis machen.");
+            if (price >= item.getBuyCostSale()) {
+                plr.sendMessage("§cDu kannst den Verkaufspreis nicht höher oder gleich dem reduzierten Kaufpreis machen.");
                 return;
             }
             item.setSellWorth(price);

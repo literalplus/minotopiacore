@@ -8,14 +8,13 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
+import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopActionHelper;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,25 +22,21 @@ import java.util.List;
  *
  * @author Janmm14, Literallie
  */
-public class CommandShop extends MTCCommandExecutor { //TODO test (integration test)
+public class CommandShop extends MTCPlayerOnlyCommandExecutor { //TODO test (integration test) //TODO maybe allow console to use this command
     private final ShopModule module;
     private final List<ShopAction> actionList = new ArrayList<>();
 
     public CommandShop(ShopModule module) {
         this.module = module;
-        actionList.add(new BuyShopAction(getModule()));
-        actionList.add(new SellShopAction(getModule()));
-        actionList.add(new PriceShopAction(getModule()));
-        //actionList.add(new SearchShopAction(getModule()));
+        actionList.add(new BuyShopAction(module));
+        actionList.add(new SellShopAction(module));
+        actionList.add(new PriceShopAction(module));
+        //actionList.add(new SearchShopAction(module));
     }
 
     @Override
-    public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
-            return true;
-        }
-        Player plr = (Player) sender;
-        if (!CommandHelper.checkPermAndMsg(sender, "mtc.shop.execute", label)) {
+    public boolean catchCommand(Player plr, String senderName, Command cmd, String label, String[] args) {
+        if (!CommandHelper.checkPermAndMsg(plr, "mtc.shop.execute", label)) {
             return true;
         }
 
@@ -51,24 +46,13 @@ public class CommandShop extends MTCCommandExecutor { //TODO test (integration t
             return true;
         }
 
-        for (ShopAction action : actionList) {
-            if (action.matches(args[0])) {
-                if (action.getPermission() != null && !plr.hasPermission(action.getPermission())) {
-                    plr.sendMessage("§cDu darfst /shop " + action.getDisplayName() + " nicht verwenden!");
-                } else if (action.getMinimumArguments() <= args.length - 1) {
-                    plr.sendMessage("§cInvalide Syntax. Versuche:");
-                    action.sendHelpLines(plr);
-                } else {
-                    action.execute(Arrays.copyOfRange(args, 1, args.length, String[].class), plr, args[0]);
-                }
-                return true;
-            }
+        if (ShopActionHelper.matchExecuteAction(actionList, plr, args, args[0])) {
+            return true;
         }
         //no action found
 
         //if user was not asking for help, send unknown action before help
         if (!args[0].equalsIgnoreCase("help") && !args[0].equals("?")) {
-
             plr.sendMessage("§cUnbekannte Aktion §6" + args[0]);
         }
 
@@ -82,9 +66,5 @@ public class CommandShop extends MTCCommandExecutor { //TODO test (integration t
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));
         plr.sendMessage("§b[]---------------------------------------------[]");
-    }
-
-    public ShopModule getModule() {
-        return module;
     }
 }

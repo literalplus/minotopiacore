@@ -20,10 +20,14 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -40,6 +44,7 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
     private final MTC plugin;
     private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
+    private ShopItem itemOnSale;
 
     protected ShopItemConfiguration(File file, MTC plugin) {
         super(file);
@@ -178,6 +183,27 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
     @Override
     public Map<String, ShopItem> getItemAliases() {
         return itemAliases;
+    }
+
+    @Override
+    @Nullable
+    public ShopItem getItemOnSale() {
+        return itemOnSale;
+    }
+
+    @Override
+    public boolean setItemOnSale(@NotNull ShopItem item) {
+        if (item.setOnSale(true)) {
+            itemOnSale.setOnSale(false);
+            itemOnSale = item;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<ShopItem> getItems() {
+        return new ArrayList<>(shopItems.values());
     }
 
     public MTC getPlugin() {

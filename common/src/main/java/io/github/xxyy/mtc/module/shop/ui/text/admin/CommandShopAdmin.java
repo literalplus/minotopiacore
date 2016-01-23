@@ -26,6 +26,7 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
         actionList.add(new AliasShopAdminAction(module));
         actionList.add(new SetCostAdminAction(module));
         actionList.add(new SetWorthShopAdminAction(module));
+        //TODO remove shop item (+ look at current sale item)
     }
 
     @Override
@@ -39,14 +40,13 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
             return true;
         }
 
-        if (ShopActionHelper.matchAction(actionList, plr, args, args[0])) {
+        if (ShopActionHelper.matchExecuteAction(actionList, plr, args, args[0])) {
             return true;
         }
         //no action found
 
         //if user was not asking for help, send unknown action before help
         if (!args[0].equalsIgnoreCase("help") && !args[0].equals("?")) {
-
             plr.sendMessage("§cUnbekannte Aktion §6" + args[0]);
         }
 

@@ -82,7 +82,7 @@ public class PriceShopAction extends AbstractShopAction {
             return;
         }
 
-        if (!output.extraCheckStackTradable(plr, itemInHand, "in deiner Hand")) {
+        if (!output.extraCheckStackSellable(plr, itemInHand, "in deiner Hand")) {
             return;
         }
 

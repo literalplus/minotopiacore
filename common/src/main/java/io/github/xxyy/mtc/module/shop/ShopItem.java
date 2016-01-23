@@ -26,14 +26,17 @@ public class ShopItem {
     public static final String ALIASES_PATH = "aliases";
     public static final String BUY_COST_PATH = "buy";
     public static final String SELL_WORTH_PATH = "sell";
+    public static final String SALE_REDUCTION_PERCENT = "sale_reduction_percent";
 
     private final Material material;
     private final byte dataValue;
     private final List<String> aliases;
     private double buyCost;
     private double sellWorth;
+    private double saleReductionPercent = .2;
+    private transient boolean onSale = false;
 
-    public ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
+    public ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases, double saleReductionPercent) {
         Preconditions.checkNotNull(material, "material");
         Preconditions.checkNotNull(aliases, "aliases");
         Preconditions.checkArgument(buyCost >= 0, "buyCost must be greater than or equal to 0");
@@ -44,6 +47,7 @@ public class ShopItem {
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
+        this.saleReductionPercent = saleReductionPercent;
     }
 
     /**
@@ -63,10 +67,11 @@ public class ShopItem {
         byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : -1;
 
         List<String> aliases = section.getStringList(ALIASES_PATH);
-        int cost = section.getInt(BUY_COST_PATH);
-        int worth = section.getInt(SELL_WORTH_PATH);
+        double cost = section.getDouble(BUY_COST_PATH);
+        double worth = section.getDouble(SELL_WORTH_PATH);
+        double saleBuyReductionPercent = section.getDouble(SALE_REDUCTION_PERCENT);
 
-        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases);
+        return new ShopItem(cost, worth, Material.getMaterial(materialName), dataValue, aliases, saleBuyReductionPercent);
     }
 
     /**
@@ -154,14 +159,31 @@ public class ShopItem {
         return buyCost;
     }
 
+    public double getBuyCostSale() {
+        return buyCost * (1 - saleReductionPercent);
+    }
+
+    /**
+     * Returns the final buycost, taking current sale state into account.
+     * @return the amount of virtual money that players have to pay in order to be sold this item
+     */
+    public double getBuyCostFinal() {
+        return onSale ? getBuyCostSale() : getBuyCost();
+    }
+
     /**
      * Sets the amount of virtual money that players have to pay in order to be sold this item.
      * A negative or a value of {@code 0} indicates that this item is not buyable.
      *
      * @param buyCost the cost of this item
+     * @return Whether the input value was valid and the property got updated
      */
-    public void setBuyCost(double buyCost) {
+    public boolean setBuyCost(double buyCost) {
+        if (!Double.isFinite(buyCost) || buyCost < sellWorth) {
+            return false;
+        }
         this.buyCost = buyCost;
+        return true;
     }
 
     /**
@@ -176,9 +198,51 @@ public class ShopItem {
      * A negative or a value of {@code 0} indicates that this item is not sellable.
      *
      * @param sellWorth the worth of this item
+     * @return Whether the input value was valid and the property got updated
      */
-    public void setSellWorth(double sellWorth) {
+    public boolean setSellWorth(double sellWorth) {
+        if (!Double.isFinite(sellWorth) || sellWorth > getBuyCostSale()) {
+            return false;
+        }
         this.sellWorth = sellWorth;
+        return true;
+    }
+
+    public double getSaleReductionPercent() {
+        return saleReductionPercent;
+    }
+
+    /**
+     * Sets the sale reduction percent.
+     * <p>
+     * The buyCost of an item currently on sale is: {@code buyCost * (1 - saleReductionPercent)}
+     * A value of {@code 0} indicates this item will never be on sale.
+     *
+     * @param saleReductionPercent the sale reduction, between 0 (inclusive) and 1 (exclusive)
+     * @return Whether the input value was valid and the property got updated
+     */
+    public boolean setSaleReductionPercent(double saleReductionPercent) {
+        if(saleReductionPercent < 0 || saleReductionPercent >= 1) {
+            return false;
+        }
+        this.saleReductionPercent = saleReductionPercent;
+        return true;
+    }
+
+    public boolean isOnSale() {
+        return onSale;
+    }
+
+    boolean setOnSale(boolean onSale) {
+        if (!canBeBought() || !canBeOnSale()) {
+            return false;
+        }
+        this.onSale = onSale;
+        return true;
+    }
+
+    public boolean canBeOnSale() {
+        return saleReductionPercent != 0;
     }
 
     /**
@@ -201,6 +265,7 @@ public class ShopItem {
         result.set(ALIASES_PATH, aliases);
         result.set(BUY_COST_PATH, buyCost);
         result.set(SELL_WORTH_PATH, sellWorth);
+        result.set(SALE_REDUCTION_PERCENT, saleReductionPercent);
         return result;
     }
 
@@ -234,6 +299,7 @@ public class ShopItem {
                 ", aliases=" + aliases +
                 ", buyCost=" + buyCost +
                 ", sellWorth=" + sellWorth +
+                ", saleReductionPercent=" + saleReductionPercent +
                 '}'; //IntelliJ says that this is "at least as efficient or more efficient" than StringBuilder
     }
 

@@ -27,12 +27,14 @@ import net.md_5.bungee.api.chat.TextComponent;
  */
 public class ShopModule extends ConfigurableMTCModule {
     public static final String NAME = "Shop";
+    private static final String SALE_CHANGE_MINUTES_PATH = "sale_change_minutes";
     private final XyComponentBuilder prefixBuilder = new XyComponentBuilder("[").color(ChatColor.AQUA)
             .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
     private final String prefix = TextComponent.toLegacyText(new XyComponentBuilder(prefixBuilder).create());
     private ShopItemConfiguration itemConfig;
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
+    private SaleChangeRunnable saleChangeRunnable;
 
     public ShopModule() {
         super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD, false);
@@ -61,6 +63,26 @@ public class ShopModule extends ConfigurableMTCModule {
     @Override
     protected void reloadImpl() {
         //FIXME reload item config
+
+        configuration.addDefault(SALE_CHANGE_MINUTES_PATH, 60);
+        configuration.trySave();
+        int saleChangeMinutes = configuration.getInt(SALE_CHANGE_MINUTES_PATH);
+
+        if (saleChangeRunnable != null) {
+            saleChangeRunnable.cancel();
+        }
+        saleChangeRunnable = new SaleChangeRunnable(this);
+        saleChangeRunnable.runTaskTimerAsynchronously(plugin, 1, 20 * 60 * saleChangeMinutes);
+    }
+
+    public void drawNewSaleItem() {
+        saleChangeRunnable.run();
+    }
+
+    @Override
+    public void disable(MTC plugin) {
+        plugin.getCommand("shop").setExecutor(null);
+        plugin.getCommand("shopadmin").setExecutor(null);
     }
 
     @Override

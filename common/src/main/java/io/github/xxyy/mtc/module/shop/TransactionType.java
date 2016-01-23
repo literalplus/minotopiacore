@@ -28,7 +28,7 @@ public enum TransactionType {
         @Override
         public double getValue(@NotNull ShopItem item) {
             Preconditions.checkNotNull(item, "item");
-            return item.getBuyCost();
+            return item.getBuyCostFinal();
         }
 
         @Override

@@ -1,12 +1,14 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
 import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -78,7 +80,7 @@ public class ShopTextOutput {
      * @return whether selling that specific itemStack is forbidden
      * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
      */
-    public boolean extraCheckStackTradable(CommandSender reciever, ItemStack itemStack) {
+    public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack) {
         if (module.getItemManager().isSellForbidden(itemStack)) {
             sendPrefixed(reciever, "§cDieses Item kann nicht verkauft werden.");
             return false;
@@ -92,7 +94,7 @@ public class ShopTextOutput {
      * @return whether selling that specific itemStack is forbidden
      * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
      */
-    public boolean extraCheckStackTradable(CommandSender reciever, ItemStack itemStack, String queryInfo) {
+    public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack, String queryInfo) {
         if (module.getItemManager().isSellForbidden(itemStack)) {
             sendPrefixed(reciever, "§cDas Item " + queryInfo + " kann nicht verkauft werden.");
             return false;
@@ -135,22 +137,22 @@ public class ShopTextOutput {
         }
 
         if (item.canBeBought()) {
-            ComponentSender.sendTo(
-                    module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                            .append(" kann für ", ChatColor.GOLD)
-                            .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()), ChatColor.YELLOW)
-                            .append(" gekauft werden.", ChatColor.GOLD),
-                    receiver
-            );
+            XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
+                .append(" kann für ", ChatColor.GOLD)
+                .append(ShopStringAdaptor.getCurrencyString(item.getBuyCostFinal()), ChatColor.YELLOW);
+            if (item.isOnSale()) {
+                builder.append(" statt ", ChatColor.GOLD)
+                    .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()));
+            }
+            builder.append(" gekauft werden.", ChatColor.GOLD);
+            ComponentSender.sendTo(builder, receiver);
         }
         if (item.canBeSold()) {
-            ComponentSender.sendTo(
-                    module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                            .append(" kann für ", ChatColor.GOLD)
-                            .append(ShopStringAdaptor.getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
-                            .append(" verkauft werden.", ChatColor.GOLD),
-                    receiver
-            );
+            XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
+                .append(" kann für ", ChatColor.GOLD)
+                .append(ShopStringAdaptor.getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
+                .append(" verkauft werden.", ChatColor.GOLD);
+            ComponentSender.sendTo(builder, receiver);
         }
     }
 
@@ -234,5 +236,39 @@ public class ShopTextOutput {
                         .append(errorMessage, ChatColor.RED, ChatColor.ITALIC)
                         .create(),
                 receiver);
+    }
+
+    /**
+     * Notifies a command sender about an item being on sale.
+     *
+     * @param item the item currently on sale
+     * @param reciever the player to send the item on sale
+     */
+    public void sendItemSale(ShopItem item, CommandSender reciever) {
+        ComponentSender.sendTo(getItemSaleMessage(item), reciever);
+    }
+
+    /**
+     * Broadcast notification about an item being on sale.
+     * @param item the item currently on sale.
+     */
+    public void broadcastItemSale(ShopItem item) {
+        BaseComponent[] itemSaleMessage = getItemSaleMessage(item);
+        module.getPlugin().getServer().getOnlinePlayers().forEach(plr -> plr.spigot().sendMessage(itemSaleMessage));
+    }
+
+    private BaseComponent[] getItemSaleMessage(ShopItem item) {
+        return module.getPrefixBuilder()
+            .append("Neues Sonderangebot! ")
+            .append(item.getDisplayName(), ChatColor.YELLOW)
+            .append(" jetzt um ", ChatColor.GOLD)
+            .append(percentageDisplay(item.getSaleReductionPercent()) + '%', ChatColor.YELLOW)
+            .append(" reduziert.", ChatColor.GOLD)
+            .create();
+    }
+
+    private String percentageDisplay(double percentage) {
+        percentage *= 100;
+        return Integer.toString((int) percentage);
     }
 }

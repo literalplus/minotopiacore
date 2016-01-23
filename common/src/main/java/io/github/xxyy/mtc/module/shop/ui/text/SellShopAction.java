@@ -60,7 +60,7 @@ public class SellShopAction extends AbstractShopAction {
     private void sellHand(String[] args, Player plr) {
         int amount;
         ItemStack itemInHand = plr.getItemInHand();
-        if (!output.extraCheckStackTradable(plr, itemInHand, "in deiner Hand")) {
+        if (!output.extraCheckStackSellable(plr, itemInHand, "in deiner Hand")) {
             return;
         }
         ShopItem item = module.getItemManager().getItem(itemInHand);
@@ -68,7 +68,7 @@ public class SellShopAction extends AbstractShopAction {
             return;
         }
 
-        if (args.length < 2 || args[1].equalsIgnoreCase("all")) {
+        if (args.length < 2 || args[1].equalsIgnoreCase("all")) { //FIXME collect all items of hand type and data in inventory and sell them all
             amount = itemInHand.getAmount();
         } else {
             if (!StringUtils.isNumeric(args[1])) {

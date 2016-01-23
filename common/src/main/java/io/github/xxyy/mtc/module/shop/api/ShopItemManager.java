@@ -4,7 +4,10 @@ import io.github.xxyy.mtc.misc.CacheHelper;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,5 +56,25 @@ public interface ShopItemManager extends CacheHelper.Cache {
      */
     ShopItem getItem(Material material, byte dataValue);
 
+    /**
+     * @return the aliases map, mapping each alias to a shop item
+     */
     Map<String, ShopItem> getItemAliases();
+
+    /**
+     * @return the current item on sale
+     */
+    @Nullable
+    ShopItem getItemOnSale();
+
+    /**
+     * @param item the item to be on sale
+     * @return wehther the item can be put on sale
+     */
+    boolean setItemOnSale(@NotNull ShopItem item);
+
+    /**
+     * @return a list of all configured shop items
+     */
+    List<ShopItem> getItems();
 }
