@@ -68,7 +68,7 @@ public class SellShopAction extends AbstractShopAction {
             return;
         }
 
-        if (args.length < 2 || args[1].equalsIgnoreCase("all")) { //FIXME collect all items of hand's type & data in inventory and sell them all
+        if (args.length < 2) {
             amount = itemInHand.getAmount();
         } else {
             if (!StringUtils.isNumeric(args[1])) {
@@ -81,6 +81,10 @@ public class SellShopAction extends AbstractShopAction {
                 plr.sendMessage("§cDie Anzahl der Items sollte einen realistischen Rahmen haben.");
                 return;
             }
+        }
+        if (amount > itemInHand.getAmount()) {
+            plr.sendMessage("§cDu hast nicht so viele Items in deiner Hand!");
+            return;
         }
 
         module.getTransactionExecutor().attemptTransaction(plr, item, amount, TransactionType.SELL);
