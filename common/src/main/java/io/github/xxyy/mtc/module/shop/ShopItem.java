@@ -33,7 +33,7 @@ public class ShopItem {
     private final List<String> aliases;
     private double buyCost;
     private double sellWorth;
-    private double saleReductionPercent = .2;
+    private double saleReductionPercent;
     private transient boolean onSale = false;
 
     public ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases, double saleReductionPercent) {
@@ -48,6 +48,10 @@ public class ShopItem {
         this.dataValue = dataValue;
         this.aliases = aliases;
         this.saleReductionPercent = saleReductionPercent;
+    }
+
+    public ShopItem(double buyCost, double sellWorth, Material material, byte dataValue, List<String> aliases) {
+        this(buyCost,sellWorth,material,dataValue, aliases, .2);
     }
 
     /**

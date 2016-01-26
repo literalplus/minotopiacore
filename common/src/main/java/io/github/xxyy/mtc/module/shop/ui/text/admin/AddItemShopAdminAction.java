@@ -44,7 +44,7 @@ public class AddItemShopAdminAction extends AbstractShopAction {
             }
             ShopItem specificItem = module.getItemManager().getItem(material, dataB);
             if (specificItem != null) {
-                plr.sendMessage("§cEs existiert bereits ein ShopItem mit dem gegebenen Material und dem entsprechenden data-Wert.");
+                plr.sendMessage("§cEs existiert bereits ein ShopItem mit dem gegebenen Material und dem entsprechenden Data-Wert.");
                 return;
             }
             ShopItem newItem = new ShopItem(-1, -1, material, dataB, new ArrayList<>());

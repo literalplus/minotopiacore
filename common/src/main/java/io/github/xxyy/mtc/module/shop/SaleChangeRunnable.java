@@ -27,17 +27,24 @@ public class SaleChangeRunnable extends NonAsyncBukkitRunnable {
 
     @Override
     public void run() {
+        drawNewItem(true);
+    }
+
+    public boolean drawNewItem(boolean broadcast) {
         List<ShopItem> items = module.getItemManager().getItems().stream()
             .filter(ShopItem::canBeBought)
             .filter(ShopItem::canBeOnSale)
             .collect(Collectors.toList());
         if (items.isEmpty()) {
             module.getPlugin().getLogger().warning("[" + module.getName() + "] Could not set an item on sale, as there is no item available to be put on sale.");
-        } else {
-            ShopItem item = items.get(random.nextInt(items.size()));
-            module.getItemManager().setItemOnSale(item);
-            module.getTextOutput().broadcastItemSale(item);
-            module.getTextOutput().sendItemSale(item, Bukkit.getConsoleSender());
+            return false;
         }
+        ShopItem item = items.get(random.nextInt(items.size()));
+        module.getItemManager().setItemOnSale(item);
+        if (broadcast) {
+            module.getTextOutput().broadcastItemSale(item);
+        }
+        module.getTextOutput().sendItemSale(item, Bukkit.getConsoleSender());
+        return true;
     }
 }

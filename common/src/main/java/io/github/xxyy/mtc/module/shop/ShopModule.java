@@ -75,8 +75,8 @@ public class ShopModule extends ConfigurableMTCModule {
         saleChangeRunnable.runTaskTimerAsynchronously(plugin, 1, 20 * 60 * saleChangeMinutes);
     }
 
-    public void drawNewSaleItem() {
-        saleChangeRunnable.run();
+    public void drawNewSaleItem(boolean broadcast) {
+        saleChangeRunnable.drawNewItem(broadcast);
     }
 
     @Override

@@ -69,7 +69,7 @@ public interface ShopItemManager extends CacheHelper.Cache {
 
     /**
      * @param item the item to be on sale
-     * @return wehther the item can be put on sale
+     * @return whether the item can be put on sale
      */
     boolean setItemOnSale(@NotNull ShopItem item);
 

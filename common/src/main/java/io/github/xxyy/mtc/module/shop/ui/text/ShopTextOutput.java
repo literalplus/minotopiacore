@@ -262,13 +262,13 @@ public class ShopTextOutput {
             .append("Neues Sonderangebot! ")
             .append(item.getDisplayName(), ChatColor.YELLOW)
             .append(" jetzt um ", ChatColor.GOLD)
-            .append(percentageDisplay(item.getSaleReductionPercent()) + '%', ChatColor.YELLOW)
+            .append(formatPercentage(item.getSaleReductionPercent()), ChatColor.YELLOW)
             .append(" reduziert.", ChatColor.GOLD)
             .create();
     }
 
-    private String percentageDisplay(double percentage) {
+    public String formatPercentage(double percentage) {
         percentage *= 100;
-        return Integer.toString((int) percentage);
+        return Integer.toString((int) percentage) + '%';
     }
 }
