@@ -75,7 +75,7 @@ public class PlayerStats {
      * @return the ratio kills/deaths or {@link Double#POSITIVE_INFINITY} if deaths = 0
      */
     public double getKDRatio() {
-        return deaths == 0 ? Double.POSITIVE_INFINITY : (kills / deaths);
+        return deaths == 0 ? Double.POSITIVE_INFINITY : ((double) kills / (double) deaths);
     }
 
     /**
