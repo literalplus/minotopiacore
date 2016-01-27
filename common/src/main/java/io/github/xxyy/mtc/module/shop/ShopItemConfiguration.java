@@ -10,9 +10,9 @@ package io.github.xxyy.mtc.module.shop;
 import io.github.xxyy.lib.guava17.collect.HashBasedTable;
 import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.fulltag.FullTagHelper;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -25,11 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
@@ -40,18 +36,24 @@ import java.util.logging.Level;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19/01/15
  */
-class ShopItemConfiguration extends ManagedConfiguration implements ShopItemManager {
-    private final MTC plugin;
+public class ShopItemConfiguration extends ManagedConfiguration implements ShopItemManager {
+    private final MTCPlugin plugin;
+    private final FullTagModule fullTagModule;
     private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
     private ShopItem itemOnSale;
 
-    protected ShopItemConfiguration(File file, MTC plugin) {
+    protected ShopItemConfiguration(File file, MTCPlugin plugin, FullTagModule fullTagModule) {
         super(file);
         this.plugin = plugin;
+        this.fullTagModule = fullTagModule;
     }
 
-    public static ShopItemConfiguration fromFile(File file, ClearCacheBehaviour behaviour, MTC plugin) {
+    protected ShopItemConfiguration(File file, ShopModule module) {
+        this(file, module.getPlugin(), module.getFullTagModule());
+    }
+
+    public static ShopItemConfiguration fromFile(File file, ClearCacheBehaviour behaviour, ShopModule module) {
         Validate.notNull(file, "File cannot be null");
 
         if (!file.exists()) {
@@ -67,16 +69,16 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
             }
         }
 
-        ShopItemConfiguration config = new ShopItemConfiguration(file, plugin);
+        ShopItemConfiguration config = new ShopItemConfiguration(file, module);
         config.setClearCacheBehaviour(behaviour);
         config.tryLoad();
 
         return config;
     }
 
-    public static ShopItemConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, MTC plugin) {
-        File file = new File(plugin.getDataFolder(), filePath);
-        return fromFile(file, behaviour, plugin);
+    public static ShopItemConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, ShopModule module) {
+        File file = new File(module.getPlugin().getDataFolder(), filePath);
+        return fromFile(file, behaviour, module);
     }
 
     @Override
@@ -120,8 +122,8 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
     }
 
     @Override
-    public boolean isSellForbidden(ItemStack stack) {
-        return FullTagHelper.isFull(stack);
+    public boolean isTradeProhibited(ItemStack stack) {
+        return fullTagModule == null || fullTagModule.isFullItem(stack);
     }
 
     @Override
@@ -206,7 +208,7 @@ class ShopItemConfiguration extends ManagedConfiguration implements ShopItemMana
         return new ArrayList<>(shopItems.values());
     }
 
-    public MTC getPlugin() {
+    public MTCPlugin getPlugin() {
         return plugin;
     }
 

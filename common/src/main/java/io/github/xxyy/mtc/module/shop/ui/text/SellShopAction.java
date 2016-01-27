@@ -93,7 +93,7 @@ public class SellShopAction extends AbstractShopAction {
     private void sellInventory(Player plr) {
         Map<ShopItem, Integer> itemAmounts = new HashMap<>();
         for (ItemStack stack : plr.getInventory().getContents()) {
-            if (module.getItemManager().isSellForbidden(stack)) {
+            if (module.getItemManager().isTradeProhibited(stack)) {
                 continue;
             }
             ShopItem item = module.getItemManager().getItem(stack);

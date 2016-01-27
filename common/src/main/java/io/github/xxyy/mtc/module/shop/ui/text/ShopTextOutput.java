@@ -78,10 +78,10 @@ public class ShopTextOutput {
      * This method does not replace {@link #checkTradable(CommandSender, ShopItem, String)} or {@link #checkTradable(CommandSender, ShopItem, String, TransactionType)}, its an additional check
      *
      * @return whether selling that specific itemStack is forbidden
-     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
+     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isTradeProhibited(ItemStack)}
      */
     public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack) {
-        if (module.getItemManager().isSellForbidden(itemStack)) {
+        if (module.getItemManager().isTradeProhibited(itemStack)) {
             sendPrefixed(reciever, "§cDieses Item kann nicht verkauft werden.");
             return false;
         }
@@ -92,10 +92,10 @@ public class ShopTextOutput {
      * This method does not replace {@link #checkTradable(CommandSender, ShopItem, String)} or {@link #checkTradable(CommandSender, ShopItem, String, TransactionType)}, its an additional check
      *
      * @return whether selling that specific itemStack is forbidden
-     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isSellForbidden(ItemStack)}
+     * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isTradeProhibited(ItemStack)}
      */
     public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack, String queryInfo) {
-        if (module.getItemManager().isSellForbidden(itemStack)) {
+        if (module.getItemManager().isTradeProhibited(itemStack)) {
             sendPrefixed(reciever, "§cDas Item " + queryInfo + " kann nicht verkauft werden.");
             return false;
         }

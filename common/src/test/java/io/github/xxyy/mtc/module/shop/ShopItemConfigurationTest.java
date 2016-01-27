@@ -38,7 +38,7 @@ public class ShopItemConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        config = new ShopItemConfiguration(mock(File.class), mock(MTC.class));
+        config = new ShopItemConfiguration(mock(File.class), mock(MTC.class), null);
         populateWithExamples(config);
     }
 

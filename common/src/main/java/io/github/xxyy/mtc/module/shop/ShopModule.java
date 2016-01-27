@@ -9,8 +9,11 @@ package io.github.xxyy.mtc.module.shop;
 
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.InjectModule;
+import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
@@ -35,14 +38,16 @@ public class ShopModule extends ConfigurableMTCModule {
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
     private SaleChangeRunnable saleChangeRunnable;
+    @InjectModule
+    private FullTagModule fullTagModule;
 
     public ShopModule() {
         super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD, false);
     }
 
     @Override
-    public boolean canBeEnabled(MTC plugin) {
-        if (!plugin.getVaultHook().isEconomyHooked()) { //this also checks if Vault is installed at all
+    public boolean canBeEnabled(MTCPlugin plugin) {
+        if (!((MTC) plugin).getVaultHook().isEconomyHooked()) { //this also checks if Vault is installed at all
             plugin.getLogger().info("ShopModule requires Vault and a running economy provider, skipping.");
             return false;
         }
@@ -50,14 +55,14 @@ public class ShopModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void enable(MTC plugin) throws Exception {
+    public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
-        itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, getPlugin());
+        itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
         textOutput = new ShopTextOutput(this);
         transactionExecutor = new ShopTransactionExecutor(this);
 
-        plugin.getCommand("shop").setExecutor(new CommandShop(this));
-        plugin.getCommand("shopadmin").setExecutor(new CommandShopAdmin(this));
+        registerCommand(new CommandShop(this), "shop", "xshop");
+        registerCommand(new CommandShopAdmin(this), "shopadmin", "sa");
     }
 
     @Override
@@ -80,9 +85,8 @@ public class ShopModule extends ConfigurableMTCModule {
     }
 
     @Override
-    public void disable(MTC plugin) {
-        plugin.getCommand("shop").setExecutor(null);
-        plugin.getCommand("shopadmin").setExecutor(null);
+    public void disable(MTCPlugin plugin) {
+
     }
 
     @Override
@@ -134,5 +138,12 @@ public class ShopModule extends ConfigurableMTCModule {
      */
     public ShopTransactionExecutor getTransactionExecutor() {
         return transactionExecutor;
+    }
+
+    /**
+     * @return the full tag module this module interfaces with, or null if none
+     */
+    public FullTagModule getFullTagModule() {
+        return fullTagModule;
     }
 }

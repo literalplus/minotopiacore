@@ -1,6 +1,6 @@
 package io.github.xxyy.mtc.module.shop.api;
 
-import io.github.xxyy.mtc.misc.CacheHelper;
+import io.github.xxyy.mtc.api.misc.Cache;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 29/10/15
  */
-public interface ShopItemManager extends CacheHelper.Cache {
+public interface ShopItemManager extends Cache {
     /**
      * Attempts to get an item by its name. This respects any aliases which may have been set. Furthermore, this allows
      * for items to be queried by their material name. Spaces are replaced by underscores and the whole string is
@@ -37,14 +37,12 @@ public interface ShopItemManager extends CacheHelper.Cache {
     ShopItem getItem(ItemStack stack);
 
     /**
-     * Checks the item stack whether it may not be sold
-     *
-     * Currently it checks whether it is a full item and if, returns false
+     * Checks if trading given item stack is prohibited due to general restrictions not relating to the shop item itself.
      *
      * @param stack the stack to check
-     * @return True if forbidden to sell
+     * @return whether trading of given item stack must be prohibited
      */
-    boolean isSellForbidden(ItemStack stack); //TODO does it fit here?
+    boolean isTradeProhibited(ItemStack stack);
 
     /**
      * Attempts to get an item managed by this configuration. The special data value {@code -1} represents a catch-all

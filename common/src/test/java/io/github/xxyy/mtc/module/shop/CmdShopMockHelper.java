@@ -21,7 +21,7 @@ class CmdShopMockHelper {
     static ShopModule mockModule(CommandShopTest i) {
         ShopModule shop = mock(ShopModule.class);
         MTC plugin = mockPlugin(i);
-        i.shopItemConfiguration = new ShopItemConfiguration(mock(File.class), plugin);
+        i.shopItemConfiguration = new ShopItemConfiguration(mock(File.class), plugin, null);
         when(shop.getItemConfig())
                 .thenReturn(i.shopItemConfiguration);
         when(shop.getPlugin()).thenReturn(plugin);

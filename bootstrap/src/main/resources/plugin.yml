@@ -78,11 +78,3 @@ commands:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [rdm]
-  shop:
-    description: Shop module text ui
-    usage: "/<command> help"
-    aliases: [xshop]
-  shopadmin:
-    description: Shop module admin text ui
-    usage: "/<command> help"
-    aliases: [sa, xshopadmin]

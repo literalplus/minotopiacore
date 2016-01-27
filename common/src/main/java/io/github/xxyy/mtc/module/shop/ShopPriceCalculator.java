@@ -49,7 +49,7 @@ public class ShopPriceCalculator {
         Preconditions.checkNotNull(type, "type");
 
         return stacks.stream()
-                .filter(not(itemManager::isSellForbidden))
+                .filter(not(itemManager::isTradeProhibited))
                 .map(itemManager::getItem)
                 .filter(Objects::nonNull)
                 .mapToDouble(type::getValue)
@@ -82,7 +82,7 @@ public class ShopPriceCalculator {
     public double calculatePrice(ItemStack itemStack, TransactionType type) {
         Preconditions.checkNotNull(itemStack, "itemStack");
         Preconditions.checkNotNull(type, "type");
-        if (itemManager.isSellForbidden(itemStack)) {
+        if (itemManager.isTradeProhibited(itemStack)) {
             return 0D;
         }
         ShopItem item = itemManager.getItem(itemStack);
