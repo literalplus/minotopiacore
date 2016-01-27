@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
-import static io.github.xxyy.mtc.misc.JavaUtils.not;
+import static io.github.xxyy.common.util.PredicateHelper.not;
 
 /**
  * Calculates prices for items according to the associated shop module. Stateless class.
