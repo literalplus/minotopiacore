@@ -147,6 +147,28 @@ public class FullTagModule extends ConfigurableMTCModule {
     }
 
     /**
+     * Checks whether given item stack is a full item managed by this module.
+     *
+     * @param stack the stack to check
+     * @return whether given item is a full item
+     */
+    public boolean isFullItem(ItemStack stack) {
+        if (stack == null || !stack.hasItemMeta()) {
+            return false;
+        }
+        List<String> lore = stack.getItemMeta().getLore();
+        if (lore == null) {
+            return false;
+        }
+        for (String str : lore) {
+            if (str.startsWith(FULL_LORE_PREFIX)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Attempts to extract a full info from a given item stack's lore lines.
      *
      * @param stack the stack to examine
