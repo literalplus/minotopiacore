@@ -15,6 +15,7 @@ import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import io.github.xxyy.mtc.module.InjectModule;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
+import io.github.xxyy.mtc.module.shop.task.UpdateDiscountTask;
 import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
@@ -30,16 +31,16 @@ import net.md_5.bungee.api.chat.TextComponent;
  */
 public class ShopModule extends ConfigurableMTCModule {
     public static final String NAME = "Shop";
-    private static final String SALE_CHANGE_MINUTES_PATH = "sale_change_minutes";
+    private static final String DISCOUNT_UPDATE_SECONDS_PATH = "sale_change_minutes";
     private final XyComponentBuilder prefixBuilder = new XyComponentBuilder("[").color(ChatColor.AQUA)
             .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
     private final String prefix = TextComponent.toLegacyText(new XyComponentBuilder(prefixBuilder).create());
     private ShopItemConfiguration itemConfig;
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
-    private SaleChangeRunnable saleChangeRunnable;
     @InjectModule
     private FullTagModule fullTagModule;
+    private UpdateDiscountTask updateDiscountTask = new UpdateDiscountTask(this); //needs to be a field so that update interval can be reloaded on-the-fly
 
     public ShopModule() {
         super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD, false);
@@ -67,21 +68,12 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-        //FIXME reload item config
-
-        configuration.addDefault(SALE_CHANGE_MINUTES_PATH, 60);
+        itemConfig.trySave();
+        configuration.addDefault(DISCOUNT_UPDATE_SECONDS_PATH, 60 * 60);
         configuration.trySave();
-        int saleChangeMinutes = configuration.getInt(SALE_CHANGE_MINUTES_PATH);
 
-        if (saleChangeRunnable != null) {
-            saleChangeRunnable.cancel();
-        }
-        saleChangeRunnable = new SaleChangeRunnable(this);
-        saleChangeRunnable.runTaskTimerAsynchronously(plugin, 1, 20 * 60 * saleChangeMinutes);
-    }
-
-    public void drawNewSaleItem(boolean broadcast) {
-        saleChangeRunnable.drawNewItem(broadcast);
+        updateDiscountTask.tryCancel();
+        updateDiscountTask.runTaskTimer(getPlugin(), configuration.getInt(DISCOUNT_UPDATE_SECONDS_PATH));
     }
 
     @Override

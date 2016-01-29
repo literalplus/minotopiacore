@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
+import com.google.common.base.Preconditions;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
@@ -9,8 +10,13 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Handles text output for the shop module. Stateless.
@@ -46,7 +52,7 @@ public class ShopTextOutput {
      * @param queryInfo an additional string describing the item, used when untradable, may be null
      * @return whether the item is tradable
      */
-    public boolean checkTradable(CommandSender receiver, ShopItem item, String queryInfo) {
+    public boolean checkTradable(@Nonnull CommandSender receiver, @Nullable ShopItem item, @Nullable String queryInfo) {
         return checkTradable(receiver, item, queryInfo, null);
     }
 
@@ -57,11 +63,13 @@ public class ShopTextOutput {
      * @param receiver  the receiver of the possible message
      * @param item      the item to check
      * @param queryInfo an additional string describing the item, used when untradable, may be null
-     * @param type      the transaction type to check tradableness for
+     * @param type      the transaction type to check for, or null to check if any trade is possible
      * @return whether the item is tradable
      */
-    public boolean checkTradable(CommandSender receiver, ShopItem item, String queryInfo, TransactionType type) {
-        boolean tradable = type != null ? type.isTradable(item) : item.canBeBought() || item.canBeSold();
+    public boolean checkTradable(@Nonnull CommandSender receiver, @Nullable ShopItem item, @Nullable String queryInfo,
+                                 @Nullable TransactionType type) {
+        boolean tradable = item != null &&
+                (type != null ? type.isTradable(item) : item.canBeBought() || item.canBeSold());
         if (!tradable) {
             String itemSpecifier = queryInfo == null ?
                     "Dieses Item" :
@@ -75,11 +83,32 @@ public class ShopTextOutput {
     }
 
     /**
+     * Checks whether given item is null, and issues a warning message to given receiver stating that such item does not
+     * exist if so. Does nothing if given item is non-null.
+     *
+     * @param receiver  the receiver of the message
+     * @param item      the item to check for nullity
+     * @param queryInfo an additional string describing this item, used if null, may be null itself
+     * @return whether given item is null
+     */
+    public boolean checkNonExistant(@Nonnull CommandSender receiver, @Nullable ShopItem item, @Nullable String queryInfo) {
+        if (item == null) {
+            String itemSpecifier = queryInfo == null ?
+                    "Dieses Item" :
+                    "Das Item " + queryInfo;
+
+            sendPrefixed(receiver, itemSpecifier + " ist nicht im Shop vorhanden.");
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * This method does not replace {@link #checkTradable(CommandSender, ShopItem, String)} or {@link #checkTradable(CommandSender, ShopItem, String, TransactionType)}, its an additional check
      *
      * @return whether selling that specific itemStack is forbidden
      * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isTradeProhibited(ItemStack)}
-     */
+     */ //TODO: This is considered a brute-force approach. This needs to be merged into checkTradable.
     public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack) {
         if (module.getItemManager().isTradeProhibited(itemStack)) {
             sendPrefixed(reciever, "§cDieses Item kann nicht verkauft werden.");
@@ -93,7 +122,7 @@ public class ShopTextOutput {
      *
      * @return whether selling that specific itemStack is forbidden
      * @see {@link io.github.xxyy.mtc.module.shop.api.ShopItemManager#isTradeProhibited(ItemStack)}
-     */
+     */ //TODO: This is considered a brute-force approach. This needs to be merged into checkTradable.
     public boolean extraCheckStackSellable(CommandSender reciever, ItemStack itemStack, String queryInfo) {
         if (module.getItemManager().isTradeProhibited(itemStack)) {
             sendPrefixed(reciever, "§cDas Item " + queryInfo + " kann nicht verkauft werden.");
@@ -138,20 +167,20 @@ public class ShopTextOutput {
 
         if (item.canBeBought()) {
             XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                .append(" kann für ", ChatColor.GOLD)
-                .append(ShopStringAdaptor.getCurrencyString(item.getBuyCostFinal()), ChatColor.YELLOW);
-            if (item.isOnSale()) {
+                    .append(" kann für ", ChatColor.GOLD)
+                    .append(ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)), ChatColor.YELLOW);
+            if (item.getManager().getDiscountManager().isDiscounted(item)) {
                 builder.append(" statt ", ChatColor.GOLD)
-                    .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()));
+                        .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()), ChatColor.YELLOW);
             }
             builder.append(" gekauft werden.", ChatColor.GOLD);
             ComponentSender.sendTo(builder, receiver);
         }
         if (item.canBeSold()) {
             XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                .append(" kann für ", ChatColor.GOLD)
-                .append(ShopStringAdaptor.getCurrencyString(item.getSellWorth()), ChatColor.YELLOW)
-                .append(" verkauft werden.", ChatColor.GOLD);
+                    .append(" kann für ", ChatColor.GOLD)
+                    .append(ShopStringAdaptor.getCurrencyString(item.getManager().getSellWorth(item)), ChatColor.YELLOW)
+                    .append(" verkauft werden.", ChatColor.GOLD);
             ComponentSender.sendTo(builder, receiver);
         }
     }
@@ -239,36 +268,43 @@ public class ShopTextOutput {
     }
 
     /**
-     * Notifies a command sender about an item being on sale.
+     * Notifies all online players and the console command sender of a new item being discounted.
      *
-     * @param item the item currently on sale
-     * @param reciever the player to send the item on sale
+     * @param item the newly discounted item
      */
-    public void sendItemSale(ShopItem item, CommandSender reciever) {
-        ComponentSender.sendTo(getItemSaleMessage(item), reciever);
+    public void announceDiscount(ShopItem item) {
+        Preconditions.checkArgument(item.isDiscountable(), "item must be discountable");
+        BaseComponent[] notification = module.getPrefixBuilder()
+                .append("Neues Sonderangebot: ", ChatColor.GOLD, ChatColor.BOLD)
+                .append(item.getDisplayName(), ChatColor.YELLOW).bold(false)
+                .append(" ist jetzt um ", ChatColor.GOLD)
+                .append(item.getDiscountPercentage() + "%", ChatColor.YELLOW)
+                .append(" reduziert!", ChatColor.GOLD)
+                .create();
+        module.getPlugin().getServer().getOnlinePlayers().forEach(plr -> plr.spigot().sendMessage(notification));
+        ComponentSender.sendTo(notification, Bukkit.getConsoleSender());
     }
 
     /**
-     * Broadcast notification about an item being on sale.
-     * @param item the item currently on sale.
+     * Creates a hover tooltip info for a shop item.
+     *
+     * @param item the item to show info for
+     * @return a hover event providing information about given item
      */
-    public void broadcastItemSale(ShopItem item) {
-        BaseComponent[] itemSaleMessage = getItemSaleMessage(item);
-        module.getPlugin().getServer().getOnlinePlayers().forEach(plr -> plr.spigot().sendMessage(itemSaleMessage));
-    }
+    public HoverEvent createItemHover(@Nullable ShopItem item) {
+        if (item == null) {
+            return new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    new XyComponentBuilder("Unbekanntes Item", ChatColor.RED).create());
+        }
 
-    private BaseComponent[] getItemSaleMessage(ShopItem item) {
-        return module.getPrefixBuilder()
-            .append("Neues Sonderangebot! ")
-            .append(item.getDisplayName(), ChatColor.YELLOW)
-            .append(" jetzt um ", ChatColor.GOLD)
-            .append(formatPercentage(item.getSaleReductionPercent()), ChatColor.YELLOW)
-            .append(" reduziert.", ChatColor.GOLD)
-            .create();
-    }
-
-    public String formatPercentage(double percentage) {
-        percentage *= 100;
-        return Integer.toString((int) percentage) + '%';
+        return new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                new XyComponentBuilder("Item: ", ChatColor.GOLD)
+                        .append(item.getDisplayName(), ChatColor.YELLOW)
+                        .append("\nKaufen: ", ChatColor.GOLD)
+                        .append(item.canBeBought() ? item.getBuyCost() : "nein", ChatColor.YELLOW)
+                        .append("\nVerkaufen: ", ChatColor.GOLD)
+                        .append(item.canBeSold() ? item.getSellWorth() : "nein", ChatColor.YELLOW)
+                        .create()
+        );
     }
 }

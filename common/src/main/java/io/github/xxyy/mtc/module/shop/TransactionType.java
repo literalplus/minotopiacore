@@ -1,6 +1,5 @@
 package io.github.xxyy.mtc.module.shop;
 
-import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -15,8 +14,7 @@ public enum TransactionType {
     SELL {
         @Override
         public double getValue(@NotNull ShopItem item) {
-            Preconditions.checkNotNull(item, "item");
-            return item.getSellWorth();
+            return item.getManager().getSellWorth(item);
         }
 
         @Override
@@ -27,8 +25,7 @@ public enum TransactionType {
     BUY {
         @Override
         public double getValue(@NotNull ShopItem item) {
-            Preconditions.checkNotNull(item, "item");
-            return item.getBuyCostFinal();
+            return item.getManager().getBuyCost(item);
         }
 
         @Override

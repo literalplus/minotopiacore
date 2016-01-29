@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module.shop;
 
+import com.google.common.base.Preconditions;
 import io.github.xxyy.lib.guava17.collect.HashBasedTable;
 import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
@@ -14,15 +15,15 @@ import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
+import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -39,14 +40,15 @@ import java.util.logging.Level;
 public class ShopItemConfiguration extends ManagedConfiguration implements ShopItemManager {
     private final MTCPlugin plugin;
     private final FullTagModule fullTagModule;
+    private final DiscountManager discountManager;
     private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
-    private ShopItem itemOnSale;
 
     protected ShopItemConfiguration(File file, MTCPlugin plugin, FullTagModule fullTagModule) {
         super(file);
         this.plugin = plugin;
         this.fullTagModule = fullTagModule;
+        discountManager = new DiscountManager();
     }
 
     protected ShopItemConfiguration(File file, ShopModule module) {
@@ -101,7 +103,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
             if (!dataPart.isEmpty()
                     && (StringUtils.isNumeric(dataPart)
                     || ((dataPart.startsWith("-") || dataPart.startsWith("+"))
-                        && StringUtils.isNumeric(dataPart.substring(1))))) {
+                    && StringUtils.isNumeric(dataPart.substring(1))))) {
                 dataValue = Byte.parseByte(dataPart);
             }
         }
@@ -119,6 +121,17 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
             return null;
         }
         return getItem(stack.getType(), stack.getData().getData());
+    }
+
+    @Override
+    public ShopItem getItem(Player plr, String input) {
+        Preconditions.checkNotNull(plr, "plr");
+        Preconditions.checkNotNull(input, "input");
+        if (input.equalsIgnoreCase("hand")) {
+            return getItem(plr.getItemInHand());
+        } else {
+            return getItem(input);
+        }
     }
 
     @Override
@@ -178,6 +191,17 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
         return true;
     }
 
+    @Override
+    public double getBuyCost(ShopItem shopItem) {
+        return discountManager.getBuyCost(shopItem);
+    }
+
+    @Override
+    public double getSellWorth(ShopItem shopItem) {
+        Preconditions.checkNotNull(shopItem, "shopItem");
+        return shopItem.getSellWorth(); //nothing to change here....yet
+    }
+
     public Table<Material, Byte, ShopItem> getShopItemTable() {
         return ImmutableTable.copyOf(shopItems);
     }
@@ -188,28 +212,17 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     }
 
     @Override
-    @Nullable
-    public ShopItem getItemOnSale() {
-        return itemOnSale;
-    }
-
-    @Override
-    public boolean setItemOnSale(@NotNull ShopItem item) {
-        if (item.setOnSale(true)) {
-            itemOnSale.setOnSale(false);
-            itemOnSale = item;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public List<ShopItem> getItems() {
         return new ArrayList<>(shopItems.values());
     }
 
     public MTCPlugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public DiscountManager getDiscountManager() {
+        return discountManager;
     }
 
     @Override
@@ -233,7 +246,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
                 .filter(Objects::nonNull)
                 .map(sec -> {
                     try {
-                        return ShopItem.deserialize(sec);
+                        return ShopItem.deserialize(sec, this);
                     } catch (Exception ex) {
                         plugin.getLogger().log(Level.WARNING, "Couldn't deserialize an invalid shop item at " + sec.getName() + ", omitting: ", ex);
                     }

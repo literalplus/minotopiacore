@@ -30,10 +30,10 @@ import static org.mockito.Mockito.mock;
  * @since 25/05/15
  */
 public class ShopItemConfigurationTest {
-    private static ShopItem POTATO = new ShopItem(1, 3, Material.POTATO, (byte) -1,
-            Lists.newArrayList("yolo", "potatos", "Kartoffel"));
-    private static ShopItem DIAMOND = new ShopItem(5, 7, Material.DIAMOND, (byte) 42,
-            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"));
+    private static ShopItem POTATO = new ShopItem(null, 3, 1, Material.POTATO, (byte) -1,
+            Lists.newArrayList("yolo", "potatos", "Kartoffel"), 2);
+    private static ShopItem DIAMOND = new ShopItem(null, 7, 5, Material.DIAMOND, (byte) 42,
+            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 6);
     private ShopItemConfiguration config;
 
     @Before

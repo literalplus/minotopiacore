@@ -22,21 +22,20 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
 
     public CommandShopAdmin(ShopModule module) {
         this.module = module;
-        actionList.add(new AddItemShopAdminAction(module));
-        actionList.add(new RemoveItemShopAdminAction(module));
+        actionList.add(new AddAdminAction(module));
+        actionList.add(new RemoveAdminAction(module));
 
-        actionList.add(new AliasShopAdminAction(module));
-        actionList.add(new SetCostAdminAction(module));
-        actionList.add(new SetWorthShopAdminAction(module));
+        actionList.add(new AliasAdminAction(module));
+        actionList.add(new BuyCostAdminAction(module));
+        actionList.add(new SellWorthAdminAction(module));
 
-        actionList.add(new DrawReducedItemShopAdminAction(module));
-        actionList.add(new SetReductionShopAdminAction(module));
-        actionList.add(new SetReducedItemShopAdminAction(module));
+        actionList.add(new ForceDiscountAdminAction(module));
+        actionList.add(new DiscountAdminAction(module));
     }
 
     @Override
     public boolean catchCommand(Player plr, String plrName, Command cmd, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(plr, "mtc.shop.admin.execute", label)) {
+        if (!CommandHelper.checkPermAndMsg(plr, "mtc.shop.admin", label)) {
             return true;
         }
 
@@ -60,7 +59,7 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
     }
 
     private void sendHelp(Player plr) {
-        plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]");
+        plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]"); //TODO: This design looks old af
         actionList.stream()
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));

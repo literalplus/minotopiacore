@@ -9,18 +9,23 @@ import org.bukkit.entity.Player;
 
 import java.util.regex.Pattern;
 
-public class AliasShopAdminAction extends AbstractShopAction {
+/**
+ * Admin action for managing item aliases.
+ *
+ * @author Janmm14
+ */
+public class AliasAdminAction extends AbstractShopAction {
     private static final Joiner ALIASES_JOINER = Joiner.on("§7, §e");
     private static final Pattern ITEM_NAME_ALIAS_DELIMITER = Pattern.compile("|", Pattern.LITERAL);
     private final ShopModule module;
 
-    protected AliasShopAdminAction(ShopModule module) {
+    protected AliasAdminAction(ShopModule module) {
         super("shopadmin", "alias", 2, null);
         this.module = module;
     }
 
     @Override
-    public void execute(String[] args, Player plr, String label) {
+    public void execute(String[] args, Player plr, String label) { //REFACTOR
         String combined = StringHelper.varArgsString(args, 1, false);
         String[] split = ITEM_NAME_ALIAS_DELIMITER.split(combined);
         String itemName = split[0];

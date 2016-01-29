@@ -61,7 +61,7 @@ public class CommandShop extends MTCPlayerOnlyCommandExecutor { //TODO test (int
     }
 
     private void sendHelp(Player plr) {
-        plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]");
+        plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]"); //TODO: This looks old af
         actionList.stream()
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));
