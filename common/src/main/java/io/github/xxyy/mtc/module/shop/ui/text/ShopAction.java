@@ -33,6 +33,15 @@ public interface ShopAction {
     boolean matches(String actionName);
 
     /**
+     * Checks whether given action name could mean this action, i.e. we are not quite sure, but if we're the only one,
+     * take it.
+     *
+     * @param actionName the action name
+     * @return whether given action name could mean this action
+     */
+    boolean fuzzyMatches(String actionName);
+
+    /**
      * Sends this action's help lines to a player.
      *
      * @param plr the player to send the lines to
