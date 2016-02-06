@@ -282,6 +282,8 @@ public class ShopItem {
         result.set(SELL_WORTH_PATH, sellWorth);
         if (isDiscountable()) { //don't save discounted price if we don't allow discounts - this must be clearly recognisable as optional
             result.set(DISCOUNTED_PRICE_PATH, discountedPrice);
+        } else {
+            result.set(DISCOUNTED_PRICE_PATH, null); //remove if it was set before
         }
         return result;
     }

@@ -73,7 +73,7 @@ public class ShopModule extends ConfigurableMTCModule {
         configuration.trySave();
 
         updateDiscountTask.tryCancel();
-        updateDiscountTask.runTaskTimer(getPlugin(), configuration.getInt(DISCOUNT_UPDATE_SECONDS_PATH));
+        updateDiscountTask.runTaskTimer(getPlugin(), configuration.getInt(DISCOUNT_UPDATE_SECONDS_PATH) * 20);
     }
 
     @Override

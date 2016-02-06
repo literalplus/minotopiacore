@@ -11,7 +11,6 @@ import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
@@ -282,7 +281,7 @@ public class ShopTextOutput {
                 .append(" reduziert!", ChatColor.GOLD)
                 .create();
         module.getPlugin().getServer().getOnlinePlayers().forEach(plr -> plr.spigot().sendMessage(notification));
-        ComponentSender.sendTo(notification, Bukkit.getConsoleSender());
+        ComponentSender.sendTo(notification, module.getPlugin().getServer().getConsoleSender());
     }
 
     /**
