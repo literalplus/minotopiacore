@@ -17,12 +17,12 @@ import org.bukkit.inventory.ItemStack;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-11-01
  */
-public class PriceShopAction extends AbstractShopAction {
+class PriceShopAction extends AbstractShopAction {
     private final ShopModule module;
     private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
 
-    protected PriceShopAction(ShopModule module) {
+    PriceShopAction(ShopModule module) {
         super("shop", "preis", 1, null, "price", "p");
         this.module = module;
         output = module.getTextOutput();
@@ -49,7 +49,9 @@ public class PriceShopAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Item|hand|inv>", "Fragt einen Preis ab.");
+        sendHelpLine(plr, "<Item>", "Fragt einen Preis ab.");
+        sendHelpLine(plr, "hand", "Fragt den Preis des Items in deiner Hand ab");
+        sendHelpLine(plr, "inv", "Fragt den Preis deines ganzen Inventars ab");
         sendHelpLine(plr, "<Item> <Anzahl>", "Berechnet einem Preis für eine bestimmte Anzahl.");
     }
 

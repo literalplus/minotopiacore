@@ -15,11 +15,11 @@ import java.util.ArrayList;
  *
  * @author Janmm14, xxyy
  */
-public class AddAdminAction extends AbstractShopAction {
+class AddAdminAction extends AbstractShopAction {
 
     private final ShopModule module;
 
-    protected AddAdminAction(ShopModule module) {
+    AddAdminAction(ShopModule module) {
         super("shopadmin", "add", 1, null);
         this.module = module;
     }
@@ -73,7 +73,7 @@ public class AddAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "[<ID>|<Material[:data]>]", "Fügt ein Item zum Shop hinzu.");
+        sendHelpLine(plr, "<Item>", "Fügt ein Item zum Shop hinzu.");
         plr.sendMessage("§6Data = -1 bedeutet jeder Wert (Wildcard). Standard ist null.");
     }
 }

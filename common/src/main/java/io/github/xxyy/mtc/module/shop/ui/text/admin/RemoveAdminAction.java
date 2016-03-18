@@ -18,10 +18,10 @@ import org.bukkit.entity.Player;
  *
  * @author xxyy, Janmm14
  */
-public class RemoveAdminAction extends AbstractShopAction {
+class RemoveAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected RemoveAdminAction(ShopModule module) {
+    RemoveAdminAction(ShopModule module) {
         super("shopadmin", "remove", 1, null);
         this.module = module;
     }

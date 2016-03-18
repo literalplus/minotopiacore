@@ -13,10 +13,10 @@ import org.bukkit.entity.Player;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-11-01
  */
-public class BuyShopAction extends AbstractShopAction {
+class BuyShopAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected BuyShopAction(ShopModule module) {
+    BuyShopAction(ShopModule module) {
         super("shop", "kaufen", 2, null, "buy", "b", "k");
         this.module = module;
     }

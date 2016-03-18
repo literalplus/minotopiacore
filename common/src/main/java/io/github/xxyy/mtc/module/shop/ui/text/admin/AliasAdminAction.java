@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
  *
  * @author Janmm14
  */
-public class AliasAdminAction extends AbstractShopAction {
+class AliasAdminAction extends AbstractShopAction {
     private static final Joiner ALIASES_JOINER = Joiner.on("§7, §e");
     private static final Pattern ITEM_NAME_ALIAS_DELIMITER = Pattern.compile("|", Pattern.LITERAL);
     private final ShopModule module;
 
-    protected AliasAdminAction(ShopModule module) {
+    AliasAdminAction(ShopModule module) {
         super("shopadmin", "alias", 2, null);
         this.module = module;
     }
@@ -70,9 +70,9 @@ public class AliasAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<add> <itemname> | <alias>", "Fügt einen Alias hinzu.");
-        sendHelpLine(plr, "<addfirst> <itemname> | <alias>", "Fügt einen Alias am Anfang hinzu, dieser wird vom Shop zur Ausgabe verwendet.");
-        sendHelpLine(plr, "<remove> <itemname> | <alias>", "Entfernt einen Alias.");
-        sendHelpLine(plr, "<list> <itemname>", "Listet alle Aliases eines Items auf.");
+        sendHelpLine(plr, "add <Item> | <Alias>", "Fügt einen Alias hinzu.");
+        sendHelpLine(plr, "addfirst <Item> | <Alias>", "Fügt einen Alias am Anfang hinzu, dieser wird vom Shop zur Ausgabe verwendet.");
+        sendHelpLine(plr, "remove <Item> | <Alias>", "Entfernt einen Alias.");
+        sendHelpLine(plr, "list <item>", "Listet alle Aliases eines Items auf.");
     }
 }

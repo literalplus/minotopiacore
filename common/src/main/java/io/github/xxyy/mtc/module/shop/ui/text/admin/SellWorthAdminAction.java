@@ -16,10 +16,10 @@ import org.bukkit.entity.Player;
  *
  * @author Janmm14, xxyy
  */
-public class SellWorthAdminAction extends AbstractShopAction {
+class SellWorthAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected SellWorthAdminAction(ShopModule module) {
+    SellWorthAdminAction(ShopModule module) {
         super("shopadmin", "worth", 2, null, "sell");
         this.module = module;
     }

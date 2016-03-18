@@ -17,10 +17,10 @@ import org.bukkit.entity.Player;
  *
  * @author Janmm14, xxyy
  */
-public class ForceDiscountAdminAction extends AbstractShopAction {
+class ForceDiscountAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected ForceDiscountAdminAction(ShopModule module) {
+    ForceDiscountAdminAction(ShopModule module) {
         super("shopadmin", "forcediscount", 0, null, "newdiscount");
         this.module = module;
     }

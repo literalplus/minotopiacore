@@ -25,10 +25,10 @@ import org.bukkit.entity.Player;
  *
  * @author Janmm14, xxyy
  */
-public class DiscountAdminAction extends AbstractShopAction {
+class DiscountAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected DiscountAdminAction(ShopModule module) {
+    DiscountAdminAction(ShopModule module) {
         super("shopadmin", "discount", 2, null);
         this.module = module;
     }

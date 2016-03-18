@@ -20,12 +20,12 @@ import java.util.Map;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-11-01
  */
-public class SellShopAction extends AbstractShopAction {
+class SellShopAction extends AbstractShopAction {
     private final ShopModule module;
     private final ShopTextOutput output;
     private final ShopPriceCalculator calculator;
 
-    protected SellShopAction(ShopModule module) {
+    SellShopAction(ShopModule module) {
         super("shop", "verkaufen", 1, null, "sell", "s");
         this.module = module;
         output = module.getTextOutput();
@@ -47,14 +47,6 @@ public class SellShopAction extends AbstractShopAction {
                 sellNamedItem(args, plr);
                 break;
         }
-    }
-
-    @Override
-    public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Item> <Anzahl>", "Verkauft Items.");
-        sendHelpLine(plr, "<Item> all", "Verkauft alle Items vom Typ.");
-        sendHelpLine(plr, "inv", "Verkauft dein ganzes Inventar.");
-        sendHelpLine(plr, "hand", "Verkauft, was du in der Hand hast.");
     }
 
     private void sellHand(String[] args, Player plr) {
@@ -135,5 +127,13 @@ public class SellShopAction extends AbstractShopAction {
         }
 
         module.getTransactionExecutor().attemptTransaction(plr, item, amount, TransactionType.SELL);
+    }
+
+    @Override
+    public void sendHelpLines(Player plr) {
+        sendHelpLine(plr, "<Item> <Anzahl>", "Verkauft Items.");
+        sendHelpLine(plr, "<Item> all", "Verkauft alle Items vom Typ.");
+        sendHelpLine(plr, "inv", "Verkauft dein ganzes Inventar.");
+        sendHelpLine(plr, "hand", "Verkauft, was du in der Hand hast.");
     }
 }

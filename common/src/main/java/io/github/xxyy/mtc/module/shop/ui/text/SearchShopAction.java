@@ -39,7 +39,7 @@ public class SearchShopAction extends AbstractShopAction {
         //TODO display results
     }
 
-    public Set<ShopItem> matchShopItems(String search) { //TODO finish search
+    private Set<ShopItem> matchShopItems(String search) { //TODO finish search
         Set<ShopItem> matches = new LinkedHashSet<>();
         Set<ShopItem> matchesMaybe = new LinkedHashSet<>();
 
