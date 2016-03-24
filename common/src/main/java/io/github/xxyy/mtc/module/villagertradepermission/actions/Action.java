@@ -7,9 +7,9 @@
 
 package io.github.xxyy.mtc.module.villagertradepermission.actions;
 
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for different actions to be executed when a player clicks on a villager

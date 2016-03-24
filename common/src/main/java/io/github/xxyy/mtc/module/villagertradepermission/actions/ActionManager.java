@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.villagertradepermission.actions;
 
 import com.google.common.collect.Maps;
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.mtc.module.villagertradepermission.VillagerTradePermissionModule;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -17,7 +18,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;

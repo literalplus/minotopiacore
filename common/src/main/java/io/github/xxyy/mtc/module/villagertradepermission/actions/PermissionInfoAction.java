@@ -7,11 +7,11 @@
 
 package io.github.xxyy.mtc.module.villagertradepermission.actions;
 
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.mtc.module.villagertradepermission.VillagerInfo;
 import io.github.xxyy.mtc.module.villagertradepermission.VillagerTradePermissionModule;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Shows permission information about the next clicked villager.

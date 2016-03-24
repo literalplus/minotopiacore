@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.villagertradepermission;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
@@ -16,7 +17,6 @@ import io.github.xxyy.mtc.module.villagertradepermission.actions.ActionManager;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

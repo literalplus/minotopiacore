@@ -10,13 +10,13 @@ package io.github.xxyy.mtc.module.fulltag.model;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.common.util.LocationHelper;
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

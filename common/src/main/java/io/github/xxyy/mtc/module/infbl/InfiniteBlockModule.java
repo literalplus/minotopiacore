@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.infbl;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.command.CommandBehaviours;
 import io.github.xxyy.mtc.helper.MTCHelper;
@@ -42,7 +43,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

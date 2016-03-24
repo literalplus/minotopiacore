@@ -7,13 +7,13 @@
 
 package io.github.xxyy.mtc.module.villagertradepermission;
 
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Checks for right-clicks on villagers.

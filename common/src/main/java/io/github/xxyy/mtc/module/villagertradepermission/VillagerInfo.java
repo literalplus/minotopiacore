@@ -7,10 +7,10 @@
 
 package io.github.xxyy.mtc.module.villagertradepermission;
 
+import io.github.xxyy.lib.intellij_annotations.NotNull;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Villager;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
