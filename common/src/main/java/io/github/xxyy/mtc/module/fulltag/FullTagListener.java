@@ -39,7 +39,7 @@ import java.util.function.BiConsumer;
 /**
  * Listens for some inventory events and tracks Full items. Also removes unknown or deleted ones on encounter.
  *
- * @author <a href="https://xxyy.github.io/>xxyy</a>
+ * @author <a href="https://xxyy.github.io/">xxyy</a>
  */
 public final class FullTagListener implements Listener {
     private static final Logger LOGGER = LogManager.getLogger(FullTagListener.class);

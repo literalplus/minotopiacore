@@ -46,7 +46,7 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
 
     /**
      * Creates a new {@link ManagedConfiguration}, loading from the given file.
-     * </p><p>
+     * <p>
      * Any errors loading the Configuration will be logged and available at {@link #getError()}.
      * If the specified input is not a valid config, a blank config will be
      * returned.

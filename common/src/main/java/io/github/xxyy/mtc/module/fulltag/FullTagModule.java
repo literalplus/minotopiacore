@@ -30,9 +30,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Module that manages items with all possible enchantments on the highest legal level
+ * <p>Module that manages items with all possible enchantments on the highest legal level
  * ("Full items"), tracks their location and keeps logs of what users do with those items.
- * <p/>
+ * </p>
  * Additionally provides some stats and easy creation for administrators.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>

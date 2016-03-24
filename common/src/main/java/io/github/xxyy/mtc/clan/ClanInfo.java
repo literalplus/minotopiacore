@@ -57,7 +57,7 @@ public class ClanInfo {
      * Creates a ClanInfo and sets all non-given values to default. (as specified in SQL)
      *
      * @param name   Name for new clan
-     * @param prefix Chatprefix, 1 <= length <= 5
+     * @param prefix Chatprefix
      * @param leader Who created the clan. Location will also be fetched from this player.
      * @return see {@link ClanInfo#create(String, String, String, Location, String, int, int, int, int)}
      * @see ClanInfo#create(String, String, String, Location, String, int, int, int, int)
@@ -71,12 +71,12 @@ public class ClanInfo {
      * Creates a new ClanInfo and inserts values into db.
      *
      * @param name       Name for new clan
-     * @param prefix     Chatprefix, 1 <= length <= 5
+     * @param prefix     Chatprefix
      * @param leaderName New clan leader's name
      * @param base       base location. Normally current location of leader (will be set later)
      * @param motd       MotD..will be shown at login, changeable
      * @param money      Amount of money in clan bank
-     * @param level      Clan level. < 255
+     * @param level      Clan level. &lt; 255
      * @param kills      Kills by all members, but only since creation of clan
      * @param deaths     Kills of all members, but only since creation of clan
      * @return on success, new ClanInfo | else, a ClanInfo with a NEGATIVE id.
