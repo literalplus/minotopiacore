@@ -80,11 +80,6 @@
             <url>https://repo.nowak-at.net/ext-release-local/</url>
         </repository>
         <repository>
-            <id>fanciful-repo</id>
-            <!-- Fanciful -->
-            <url>http://repo.franga2000.com/artifactory/public/</url>
-        </repository>
-        <repository>
             <id>xxyy-repo</id>
             <!-- xLogin, etc. -->
             <url>https://repo.nowak-at.net/xxyy-private/</url>
@@ -154,11 +149,6 @@
                 <groupId>io.github.xxyy.common</groupId>
                 <artifactId>xyc-games</artifactId>
                 <version>${xyc.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>mkremins</groupId>
-                <artifactId>fanciful</artifactId>
-                <version>0.3.3-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.puharesource.mc</groupId>

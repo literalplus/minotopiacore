@@ -7,14 +7,15 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import mkremins.fanciful.FancyMessage;
+import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,10 +29,10 @@ import java.util.Arrays;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 4.9.14
  */
-public class CommandTrueFalse implements CommandExecutor {
+class CommandTrueFalse implements CommandExecutor {
     private final TrueFalseModule module;
 
-    public CommandTrueFalse(TrueFalseModule module) {
+    CommandTrueFalse(TrueFalseModule module) {
         this.module = module;
     }
 
@@ -161,10 +162,13 @@ public class CommandTrueFalse implements CommandExecutor {
 
                         int i = 0;
                         for (TrueFalseQuestion question : module.getQuestions()) {
-                            new FancyMessage("#" + i + " ").color(ChatColor.GOLD)
-                                    .then(question.getText() + " ").color(question.getAnswer() ? ChatColor.GREEN : ChatColor.RED)
-                                    .then("[-]").style(ChatColor.UNDERLINE).color(ChatColor.DARK_RED)
-                                    .tooltip("/wf remq " + i).suggest("/wf remq " + i++).send(sender);
+                            ComponentSender.sendTo(
+                                    new XyComponentBuilder("#" + i + " ", ChatColor.GOLD)
+                                            .append(question.getText() + " ")
+                                            .color(question.getAnswer() ? ChatColor.GREEN : ChatColor.RED)
+                                            .append("[-]", ChatColor.DARK_RED, ChatColor.UNDERLINE)
+                                            .hintedCommand("/wf remq " + i), sender
+                            );
                         }
                         return true;
                     case "next":

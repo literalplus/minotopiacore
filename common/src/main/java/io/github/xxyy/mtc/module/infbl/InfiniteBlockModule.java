@@ -7,6 +7,8 @@
 
 package io.github.xxyy.mtc.module.infbl;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.misc.XyLocation;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.command.CommandBehaviours;
@@ -16,8 +18,7 @@ import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import io.github.xxyy.mtc.module.InjectModule;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
-import mkremins.fanciful.FancyMessage;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -94,13 +95,13 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         save();
     }
 
-    public void addInfiniteToCfg(Location input) {
+    void addInfiniteToCfg(Location input) {
         infiniteBlockLocations.add(XyLocation.of(input));
         configuration.set(DATA_PATH, infiniteBlockLocations);
         save();
     }
 
-    public void removeInfiniteFromCfg(Location input) {
+    void removeInfiniteFromCfg(Location input) {
         infiniteBlockLocations.remove(XyLocation.of(input));
         configuration.set(DATA_PATH, infiniteBlockLocations);
         save();
@@ -208,7 +209,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         }
     }
 
-    public class CommandHandler extends MTCCommandExecutor {
+    class CommandHandler extends MTCCommandExecutor {
         @Override
         @SuppressWarnings("ConstantConditions")
         public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
@@ -244,16 +245,13 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                             });
                         } else {
                             infiniteBlockLocations.stream().forEach(loc -> {
-                                //@formatter:off
-                                new FancyMessage(loc.getBlock().getType() + " @ ")
-                                            .color(ChatColor.GOLD)
-                                        .then(loc.prettyPrint() + " [klick]")
-                                            .color(ChatColor.YELLOW)
-                                            .tooltip("Hier klicken zum Teleportieren: ", loc.toTpCommand(null))
-                                            .command(loc.toTpCommand(null))
-                                        .send(sender);
+                                ComponentSender.sendTo(
+                                        new XyComponentBuilder(loc.getBlock().getType() + " @ ", ChatColor.GOLD)
+                                                .append(loc.prettyPrint(), ChatColor.YELLOW)
+                                                .append("[tp]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                                                .hintedCommand(loc.toTpCommand(null)), sender
+                                );
                                 i.addAndGet(1);
-                                //@formatter:on
                             });
                         }
                         sender.sendMessage("§6" + i.get() + " §eInfiniteBlocks registriert.");

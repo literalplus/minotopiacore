@@ -7,12 +7,14 @@
 
 package io.github.xxyy.mtc.module.quiz;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
-import mkremins.fanciful.FancyMessage;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,9 +38,9 @@ class CommandQuiz implements CommandExecutor {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "info":
-                    if(module.hasActiveGame()) {
+                    if (module.hasActiveGame()) {
                         sender.sendMessage("§9Aktuelle Frage:");
-                        sender.sendMessage("§d"+module.getGame().getCurrentQuestion().getText());
+                        sender.sendMessage("§d" + module.getGame().getCurrentQuestion().getText());
                     } else {
                         sender.sendMessage("§cEs läuft momentan kein Quiz!");
                     }
@@ -84,7 +86,7 @@ class CommandQuiz implements CommandExecutor {
                         module.getGame().abort(args.length > 1 ? StringHelper.varArgsString(args, 1, true) : "");
                         return true;
                     case "addq":
-                        if(CommandHelper.kickConsoleFromMethod(sender, label)) {
+                        if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                             return true;
                         }
 
@@ -128,27 +130,24 @@ class CommandQuiz implements CommandExecutor {
 
                         int i = 0;
                         for (QuizQuestion q : module.getQuestions()) { //name chosen because of `question` variable already in scope
-                            //@formatter:off
-                            new FancyMessage("#" + i + " ").color(ChatColor.GOLD)
-                                    .then(q.getText() + " ").color(ChatColor.GOLD).style(ChatColor.UNDERLINE)
-                                        .tooltip("Antwort:", q.getAnswer())
-                                    .then("[-]").style(ChatColor.UNDERLINE).color(ChatColor.DARK_RED)
-                                        .tooltip("/qz remq " + i)
-                                        .suggest("/qz remq " + i)
-                                    .then(" ")
-                                    .then("[~]").style(ChatColor.UNDERLINE).color(ChatColor.DARK_GREEN)
-                                        .tooltip("/qz start " + i)
-                                        .suggest("/qz start " + i++)
-                                    .send(sender);
-                            //@formatter:on
+                            ComponentSender.sendTo(
+                                    new XyComponentBuilder("#" + i + " ", ChatColor.GOLD)
+                                            .append(q.getText(), ChatColor.GOLD, ChatColor.UNDERLINE)
+                                            .tooltip("Antwort:", q.getAnswer())
+                                            .append(" ", ComponentBuilder.FormatRetention.NONE)
+                                            .append("[-]", ChatColor.DARK_RED, ChatColor.UNDERLINE)
+                                            .hintedCommand("/qz remq " + i)
+                                            .append(" ", ComponentBuilder.FormatRetention.NONE)
+                                            .append("[~]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                                            .hintedCommand("/qz start " + i++), sender
+                            );
                         }
 
-                        new FancyMessage("[Quiz mit zufälliger Frage starten]")
-                                .style(ChatColor.UNDERLINE).color(ChatColor.GOLD)
-                                .tooltip("/qz start r")
-                                .suggest("/qz start r")
-                                .send(sender);
-
+                        ComponentSender.sendTo(
+                                new XyComponentBuilder("[Quiz mit zufälliger Frage starten]", ChatColor.GOLD)
+                                        .underlined(true)
+                                        .hintedCommand("/qz start r"), sender
+                        );
                         return true;
                 }
             }

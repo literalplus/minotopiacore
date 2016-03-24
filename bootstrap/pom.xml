@@ -28,10 +28,6 @@
             <artifactId>mtc-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>mkremins</groupId>
-            <artifactId>fanciful</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
@@ -128,7 +124,6 @@
                     <artifactSet>
                         <includes>
                             <include>io.github.xxyy.mtc:*</include>
-                            <include>mkremins:fanciful</include>
                             <include>org.reflections:reflections</include>
                             <include>org.javassist:javassist</include>
                             <include>com.lmax:disruptor</include>

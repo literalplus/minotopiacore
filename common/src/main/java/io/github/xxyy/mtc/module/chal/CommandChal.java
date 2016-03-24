@@ -7,10 +7,12 @@
 
 package io.github.xxyy.mtc.module.chal;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.UUIDHelper;
 import io.github.xxyy.mtc.hook.XLoginHook;
-import mkremins.fanciful.FancyMessage;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,8 +21,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.List;
 import java.util.UUID;
-
-import static org.bukkit.ChatColor.*;
 
 /**
  * Provides a text-based admin front-end to the Chal module.
@@ -31,7 +31,7 @@ import static org.bukkit.ChatColor.*;
 class CommandChal implements CommandExecutor {
     private final ChalModule module;
 
-    public CommandChal(ChalModule module) {
+    CommandChal(ChalModule module) {
         this.module = module;
     }
 
@@ -40,17 +40,13 @@ class CommandChal implements CommandExecutor {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "list":
-                    //@formatter:off
-                    module.getLocations().stream()
-                            .forEach(cl -> new FancyMessage(" -> ").color(GOLD)
-                            .then(cl.getDate().toReadable()).color(YELLOW)
-                            .then(" @" + cl.pretyPrint() + " ").color(GOLD)
-                            .then("[tp]").color(GREEN)
-                                .style(UNDERLINE)
-                                .tooltip("Hier klicken zum Teleportieren!")
-                                .suggest(cl.toTpCommand(sender.getName()))
-                            .send(sender));
-                    //@formatter:on
+                    module.getLocations().stream().forEach(cl -> ComponentSender.sendTo(
+                            new XyComponentBuilder(" -> ", ChatColor.GOLD)
+                                    .append(cl.getDate().toReadable(), ChatColor.YELLOW)
+                                    .append(" @ " + cl.prettyPrint() + " ", ChatColor.GOLD)
+                                    .append("[tp]", ChatColor.GREEN, ChatColor.UNDERLINE)
+                                    .hintedCommand(cl.toTpCommand(sender.getName())), sender
+                    ));
                     if (module.getLocations().isEmpty()) {
                         sender.sendMessage("§cKeine Kisten gespeichert!");
                     }
@@ -96,17 +92,15 @@ class CommandChal implements CommandExecutor {
                             return true;
                         } else {
                             sender.sendMessage("§cMehere Spieler gefunden:");
-                            //@formatter:off
-                            profiles.forEach(pro -> new FancyMessage(pro.getName()).color(GOLD)
-                                    .then(" => ").color(YELLOW)
-                                    .then(pro.getUniqueId().toString() + " (").color(GOLD)
-                                    .then(pro.isPremium() ? "Premium" : "Cracked").color(pro.isPremium() ? GREEN : RED)
-                                    .then(") ").color(GOLD)
-                                    .then("[*]").color(BLUE)
-                                        .tooltip("Hier klicken zum Auswählen!")
-                                        .suggest("/chal reset "+pro.getUniqueId().toString())
-                                    .send(sender));
-                            //@formatter:on
+                            profiles.forEach(profile -> ComponentSender.sendTo(
+                                    new XyComponentBuilder(profile.getName(), ChatColor.GOLD)
+                                            .append(" => ", ChatColor.YELLOW)
+                                            .append(profile.getUniqueId().toString() + " (", ChatColor.GOLD)
+                                            .append(profile.isPremium() ? "Premium" : "Cracked", ChatColor.YELLOW)
+                                            .append(") ", ChatColor.GOLD)
+                                            .append("[*]", ChatColor.BLUE)
+                                            .hintedCommand("/chal reset " + profile.getUniqueId().toString()), sender
+                            ));
                             return true;
                         }
                     }
@@ -115,12 +109,12 @@ class CommandChal implements CommandExecutor {
                     sender.sendMessage("§aGeöffnete Kisten entfernt.");
                     return true;
                 case "edit":
-                    if(CommandHelper.kickConsoleFromMethod(sender, label)) {
+                    if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                         return true;
                     }
 
                     Player plr = ((Player) sender);
-                    if(plr.hasMetadata(ChalModule.METADATA_KEY)) {
+                    if (plr.hasMetadata(ChalModule.METADATA_KEY)) {
                         plr.removeMetadata(ChalModule.METADATA_KEY, module.getPlugin());
                         plr.sendMessage("§eEdit Mode deaktiviert");
                     } else {

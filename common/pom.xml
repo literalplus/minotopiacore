@@ -44,10 +44,6 @@
             <artifactId>worldguard</artifactId>
         </dependency>
         <dependency>
-            <groupId>mkremins</groupId>
-            <artifactId>fanciful</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.puharesource.mc</groupId>
             <artifactId>TitleManager</artifactId>
         </dependency>
