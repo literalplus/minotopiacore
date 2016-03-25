@@ -23,54 +23,60 @@ import org.bukkit.event.entity.PlayerDeathEvent;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-03
  */
-public class StatsDeathListener implements Listener {
+class StatsDeathListener implements Listener {
     private final PvPStatsModule module;
 
-    public StatsDeathListener(PvPStatsModule module) {
+    StatsDeathListener(PvPStatsModule module) {
         this.module = module;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onStatsDeath(PlayerDeathEvent evt) {
         Player victim = evt.getEntity();
-        PlayerStats victimStats = module.getRepository().find(victim);
-        victimStats.addDeaths(1);
-        incrementClanDeaths(victim);
-        Player killer = victim.getKiller();
-        module.getRepository().save(victimStats); //Only adds to queue
-        if (killer != null) {
-            PlayerStats killerStats = module.getRepository().find(killer);
-            killerStats.addKills(1);
-            incrementClanKills(killer);
-            module.getRepository().save(killerStats); //Only adds to queue
+        module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
+            PlayerStats victimStats = module.getRepository().find(victim);
+            victimStats.addDeaths(1);
+            Player killer = victim.getKiller();
+            module.getRepository().save(victimStats); //Only adds to queue
 
-            if (module.isFeatureEnabled("title.killer")) {
-                module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + "§6 Kills!");
+            if (killer != null) {
+                PlayerStats killerStats = module.getRepository().find(killer);
+                killerStats.addKills(1);
+                module.getRepository().save(killerStats); //Only adds to queue
+
+                if (module.isFeatureEnabled("title.killer")) {
+                    module.getTitleManagerHook().sendTitle(killer, "", "§6Du hast §e" + killerStats.getKills() + "§6 Kills!");
+                }
             }
-        }
 
-        if (module.isFeatureEnabled("title.victim")) {
-            module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + "§6 Deaths!");
-        }
+            if (ConfigHelper.isClanEnabled()) {
+                module.getPlugin().getServer().getScheduler().runTask(module.getPlugin(), () -> {
+                    incrementClanDeaths(victim);
+                    if (killer != null) {
+                        incrementClanKills(killer);
+                    }
+                });
+            }
+
+            if (module.isFeatureEnabled("title.victim")) {
+                module.getTitleManagerHook().sendTitle(victim, "", "§6Du hast §e" + victimStats.getDeaths() + "§6 Deaths!");
+            }
+        });
     }
 
     private void incrementClanKills(Player plr) {
-        if (ConfigHelper.isClanEnabled()) {
-            ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
-            if (ci.id > 0) {
-                ci.kills += 1;
-                ci.flush();
-            }
+        ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
+        if (ci.id > 0) {
+            ci.kills += 1;
+            ci.flush();
         }
     }
 
     private void incrementClanDeaths(Player plr) {
-        if (ConfigHelper.isClanEnabled()) {
-            ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
-            if (ci.id > 0) {
-                ci.deaths += 1;
-                ci.flush();
-            }
+        ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plr.getName());
+        if (ci.id > 0) {
+            ci.deaths += 1;
+            ci.flush();
         }
     }
 }
