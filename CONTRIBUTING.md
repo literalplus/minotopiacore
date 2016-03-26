@@ -9,6 +9,15 @@ obtained by sending an email to `xxyy98+mtclicense@gmail.com`.
 Please use sane code style and auto-format code with standard IntelliJ code style. 
 Some special code style guidelines are delivered with the project. Just press `Ctrl+Alt+F`.
 
+Do not put empty lines after class declarations, write fields immediately afterwards, like so:
+
+````java
+public class SomeClass extends Something implements Thing, OtherThing {
+    public static final String SOME_DATA_PATH = "config.some.data";
+    private final ThingModule module;
+}
+````
+
 # Commit messages
 
 All commit messages **must** comply to the following standards:
