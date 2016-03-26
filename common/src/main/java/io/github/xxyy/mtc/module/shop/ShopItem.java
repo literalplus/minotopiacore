@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.WordUtils;
@@ -187,10 +188,60 @@ public class ShopItem {
     }
 
     /**
-     * @return the modifiable list of this item's alternative names ("aliases")
+     * @return the immutable list of this item's alternative names ("aliases")
      */
     public List<String> getAliases() {
-        return aliases;
+        return ImmutableList.copyOf(aliases);
+    }
+
+    /**
+     * Adds an alias to this item, silently failing if such an alias already exists, ignoring case.
+     *
+     * @param alias the alias to add
+     */
+    public void addAlias(String alias) { //TODO: case-insensitive aliases
+        Preconditions.checkNotNull(alias, "alias");
+        Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
+
+        aliases.add(alias);
+    }
+
+    /**
+     * Removes an alias from this item, ignoring case.
+     *
+     * @param toRemove the alias to remove
+     */
+    public void removeAlias(String toRemove) {
+        Preconditions.checkNotNull(toRemove, "toRemove");
+        Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
+
+        String toRemoveLower = toRemove.toLowerCase();
+        aliases.removeIf(toRemoveLower::equalsIgnoreCase);
+    }
+
+    /**
+     * Removes an alias from this item by index.
+     *
+     * @param removeIndex the index to remove from
+     * @return the removed alias
+     */
+    public String removeAlias(int removeIndex) {
+        Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
+
+        return aliases.remove(removeIndex);
+    }
+
+    /**
+     * Sets this item's display name and keeps the old display name as an alias.
+     *
+     * @param newDisplayName the new display name
+     * @implNote This implementation just adds the new display name as first alias
+     */
+    public void setDisplayName(String newDisplayName) {
+        Preconditions.checkNotNull(newDisplayName, "newDisplayName");
+        Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
+
+        aliases.add(0, newDisplayName);
     }
 
     /**
