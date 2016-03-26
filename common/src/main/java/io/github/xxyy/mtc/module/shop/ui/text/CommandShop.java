@@ -23,15 +23,13 @@ import java.util.List;
  * @author Janmm14, Literallie
  */
 public class CommandShop extends MTCPlayerOnlyCommandExecutor { //TODO test (integration test) //TODO maybe allow console to use this command
-    private final ShopModule module;
     private final List<ShopAction> actionList = new ArrayList<>();
 
     public CommandShop(ShopModule module) {
-        this.module = module;
         actionList.add(new BuyShopAction(module));
         actionList.add(new SellShopAction(module));
         actionList.add(new PriceShopAction(module));
-        //actionList.add(new SearchShopAction(module));
+        actionList.add(new SearchShopAction(module));
     }
 
     @Override
