@@ -14,12 +14,12 @@ import org.bukkit.entity.Player;
 /**
  * Admin action that displays or sets the buy cost of a shop item.
  *
- * @author Janmm14, xxyy
+ * @author xxyy, Janmm14
  */
-public class BuyCostAdminAction extends AbstractShopAction {
+class BuyCostAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
-    protected BuyCostAdminAction(ShopModule module) {
+    BuyCostAdminAction(ShopModule module) {
         super("shopadmin", "cost", 2, null, "buy");
         this.module = module;
     }

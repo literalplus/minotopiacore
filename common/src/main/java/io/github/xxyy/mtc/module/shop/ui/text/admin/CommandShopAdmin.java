@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Janmm14, Literallie
  */
-public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO maybe allow console to use this command
+public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor {
     private final ShopModule module;
     private final List<ShopAction> actionList = new ArrayList<>();
 
@@ -24,11 +24,9 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor { //TODO mayb
         this.module = module;
         actionList.add(new AddAdminAction(module));
         actionList.add(new RemoveAdminAction(module));
-
         actionList.add(new AliasAdminAction(module));
         actionList.add(new BuyCostAdminAction(module));
         actionList.add(new SellWorthAdminAction(module));
-
         actionList.add(new ForceDiscountAdminAction(module));
         actionList.add(new DiscountAdminAction(module));
     }
