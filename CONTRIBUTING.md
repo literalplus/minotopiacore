@@ -78,3 +78,20 @@ to be available and do not need extra libraries.
 
 For JSON chat messages, please stick with the Spigot chat API. Use XYC's improved `XyComponentBuilder` instead of
 Spigot's `ComponentBuilder` - It provides extra utility methods and more readable syntax.
+
+# Command help messages
+
+Command help messages must follow a consistent style. That style is as follows for MTC:
+
+````
+/command sub additem --some-option=<arg> <argument> <argument> [optional] [optional...] 
+````
+
+Note that the `--some-option` part is not usual Minecraft style and should be avoided. It is not yet used in MTC, but
+if it were to be used, a library should be included for argument parsing.
+
+Also note that this is also valid:
+
+````
+/command sub additem <Item[:Data value]>
+````
