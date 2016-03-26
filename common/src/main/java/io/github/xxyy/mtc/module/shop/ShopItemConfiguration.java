@@ -74,7 +74,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     public ShopItem getItem(String input) {
         ShopItem item = itemAliases.get(input); //Check aliases first
         if (item != null) { // Note that we do *not* support data values for aliases since those may be specific to that
-            return item;    // value - Users can manually specify their aliases with dot notation though.
+            return item;    // value - Users can manually specify their aliases with colon notation though.
         }
 
         String[] parts = input.split(":", 2); //name:data notation, where data is a byte
@@ -85,18 +85,19 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
             return null;
         }
 
-        if (parts.length > 1) {
+        if (parts.length > 1) { //We got a data value
             String dataPart = parts[1];
             if (!dataPart.isEmpty()
                     && (StringUtils.isNumeric(dataPart)
-                    || ((dataPart.startsWith("-") || dataPart.startsWith("+"))
-                    && StringUtils.isNumeric(dataPart.substring(1))))) {
+                    /*|| ((dataPart.startsWith("-") || dataPart.startsWith("+")) //TODO: Does explicitly specifying a wildcard item allow for exploits?
+                    && StringUtils.isNumeric(dataPart.substring(1)))*/)) {
                 dataValue = Byte.parseByte(dataPart);
             }
         }
-        if (dataValue < 0) { //invalid data value, uer data value input -1 may not be correct
-            return null;
-        }
+
+//        if (dataValue < 0) { //invalid data value, user data value input -1 may not be correct
+//            return null;
+//        }
 
         return getItem(material, dataValue);
     }
@@ -124,7 +125,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     @Override
     public ShopItem getItem(Material material, byte dataValue) {
         ShopItem foundItem = shopItems.get(material, dataValue); //check specific values before wildcard
-        if (foundItem != null || dataValue == -1) {
+        if (foundItem != null || dataValue == ShopItem.WILDCARD_DATA_VALUE) { //wildcard not found, ne need to check again
             return foundItem;
         }
         return getWildcardItem(material);
@@ -132,7 +133,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
 
     @Override
     public ShopItem getWildcardItem(Material material) {
-        return shopItems.get(material, (byte) -1);
+        return shopItems.get(material, ShopItem.WILDCARD_DATA_VALUE);
     }
 
     @Override

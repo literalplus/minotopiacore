@@ -29,6 +29,32 @@ public class ShopItem {
     public static final String SELL_WORTH_PATH = "sell";
     public static final String DISCOUNTED_PRICE_PATH = "discounted_price";
 
+    /**
+     * Magic sell worth value that indicates that the item cannot be sold.
+     *
+     * @see #canBeSold()
+     */
+    public static final double NOT_SELLABLE = 0D;
+
+    /**
+     * Magic sell worth value that indicates that the item cannot be bought.
+     *
+     * @see #canBeBought()
+     */
+    public static final double NOT_BUYABLE = 0D;
+
+    /**
+     * Magic discounted price value that indicated that the item cannot be discounted.
+     *
+     * @see #isDiscountable()
+     */
+    public static final double NOT_DISCOUNTABLE = 0D;
+
+    /**
+     * Magic data value that indicates that this item matches all data values that do not have specific items defined.
+     */
+    public static final byte WILDCARD_DATA_VALUE = -1;
+
     private final ShopItemManager manager;
     private final Material material;
     private final byte dataValue;
@@ -40,19 +66,20 @@ public class ShopItem {
 
     public ShopItem(ShopItemManager manager, double buyCost, double sellWorth, Material material, byte dataValue,
                     List<String> aliases, double discountedPrice) {
-        this.manager = manager;
         Preconditions.checkNotNull(material, "material");
         Preconditions.checkNotNull(aliases, "aliases");
         Preconditions.checkArgument(buyCost >= 0, "buyCost must be greater than or equal to 0");
         Preconditions.checkArgument(sellWorth >= 0, "sellWorth must be greater than or equal to 0");
         Preconditions.checkArgument(discountedPrice >= 0, "discountedPrice must be greater than or equal to 0");
         Preconditions.checkArgument(dataValue >= -1, "dataValue must be greater than or equal to -1");
+        setDiscountedPrice(discountedPrice); //updates percentage cache, checks < buyCost
+
+        this.manager = manager;
         this.buyCost = buyCost;
         this.sellWorth = sellWorth;
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
-        setDiscountedPrice(discountedPrice); //updates percentage cache, checks < buyCost
     }
 
     /**
@@ -69,14 +96,16 @@ public class ShopItem {
     public static ShopItem deserialize(ConfigurationSection section, ShopItemManager manager)
             throws NumberFormatException, ClassCastException {
         Preconditions.checkNotNull(section, "section");
+
         String[] arr = section.getName().split(":");
         String materialName = arr[0];
-        byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : -1;
+        byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : WILDCARD_DATA_VALUE;
 
         List<String> aliases = section.getStringList(ALIASES_PATH);
         double cost = section.getDouble(BUY_COST_PATH);
         double worth = section.getDouble(SELL_WORTH_PATH);
-        double discountedPrice = section.getDouble(DISCOUNTED_PRICE_PATH, 0); //explicit default value -> not specified means no discount
+        //explicit default value -> not specified means no discount
+        double discountedPrice = section.getDouble(DISCOUNTED_PRICE_PATH, NOT_DISCOUNTABLE);
 
         return new ShopItem(manager, cost, worth, Material.getMaterial(materialName), dataValue, aliases, discountedPrice);
     }
@@ -87,7 +116,7 @@ public class ShopItem {
     public String getDisplayName() {
         if (aliases.isEmpty()) {
             String readableMaterialName = WordUtils.capitalizeFully(material.name().replace('_', ' '));
-            return dataValue < 0 ? (readableMaterialName + ":" + dataValue) : readableMaterialName;
+            return dataValue == WILDCARD_DATA_VALUE ? readableMaterialName : (readableMaterialName + ":" + dataValue);
         } else {
             return aliases.get(0);
         }
@@ -108,15 +137,20 @@ public class ShopItem {
     }
 
     /**
-     * Checks if an item stack matches this shop item.
+     * Checks if an item stack matches this shop item. Note that this might not be consistent with the item returned by
+     * the item manager for that stack since wildcard items match all data values and don't care about overriding
+     * specific values here. Use with care.
      *
      * @param stack the stack to check
      * @return whether this item matches given stack
+     * @deprecated not consistent with {@link ShopItemManager}
      */
     @SuppressWarnings({"deprecation", "SimplifiableIfStatement"})
+    @Deprecated
     public boolean matches(ItemStack stack) {
         Preconditions.checkNotNull(stack, "stack");
-        if (dataValue != -1 &&
+
+        if (dataValue != WILDCARD_DATA_VALUE &&
                 stack.getData().getData() != dataValue) {
             return false;
         }
@@ -128,14 +162,14 @@ public class ShopItem {
      * @return whether players are allowed to sell this item to the shop
      */
     public boolean canBeSold() {
-        return sellWorth > 0;
+        return sellWorth != NOT_SELLABLE;
     }
 
     /**
      * @return whether players are allowed to buy this item from the shop
      */
     public boolean canBeBought() {
-        return buyCost > 0;
+        return buyCost != NOT_BUYABLE;
     }
 
     /**
@@ -146,7 +180,7 @@ public class ShopItem {
     }
 
     /**
-     * @return the item's data value, -1 means any
+     * @return the item's data value, {@link #WILDCARD_DATA_VALUE} means any
      */
     public byte getDataValue() {
         return dataValue;
@@ -175,11 +209,14 @@ public class ShopItem {
      * due to additional factors imposed by the item manager, such as discounts.
      *
      * @param buyCost the new buy cost to set
-     * @throws IllegalArgumentException if the new buy cost is not a finite number or greater than the sell worth
+     * @throws IllegalArgumentException if the new buy cost is not a positive finite number greater than the sell worth
      */
     public void setBuyCost(double buyCost) {
-        Preconditions.checkArgument(Double.isFinite(buyCost) && buyCost > sellWorth,
-                "buyCost must be a finite number greater than the sell worth");
+        if (buyCost != NOT_BUYABLE) {
+            Preconditions.checkArgument(Double.isFinite(buyCost) && buyCost > sellWorth,
+                    "buyCost must be a positive finite number greater than the sell worth");
+        }
+
         this.buyCost = buyCost;
     }
 
@@ -199,17 +236,20 @@ public class ShopItem {
      * prices may differ due to additional factors imposed by the item manager, such as discounts.
      *
      * @param sellWorth the new sell worth to set
-     * @throws IllegalArgumentException if the new buy cost is not a finite number or less than the buy cost
+     * @throws IllegalArgumentException if the new buy cost is not a finite positive number less than the buy cost
      */
     public void setSellWorth(double sellWorth) {
-        Preconditions.checkArgument(Double.isFinite(sellWorth) && sellWorth < buyCost,
-                "sellWorth must be a finite number greater than the buy cost");
+        if (sellWorth != NOT_SELLABLE) {
+            Preconditions.checkArgument(Double.isFinite(sellWorth) && sellWorth < buyCost && sellWorth > 0,
+                    "sellWorth must be a finite positive number less than the buy cost");
+        }
+
         this.sellWorth = sellWorth;
     }
 
     /**
      * Gets the discounted price of this item, meaning its buy cost when discounted. If the item cannot be
-     * discounted, this returns a value of zero.
+     * discounted, this returns a value of {@link #NOT_DISCOUNTABLE}.
      *
      * @return the discounted price
      */
@@ -226,10 +266,11 @@ public class ShopItem {
      * @throws IllegalArgumentException if the discounted price is not between the buy cost and the sell worth
      */
     public void setDiscountedPrice(double discountedPrice) {
-        if (discountedPrice != 0) {
+        if (discountedPrice != NOT_DISCOUNTABLE) {
             Preconditions.checkArgument(discountedPrice < buyCost, "discounted price must be less than buy cost (item must be buyable)");
             Preconditions.checkArgument(discountedPrice > sellWorth, "discounted price must be greater than sell worth");
         }
+
         this.discountedPrice = discountedPrice;
         calculateDiscountPercentage();
     }
@@ -250,14 +291,14 @@ public class ShopItem {
      * @return whether this item can be discounted
      */
     public boolean isDiscountable() {
-        return discountedPrice > 0 && canBeBought();
+        return discountedPrice != NOT_DISCOUNTABLE && canBeBought();
     }
 
     /**
      * @return a unique name for this item which can be used to save it in serialization
      */
     public String getSerializationName() {
-        return dataValue >= 0 ? (material.name() + ":" + dataValue) : material.name();
+        return dataValue == WILDCARD_DATA_VALUE ? material.name() : (material.name() + ":" + dataValue);
     }
 
     /**
