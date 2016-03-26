@@ -1,6 +1,5 @@
 package io.github.xxyy.mtc.module.shop;
 
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +12,7 @@ import javax.annotation.Nonnull;
 public enum TransactionType {
     SELL {
         @Override
-        public double getValue(@NotNull ShopItem item) {
+        public double getValue(@Nonnull ShopItem item) {
             return item.getManager().getSellWorth(item);
         }
 
@@ -24,7 +23,7 @@ public enum TransactionType {
     },
     BUY {
         @Override
-        public double getValue(@NotNull ShopItem item) {
+        public double getValue(@Nonnull ShopItem item) {
             return item.getManager().getBuyCost(item);
         }
 

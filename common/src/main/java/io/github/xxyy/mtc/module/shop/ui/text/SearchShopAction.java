@@ -6,9 +6,9 @@ import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -82,7 +82,7 @@ public class SearchShopAction extends AbstractShopAction {
      * @return the relative similarity, from 0 (no similarity) up to 1 (equal)
      */
     @Nonnegative
-    public static double getEqualityPercentage(@NotNull String s1, @NotNull String s2) {
+    public static double getEqualityPercentage(@Nonnull String s1, @Nonnull String s2) {
         //adapted from http://stackoverflow.com/a/16018452 (removed one variable, as unneeded)
         if (s1.length() < s2.length()) {
             String s1copy = s1;

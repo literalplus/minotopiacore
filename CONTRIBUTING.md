@@ -62,3 +62,10 @@ Here are some examples of non-complying commit messages that will be rejected:
  * `fix #386` (not meaningful)
  * `Added HolographicDisplays source because Maven sucks` (not present tense)
  
+# Library usage
+
+For nullity annotations, please only use `javax.annotation.Nonnull` and `javax.annotation.Nullable`. These are guaranteed
+to be available and do not need extra libraries.
+
+For JSON chat messages, please stick with the Spigot chat API. Use XYC's improved `XyComponentBuilder` instead of
+Spigot's `ComponentBuilder` - It provides extra utility methods and more readable syntax.

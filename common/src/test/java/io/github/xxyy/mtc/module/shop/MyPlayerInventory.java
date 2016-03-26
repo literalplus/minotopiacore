@@ -6,24 +6,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 class MyPlayerInventory implements PlayerInventory {
 
-    @NotNull
+    @Nonnull
     private final Player plr;
 
     private ItemStack[] armor = new ItemStack[4];
     private ItemStack[] inv = new ItemStack[4 * 9];
     private int heldItemSlot = 0;
 
-    MyPlayerInventory(@NotNull Player plr) {
+    MyPlayerInventory(@Nonnull Player plr) {
         this.plr = plr;
     }
 
