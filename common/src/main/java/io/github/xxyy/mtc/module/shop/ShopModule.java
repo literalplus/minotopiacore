@@ -24,14 +24,15 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 /**
- * Manages the shop module, allowing players to buy
+ * Manages the shop module. That module provides a more-or-less simple admin shop that allows players to buy and sell
+ * items for Vault money.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 30/11/14
  */
 public class ShopModule extends ConfigurableMTCModule {
     public static final String NAME = "Shop";
-    private static final String DISCOUNT_UPDATE_SECONDS_PATH = "sale_change_minutes";
+    private static final String DISCOUNT_UPDATE_MINUTES_PATH = "sale_change_minutes";
     private final XyComponentBuilder prefixBuilder = new XyComponentBuilder("[").color(ChatColor.AQUA)
             .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
     private final String prefix = TextComponent.toLegacyText(new XyComponentBuilder(prefixBuilder).create());
@@ -69,11 +70,11 @@ public class ShopModule extends ConfigurableMTCModule {
     @Override
     protected void reloadImpl() {
         itemConfig.trySave();
-        configuration.addDefault(DISCOUNT_UPDATE_SECONDS_PATH, 60 * 60);
+        configuration.addDefault(DISCOUNT_UPDATE_MINUTES_PATH, 60);
         configuration.trySave();
 
         updateDiscountTask.tryCancel();
-        updateDiscountTask.runTaskTimer(getPlugin(), configuration.getInt(DISCOUNT_UPDATE_SECONDS_PATH) * 20);
+        updateDiscountTask.runTaskTimer(getPlugin(), configuration.getInt(DISCOUNT_UPDATE_MINUTES_PATH) * 60 * 20);
     }
 
     @Override
