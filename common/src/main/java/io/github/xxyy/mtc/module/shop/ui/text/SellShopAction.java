@@ -65,12 +65,7 @@ class SellShopAction extends AbstractShopAction {
                 plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
                 return;
             }
-            try {
-                amount = Integer.parseInt(args[1]);
-            } catch (NumberFormatException ignored) {
-                plr.sendMessage("§cDie Anzahl der Items sollte einen realistischen Rahmen haben.");
-                return;
-            }
+            amount = Integer.parseInt(args[1]);
         }
         if (amount > itemInHand.getAmount()) {
             plr.sendMessage("§cDu hast nicht so viele Items in deiner Hand!");
@@ -86,6 +81,7 @@ class SellShopAction extends AbstractShopAction {
             if (module.getItemManager().isTradeProhibited(stack)) {
                 continue;
             }
+
             ShopItem item = module.getItemManager().getItem(stack);
             if (item.canBeSold()) { //add up current amount with this amount
                 itemAmounts.compute(item, (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount));
@@ -94,11 +90,16 @@ class SellShopAction extends AbstractShopAction {
 
         double totalProfit = itemAmounts.entrySet().stream()
                 .mapToDouble(e -> {
-                    module.getTransactionExecutor().attemptTransactionSilent(plr, e.getKey(), e.getValue(), TransactionType.SELL);
-                    return calculator.calculatePrice(e.getKey(), e.getValue(), TransactionType.SELL);
+                    boolean transactionSucceeded = module.getTransactionExecutor()
+                            .attemptTransactionSilent(plr, e.getKey(), e.getValue(), TransactionType.SELL);
+                    if (transactionSucceeded) {
+                        return calculator.calculatePrice(e.getKey(), e.getValue(), TransactionType.SELL);
+                    } else {
+                        return 0D;
+                    }
                 }).sum();
 
-        output.sendPrefixed(plr, "Du hast alles in deinem Inventar verkauft, was nicht niet- und nagelfest (unverkäuflich) ist.");
+        output.sendPrefixed(plr, "Du hast alles in deinem Inventar verkauft, was nicht niet- und nagelfest (unverkäuflich) war.");
         output.sendPrefixed(plr, "Du hast dadurch §e" + ShopStringAdaptor.getCurrencyString(totalProfit) + "§6 eingenommen.");
     }
 
@@ -113,7 +114,7 @@ class SellShopAction extends AbstractShopAction {
         int amount;
         if (lastArg.equalsIgnoreCase("all")) {
             amount = Arrays.stream(plr.getInventory().getContents())
-                    .filter(item::matches)
+                    .filter(item::matches) //TODO: This might be a problem with wildcard items
                     .mapToInt(ItemStack::getAmount)
                     .sum();
         } else {
