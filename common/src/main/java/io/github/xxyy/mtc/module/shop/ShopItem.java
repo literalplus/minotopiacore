@@ -224,8 +224,9 @@ public class ShopItem {
      *
      * @param removeIndex the index to remove from
      * @return the removed alias
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getAliases().size())
      */
-    public String removeAlias(int removeIndex) {
+    public String removeAlias(int removeIndex) throws IndexOutOfBoundsException {
         Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
 
         return aliases.remove(removeIndex);
