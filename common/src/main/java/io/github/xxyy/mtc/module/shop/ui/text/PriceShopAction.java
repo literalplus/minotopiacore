@@ -47,14 +47,6 @@ class PriceShopAction extends AbstractShopAction {
         }
     }
 
-    @Override
-    public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Item>", "Fragt einen Preis ab.");
-        sendHelpLine(plr, "hand", "Fragt den Preis des Items in deiner Hand ab");
-        sendHelpLine(plr, "inv", "Fragt den Preis deines ganzen Inventars ab");
-        sendHelpLine(plr, "<Item> <Anzahl>", "Berechnet einem Preis für eine bestimmte Anzahl.");
-    }
-
     private void priceNamedItem(String[] args, Player plr) {
         String lastArg = args[args.length - 1];
         int amount = 1;
@@ -84,11 +76,15 @@ class PriceShopAction extends AbstractShopAction {
             return;
         }
 
-        if (!output.extraCheckStackSellable(plr, itemInHand, "in deiner Hand")) {
-            return;
-        }
-
         ShopItem item = module.getItemManager().getItem(itemInHand);
         output.sendPriceInfo(plr, item, itemInHand.getAmount(), "in deiner Hand");
+    }
+
+    @Override
+    public void sendHelpLines(Player plr) {
+        sendHelpLine(plr, "<Item>", "Fragt einen Preis ab");
+        sendHelpLine(plr, "hand", "Fragt den Preis des Items in deiner Hand ab");
+        sendHelpLine(plr, "inv", "Fragt den Preis deines ganzen Inventars ab");
+        sendHelpLine(plr, "<Item> <Anzahl>", "Berechnet einem Preis für eine bestimmte Anzahl");
     }
 }

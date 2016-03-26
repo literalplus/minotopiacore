@@ -105,7 +105,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     @Override
     @SuppressWarnings("deprecation")
     public ShopItem getItem(ItemStack stack) {
-        if (stack == null || stack.getType() == Material.AIR) {
+        if (stack == null || stack.getType() == Material.AIR || isTradeProhibited(stack)) {
             return null;
         }
         return getItem(stack.getType(), stack.getData().getData());

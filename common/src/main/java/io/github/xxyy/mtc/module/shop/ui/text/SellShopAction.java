@@ -52,10 +52,8 @@ class SellShopAction extends AbstractShopAction {
     private void sellHand(String[] args, Player plr) {
         int amount;
         ItemStack itemInHand = plr.getItemInHand();
-        if (!output.extraCheckStackSellable(plr, itemInHand, "in deiner Hand")) {
-            return;
-        }
-        ShopItem item = module.getItemManager().getItem(itemInHand);
+        ShopItem item = module.getItemManager().getItem(itemInHand); //returns null for FullTag items
+
         if (!output.checkTradable(plr, item, "in deiner Hand", TransactionType.SELL)) {
             return;
         }

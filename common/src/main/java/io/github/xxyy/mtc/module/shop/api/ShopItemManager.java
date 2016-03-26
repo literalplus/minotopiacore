@@ -29,7 +29,8 @@ public interface ShopItemManager extends Cache {
     ShopItem getItem(String input);
 
     /**
-     * Attempts to get an item managed by this manager matching given item stack.
+     * Attempts to get an item managed by this manager matching given item stack. Returns null if the stack is null,
+     * the stack is of {@link Material#AIR} or {@link #isTradeProhibited(ItemStack) trading of that stack is prohibited}.
      *
      * @param stack the stack to find the item for
      * @return the found item for that stack, or {@code null} otherwise.
