@@ -79,6 +79,9 @@ to be available and do not need extra libraries.
 For JSON chat messages, please stick with the Spigot chat API. Use XYC's improved `XyComponentBuilder` instead of
 Spigot's `ComponentBuilder` - It provides extra utility methods and more readable syntax.
 
+Prefer `com.google.common.base.Preconditions` over Apache's `Validate`. When using them at the start of a method to
+check arguments and/or state, put a blank line after all precondition checks.
+
 # Command help messages
 
 Command help messages must follow a consistent style. That style is as follows for MTC:
