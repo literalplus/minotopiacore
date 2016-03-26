@@ -29,7 +29,7 @@ public interface ShopItemManager extends Cache {
     ShopItem getItem(String input);
 
     /**
-     * Attempts to get an item managed by this configuration matching given item stack.
+     * Attempts to get an item managed by this manager matching given item stack.
      *
      * @param stack the stack to find the item for
      * @return the found item for that stack, or {@code null} otherwise.
@@ -37,7 +37,7 @@ public interface ShopItemManager extends Cache {
     ShopItem getItem(ItemStack stack);
 
     /**
-     * Attempts to get an item managed by this configuration matching given input string. If the input string is
+     * Attempts to get an item managed by this manager matching given input string. If the input string is
      * {@code "hand"}, the player's item in hand is requested. Otherwise, the same syntax as in
      * {@link #getItem(String)} is used.
      *
@@ -48,15 +48,7 @@ public interface ShopItemManager extends Cache {
     ShopItem getItem(Player plr, String input);
 
     /**
-     * Checks if trading given item stack is prohibited due to general restrictions not relating to the shop item itself.
-     *
-     * @param stack the stack to check
-     * @return whether trading of given item stack must be prohibited
-     */
-    boolean isTradeProhibited(ItemStack stack); //TODO: Take shop item and forward call
-
-    /**
-     * Attempts to get an item managed by this configuration. The special data value {@code -1} represents a catch-all
+     * Attempts to get an item managed by this manager. The special data value {@code -1} represents a catch-all
      * wildcard item that matches all data values of that material that do not have a specific item attached to them.
      *
      * @param material  the material to find the item for
@@ -64,6 +56,23 @@ public interface ShopItemManager extends Cache {
      * @return the found item for the specific data value, if found, the wildcard item, if found, or {@code null} otherwise.
      */
     ShopItem getItem(Material material, byte dataValue);
+
+    /**
+     * Gets the wildcard item for a given material, if any. A wildcard item matches all data values and is represented
+     * internally by the special -1 data value.
+     *
+     * @param material the material to match
+     * @return the wildcard item for given material, or null if there is none
+     */
+    ShopItem getWildcardItem(Material material);
+
+    /**
+     * Checks if trading given item stack is prohibited due to general restrictions not relating to the shop item itself.
+     *
+     * @param stack the stack to check
+     * @return whether trading of given item stack must be prohibited
+     */
+    boolean isTradeProhibited(ItemStack stack); //TODO: Take shop item and forward call
 
     /**
      * @return the aliases map, mapping each alias to a shop item

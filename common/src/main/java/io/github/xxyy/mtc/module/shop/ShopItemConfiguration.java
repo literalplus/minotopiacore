@@ -122,17 +122,22 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     }
 
     @Override
-    public boolean isTradeProhibited(ItemStack stack) {
-        return fullTagModule == null || fullTagModule.isFullItem(stack);
+    public ShopItem getItem(Material material, byte dataValue) {
+        ShopItem foundItem = shopItems.get(material, dataValue); //check specific values before wildcard
+        if (foundItem != null || dataValue == -1) {
+            return foundItem;
+        }
+        return getWildcardItem(material);
     }
 
     @Override
-    public ShopItem getItem(Material material, byte dataValue) {
-        ShopItem item = shopItems.get(material, dataValue); //check specific values before wildcard
-        if (item != null) {
-            return item;
-        }
-        return shopItems.get(material, (byte) -1); //catch-all wildcard thingy
+    public ShopItem getWildcardItem(Material material) {
+        return shopItems.get(material, (byte) -1);
+    }
+
+    @Override
+    public boolean isTradeProhibited(ItemStack stack) {
+        return fullTagModule == null || fullTagModule.isFullItem(stack);
     }
 
     /**
