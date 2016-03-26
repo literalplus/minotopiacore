@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -58,19 +57,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     public static ShopItemConfiguration fromFile(File file, ClearCacheBehaviour behaviour, ShopModule module) {
         Validate.notNull(file, "File cannot be null");
 
-        if (!file.exists()) {
-            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
-                throw new IllegalStateException("Couldn't create managed config file's parent dirs for some reason: " + file.getAbsolutePath()); //Sometimes I hate Java's backwards compat
-            }
-            try {
-                if (!file.createNewFile()) {
-                    throw new IOException("Couldn't create managed config file for some reason: " + file.getAbsolutePath());
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Caught IOException", e);
-            }
-        }
-
+        ManagedConfiguration.ensureReadable(file);
         ShopItemConfiguration config = new ShopItemConfiguration(file, module);
         config.setClearCacheBehaviour(behaviour);
         config.tryLoad();

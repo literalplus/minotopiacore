@@ -60,7 +60,21 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
      */
     public static ManagedConfiguration fromFile(File file, ClearCacheBehaviour behaviour) {
         Validate.notNull(file, "File cannot be null");
+        ensureReadable(file);
 
+        ManagedConfiguration config = new ManagedConfiguration(file);
+        config.setClearCacheBehaviour(behaviour);
+        config.tryLoad();
+
+        return config;
+    }
+
+    /**
+     * Ensures that given file and its parent directories exist, and that it can be read by the application.
+     *
+     * @param file the file to check
+     */
+    protected static void ensureReadable(File file) {
         if (!file.exists()) {
             if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
                 throw new IllegalStateException("Couldn't create managed config file's parent dirs for some reason: " + file.getAbsolutePath()); //Sometimes I hate Java's backwards compat
@@ -73,12 +87,9 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
                 throw new IllegalStateException("Caught IOException", e);
             }
         }
-
-        ManagedConfiguration config = new ManagedConfiguration(file);
-        config.setClearCacheBehaviour(behaviour);
-        config.tryLoad();
-
-        return config;
+        if (!file.canRead()) {
+            throw new IllegalStateException("Config file is not readable: " + file.getAbsolutePath());
+        }
     }
 
     /**
