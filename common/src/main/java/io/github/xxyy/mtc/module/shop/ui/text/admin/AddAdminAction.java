@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.shop.ui.text.admin;
 
+import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
  * @author Janmm14, xxyy
  */
 class AddAdminAction extends AbstractShopAction {
-
     private final ShopModule module;
 
     AddAdminAction(ShopModule module) {
@@ -26,54 +26,70 @@ class AddAdminAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) { //REFACTOR
-        String[] split = args[0].split(":");
+        // /sa add material_name:data
+        String[] itemSpec = args[0].split(":");
 
-        String itemIdStr = split[0];
-        String dataStr = split.length == 1 ? "0" : split[1];
-        Material material = Material.matchMaterial(itemIdStr);
+        String materialDefinition = itemSpec[0];
+        String dataValueInput = itemSpec.length == 1 ? "0" : itemSpec[1];
+        Material material = Material.matchMaterial(materialDefinition);
         if (material == null) {
-            plr.sendMessage("§cDas Material §6" + itemIdStr + "§c ist nicht bekannt.");
+            plr.sendMessage("§cUnbekanntes Material: §6" + materialDefinition);
             return;
         }
+
         byte dataValue;
         try {
-            dataValue = Byte.parseByte(dataStr);
+            dataValue = Byte.parseByte(dataValueInput);
         } catch (NumberFormatException ignore) {
-            plr.sendMessage(String.format("§cData muss eine Zahl zwischen -1 und 127 sein - nicht §e%s§c.", dataStr));
-            return;
+            dataValue = -2;
         }
+
         if (dataValue < -1) {
-            plr.sendMessage("§cData muss zwischen -1 und 127 liegen.");
+            plr.sendMessage(String.format("§c§lFehler: §cDer Datenwert muss eine Zahl zwischen -1 und 127 sein. (%s)",
+                    dataValueInput));
             return;
         }
 
-//        ShopItem wildcardItem = module.getItemManager().getItem(material, (byte) -1); //allow for default price - FIXME: data values with wildcards are probably not carried
-//        if (wildcardItem != null) {
-//            plr.sendMessage("§cEs existiert bereits ein Wildcard-ShopItem mit dem Material."); //TO DO do we allow wildcard & specific ShopItems of same material currently?
-//            return;
-//        }
         ShopItem specificItem = module.getItemManager().getItem(material, dataValue);
         if (specificItem != null) {
-            plr.sendMessage(String.format("§cFür dieses Material und diesen Datenwert gibt es bereits das Item §e%s§c.",
-                    specificItem.getDisplayName()));
+            plr.sendMessage(String.format("§c§lFehler: §cDieses Item (%s, %s) existiert bereits mit dem Namen %s.",
+                    material, dataValueInput, specificItem.getDisplayName()));
             return;
         }
 
-        ShopItem newItem = new ShopItem(module.getItemManager(), -1, -1, material, dataValue, new ArrayList<>(), 0);
-        module.getItemConfig().storeItem(newItem);
+        ShopItem wildcardItem = module.getItemManager().getWildcardItem(material);
+        if (wildcardItem != null) {
+            plr.sendMessage(String.format("§e§lAchtung: §eEs existiert bereits ein Wildcard-Item für dieses Material. " +
+                    "Dein Item mit dem Datenwert %s wird trotzdem funktionieren.", dataValueInput));
+        }
+
+        ShopItem createdItem = new ShopItem(
+                module.getItemManager(),
+                ShopItem.NOT_BUYABLE, ShopItem.NOT_SELLABLE,
+                material, dataValue,
+                new ArrayList<>(),
+                ShopItem.NOT_DISCOUNTABLE
+        );
+
+        module.getItemConfig().storeItem(createdItem);
         module.getItemConfig().asyncSave(module.getPlugin());
-        plr.sendMessage("§aDas Item " + newItem.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
-        String aliasCmd = "/sa alias add " + newItem.getMaterial() + ':' + newItem.getDataValue() + " <alias>";
-        plr.spigot().sendMessage(
-                new XyComponentBuilder("Setze jetzt einen Anzeigenamen: ", ChatColor.GOLD)
-                        .append(aliasCmd, ChatColor.RED)
-                        .suggest(aliasCmd)
-                        .create());
+
+        plr.sendMessage("§aDas Item " + createdItem.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
+
+        String aliasCmd = "/sa alias add " + createdItem.getMaterial() + ':' + createdItem.getDataValue() + " <alias>";
+
+        ComponentSender.sendTo(
+                new XyComponentBuilder("Setze als nächstes einen Anzeigenamen: ", ChatColor.GOLD)
+                        .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                        .hintedCommand(aliasCmd), plr
+        );
     }
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Item>", "Fügt ein Item zum Shop hinzu.");
-        plr.sendMessage("§6Data = -1 bedeutet jeder Wert (Wildcard). Standard ist null.");
+        sendHelpLine(plr, "<Material[:Datenwert]>", "Fügt ein Item zum Shop hinzu.");
+        plr.sendMessage("§6Datenwert -1 ('Wildcard') gilt für alle Items, egal welcher Datenwert.");
+        plr.sendMessage("§6Spezifische Datenwerte werden vor der Wildcard berücksichtigt.");
+        plr.sendMessage("§6Wenn nicht angegeben, wird 0 verwendet.");
     }
 }
