@@ -133,10 +133,13 @@ public class ShopItem {
      */
     @SuppressWarnings("deprecation")
     public ItemStack toItemStack(int amount) {
-        return new ItemStackFactory(material)
-                .amount(amount)
-                .legacyData(dataValue)
-                .produce();
+        ItemStackFactory factory = new ItemStackFactory(material).amount(amount);
+
+        if (dataValue != WILDCARD_DATA_VALUE) {
+            factory.legacyData(dataValue);
+        }
+
+        return factory.produce();
     }
 
     /**
