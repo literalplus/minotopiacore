@@ -31,10 +31,10 @@ import static org.mockito.Mockito.mock;
  * @since 25/05/15
  */
 public class ShopItemConfigurationTest {
-    private static ShopItem POTATO = new ShopItem(null, 3, 1, Material.POTATO, (byte) -1,
+    private static ShopItem POTATO = new ShopItem(null, 3, 1, Material.POTATO, ShopItem.WILDCARD_DATA_VALUE,
             Lists.newArrayList("yolo", "potatos", "Kartoffel"), ShopItem.NOT_DISCOUNTABLE);
     private static ShopItem DIAMOND = new ShopItem(null, 7, 5, Material.DIAMOND, (byte) 42,
-            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 4);
+            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 6);
     private ShopItemConfiguration config;
 
     @Before
@@ -104,10 +104,12 @@ public class ShopItemConfigurationTest {
         assertThat("Diamond mapped to data value 127 (native)", config.getItem(Material.DIAMOND, (byte) 127), is(nullValue()));
         assertThat("Diamond not mapped to own data value",
                 config.getItem(Material.DIAMOND.name() + ":" + DIAMOND.getDataValue()), is(DIAMOND));
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testWildcardDataValueException() {
         //test that the item is not wrongly mapped to -1 (special value)
-        assertThat("Potato mapped to data value -1", config.getItem(Material.POTATO.name() + ":-1"), is(nullValue()));
-        assertThat("Diamond mapped to data value -1", config.getItem(Material.DIAMOND.name() + ":-1"), is(nullValue()));
+        System.out.println(config.getItem(Material.POTATO.name() + ":-1"));
     }
 
     //store
