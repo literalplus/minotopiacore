@@ -9,12 +9,13 @@ package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
 import java.util.List;
 
@@ -73,7 +74,6 @@ public class ShopItem {
         Preconditions.checkArgument(sellWorth >= 0, "sellWorth must be greater than or equal to 0");
         Preconditions.checkArgument(discountedPrice >= 0, "discountedPrice must be greater than or equal to 0");
         Preconditions.checkArgument(dataValue >= -1, "dataValue must be greater than or equal to -1");
-        setDiscountedPrice(discountedPrice); //updates percentage cache, checks < buyCost
 
         this.manager = manager;
         this.buyCost = buyCost;
@@ -81,6 +81,8 @@ public class ShopItem {
         this.material = material;
         this.dataValue = dataValue;
         this.aliases = aliases;
+
+        setDiscountedPrice(discountedPrice); //updates percentage cache, checks < buyCost
     }
 
     /**

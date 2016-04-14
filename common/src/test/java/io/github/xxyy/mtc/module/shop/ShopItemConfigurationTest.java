@@ -8,12 +8,13 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.collect.Lists;
-import io.github.xxyy.lib.guava17.collect.Table;
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.junit.Before;
 import org.junit.Test;
+
+import io.github.xxyy.lib.guava17.collect.Table;
+import io.github.xxyy.mtc.MTC;
 
 import java.io.File;
 import java.util.Map;
@@ -31,9 +32,9 @@ import static org.mockito.Mockito.mock;
  */
 public class ShopItemConfigurationTest {
     private static ShopItem POTATO = new ShopItem(null, 3, 1, Material.POTATO, (byte) -1,
-            Lists.newArrayList("yolo", "potatos", "Kartoffel"), 2);
+            Lists.newArrayList("yolo", "potatos", "Kartoffel"), ShopItem.NOT_DISCOUNTABLE);
     private static ShopItem DIAMOND = new ShopItem(null, 7, 5, Material.DIAMOND, (byte) 42,
-            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 6);
+            Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 4);
     private ShopItemConfiguration config;
 
     @Before
