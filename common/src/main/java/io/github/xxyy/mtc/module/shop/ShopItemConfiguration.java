@@ -8,13 +8,6 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import io.github.xxyy.lib.guava17.collect.HashBasedTable;
 import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
@@ -24,13 +17,15 @@ import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
@@ -144,7 +139,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
 
     @Override
     public boolean isTradeProhibited(ItemStack stack) {
-        return fullTagModule == null || fullTagModule.isFullItem(stack);
+        return fullTagModule != null && fullTagModule.isFullItem(stack);
     }
 
     /**
