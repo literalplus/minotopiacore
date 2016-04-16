@@ -28,8 +28,8 @@ class AliasAdminAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
-        String itemSpec = args[0];
-        String aliasSpec = StringHelper.varArgsString(args, 1, false);
+        String itemSpec = args[1];
+        String aliasSpec = StringHelper.varArgsString(args, 2, false);
         ShopItem item = module.getItemManager().getItem(plr, itemSpec);
 
         if (module.getTextOutput().checkNonExistant(plr, item, itemSpec)) {
