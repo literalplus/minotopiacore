@@ -141,7 +141,8 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
 
     @Override
     public boolean isTradeProhibited(ItemStack stack) {
-        return fullTagModule != null && fullTagModule.isFullItem(stack);
+        return (fullTagModule != null && fullTagModule.isFullItem(stack)) ||
+                !stack.getEnchantments().isEmpty();
     }
 
     /**
