@@ -83,7 +83,7 @@ class SellShopAction extends AbstractShopAction {
             }
 
             ShopItem item = module.getItemManager().getItem(stack);
-            if (item.canBeSold()) { //add up current amount with this amount
+            if (item != null && item.canBeSold()) { //add up current amount with this amount
                 itemAmounts.compute(item, (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount));
             }
         }
@@ -104,9 +104,9 @@ class SellShopAction extends AbstractShopAction {
     }
 
     private void sellNamedItem(String[] args, Player plr) {
-        String itemName = StringHelper.varArgsString(args, 1, 1, false); //last arg is amount, ignore that
+        String itemName = StringHelper.varArgsString(args, 0, 1, false); //last arg is amount, ignore that
         ShopItem item = module.getItemManager().getItem(itemName);
-        if (!output.checkTradable(plr, item, item.getDisplayName(), TransactionType.SELL)) { //handles null
+        if (!output.checkTradable(plr, item, itemName, TransactionType.SELL)) { //handles null
             return;
         }
 
