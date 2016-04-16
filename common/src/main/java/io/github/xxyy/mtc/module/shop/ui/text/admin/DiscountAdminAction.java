@@ -29,7 +29,7 @@ class DiscountAdminAction extends AbstractShopAction {
     private final ShopModule module;
 
     DiscountAdminAction(ShopModule module) {
-        super("shopadmin", "discount", 2, null);
+        super("shopadmin", "discount", 1, null);
         this.module = module;
     }
 
@@ -37,12 +37,14 @@ class DiscountAdminAction extends AbstractShopAction {
     public void execute(String[] args, Player plr, String label) {
         double newDiscountPrice = -1;
         try {
-            newDiscountPrice = Double.parseDouble(args[0]);
-        } catch (NumberFormatException ignore) {
-            //If it's not a double, they are probably querying the status -> not an error
+            newDiscountPrice = Double.parseDouble(args[args.length - 1]);
+        } catch (NumberFormatException nfe) {
+            if (args.length > 1) {
+                plr.sendMessage("§cReduzierter Preis muss eine Zahl sein!");
+            }
         }
 
-        String itemName = StringHelper.varArgsString(args, 0, false);
+        String itemName = StringHelper.varArgsString(args, 0, 1, false);
         ShopItem item = module.getItemManager().getItem(plr, itemName);
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
