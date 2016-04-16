@@ -33,7 +33,7 @@ class SellWorthAdminAction extends AbstractShopAction {
             //If it's not a double, they are probably querying the status -> not an error
         }
 
-        String itemName = StringHelper.varArgsString(args, 0, false);
+        String itemName = StringHelper.varArgsString(args, 1, false);
         ShopItem item = module.getItemManager().getItem(plr, itemName);
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
