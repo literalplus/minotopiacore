@@ -299,6 +299,8 @@ public class ShopItem {
         if (sellWorth != NOT_SELLABLE) {
             Preconditions.checkArgument(Double.isFinite(sellWorth) && sellWorth < buyCost && sellWorth > 0,
                     "sellWorth must be a finite positive number less than the buy cost");
+            Preconditions.checkArgument(!isDiscountable() || sellWorth < discountedPrice,
+                    "sellWorth must be less than the discounted price");
         }
 
         this.sellWorth = sellWorth;
