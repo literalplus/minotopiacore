@@ -66,7 +66,8 @@ public abstract class AbstractShopAction implements ShopAction {
         String command = "/" + baseCommand + " " + displayName + " " + arguments;
         plr.spigot().sendMessage(
                 new XyComponentBuilder(command, ChatColor.DARK_AQUA)
-                        .hintedCommand(command)
+                        .tooltip("§eKlicken zum Kopieren")
+                        .suggest(command)
                         .append(" " + description, ChatColor.GRAY)
                         .create()
         );

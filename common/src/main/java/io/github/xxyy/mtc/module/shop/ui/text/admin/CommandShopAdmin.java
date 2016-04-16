@@ -57,7 +57,7 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor {
     }
 
     private void sendHelp(Player plr) {
-        plr.sendMessage("§7==={§l§8MinoTopia Shop: Verwaltungsbefehle§7}===");
+        plr.sendMessage("§7========{§8§lMinoTopia Shop: Verwaltungsbefehle§7}========");
         actionList.stream()
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));
