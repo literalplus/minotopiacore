@@ -48,8 +48,8 @@ public final class ShopActionHelper {
     public static void attemptExecution(Player plr, String[] args, String label, ShopAction action) {
         if (action.getPermission() != null && !plr.hasPermission(action.getPermission())) {
             plr.sendMessage("§cDu darfst /" + label + " " + action.getDisplayName() + " nicht verwenden!");
-        } else if (action.getMinimumArguments() <= args.length - 1) {
-            plr.sendMessage("§cInvalide Syntax:");
+        } else if (action.getMinimumArguments() > args.length - 1) {
+            plr.sendMessage("§cInvalide Syntax, zu wenige Argumente:");
             action.sendHelpLines(plr);
         } else {
             action.execute(Arrays.copyOfRange(args, 1, args.length, String[].class), plr, args[0]);
