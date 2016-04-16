@@ -57,11 +57,10 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor {
     }
 
     private void sendHelp(Player plr) {
-        plr.sendMessage("§9[]------------- §5MinoTopiaShop§9 -------------[]"); //TODO: This design looks old af
+        plr.sendMessage("§7==={§l§8MinoTopia Shop: Verwaltungsbefehle§7}===");
         actionList.stream()
             .filter(action -> action.getPermission() == null || plr.hasPermission(action.getPermission()))
             .forEach(action -> action.sendHelpLines(plr));
-        plr.sendMessage("§b[]---------------------------------------------[]");
     }
 
     public ShopModule getModule() {
