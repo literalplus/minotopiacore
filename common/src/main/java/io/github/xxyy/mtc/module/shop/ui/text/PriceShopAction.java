@@ -31,7 +31,7 @@ class PriceShopAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
-        switch (args[1].toLowerCase()) {
+        switch (args[0].toLowerCase()) {
             case "hand":
             case "h":
                 priceHand(plr);
