@@ -38,7 +38,7 @@ public class ShopStringAdaptor {
      * @return the human-readable display string
      */
     public static String getAdjustedDisplayName(ShopItem item, int amount) {
-        return amount + " " + item;
+        return amount + " " + item.getDisplayName();
     }
 
     /**
