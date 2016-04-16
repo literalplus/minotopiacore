@@ -27,7 +27,7 @@ public class ShopStringAdaptor {
     public static String getCurrencyString(double amount) {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
-                amount + CURRENCY_PLURAL;
+                amount + " " + CURRENCY_PLURAL;
     }
 
     /**
