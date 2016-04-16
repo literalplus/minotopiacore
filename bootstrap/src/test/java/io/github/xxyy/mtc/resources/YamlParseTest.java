@@ -34,14 +34,14 @@ public class YamlParseTest {
 
     @Test
     public void checkPluginYml() throws FileNotFoundException, InvalidDescriptionException {
-        File file = new File("bootstrap/src/main/resources/plugin.yml");
+        File file = new File("src/main/resources/plugin.yml");
         Assert.assertTrue("plugin.yml missing", file.isFile());
         new PluginDescriptionFile(new FileInputStream(file));
     }
 
     @Test
     public void checkLanguage() {
-        File dir = new File("bootstrap/src/main/resources/lang/");
+        File dir = new File("src/main/resources/lang/");
         Assert.assertTrue("lang folder missing or not a directory", dir.isDirectory());
         Logger fakeLogger = spy(Logger.getLogger(getClass().getName()));
         when(SERVER.getLogger()).thenReturn(fakeLogger);
