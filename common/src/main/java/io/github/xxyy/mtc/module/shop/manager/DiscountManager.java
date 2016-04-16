@@ -56,6 +56,11 @@ public class DiscountManager {
     public ShopItem selectDiscountedItem(ShopItemManager shopItemManager) {
         Stream<ShopItem> filteredItemStream = shopItemManager.getItems().stream()
                 .filter(ShopItem::isDiscountable);
+
+        if (filteredItemStream.count() == 0) {
+            return null; //RandomUtils.nextInt(0) throws an exception
+        }
+
         discountedItem = filteredItemStream
                 .skip(RandomUtils.nextInt((int) filteredItemStream.count()))
                 .findFirst().orElse(null);
