@@ -30,7 +30,7 @@ class BuyShopAction extends AbstractShopAction {
         }
 
         int amount = Integer.parseInt(finalArg);
-        String itemName = StringHelper.varArgsString(args, 1, 1, false);
+        String itemName = StringHelper.varArgsString(args, 0, 1, false);
         ShopItem item = module.getItemManager().getItem(itemName);
 
         if (!module.getTextOutput().checkTradable(plr, item, itemName, TransactionType.BUY)) {
