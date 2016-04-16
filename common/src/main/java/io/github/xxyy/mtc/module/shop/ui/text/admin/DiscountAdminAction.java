@@ -95,7 +95,7 @@ class DiscountAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<reduzierter Preis> <Item>", "Setzt den reduzierten Preis für ein Item (0 = aus)");
+        sendHelpLine(plr, "<Item> <reduzierter Preis>", "Setzt den reduzierten Preis für ein Item (0 = aus)");
         sendHelpLine(plr, "<Item>", "Zeigt den reduzierten Preis für ein Item");
     }
 }
