@@ -23,12 +23,13 @@ class BuyShopAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
-        if (!StringUtils.isNumeric(args[2])) {
-            plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
+        String finalArg = args[args.length - 1];
+        if (!StringUtils.isNumeric(finalArg)) {
+            plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + finalArg + ")");
             return;
         }
 
-        int amount = Integer.parseInt(args[2]);
+        int amount = Integer.parseInt(finalArg);
         String itemName = StringHelper.varArgsString(args, 1, 1, false);
         ShopItem item = module.getItemManager().getItem(itemName);
 
