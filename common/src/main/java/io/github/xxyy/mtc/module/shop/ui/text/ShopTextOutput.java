@@ -1,5 +1,6 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
@@ -152,6 +153,11 @@ public class ShopTextOutput {
                     .append(ShopStringAdaptor.getCurrencyString(item.getManager().getSellWorth(item)), ChatColor.YELLOW)
                     .append(" verkauft werden.", ChatColor.GOLD);
             ComponentSender.sendTo(builder, receiver);
+        }
+        if (item.getAliases().size() > 1) {
+            receiver.sendMessage(String.format("%sAuch bekannt als: §e%s",
+                    module.getChatPrefix(),
+                    Joiner.on("§6, §e").join(item.getAliases())));
         }
     }
 
