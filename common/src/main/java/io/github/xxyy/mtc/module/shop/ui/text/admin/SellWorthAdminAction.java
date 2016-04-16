@@ -67,7 +67,7 @@ class SellWorthAdminAction extends AbstractShopAction {
                     sellWorth, item.getDiscountedPrice()
             ), sender);
         }
-        if (sellWorth >= item.getBuyCost()) {
+        if (sellWorth >= item.getBuyCost() && item.canBeBought()) {
             return !CommandHelper.msg(String.format(
                     "§cDer Verkaufswert §e%s §cmuss geringer als der Kaufpreis §e%s §csein!",
                     sellWorth, item.getBuyCost()
