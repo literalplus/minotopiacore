@@ -58,8 +58,8 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
-        super.enable(plugin);
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
+        super.enable(plugin);
         textOutput = new ShopTextOutput(this);
         transactionExecutor = new ShopTransactionExecutor(this);
 
