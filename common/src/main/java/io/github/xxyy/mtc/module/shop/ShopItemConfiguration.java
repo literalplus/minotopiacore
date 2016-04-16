@@ -66,6 +66,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     }
 
     public static ShopItemConfiguration fromDataFolderPath(String filePath, ClearCacheBehaviour behaviour, ShopModule module) {
+        Preconditions.checkNotNull(module.getPlugin(), "plugin");
         File file = new File(module.getPlugin().getDataFolder(), filePath);
         return fromFile(file, behaviour, module);
     }

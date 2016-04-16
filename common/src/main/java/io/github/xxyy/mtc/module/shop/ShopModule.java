@@ -58,8 +58,8 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
-        itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
         super.enable(plugin);
+        itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
         textOutput = new ShopTextOutput(this);
         transactionExecutor = new ShopTransactionExecutor(this);
 
@@ -69,7 +69,10 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-        itemConfig.trySave();
+        if (itemConfig != null) { //not yet set when called during enable
+            itemConfig.trySave();
+        }
+
         configuration.addDefault(DISCOUNT_UPDATE_MINUTES_PATH, 60);
         configuration.trySave();
 
