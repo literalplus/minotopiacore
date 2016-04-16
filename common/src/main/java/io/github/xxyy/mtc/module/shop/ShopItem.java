@@ -9,13 +9,12 @@ package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
-
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
 import java.util.List;
 
@@ -110,7 +109,10 @@ public class ShopItem {
         //explicit default value -> not specified means no discount
         double discountedPrice = section.getDouble(DISCOUNTED_PRICE_PATH, NOT_DISCOUNTABLE);
 
-        return new ShopItem(manager, cost, worth, Material.getMaterial(materialName), dataValue, aliases, discountedPrice);
+        Material material = Material.getMaterial(materialName);
+        Preconditions.checkNotNull(material, "No such material '%s'", materialName);
+
+        return new ShopItem(manager, cost, worth, material, dataValue, aliases, discountedPrice);
     }
 
     /**

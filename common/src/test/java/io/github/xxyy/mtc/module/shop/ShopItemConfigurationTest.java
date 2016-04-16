@@ -8,13 +8,12 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.collect.Lists;
+import io.github.xxyy.lib.guava17.collect.Table;
+import io.github.xxyy.mtc.MTC;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.junit.Before;
 import org.junit.Test;
-
-import io.github.xxyy.lib.guava17.collect.Table;
-import io.github.xxyy.mtc.MTC;
 
 import java.io.File;
 import java.util.Map;
@@ -63,18 +62,18 @@ public class ShopItemConfigurationTest {
         subTestGetByStack();
     }
 
-    public void subTestGetBySerializationName() {
+    private void subTestGetBySerializationName() {
         assertThat("Potato not mapped to serialization name", config.getItem(POTATO.getSerializationName()), is(POTATO));
         assertThat("Diamond not mapped to serialization name", config.getItem(DIAMOND.getSerializationName()), is(DIAMOND));
     }
 
-    public void subTestGetByMaterial() {
+    private void subTestGetByMaterial() {
         assertThat("Potato not mapped to material", config.getItem(Material.POTATO.name()), is(POTATO));
         assertThat("Diamond mapped to plain material", config.getItem(Material.DIAMOND.name()), is(nullValue()));
     }
 
     @SuppressWarnings("deprecation")
-    public void subTestGetByStack() {
+    private void subTestGetByStack() {
         assertThat("Potato not mapped to stack",
                 config.getItem(new ItemStack(Material.POTATO)), is(POTATO));
         assertThat("Diamond wrongly mapped to arbitrary stack",
@@ -83,14 +82,14 @@ public class ShopItemConfigurationTest {
                 config.getItem(new ItemStack(Material.DIAMOND, 2, (short) 12, (byte) 42)), is(DIAMOND));
     }
 
-    public void subTestGetByAliases() {
+    private void subTestGetByAliases() {
         POTATO.getAliases().forEach(al ->
                 assertThat("Potato not mapped to alias: " + al, config.getItem(al), is(POTATO)));
         DIAMOND.getAliases().forEach(al ->
                 assertThat("Diamond not mapped to alias: " + al, config.getItem(al), is(DIAMOND)));
     }
 
-    public void subTestGetByDataValues() {
+    private void subTestGetByDataValues() {
         //test that items including all data values (-1) are mapped to all data values
         assertThat("Potato not mapped to data value 0", config.getItem(Material.POTATO.name() + ":0"), is(POTATO));
         assertThat("Potato not mapped to data value 1", config.getItem(Material.POTATO.name() + ":1"), is(POTATO));

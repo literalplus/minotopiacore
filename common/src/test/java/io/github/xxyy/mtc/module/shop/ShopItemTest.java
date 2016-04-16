@@ -7,11 +7,17 @@
 
 package io.github.xxyy.mtc.module.shop;
 
+import io.github.xxyy.common.test.util.MockHelper;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -30,9 +36,21 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 @SuppressWarnings("deprecation")
 public class ShopItemTest {
 
-    @Test
-    public void testConstructorValidation() throws Exception {
+    @BeforeClass
+    public static void setBukkitServer() {
+        Server server = MockHelper.mockServer();//need this for item stack hasItemMeta() ._.
 
+        ItemFactory itemFactory = Mockito.mock(ItemFactory.class);
+        //noinspection ResultOfMethodCallIgnored
+        Mockito.doAnswer(args -> args.getArguments()[0] == null)
+                .when(itemFactory).equals(Mockito.any(ItemMeta.class), Mockito.isNull(ItemMeta.class));
+
+        Mockito.when(server.getItemFactory()).thenReturn(itemFactory);
+    }
+
+    //@Test
+    public void testConstructorValidation() throws Exception {
+        //TODO ?
     }
 
     @Test
@@ -174,9 +192,9 @@ public class ShopItemTest {
         ShopItem item = createAnyItem();
         item.setBuyCost(10D);
         item.setDiscountedPrice(6D);
-        assertThat("miscalculated discount percentage", item.getDiscountPercentage(), is(40D));
+        assertThat("miscalculated discount percentage", item.getDiscountPercentage(), is(40));
         item.setDiscountedPrice(1D); //OMG ONE DIRECTION!!!!!!1
-        assertThat("miscalculated discount percentage", item.getDiscountPercentage(), is(90D));
+        assertThat("miscalculated discount percentage", item.getDiscountPercentage(), is(90));
     }
 
     @Test
@@ -205,11 +223,7 @@ public class ShopItemTest {
         ShopItem item = createItemFromMaterialAndData(Material.CAKE, ShopItem.WILDCARD_DATA_VALUE);
         item.setBuyCost(15D);
         item.setSellWorth(10D);
-        MemoryConfiguration configuration = new MemoryConfiguration();
-        item.serializeToSection(configuration);
-        assertThat("configuration did not contain item", configuration.contains(item.getSerializationName()), is(true));
-        ShopItem deserializedItem = ShopItem.deserialize(configuration, null);
-        assertThat("deserialized item not equal to initial", deserializedItem, is(equalTo(item)));
+        testSerialization(item);
     }
 
     @Test
@@ -218,12 +232,17 @@ public class ShopItemTest {
         item.setBuyCost(15D);
         item.setSellWorth(10D);
         item.setDiscountedPrice(12D);
+        testSerialization(item);
+    }
+
+    private void testSerialization(ShopItem item) {
         MemoryConfiguration configuration = new MemoryConfiguration();
         item.serializeToSection(configuration);
         assertThat("configuration did not contain item", configuration.contains(item.getSerializationName()), is(true));
-        ShopItem deserializedItem = ShopItem.deserialize(configuration, null);
+        ShopItem deserializedItem = ShopItem.deserialize(configuration.getConfigurationSection(item.getSerializationName()), null);
         assertThat("deserialized item not equal to initial", deserializedItem, is(equalTo(item)));
     }
+
 
     @Nonnull
     private ShopItem createAnyItem() {
