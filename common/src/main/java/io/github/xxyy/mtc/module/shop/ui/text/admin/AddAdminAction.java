@@ -88,8 +88,8 @@ class AddAdminAction extends AbstractShopAction {
     @Override
     public void sendHelpLines(Player plr) {
         sendHelpLine(plr, "<Material[:Datenwert]>", "Fügt ein Item zum Shop hinzu.");
-        plr.sendMessage("§6Datenwert -1 ('Wildcard') gilt für alle Items, egal welcher Datenwert.");
-        plr.sendMessage("§6Spezifische Datenwerte werden vor der Wildcard berücksichtigt.");
-        plr.sendMessage("§6Wenn nicht angegeben, wird 0 verwendet.");
+        plr.sendMessage("§7Datenwert -1 ('Wildcard') gilt für alle, Datenwert egal.");
+        plr.sendMessage("§7Eine Wildcard überschreibt nicht existierende Datenwerte.");
+        plr.sendMessage("§7Wenn nicht angegeben, wird 0 verwendet.");
     }
 }
