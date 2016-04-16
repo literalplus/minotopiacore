@@ -41,7 +41,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     private final FullTagModule fullTagModule;
     private final DiscountManager discountManager;
     private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
-    private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length);
+    private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length); //stored in lower case
 
     protected ShopItemConfiguration(File file, MTCPlugin plugin, FullTagModule fullTagModule) {
         super(file);
@@ -73,6 +73,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
 
     @Override
     public ShopItem getItem(String input) {
+        input = input.toLowerCase(Locale.GERMAN); //ß -> ss
         ShopItem item = itemAliases.get(input); //Check aliases first
         if (item != null) { // Note that we do *not* support data values for aliases since those may be specific to that
             return item;    // value - Users can manually specify their aliases with colon notation though.
@@ -158,7 +159,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
 
         shopItems.put(item.getMaterial(), item.getDataValue(), item);
         item.getAliases()
-                .forEach(alt -> this.itemAliases.put(alt, item));
+                .forEach(alt -> this.itemAliases.put(alt.toLowerCase(Locale.GERMAN), item));
     }
 
     /**
@@ -247,12 +248,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
                     }
                     return null;
                 }).filter(Objects::nonNull)
-                .forEach(item -> {
-                    storeItem(item);
-                    shopItems.put(item.getMaterial(), item.getDataValue(), item);
-                    item.getAliases().stream()
-                            .forEach(alt -> itemAliases.put(alt, item));
-                });
+                .forEach(this::storeItem);
     }
 
     private void saveItems() {
