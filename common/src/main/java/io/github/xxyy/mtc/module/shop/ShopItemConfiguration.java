@@ -233,6 +233,17 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
         return super.saveToString();
     }
 
+    /**
+     * Updates this configuration's caches to match the updated state of given item.
+     *
+     * @param item the items whose state may have been changed
+     */
+    public void updateItem(ShopItem item) {
+        removeItem(item);
+        storeItem(item);
+        asyncSave(plugin);
+    }
+
     private void loadItems() {
         shopItems.clear();
         itemAliases.clear();

@@ -90,20 +90,20 @@ class AliasAdminAction extends AbstractShopAction {
         } else {
             item.removeAlias(aliasSpec);
         }
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         plr.sendMessage("§aAlias §2" + removedAlias + "§a entfernt.");
     }
 
     private void aliasSetDisplayName(Player plr, String aliasSpec, ShopItem item) {
         item.setDisplayName(aliasSpec);
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         plr.sendMessage(String.format("§aDer Anzeigename von %s ist jetzt $2%s§a.",
                 item.getSerializationName(), item.getDisplayName()));
     }
 
     private void aliasAdd(Player plr, String aliasSpec, ShopItem item) {
         item.addAlias(aliasSpec);
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         plr.sendMessage(String.format("§aAlias §2%s§a zu %s hinzugefügt.", aliasSpec, item.getDisplayName()));
     }
 

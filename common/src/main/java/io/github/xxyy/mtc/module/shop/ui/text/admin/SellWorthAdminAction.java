@@ -75,7 +75,7 @@ class SellWorthAdminAction extends AbstractShopAction {
         }
 
         item.setSellWorth(sellWorth);
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         sender.sendMessage("§aNeuer Verkaufswert gesetzt:");
         return true;
     }

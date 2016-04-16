@@ -75,7 +75,7 @@ class BuyCostAdminAction extends AbstractShopAction {
         }
 
         item.setBuyCost(buyCost);
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         sender.sendMessage("§aNeuer Kaufpreis gesetzt:");
         return true;
     }

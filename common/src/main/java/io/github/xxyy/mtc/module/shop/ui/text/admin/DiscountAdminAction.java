@@ -88,7 +88,7 @@ class DiscountAdminAction extends AbstractShopAction {
         }
 
         item.setDiscountedPrice(discountedPrice);
-        module.getItemConfig().asyncSave(module.getPlugin());
+        module.getItemConfig().updateItem(item);
         sender.sendMessage("§aNeuer reduzierter Preis gesetzt:");
         return true;
     }
