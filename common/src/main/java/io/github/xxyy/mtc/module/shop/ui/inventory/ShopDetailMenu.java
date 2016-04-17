@@ -60,7 +60,7 @@ public class ShopDetailMenu extends ShopMenu {
         if (item.canBeBought()) {
             for (int i = 0; i < ITEM_AMOUNT_ROWS.length; i++) {
                 int[] amountRow = ITEM_AMOUNT_ROWS[i];
-                for (int j = 0; j < amountRow.length; i++) {
+                for (int j = 0; j < amountRow.length; j++) {
                     int amount = amountRow[j];
                     if (amount == 0) {
                         continue;
