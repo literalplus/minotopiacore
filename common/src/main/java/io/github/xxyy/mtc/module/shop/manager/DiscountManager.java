@@ -13,7 +13,8 @@ import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.math.RandomUtils;
 
 import javax.annotation.Nullable;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Manages discounts on shop items.
@@ -54,17 +55,14 @@ public class DiscountManager {
      * @return the new discounted item
      */
     public ShopItem selectDiscountedItem(ShopItemManager shopItemManager) {
-        Stream<ShopItem> filteredItemStream = shopItemManager.getItems().stream()
-                .filter(ShopItem::isDiscountable);
+        List<ShopItem> discountableItems = shopItemManager.getItems().stream()
+                .filter(ShopItem::isDiscountable)
+                .collect(Collectors.toList());
 
-        if (filteredItemStream.count() == 0) {
-            return null; //RandomUtils.nextInt(0) throws an exception
+        if (discountableItems.isEmpty()) {
+            return null;
         }
-
-        discountedItem = filteredItemStream
-                .skip(RandomUtils.nextInt((int) filteredItemStream.count()))
-                .findFirst().orElse(null);
-        return discountedItem;
+        return discountableItems.get(RandomUtils.nextInt(discountableItems.size()));
     }
 
     /**
