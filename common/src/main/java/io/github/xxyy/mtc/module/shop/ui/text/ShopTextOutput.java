@@ -218,11 +218,11 @@ public class ShopTextOutput {
     public void sendTransactionSuccess(CommandSender receiver, ShopItem item, int amount, TransactionType type) {
         ComponentSender.sendTo(
                 module.getPrefixBuilder()
-                        .append("Du hast erfolgreich ", ChatColor.GOLD)
+                        .append("Du hast ", ChatColor.GOLD)
                         .append(ShopStringAdaptor.getAdjustedDisplayName(item, amount), ChatColor.YELLOW)
                         .append(" für ", ChatColor.GOLD)
                         .append(ShopStringAdaptor.getCurrencyString(calculator.calculatePrice(item, amount, type)), ChatColor.YELLOW)
-                        .append(" " + ShopStringAdaptor.getParticipleII(type), ChatColor.GOLD)
+                        .append(" " + ShopStringAdaptor.getParticipleII(type) + ".", ChatColor.GOLD)
                         .create(), receiver
         );
     }
