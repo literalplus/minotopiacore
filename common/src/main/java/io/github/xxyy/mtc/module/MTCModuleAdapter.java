@@ -12,8 +12,12 @@ import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.module.MTCModule;
 import io.github.xxyy.mtc.api.module.ModuleCommand;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract base class for MTC modules. Note when implementing that the Reflection-based loading facility expects your
@@ -26,6 +30,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 public abstract class MTCModuleAdapter implements MTCModule {
     private final String name;
     protected MTC plugin;
+    protected Set<Listener> registeredListeners = new HashSet<>();
     protected boolean enabledByDefault = true;
 
     /**
@@ -56,7 +61,7 @@ public abstract class MTCModuleAdapter implements MTCModule {
 
     @Override
     public void disable(MTCPlugin plugin) {
-
+        registeredListeners.forEach(HandlerList::unregisterAll);
     }
 
     @Override
@@ -101,5 +106,16 @@ public abstract class MTCModuleAdapter implements MTCModule {
      */
     protected ModuleCommand registerCommand(CommandExecutor executor, String name, String... aliases) {
         return plugin.getModuleManager().registerModuleCommand(this, executor, name, aliases);
+    }
+
+    /**
+     * Registers an event listener with the server associated with this module and unregisters it when the module
+     * is being disabled.
+     *
+     * @param listener the listener to register
+     */
+    protected void registerListener(Listener listener) {
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        registeredListeners.add(listener);
     }
 }
