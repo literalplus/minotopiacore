@@ -40,7 +40,7 @@ public abstract class ShopMenu implements InventoryHolder {
             player.closeInventory();
         }
 
-        player.openInventory(inventory);
+        player.openInventory(getInventory());
     }
 
     @Override
