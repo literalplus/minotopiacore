@@ -10,8 +10,8 @@ echo "Built..."
 
 echo "Deploying..."
 cd bootstrap/target
-scp minotopaicore-*.jar mt-mikey:/home/minecraft/plugins/qa/mtc.jar
-scp minotopaicore-*.jar mt-mikey:/home/minecraft/mtc-qa/plugins/mtc.jar
+scp -C minotopiacore-*.jar mt-mikey:/home/minecraft/plugins/qa/mtc.jar
+scp -C minotopiacore-*.jar mt-mikey:/home/minecraft/mtc-qa/plugins/mtc.jar
 
 echo "Deployed..."
 echo "Done!"
