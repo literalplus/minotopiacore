@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.shop.ui.text;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopActionHelper;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -24,8 +25,10 @@ import java.util.List;
  */
 public class CommandShop extends MTCPlayerOnlyCommandExecutor { //TODO test (integration test) //TODO maybe allow console to use this command
     private final List<ShopAction> actionList = new ArrayList<>();
+    private final ShopModule module;
 
     public CommandShop(ShopModule module) {
+        this.module = module;
         actionList.add(new BuyShopAction(module));
         actionList.add(new SellShopAction(module));
         actionList.add(new PriceShopAction(module));
@@ -39,8 +42,7 @@ public class CommandShop extends MTCPlayerOnlyCommandExecutor { //TODO test (int
         }
 
         if (args.length == 0) {
-            //TODO: open gui instead of sending help
-            sendHelp(plr);
+            ShopListMenu.openMenu(plr, module);
             return true;
         }
 
