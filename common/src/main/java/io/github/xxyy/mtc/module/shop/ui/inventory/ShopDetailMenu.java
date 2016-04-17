@@ -7,6 +7,7 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
+import com.google.common.base.Preconditions;
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
@@ -41,6 +42,7 @@ public class ShopDetailMenu extends ShopMenu {
 
     public ShopDetailMenu(Player player, ShopModule module, ShopItem item) {
         super(player, module);
+        Preconditions.checkNotNull(item, "item");
         this.item = item;
         initTopRow();
         renderCanvas();

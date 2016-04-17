@@ -26,15 +26,13 @@ public abstract class ShopMenu implements InventoryHolder {
     public static final int INVENTORY_SIZE = 6 * ROW_SIZE;
     public static final int CANVAS_SIZE = INVENTORY_SIZE - ROW_SIZE;
     protected final ShopModule module;
-    private final Inventory inventory;
+    private Inventory inventory;
     private final Player player;
     protected MenuButton[] topRowButtons = new MenuButton[ROW_SIZE];
 
     protected ShopMenu(Player player, ShopModule module) {
         this.player = player;
         this.module = module;
-        this.inventory = module.getPlugin().getServer()
-                .createInventory(this, INVENTORY_SIZE, getInventoryTitle());
     }
 
     public void open() {
@@ -47,6 +45,11 @@ public abstract class ShopMenu implements InventoryHolder {
 
     @Override
     public Inventory getInventory() {
+        //lazy init to circumvent title possibly being unknown at creation time
+        if (inventory == null) {
+            inventory = module.getPlugin().getServer()
+                    .createInventory(this, INVENTORY_SIZE, getInventoryTitle());
+        }
         return inventory;
     }
 
