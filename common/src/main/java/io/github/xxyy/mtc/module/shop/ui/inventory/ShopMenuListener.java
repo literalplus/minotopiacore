@@ -30,9 +30,8 @@ public class ShopMenuListener implements Listener {
         if (holder != null && holder instanceof ShopMenu) {
             if (evt.getClick().isLeftClick()) {
                 ((ShopMenu) holder).handleClick(evt);
-            } else {
-                evt.setCancelled(true);
             }
+            evt.setCancelled(true);
         }
     }
 }
