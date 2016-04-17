@@ -17,6 +17,7 @@ import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.task.UpdateDiscountTask;
 import io.github.xxyy.mtc.module.shop.transaction.ShopTransactionExecutor;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenuListener;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
 import io.github.xxyy.mtc.module.shop.ui.text.admin.CommandShopAdmin;
@@ -62,6 +63,7 @@ public class ShopModule extends ConfigurableMTCModule {
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
         textOutput = new ShopTextOutput(this);
         transactionExecutor = new ShopTransactionExecutor(this);
+        registerListener(new ShopMenuListener());
 
         registerCommand(new CommandShop(this), "shop", "xshop");
         registerCommand(new CommandShopAdmin(this), "shopadmin", "sa");
