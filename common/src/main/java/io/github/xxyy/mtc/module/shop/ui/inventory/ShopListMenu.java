@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -57,7 +58,10 @@ public class ShopListMenu extends ShopMenu {
         this.currentItemStart = itemStart;
 
         for (int i = 0; i < topRowButtons.length; i++) {
-            getInventory().setItem(i, topRowButtons[i].getItemStack(this));
+            MenuButton button = topRowButtons[i];
+            if (button != null) {
+                getInventory().setItem(i, button.getItemStack(this));
+            }
         }
 
         int numberOfItemsToDisplay = items.size() - itemStart;
