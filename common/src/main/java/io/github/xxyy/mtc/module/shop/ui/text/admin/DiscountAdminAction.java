@@ -35,26 +35,27 @@ class DiscountAdminAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
-        double newDiscountPrice = -1;
-        try {
-            newDiscountPrice = Double.parseDouble(args[args.length - 1]);
-        } catch (NumberFormatException nfe) {
-            if (args.length > 1) {
-                plr.sendMessage("§cReduzierter Preis muss eine Zahl sein!");
-            }
-        }
-
-        String itemName = StringHelper.varArgsString(args, 0, 1, false);
+        int ignoreArgsEnd = args.length == 1 ? 0 : 1; //only strip args if we have anything left then
+        String itemName = StringHelper.varArgsString(args, 0, ignoreArgsEnd, false);
         ShopItem item = module.getItemManager().getItem(plr, itemName);
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
         }
 
-        if (newDiscountPrice != -1) {
-            handleSet(item, plr, newDiscountPrice);
+        if (args.length == 1) {
+            sendDiscountInfo(item, plr);
+            return;
         }
 
-        sendDiscountInfo(item, plr);
+        try {
+            double newDiscountPrice = Double.parseDouble(args[args.length - 1]);
+            handleSet(item, plr, newDiscountPrice);
+            sendDiscountInfo(item, plr);
+        } catch (NumberFormatException nfe) {
+            if (args.length > 1) {
+                plr.sendMessage("§cReduzierter Preis muss eine Zahl sein!");
+            }
+        }
     }
 
     private void sendDiscountInfo(ShopItem item, CommandSender sender) {
