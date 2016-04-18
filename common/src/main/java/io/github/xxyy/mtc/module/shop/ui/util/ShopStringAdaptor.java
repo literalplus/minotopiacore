@@ -3,6 +3,9 @@ package io.github.xxyy.mtc.module.shop.ui.util;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * Adapts strings to different arguments, for proper grammar. This class aims to prevent things like "1 items" from
  * happening since these look unprofessional. Static utility class.
@@ -13,6 +16,7 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 public class ShopStringAdaptor {
     public static final String CURRENCY_SINGULAR = "MineCoin";
     public static final String CURRENCY_PLURAL = "MineCoins";
+    private static final NumberFormat CURRENCY_FORMAT = new DecimalFormat("### ###,00");
 
     private ShopStringAdaptor() {
 
@@ -27,7 +31,7 @@ public class ShopStringAdaptor {
     public static String getCurrencyString(double amount) {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
-                amount + " " + CURRENCY_PLURAL;
+                CURRENCY_FORMAT.format(amount) + " " + CURRENCY_PLURAL;
     }
 
     /**
