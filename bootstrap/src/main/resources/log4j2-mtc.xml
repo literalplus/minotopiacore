@@ -57,6 +57,12 @@
             <TimeBasedTriggeringPolicy/>
             <DefaultRolloverStrategy max="200"/>
         </RollingFile>
+        <RollingFile name="ShopLogFile" fileName="${sys:mtc.logsdir}shop.log"
+                     filePattern="${sys:mtc.logsdir}shop/$${date:yyyy-MM}/%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="io.github.xxyy.mtc" level="info" additivity="false">
@@ -73,6 +79,9 @@
         </Logger>
         <Logger name="io.github.xxyy.mtc.chat.cmdspy.BadCommandSpyFilter" level="info" additivity="false">
             <AppenderRef ref="BadCmdLogFile"/>
+        </Logger>
+        <Logger name="io.github.xxyy.mtc.module.shop" level="info" additivity="false">
+            <AppenderRef ref="ShopLogFile"/>
         </Logger>
         <Root/>
     </Loggers>

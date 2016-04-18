@@ -10,12 +10,14 @@ package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +32,7 @@ import java.util.Arrays;
  * @since 2016-04-18
  */
 public class SellButton implements MenuButton {
+    private static final Logger LOGGER = LogManager.getLogger(SellButton.class);
     private final ShopPriceCalculator priceCalculator;
 
     public SellButton(ShopPriceCalculator priceCalculator) {
@@ -70,9 +73,15 @@ public class SellButton implements MenuButton {
     private void clearSoldItems(ShopMenu menu) {
         ItemStack[] contents = menu.getInventory().getContents();
         for (int slotId = ShopMenu.ROW_SIZE; slotId < contents.length; slotId++) {
-            ShopItem item = menu.getModule().getItemManager().getItem(contents[slotId]);
+            ItemStack stack = contents[slotId];
+            ShopItem item = menu.getModule().getItemManager().getItem(stack);
             if (item != null && item.canBeSold()) {
                 menu.getInventory().setItem(slotId, null);
+                LOGGER.info(
+                        "Inventory Transaction {}: SELL {} x{} ({})",
+                        menu.getPlayer().getName(), item.getSerializationName(),
+                        stack.getAmount(), menu.getPlayer().getUniqueId()
+                );
             }
         }
     }

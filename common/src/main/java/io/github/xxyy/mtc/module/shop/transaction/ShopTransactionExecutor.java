@@ -1,13 +1,13 @@
 package io.github.xxyy.mtc.module.shop.transaction;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.api.TransactionInfo;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +19,7 @@ import java.util.Set;
  * @since 29/10/15
  */
 public class ShopTransactionExecutor {
+    private static final Logger LOGGER = LogManager.getLogger(ShopTransactionExecutor.class);
     private final ShopTextOutput output;
     private final TransactionHandler economyHandler;
     private final TransactionHandler inventoryHandler;
@@ -62,31 +63,6 @@ public class ShopTransactionExecutor {
         return attemptTransactionInternal(plr, item, amount, type);
     }
 
-    //TODO: JavaDoc
-    public ItemStack attemptRawSell(Player plr, ItemStack stack, ShopItem item, int amount) {
-        if (stack.getAmount() < amount) {
-            output.sendTransactionFailure(plr, TransactionType.SELL, "Du hast nicht " + amount + " Items!");
-            return new ItemStack(stack);
-        }
-
-        if (!output.checkTradable(plr, item, null, TransactionType.SELL)) {
-            return new ItemStack(stack);
-        }
-
-        ItemStack newStack = new ItemStack(stack);
-        newStack.setAmount(stack.getAmount() - amount);
-        if (newStack.getAmount() == 0) {
-            newStack = null;
-        }
-
-        TransactionInfo info = economyHandler.execute(plr, item, amount, TransactionType.SELL);
-        if (!info.isSuccessful()) {
-            return new ItemStack(stack);
-        } else {
-            return newStack;
-        }
-    }
-
     private boolean attemptTransactionInternal(Player plr, ShopItem item, int amount, TransactionType type) {
         /*
         For simplicity reasons, the action that takes the player's payment is always called first. So if they cannot
@@ -116,11 +92,20 @@ public class ShopTransactionExecutor {
             if (!info.isSuccessful()) {
                 output.sendTransactionFailure(plr, type, info.getTransactionError());
                 succeededSteps.forEach(TransactionInfo::revoke);
+                LOGGER.info(
+                        "Failed Transaction {}: {} {} x{} ({}) [{}]",
+                        plr.getName(), type.name(), item.getSerializationName(),
+                        amount, plr.getUniqueId(), info.getTransactionError()
+                );
                 return false;
             } else {
                 succeededSteps.add(info);
             }
         }
+        LOGGER.info(
+                "Successful Transaction {}: {} {} x{} ({})",
+                plr.getName(), type.name(), item.getSerializationName(), amount, plr.getUniqueId()
+        );
         return true;
     }
 }
