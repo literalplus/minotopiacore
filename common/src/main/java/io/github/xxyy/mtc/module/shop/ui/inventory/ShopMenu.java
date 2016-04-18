@@ -31,7 +31,7 @@ public abstract class ShopMenu implements InventoryHolder {
     public static final int CANVAS_SIZE = INVENTORY_SIZE - ROW_SIZE;
     private static final ItemStackFactory TOP_ROW_PLACEHOLDER =
             new ItemStackFactory(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8))
-                    .displayName("§eVerloren? §6/shop help");
+                    .displayName("§eHilfe: §6/shop help");
     protected final ShopModule module;
     private Inventory inventory;
     private final Player player;
