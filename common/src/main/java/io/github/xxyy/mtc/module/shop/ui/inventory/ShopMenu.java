@@ -13,6 +13,7 @@ import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -129,6 +130,15 @@ public abstract class ShopMenu implements InventoryHolder {
     }
 
     /**
+     * Handles this inventory being closed.
+     *
+     * @param evt the event causing the close
+     */
+    public void handleClose(InventoryCloseEvent evt) {
+        //no-op
+    }
+
+    /**
      * Renders all buttons registered for the top menu.
      */
     protected void renderTopMenu() {
@@ -137,7 +147,7 @@ public abstract class ShopMenu implements InventoryHolder {
             if (button != null) {
                 getInventory().setItem(i, button.getItemStack(this));
             } else {
-                getInventory().setItem(i, new ItemStack(Material.BARRIER));
+                getInventory().setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, (short) 8)); //light gray - practically invisible
             }
         }
     }

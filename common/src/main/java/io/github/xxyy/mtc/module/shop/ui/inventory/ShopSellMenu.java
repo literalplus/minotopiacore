@@ -16,6 +16,10 @@ import io.github.xxyy.mtc.module.shop.ui.inventory.button.SellButton;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
 
 /**
  * An inventory menu where players can drop items to sell to the shop.
@@ -88,6 +92,26 @@ public class ShopSellMenu extends ShopMenu {
                 this::updateTopMenu, //update price since contents probably changed
                 10L
         );
+    }
+
+    @Override
+    public void handleClose(InventoryCloseEvent evt) {
+        ItemStack[] contents = evt.getInventory().getContents();
+        for (int slotId = ROW_SIZE; slotId < contents.length; slotId++) {
+            returnStackToPlayer(contents[slotId]);
+        }
+    }
+
+    private void returnStackToPlayer(ItemStack stack) {
+        if (stack != null && stack.getType() != Material.AIR) {
+            HashMap<Integer, ItemStack> leftover =
+                    getPlayer().getInventory().addItem(stack);
+            if (!leftover.isEmpty()) {
+                for (ItemStack leftoverStack : leftover.values()) {
+                    getPlayer().getWorld().dropItem(getPlayer().getLocation(), leftoverStack);
+                }
+            }
+        }
     }
 
     @Override
