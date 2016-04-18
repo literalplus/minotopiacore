@@ -8,10 +8,14 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -60,13 +64,24 @@ public class ShopListMenu extends ShopMenu {
 
         int numberOfItemsToDisplay = items.size() - itemStart;
         int numberOfSlotsToFill = Math.min(numberOfItemsToDisplay, CANVAS_SIZE);
+        VaultHook vaultHook = module.getPlugin().getVaultHook();
+        double currentBalance = vaultHook == null ? 0 : vaultHook.getBalance(getPlayer());
 
         for (int canvasId = 0; canvasId < numberOfSlotsToFill; canvasId++) {
             ShopItem item = items.get(itemStart + canvasId);
             if (item != null) {
                 int slotId = ROW_SIZE + canvasId;
-                getInventory().setItem(slotId, item.toItemStack(1));
                 displayedItems[canvasId] = item;
+
+                if (vaultHook != null && currentBalance < item.getBuyCost()) {
+                    getInventory().setItem(slotId, new ItemStackFactory(Material.BARRIER)
+                            .displayName(item.getDisplayName())
+                            .lore("§cDas kannst du dir nicht leisten!")
+                            .lore("§4SStückpreis: §c" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
+                            .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
+                            .produce());
+                }
+                getInventory().setItem(slotId, item.toItemStack(1));
             }
         }
     }
