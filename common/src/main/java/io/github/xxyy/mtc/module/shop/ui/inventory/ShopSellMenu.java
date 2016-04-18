@@ -61,13 +61,13 @@ public class ShopSellMenu extends ShopMenu {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"SimplifiableIfStatement"})
     public boolean handleClick(InventoryClickEvent evt) {
-        if (evt.isLeftClick()) {
+        if (evt.getSlot() < ROW_SIZE) { //no modifications to top menu bar
             return super.handleClick(evt);
         }
 
-        return evt.getSlot() < ROW_SIZE; //no modifications to top menu bar
+        return false;
 
     }
 
