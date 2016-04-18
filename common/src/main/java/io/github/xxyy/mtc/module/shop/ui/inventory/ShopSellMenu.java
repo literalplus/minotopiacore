@@ -108,6 +108,7 @@ public class ShopSellMenu extends ShopMenu {
 
     private void returnStackToPlayer(ItemStack stack) {
         if (stack != null && stack.getType() != Material.AIR) {
+            //Intended: Players keep their stuff at death, chris said it doesn't really matter
             HashMap<Integer, ItemStack> leftover =
                     getPlayer().getInventory().addItem(stack);
             if (!leftover.isEmpty()) {
