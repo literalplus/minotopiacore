@@ -8,10 +8,12 @@ echo "Building..."
 mvn clean install
 echo "Built..."
 
-echo "Deploying..."
+echo "Deploying... (0/2)"
 cd bootstrap/target
 scp -C minotopiacore-*.jar mt-mikey:/home/minecraft/plugins/qa/mtc.jar
+echo "Deploying... (1/2)"
 scp -C minotopiacore-*.jar mt-mikey:/home/minecraft/mtc-qa/plugins/mtc.jar
+echo "Deploying... (2/2)"
 
 echo "Deployed..."
 echo "Done!"
