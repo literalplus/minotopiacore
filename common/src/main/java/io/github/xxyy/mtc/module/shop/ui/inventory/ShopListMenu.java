@@ -101,7 +101,6 @@ public class ShopListMenu extends ShopMenu {
         DiscountManager discountManager = getModule().getItemManager().getDiscountManager();
         if (discountManager.hasDiscount()) {
             this.rawItems.add(discountManager.getDiscountedItem());
-            this.rawItems.add(null);
         }
         this.rawItems.addAll(unfilteredItems);
         filterItems();
