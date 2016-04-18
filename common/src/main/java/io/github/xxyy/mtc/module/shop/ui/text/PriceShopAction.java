@@ -66,7 +66,7 @@ class PriceShopAction extends AbstractShopAction {
                 ShopStringAdaptor.getCurrencyString(
                         calculator.sumInventoryPrices(plr, TransactionType.SELL)
                 ) +
-                " wert.");
+                " §6wert.");
     }
 
     private void priceHand(Player plr) {
