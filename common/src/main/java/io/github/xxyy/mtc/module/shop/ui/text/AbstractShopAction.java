@@ -65,10 +65,10 @@ public abstract class AbstractShopAction implements ShopAction {
     protected void sendHelpLine(Player plr, String arguments, String description) {
         String command = "/" + baseCommand + " " + displayName + " ";
         plr.spigot().sendMessage(
-                new XyComponentBuilder(command, ChatColor.DARK_AQUA)
+                new XyComponentBuilder(command + arguments + " ", ChatColor.DARK_AQUA)
                         .tooltip("§eKlicken zum Kopieren")
                         .suggest(command)
-                        .append(arguments + " " + description, ChatColor.GRAY)
+                        .append(description, ChatColor.GRAY)
                         .create()
         );
     }
