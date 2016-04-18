@@ -15,7 +15,6 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -38,8 +37,8 @@ public class SellButton implements MenuButton {
 
     @Override
     public ItemStack getItemStack(ShopMenu menu) {
-        return new ItemStackFactory(Material.WOOL)
-                .woolColor(DyeColor.LIME)
+        return new ItemStackFactory(Material.SKULL_ITEM)
+                .skullOwner("MHF_TNT2")
                 .displayName("§3§lJetzt verkaufen!")
                 .lore("§6Gesamtwert:")
                 .lore("§e" + calculateMenuWorth(menu))
