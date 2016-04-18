@@ -51,7 +51,9 @@ public class ShopDetailMenu extends ShopMenu {
 
     private void initTopRow() {
         setTopRowButton(0, BackToListButton.INSTANCE);
-        setTopRowButton(3, new GenericButton(ShopInventoryHelper.createInfoStack(item, false), null));
+        setTopRowButton(3, new GenericButton(
+                ShopInventoryHelper.createInfoStack(item, false, getModule().getItemManager()), null
+        ));
         setTopRowButton(4, OpenSellMenuButton.INSTANCE);
         setTopRowButton(8, BackToListButton.INSTANCE);
     }

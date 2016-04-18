@@ -48,6 +48,13 @@ public class DiscountManager {
     }
 
     /**
+     * @return whether there is currently a discounted item
+     */
+    public boolean hasDiscount() {
+        return getDiscountedItem() != null;
+    }
+
+    /**
      * Selects a new discounted item. More specifically, semi-randomly selects a shop item from given manager that can
      * be discounted and sets it as the discounted item. If no items are discountable, null is set as discounted item.
      *

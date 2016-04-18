@@ -12,6 +12,7 @@ import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
@@ -19,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -81,7 +83,9 @@ public class ShopListMenu extends ShopMenu {
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
                             .produce());
                 } else {
-                    getInventory().setItem(slotId, ShopInventoryHelper.createInfoStack(item, true));
+                    getInventory().setItem(slotId, ShopInventoryHelper.createInfoStack(
+                            item, true, getModule().getItemManager())
+                    );
                 }
             }
         }
@@ -93,7 +97,13 @@ public class ShopListMenu extends ShopMenu {
      * @param unfilteredItems the items to be shown in this menu
      */
     public void setItems(Collection<ShopItem> unfilteredItems) {
-        this.rawItems = unfilteredItems;
+        this.rawItems = new ArrayList<>();
+        DiscountManager discountManager = getModule().getItemManager().getDiscountManager();
+        if (discountManager.hasDiscount()) {
+            this.rawItems.add(discountManager.getDiscountedItem());
+            this.rawItems.add(null);
+        }
+        this.rawItems.addAll(unfilteredItems);
         filterItems();
     }
 
