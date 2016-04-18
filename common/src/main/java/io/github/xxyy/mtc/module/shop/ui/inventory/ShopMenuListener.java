@@ -28,9 +28,7 @@ public class ShopMenuListener implements Listener {
 
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         if (holder != null && holder instanceof ShopMenu) {
-            if (evt.getClick().isLeftClick()) {
-                ((ShopMenu) holder).handleClick(evt);
-            }
+            ((ShopMenu) holder).handleClick(evt);
             evt.setCancelled(true);
         }
     }

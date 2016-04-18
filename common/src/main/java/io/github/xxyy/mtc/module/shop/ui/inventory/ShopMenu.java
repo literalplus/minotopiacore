@@ -8,12 +8,13 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import com.google.common.base.Preconditions;
-import io.github.xxyy.mtc.module.shop.ShopModule;
-import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 
 /**
  * A simple menu icon framework for the Shop inventory. Abstract base class for inventory menus for trading.
@@ -97,6 +98,10 @@ public abstract class ShopMenu implements InventoryHolder {
      * @param evt the event causing the click
      */
     public void handleClick(InventoryClickEvent evt) {
+        if (!evt.getClick().isLeftClick()) {
+            return;
+        }
+
         int slotId = evt.getSlot();
         if (slotId < ROW_SIZE) { //top row
             MenuButton button = topRowButtons[slotId];
