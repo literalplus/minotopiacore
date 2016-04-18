@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 import org.bukkit.Material;
@@ -28,6 +29,9 @@ public abstract class ShopMenu implements InventoryHolder {
     public static final int ROW_SIZE = 9;
     public static final int INVENTORY_SIZE = 6 * ROW_SIZE;
     public static final int CANVAS_SIZE = INVENTORY_SIZE - ROW_SIZE;
+    private static final ItemStackFactory TOP_ROW_PLACEHOLDER =
+            new ItemStackFactory(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8))
+                    .displayName("§eVerloren? §6/shop help");
     protected final ShopModule module;
     private Inventory inventory;
     private final Player player;
@@ -147,7 +151,7 @@ public abstract class ShopMenu implements InventoryHolder {
             if (button != null) {
                 getInventory().setItem(i, button.getItemStack(this));
             } else {
-                getInventory().setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8)); //light gray - practically invisible
+                getInventory().setItem(i, TOP_ROW_PLACEHOLDER.produce()); //light gray - practically invisible
             }
         }
     }
