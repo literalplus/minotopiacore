@@ -52,7 +52,7 @@ public class ShopDetailMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, BackToListButton.INSTANCE);
         setTopRowButton(3, new GenericButton(
-                ShopInventoryHelper.createInfoStack(item, false, getModule().getItemManager()), null
+                ShopInventoryHelper.createInfoStack(item, false), null
         ));
         setTopRowButton(4, OpenSellMenuButton.INSTANCE);
         setTopRowButton(8, BackToListButton.INSTANCE);
@@ -136,7 +136,7 @@ public class ShopDetailMenu extends ShopMenu {
                 .lore("§8" + item.getDisplayName() + "§7 zu kaufen.")
                 .lore(" ")
                 .lore("§eKaufpreis: §7" + ShopStringAdaptor.getCurrencyString(totalPrice))
-                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
+                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
                 .produce();
     }
 
@@ -146,7 +146,7 @@ public class ShopDetailMenu extends ShopMenu {
                 .lore("§4" + item.getDisplayName() + "§c nicht leisten!")
                 .lore(" ")
                 .lore("§eKaufpreis: §7" + ShopStringAdaptor.getCurrencyString(totalPrice))
-                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
+                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
                 .produce();
     }
 

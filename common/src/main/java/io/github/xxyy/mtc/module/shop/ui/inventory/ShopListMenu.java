@@ -84,7 +84,7 @@ public class ShopListMenu extends ShopMenu {
                             .produce());
                 } else {
                     getInventory().setItem(slotId, ShopInventoryHelper.createInfoStack(
-                            item, true, getModule().getItemManager())
+                            item, true)
                     );
                 }
             }

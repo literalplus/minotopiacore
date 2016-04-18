@@ -9,7 +9,6 @@ package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.module.shop.ShopItem;
-import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +23,7 @@ public class ShopInventoryHelper {
 
     }
 
-    public static ItemStack createInfoStack(ShopItem item, boolean realItem, ShopItemManager itemManager) {
+    public static ItemStack createInfoStack(ShopItem item, boolean realItem) {
         ItemStackFactory factory;
         if (realItem) {
             factory = new ItemStackFactory(item.toItemStack(1));
@@ -36,10 +35,10 @@ public class ShopInventoryHelper {
 
         if (item.canBeBought()) {
             String lore = "§eStückpreis: §7";
-            if (itemManager.getDiscountManager().isDiscounted(item)) {
+            if (item.getManager().getDiscountManager().isDiscounted(item)) {
                 lore += "§m" + item.getBuyCost() + " §6";
             }
-            factory.lore(lore + itemManager.getBuyCost(item));
+            factory.lore(lore + item.getManager().getBuyCost(item));
         } else {
             factory.lore("§cKann nicht verkauft werden");
         }
