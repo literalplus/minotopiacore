@@ -5,6 +5,7 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ class SellShopAction extends AbstractShopAction {
     private final ShopPriceCalculator calculator;
 
     SellShopAction(ShopModule module) {
-        super("shop", "verkaufen", 1, null, "sell", "s");
+        super("shop", "verkaufen", 0, null, "sell", "s");
         this.module = module;
         output = module.getTextOutput();
         calculator = new ShopPriceCalculator(module.getItemManager());
@@ -34,6 +35,11 @@ class SellShopAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
+        if (args.length == 0) {
+            ShopSellMenu.openMenu(plr, module);
+            return;
+        }
+
         switch (args[0].toLowerCase()) {
             case "hand":
             case "h":
