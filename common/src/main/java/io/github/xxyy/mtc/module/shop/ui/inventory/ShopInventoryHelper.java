@@ -23,9 +23,15 @@ public class ShopInventoryHelper {
 
     }
 
-    public static ItemStack createInfoStack(ShopItem item) {
-        ItemStackFactory factory = new ItemStackFactory(Material.SKULL_ITEM)
-                .displayName("§lInfo: §f" + item.getDisplayName());
+    public static ItemStack createInfoStack(ShopItem item, boolean realItem) {
+        ItemStackFactory factory;
+        if (realItem) {
+            factory = new ItemStackFactory(item.toItemStack(1));
+        } else {
+            factory = new ItemStackFactory(Material.SKULL_ITEM)
+                    .skullOwner("MHF_Exclamation")
+                    .displayName("§lInfo: §f" + item.getDisplayName());
+        }
 
         if (item.canBeBought()) {
             factory.lore("§eStückpreis: §7" + item.getBuyCost());

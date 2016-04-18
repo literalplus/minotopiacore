@@ -80,8 +80,9 @@ public class ShopListMenu extends ShopMenu {
                             .lore("§4SStückpreis: §c" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
                             .produce());
+                } else {
+                    getInventory().setItem(slotId, ShopInventoryHelper.createInfoStack(item, true));
                 }
-                getInventory().setItem(slotId, item.toItemStack(1));
             }
         }
     }
