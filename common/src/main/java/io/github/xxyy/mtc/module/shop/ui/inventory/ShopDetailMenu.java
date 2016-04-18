@@ -17,6 +17,7 @@ import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.BackToListButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.GenericButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -51,12 +52,12 @@ public class ShopDetailMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, BackToListButton.INSTANCE);
         setTopRowButton(3, new GenericButton(ShopInventoryHelper.createInfoStack(item), null));
-        //TODO: 4 sell
-        //TODO: 5 custom amount
+        setTopRowButton(4, OpenSellMenuButton.INSTANCE);
         setTopRowButton(8, BackToListButton.INSTANCE);
     }
 
     private void renderCanvas() {
+        renderTopMenu();
         if (item.canBeBought()) {
             for (int i = 0; i < ITEM_AMOUNT_ROWS.length; i++) {
                 int[] amountRow = ITEM_AMOUNT_ROWS[i];

@@ -10,7 +10,7 @@ package io.github.xxyy.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
-import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -42,7 +42,7 @@ public class ShopListMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, PaginationButton.FIRST_PAGE);
         setTopRowButton(1, PaginationButton.PREVIOUS_PAGE);
-        //TODO: sell button at 4
+        setTopRowButton(4, OpenSellMenuButton.INSTANCE);
         setTopRowButton(7, PaginationButton.NEXT_PAGE);
         setTopRowButton(8, PaginationButton.LAST_PAGE);
     }
@@ -56,13 +56,7 @@ public class ShopListMenu extends ShopMenu {
         Preconditions.checkArgument(itemStart < items.size(),
                 "itemStart %s must be less than items size %s!", itemStart, items.size());
         this.currentItemStart = itemStart;
-
-        for (int i = 0; i < topRowButtons.length; i++) {
-            MenuButton button = topRowButtons[i];
-            if (button != null) {
-                getInventory().setItem(i, button.getItemStack(this));
-            }
-        }
+        renderTopMenu();
 
         int numberOfItemsToDisplay = items.size() - itemStart;
         int numberOfSlotsToFill = Math.min(numberOfItemsToDisplay, CANVAS_SIZE);

@@ -8,13 +8,12 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import com.google.common.base.Preconditions;
+import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-
-import io.github.xxyy.mtc.module.shop.ShopModule;
-import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
 
 /**
  * A simple menu icon framework for the Shop inventory. Abstract base class for inventory menus for trading.
@@ -96,10 +95,11 @@ public abstract class ShopMenu implements InventoryHolder {
      * Handles a click on this menu.
      *
      * @param evt the event causing the click
+     * @return whether the event should be cancelled
      */
-    public void handleClick(InventoryClickEvent evt) {
+    public boolean handleClick(InventoryClickEvent evt) {
         if (!evt.getClick().isLeftClick()) {
-            return;
+            return true;
         }
 
         int slotId = evt.getSlot();
@@ -110,6 +110,31 @@ public abstract class ShopMenu implements InventoryHolder {
             }
         } else {
             handleCanvasClick(evt, slotId - ROW_SIZE);
+        }
+        return true;
+    }
+
+    /**
+     * Handles a click on this menu on the {@link org.bukkit.event.EventPriority#MONITOR} priority.
+     * Note that this only gets called if {@link #handleClick(InventoryClickEvent)} hasn't cancelled
+     * the event. This is useful for when you need the action to actually be performed for your
+     * logic.
+     *
+     * @param evt the event causing the click
+     */
+    public void handleClickMonitor(InventoryClickEvent evt) {
+        //no action by default
+    }
+
+    /**
+     * Renders all buttons registered for the top menu.
+     */
+    protected void renderTopMenu() {
+        for (int i = 0; i < topRowButtons.length; i++) {
+            MenuButton button = topRowButtons[i];
+            if (button != null) {
+                getInventory().setItem(i, button.getItemStack(this));
+            }
         }
     }
 

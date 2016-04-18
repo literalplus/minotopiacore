@@ -1,11 +1,13 @@
 package io.github.xxyy.mtc.module.shop.transaction;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.api.TransactionInfo;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
-import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +60,31 @@ public class ShopTransactionExecutor {
      */
     public boolean attemptTransactionSilent(Player plr, ShopItem item, int amount, TransactionType type) {
         return attemptTransactionInternal(plr, item, amount, type);
+    }
+
+    //TODO: JavaDoc
+    public ItemStack attemptRawSell(Player plr, ItemStack stack, ShopItem item, int amount) {
+        if (stack.getAmount() < amount) {
+            output.sendTransactionFailure(plr, TransactionType.SELL, "Du hast nicht " + amount + " Items!");
+            return new ItemStack(stack);
+        }
+
+        if (!output.checkTradable(plr, item, null, TransactionType.SELL)) {
+            return new ItemStack(stack);
+        }
+
+        ItemStack newStack = new ItemStack(stack);
+        newStack.setAmount(stack.getAmount() - amount);
+        if (newStack.getAmount() == 0) {
+            newStack = null;
+        }
+
+        TransactionInfo info = economyHandler.execute(plr, item, amount, TransactionType.SELL);
+        if (!info.isSuccessful()) {
+            return new ItemStack(stack);
+        } else {
+            return newStack;
+        }
     }
 
     private boolean attemptTransactionInternal(Player plr, ShopItem item, int amount, TransactionType type) {

@@ -28,8 +28,19 @@ public class ShopMenuListener implements Listener {
 
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         if (holder != null && holder instanceof ShopMenu) {
-            ((ShopMenu) holder).handleClick(evt);
-            evt.setCancelled(true);
+            evt.setCancelled(((ShopMenu) holder).handleClick(evt));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onInventoryClickMonitor(InventoryClickEvent evt) {
+        if (evt.getClickedInventory() == null) {
+            return;
+        }
+
+        InventoryHolder holder = evt.getClickedInventory().getHolder();
+        if (holder != null && holder instanceof ShopMenu) {
+            ((ShopMenu) holder).handleClickMonitor(evt);
         }
     }
 }
