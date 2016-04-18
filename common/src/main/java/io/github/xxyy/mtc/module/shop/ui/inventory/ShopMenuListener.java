@@ -56,4 +56,21 @@ public class ShopMenuListener implements Listener {
             ((ShopMenu) holder).handleClose(evt);
         }
     }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onInventoryHotbarSwap(InventoryClickEvent evt) {
+        if (evt.getClickedInventory() == null) {
+            return;
+        }
+
+        InventoryHolder holder = evt.getView().getTopInventory().getHolder();
+        if (holder != null && holder instanceof ShopMenu) {
+            switch (evt.getAction()) {
+                case HOTBAR_MOVE_AND_READD:
+                case HOTBAR_SWAP:
+                case MOVE_TO_OTHER_INVENTORY:
+                    evt.setCancelled(!((ShopMenu) holder).permitsHotbarSwap(evt));
+            }
+        }
+    }
 }

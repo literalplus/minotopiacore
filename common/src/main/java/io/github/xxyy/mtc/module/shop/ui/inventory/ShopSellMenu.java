@@ -129,6 +129,11 @@ public class ShopSellMenu extends ShopMenu {
         return "§9§lMinoTopia Shop - Verkaufen";
     }
 
+    @Override
+    public boolean permitsHotbarSwap(InventoryClickEvent evt) {
+        return true;
+    }
+
     /**
      * Opens a new shop sell menu for a given player.
      *

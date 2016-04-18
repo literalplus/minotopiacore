@@ -143,6 +143,17 @@ public abstract class ShopMenu implements InventoryHolder {
     }
 
     /**
+     * Figures out whether this menu permits hotbar swap for a given event. This also checks for moving to the other
+     * inventory using shift.
+     *
+     * @param evt the event to process
+     * @return whether hotbar swap is permitted
+     */
+    public boolean permitsHotbarSwap(InventoryClickEvent evt) {
+        return false;
+    }
+
+    /**
      * Renders all buttons registered for the top menu.
      */
     protected void renderTopMenu() {
