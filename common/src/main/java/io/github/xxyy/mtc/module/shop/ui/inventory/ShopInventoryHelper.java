@@ -35,12 +35,11 @@ public class ShopInventoryHelper {
         }
 
         if (item.canBeBought()) {
+            String lore = "§eStückpreis: §7";
             if (itemManager.getDiscountManager().isDiscounted(item)) {
-                factory.lore("§c§mNormalpreis: " + itemManager.getBuyCost(item));
-                factory.lore("§e§mReduzierter Preis: §7" + itemManager.getBuyCost(item));
-            } else {
-                factory.lore("§eStückpreis: §7" + itemManager.getBuyCost(item));
+                lore += "§m" + item.getBuyCost() + " §6";
             }
+            factory.lore(lore + itemManager.getBuyCost(item));
         } else {
             factory.lore("§cKann nicht verkauft werden");
         }
