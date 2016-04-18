@@ -14,6 +14,7 @@ import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
+import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -56,6 +57,10 @@ public class SellButton implements MenuButton {
         if (vaultHook != null) {
             vaultHook.depositPlayer(menu.getPlayer(), totalWorth);
             sellMenu.clearCanvas();
+            menu.getModule().getTextOutput()
+                    .sendPrefixed(menu.getPlayer(), "Du hast durch deinen Verkauf §e" +
+                            ShopStringAdaptor.getCurrencyString(totalWorth) +
+                            "§6 eingenommen.");
         } else {
             menu.getPlayer().sendMessage("§cKonnte nicht mit dem Geldplugin reden :(");
         }
