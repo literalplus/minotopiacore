@@ -77,7 +77,7 @@ public class ShopListMenu extends ShopMenu {
                     getInventory().setItem(slotId, new ItemStackFactory(Material.BARRIER)
                             .displayName(item.getDisplayName())
                             .lore("§cDas kannst du dir nicht leisten!")
-                            .lore("§4SStückpreis: §c" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
+                            .lore("§4Stückpreis: §c" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
                             .produce());
                 } else {
