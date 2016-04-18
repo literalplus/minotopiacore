@@ -69,7 +69,9 @@ public class DiscountManager {
         if (discountableItems.isEmpty()) {
             return null;
         }
-        return discountableItems.get(RandomUtils.nextInt(discountableItems.size()));
+        ShopItem item = discountableItems.get(RandomUtils.nextInt(discountableItems.size()));
+        discountedItem = item;
+        return item;
     }
 
     /**
