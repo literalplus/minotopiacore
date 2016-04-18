@@ -3,6 +3,7 @@ package io.github.xxyy.mtc.module.shop;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -33,8 +34,20 @@ public class ShopPriceCalculator {
      */
     public double sumInventoryPrices(Player plr, TransactionType type) {
         Preconditions.checkNotNull(plr, "plr");
-        return sumPrices(Arrays.asList(plr.getInventory().getContents()), type) /*+
+        return sumInventoryPrices(plr.getInventory(), type) /*+
                 sumPrices(Arrays.asList(plr.getInventory().getArmorContents()), type)*/; //probably more intuitive
+    }
+
+    /**
+     * Sums the prices of all items in an inventory.
+     *
+     * @param inventory the inventory to survey
+     * @param type      the transaction type for which to calculate the price
+     * @return the sum of item prices
+     */
+    public double sumInventoryPrices(Inventory inventory, TransactionType type) {
+        Preconditions.checkNotNull(inventory, "inventory");
+        return sumPrices(Arrays.asList(inventory.getContents()), type);
     }
 
     /**
