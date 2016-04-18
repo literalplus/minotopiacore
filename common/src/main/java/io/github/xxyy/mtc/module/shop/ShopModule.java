@@ -81,7 +81,7 @@ public class ShopModule extends ConfigurableMTCModule {
         updateDiscountTask.tryCancel();
         updateDiscountTask.runTaskTimer(getPlugin(),
                 60 * 20, //delay for one minute after reload for yolo reasons
-                configuration.getInt(DISCOUNT_UPDATE_MINUTES_PATH) * 60 * 20);
+                configuration.getInt(DISCOUNT_UPDATE_MINUTES_PATH, 60) * 60 * 20);
     }
 
     @Override
