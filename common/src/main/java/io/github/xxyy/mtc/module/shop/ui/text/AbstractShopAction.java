@@ -68,7 +68,7 @@ public abstract class AbstractShopAction implements ShopAction {
                 new XyComponentBuilder(command, ChatColor.DARK_AQUA)
                         .tooltip("§eKlicken zum Kopieren")
                         .suggest(command)
-                        .append(" " + description, ChatColor.GRAY)
+                        .append(arguments + " " + description, ChatColor.GRAY)
                         .create()
         );
     }
