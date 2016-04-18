@@ -10,10 +10,12 @@ package io.github.xxyy.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.MenuButton;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * A simple menu icon framework for the Shop inventory. Abstract base class for inventory menus for trading.
@@ -134,6 +136,8 @@ public abstract class ShopMenu implements InventoryHolder {
             MenuButton button = topRowButtons[i];
             if (button != null) {
                 getInventory().setItem(i, button.getItemStack(this));
+            } else {
+                getInventory().setItem(i, new ItemStack(Material.BARRIER));
             }
         }
     }
