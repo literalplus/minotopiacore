@@ -57,9 +57,13 @@ public class ShopSellMenu extends ShopMenu {
     }
 
     /**
-     * Deletes all items from the canvas.
+     * Deletes all items from the canvas, returning anything left to the player.
      */
     public void clearCanvas() {
+        ItemStack[] contents = getInventory().getContents();
+        for (int slotId = ROW_SIZE; slotId < contents.length; slotId++) {
+            returnStackToPlayer(contents[slotId]);
+        }
         getInventory().clear();
         renderTopMenu();
     }

@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 import com.google.common.base.Preconditions;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
+import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
@@ -55,6 +56,7 @@ public class SellButton implements MenuButton {
         VaultHook vaultHook = menu.getModule().getPlugin().getVaultHook();
         if (vaultHook != null) {
             vaultHook.depositPlayer(menu.getPlayer(), totalWorth);
+            clearSoldItems(menu);
             sellMenu.clearCanvas();
             menu.getModule().getTextOutput()
                     .sendPrefixed(menu.getPlayer(), "Du hast durch deinen Verkauf §e" +
@@ -62,6 +64,16 @@ public class SellButton implements MenuButton {
                             "§6 eingenommen.");
         } else {
             menu.getPlayer().sendMessage("§cKonnte nicht mit dem Geldplugin reden :(");
+        }
+    }
+
+    private void clearSoldItems(ShopMenu menu) {
+        ItemStack[] contents = menu.getInventory().getContents();
+        for (int slotId = ShopMenu.ROW_SIZE; slotId < contents.length; slotId++) {
+            ShopItem item = menu.getModule().getItemManager().getItem(contents[slotId]);
+            if (item != null && item.canBeSold()) {
+                menu.getInventory().setItem(slotId, null);
+            }
         }
     }
 
