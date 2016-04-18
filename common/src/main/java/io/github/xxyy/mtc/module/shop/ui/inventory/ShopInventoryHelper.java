@@ -36,7 +36,7 @@ public class ShopInventoryHelper {
         if (item.canBeBought()) {
             String lore = "§eStückpreis: §7";
             if (item.getManager().getDiscountManager().isDiscounted(item)) {
-                lore += "§m" + item.getBuyCost() + " §6";
+                lore += "§m" + item.getBuyCost() + "§6 ";
             }
             factory.lore(lore + item.getManager().getBuyCost(item));
         } else {
