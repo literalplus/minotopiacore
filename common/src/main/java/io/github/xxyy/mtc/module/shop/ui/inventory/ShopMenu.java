@@ -147,7 +147,7 @@ public abstract class ShopMenu implements InventoryHolder {
             if (button != null) {
                 getInventory().setItem(i, button.getItemStack(this));
             } else {
-                getInventory().setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, (short) 8)); //light gray - practically invisible
+                getInventory().setItem(i, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 8)); //light gray - practically invisible
             }
         }
     }
