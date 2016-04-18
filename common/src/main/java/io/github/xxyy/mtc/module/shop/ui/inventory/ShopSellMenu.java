@@ -8,14 +8,14 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
+import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.BackToListButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.GenericButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.SellButton;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * An inventory menu where players can drop items to sell to the shop.
@@ -41,7 +41,23 @@ public class ShopSellMenu extends ShopMenu {
                         .lore(" ")
                         .lore("§6Alternativ: /shop verkaufen")
                         .produce(), null));
+        setTopRowButton(4, new SellButton(new ShopPriceCalculator(module.getItemManager())));
         setTopRowButton(8, BackToListButton.INSTANCE);
+    }
+
+    /**
+     * Updates the top menu of this inventory to match the current canvas value.
+     */
+    public void updateTopMenu() {
+        renderTopMenu();
+    }
+
+    /**
+     * Deletes all items from the canvas.
+     */
+    public void clearCanvas() {
+        getInventory().clear();
+        renderTopMenu();
     }
 
     @Override
@@ -50,34 +66,9 @@ public class ShopSellMenu extends ShopMenu {
         if (evt.isLeftClick()) {
             return super.handleClick(evt);
         }
-        ItemStack cursor = evt.getCursor();
-        if (cursor == null) {
-            return true;
-        }
 
-        int amount;
-        switch (evt.getAction()) {
-            case PLACE_ALL:
-                amount = cursor.getAmount();
-                break;
-            case PLACE_SOME:
-                amount = cursor.getAmount() / 2;
-                break;
-            case PLACE_ONE:
-                amount = 1;
-                break;
-            default:
-                return true;
-        }
+        return evt.getSlot() < ROW_SIZE; //no modifications to top menu bar
 
-        ShopItem item = getModule().getItemManager().getItem(cursor);
-        ItemStack newCursor = module.getTransactionExecutor().attemptRawSell(
-                getPlayer(), cursor, item, amount
-        );
-        evt.setCursor(newCursor);      //This should *theoretically* be okay if we
-        getPlayer().updateInventory(); // do this
-
-        return true;
     }
 
     @Override
