@@ -68,7 +68,26 @@ public class ShopSellMenu extends ShopMenu {
         }
 
         return false;
+    }
 
+    @Override
+    public void handleClickMonitor(InventoryClickEvent evt) {
+        switch (evt.getAction()) {
+            case CLONE_STACK:
+            case DROP_ALL_CURSOR:
+            case DROP_ALL_SLOT:
+            case DROP_ONE_CURSOR:
+            case DROP_ONE_SLOT:
+            case NOTHING:
+            case UNKNOWN:
+                return;
+        }
+
+        getModule().getPlugin().getServer().getScheduler().runTaskLater(
+                getModule().getPlugin(),
+                this::updateTopMenu, //update price since contents probably changed
+                10L
+        );
     }
 
     @Override
