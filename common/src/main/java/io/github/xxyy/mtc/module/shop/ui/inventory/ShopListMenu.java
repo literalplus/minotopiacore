@@ -16,7 +16,6 @@ import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -76,10 +75,11 @@ public class ShopListMenu extends ShopMenu {
                 displayedItems[canvasId] = item;
 
                 if (vaultHook != null && currentBalance < item.getBuyCost()) {
-                    getInventory().setItem(slotId, new ItemStackFactory(Material.BARRIER)
+                    getInventory().setItem(slotId, new ItemStackFactory(item.toItemStack(1))
                             .displayName(item.getDisplayName())
                             .lore("§cDas kannst du dir nicht leisten!")
-                            .lore("§4Stückpreis: §c" + ShopStringAdaptor.getCurrencyString(item.getBuyCost()))
+                            .lore("§4Stückpreis: §c" +
+                                    ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
                             .produce());
                 } else {
