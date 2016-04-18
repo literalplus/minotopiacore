@@ -6,9 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.function.ToDoubleFunction;
 
 import static io.github.xxyy.common.util.PredicateHelper.not;
 
@@ -63,10 +64,20 @@ public class ShopPriceCalculator {
 
         return stacks.stream()
                 .filter(not(itemManager::isTradeProhibited))
-                .map(itemManager::getItem)
-                .filter(Objects::nonNull)
-                .mapToDouble(type::getValue)
+                .mapToDouble(toItemWorthFunction(type))
                 .sum();
+    }
+
+    @Nonnull
+    private ToDoubleFunction<ItemStack> toItemWorthFunction(TransactionType type) {
+        return stack -> {
+            ShopItem item = itemManager.getItem(stack);
+            if (item == null) {
+                return 0D;
+            } else {
+                return calculatePrice(item, stack.getAmount(), type);
+            }
+        };
     }
 
     /**
