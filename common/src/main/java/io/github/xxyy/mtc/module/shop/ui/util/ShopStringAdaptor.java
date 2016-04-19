@@ -3,8 +3,9 @@ package io.github.xxyy.mtc.module.shop.ui.util;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 
-import java.text.DecimalFormat;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Adapts strings to different arguments, for proper grammar. This class aims to prevent things like "1 items" from
@@ -16,7 +17,15 @@ import java.text.NumberFormat;
 public class ShopStringAdaptor {
     public static final String CURRENCY_SINGULAR = "MineCoin";
     public static final String CURRENCY_PLURAL = "MineCoins";
-    private static final NumberFormat CURRENCY_FORMAT = new DecimalFormat("### ###,00");
+    private static final NumberFormat CURRENCY_FORMAT;
+
+    static {
+        CURRENCY_FORMAT = NumberFormat.getNumberInstance(Locale.GERMAN);
+        CURRENCY_FORMAT.setGroupingUsed(true);
+        CURRENCY_FORMAT.setMaximumFractionDigits(2);
+        CURRENCY_FORMAT.setMinimumFractionDigits(2);
+        CURRENCY_FORMAT.setRoundingMode(RoundingMode.HALF_UP);
+    }
 
     private ShopStringAdaptor() {
 
@@ -31,7 +40,7 @@ public class ShopStringAdaptor {
     public static String getCurrencyString(double amount) {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
-                CURRENCY_FORMAT.format(amount) + " " + CURRENCY_PLURAL;
+                CURRENCY_FORMAT.format(amount) + CURRENCY_PLURAL;
     }
 
     /**
