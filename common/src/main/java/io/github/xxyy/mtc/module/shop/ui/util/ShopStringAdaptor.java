@@ -40,7 +40,7 @@ public class ShopStringAdaptor {
     public static String getCurrencyString(double amount) {
         return amount == 1 ?
                 "einen " + CURRENCY_SINGULAR :
-                CURRENCY_FORMAT.format(amount) + CURRENCY_PLURAL;
+                CURRENCY_FORMAT.format(amount) + " " + CURRENCY_PLURAL;
     }
 
     /**
