@@ -131,6 +131,7 @@ public class ShopSellMenu extends ShopMenu {
 
     @Override
     public boolean permitsHotbarSwap(InventoryClickEvent evt) {
+        updateTopMenu();
         return true;
     }
 
