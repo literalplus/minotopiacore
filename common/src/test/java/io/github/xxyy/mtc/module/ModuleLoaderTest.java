@@ -7,14 +7,17 @@
 
 package io.github.xxyy.mtc.module;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.api.MTCPlugin;
-import io.github.xxyy.mtc.api.module.MTCModule;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.module.MTCModule;
+import io.github.xxyy.mtc.api.module.inject.InjectMe;
+import io.github.xxyy.mtc.api.module.inject.Injectable;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -22,7 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -34,14 +39,14 @@ import static org.mockito.Mockito.mock;
  * @since 18/06/15
  */
 public class ModuleLoaderTest {
-    private static MTCModuleManager moduleManager;
+    private static SimpleModuleManager moduleManager;
     private static ModuleLoader loader;
     private static MTC mtc;
 
     @BeforeClass
     public static void initClass() {
         mtc = mock(MTC.class);
-        moduleManager = new MTCModuleManager(mtc, new File("./target/"));
+        moduleManager = new SimpleModuleManager(mtc, new File("./target/"));
         loader = new ModuleLoader(moduleManager);
     }
 
@@ -110,6 +115,11 @@ public class ModuleLoaderTest {
                 moduleManager.isEnabled(clazz), is(expectedState));
     }
 
+    private static class SomeInjectable implements Injectable {
+        public void wow() {
+
+        }
+    }
 
     private static class MockMTCModule extends MTCModuleAdapter {
         protected MockMTCModule(String name) {
@@ -130,10 +140,10 @@ public class ModuleLoaderTest {
     }
 
     private static class Module2 extends MockMTCModule {
-        @InjectModule(required = true)
+        @InjectMe(required = true)
         Module1 module1;
 
-        @InjectModule
+        @InjectMe
         Module3 module3;
 
         Module1 ordinaryField;
@@ -144,17 +154,26 @@ public class ModuleLoaderTest {
     }
 
     private static class Module3 extends MockMTCModule {
-        @InjectModule
+        @InjectMe
         Module1 module1;
 
-        @InjectModule
+        @InjectMe
         Module2 module2;
 
-        @InjectModule
+        @InjectMe
         Module4 module4;
+
+        @InjectMe
+        SomeInjectable anyClass;
 
         protected Module3() {
             super("Module3");
+        }
+
+        @Override
+        public void enable(MTCPlugin plugin) throws Exception {
+            super.enable(plugin);
+            anyClass.wow(); //wow
         }
     }
 
@@ -180,7 +199,7 @@ public class ModuleLoaderTest {
 
         @Override
         public void enable(MTCPlugin plugin) throws Exception {
-            throw new Exception("random exception in enable");
+            throw new Exception("ignore");
         }
 
         @Override

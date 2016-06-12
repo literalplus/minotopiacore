@@ -6,6 +6,18 @@
  */
 package io.github.xxyy.mtc;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
 import io.github.xxyy.common.localisation.LangHelper;
 import io.github.xxyy.common.localisation.XyLocalizable;
 import io.github.xxyy.common.misc.HelpManager;
@@ -16,7 +28,13 @@ import io.github.xxyy.common.xyplugin.SqlXyPlugin;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.PlayerGameManager;
 import io.github.xxyy.mtc.api.module.ModuleManager;
-import io.github.xxyy.mtc.chat.*;
+import io.github.xxyy.mtc.chat.ChatListener;
+import io.github.xxyy.mtc.chat.CommandChatClear;
+import io.github.xxyy.mtc.chat.CommandChatFarbe;
+import io.github.xxyy.mtc.chat.CommandGlobalMute;
+import io.github.xxyy.mtc.chat.CommandMute;
+import io.github.xxyy.mtc.chat.CommandPrivateChat;
+import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.cmdspy.CommandCmdSpy;
 import io.github.xxyy.mtc.chat.cmdspy.CommandSpyListener;
 import io.github.xxyy.mtc.clan.ui.CommandClan;
@@ -33,19 +51,16 @@ import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.AntiLogoutHandler;
 import io.github.xxyy.mtc.misc.DummyLogoutHandler;
 import io.github.xxyy.mtc.misc.PlayerGameManagerImpl;
-import io.github.xxyy.mtc.misc.cmd.*;
-import io.github.xxyy.mtc.module.MTCModuleManager;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPluginLoader;
+import io.github.xxyy.mtc.misc.cmd.CommandBReload;
+import io.github.xxyy.mtc.misc.cmd.CommandGiveAll;
+import io.github.xxyy.mtc.misc.cmd.CommandList;
+import io.github.xxyy.mtc.misc.cmd.CommandLore;
+import io.github.xxyy.mtc.misc.cmd.CommandMTC;
+import io.github.xxyy.mtc.misc.cmd.CommandPeace;
+import io.github.xxyy.mtc.misc.cmd.CommandPlayerHead;
+import io.github.xxyy.mtc.misc.cmd.CommandRandom;
+import io.github.xxyy.mtc.misc.cmd.CommandTeam;
+import io.github.xxyy.mtc.module.SimpleModuleManager;
 
 import java.io.File;
 
@@ -67,7 +82,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
     private PlayerGameManager gameManager;
-    private MTCModuleManager moduleManager = new MTCModuleManager(this, this.getDataFolder());
+    private SimpleModuleManager moduleManager = new SimpleModuleManager(this, this.getDataFolder());
     private Logger logger;
 
     public MTC() {

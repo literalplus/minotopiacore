@@ -7,12 +7,14 @@
 
 package io.github.xxyy.mtc.api.module;
 
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.plugin.Plugin;
+
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.command.CommandBehaviour;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.Plugin;
+import io.github.xxyy.mtc.api.module.inject.Injector;
 
 import java.util.Collection;
 import java.util.List;
@@ -106,4 +108,14 @@ public interface ModuleManager {
      * @return the plugin this manager belongs to
      */
     MTCPlugin getPlugin();
+
+    /**
+     * @return the injector associated with this manager
+     */
+    Injector getInjector();
+
+    /**
+     * @return the dependency manager associated with this manager
+     */
+    DependencyManager getDependencyManager();
 }

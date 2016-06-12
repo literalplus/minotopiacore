@@ -7,21 +7,26 @@
 
 package io.github.xxyy.mtc.module;
 
+import org.apache.logging.log4j.Logger;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.plugin.Plugin;
+import org.reflections.Reflections;
+
 import io.github.xxyy.lib.guava17.base.Preconditions;
 import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.command.CommandRegistrationManager;
+import io.github.xxyy.mtc.api.module.DependencyManager;
 import io.github.xxyy.mtc.api.module.MTCModule;
 import io.github.xxyy.mtc.api.module.ModuleCommand;
 import io.github.xxyy.mtc.api.module.ModuleManager;
+import io.github.xxyy.mtc.api.module.inject.Injector;
+import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.command.MTCModuleCommand;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.Plugin;
-import org.reflections.Reflections;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -38,9 +43,13 @@ import java.util.stream.Collectors;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 18/06/15
  */
-public class MTCModuleManager implements ModuleManager {
+public class SimpleModuleManager implements ModuleManager {
+    private static final Logger LOGGER = LogManager.getLogger(SimpleModuleManager.class);
     private final MTC plugin;
     private final ModuleLoader loader = new ModuleLoader(this);
+    private final Injector injector = new SimpleInjector(this);
+    private final DependencyManager dependencyManager = new SimpleDependencyManager(this);
+
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final CommandRegistrationManager commandRegistrationManager = new CommandRegistrationManager();
     private final ManagedConfiguration enabledModulesConfig;
@@ -51,7 +60,7 @@ public class MTCModuleManager implements ModuleManager {
      * @param plugin     the plugin to manage modules for
      * @param dataFolder the data folder where configuration can be stored
      */
-    public MTCModuleManager(MTC plugin, File dataFolder) {
+    public SimpleModuleManager(MTC plugin, File dataFolder) {
         this.plugin = plugin;
         enabledModulesConfig = ManagedConfiguration.fromFile(
                 new File(dataFolder, "enabled_modules.yml"),
@@ -119,7 +128,7 @@ public class MTCModuleManager implements ModuleManager {
      */
     public void enableLoaded() {
         loader.getLoadedModules().stream()
-                .filter(m -> m.getModule().canBeEnabled(plugin))
+                .filter(m -> m.getInstance().canBeEnabled(plugin))
                 .forEach(m -> loader.setEnabled(m, true));
         enabledModulesConfig.trySave();
     }
@@ -130,8 +139,8 @@ public class MTCModuleManager implements ModuleManager {
         try {
             return loader.setEnabled(module, enabled);
         } catch (Exception e) {
-            plugin.getLogger().log(Level.SEVERE, "Module " + module.getName() + " could not be " +
-                    (enabled ? "en" : "dis") + "abled:", e);
+            LOGGER.error(String.format("Module %s could not be %sabled:",
+                    module.getName(), enabled ? "en" : "dis"), e);
             return null;
         }
     }
@@ -169,19 +178,31 @@ public class MTCModuleManager implements ModuleManager {
     void registerEnabled(MTCModule module, boolean enabled) {
         try {
             if (enabled) {
-                enabledModules.put(module.getClass(), module);
                 module.enable(plugin);
+                enabledModules.put(module.getClass(), module);
             } else {
                 enabledModules.remove(module.getClass());
                 module.disable(plugin);
             }
         } catch (Exception | NoClassDefFoundError e) { //occurs at disable when reloading with replaced jar
-            plugin.getLogger().log(Level.SEVERE, "Module " + module.getName() + " failed to change enabled state:", e);
+            if (!"ignore".equals(e.getMessage())) { //unit tests, let's pretend it's a feature
+                LOGGER.error("Module " + module.getName() + " failed to change enabled state:", e);
+            }
         }
     }
 
     @Override
     public MTC getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public Injector getInjector() {
+        return injector;
+    }
+
+    @Override
+    public DependencyManager getDependencyManager() {
+        return dependencyManager;
     }
 }

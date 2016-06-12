@@ -7,10 +7,12 @@
 
 package io.github.xxyy.mtc.api;
 
+import org.bukkit.plugin.Plugin;
+
 import io.github.xxyy.common.sql.SpigotSql;
 import io.github.xxyy.common.xyplugin.XyPluggable;
 import io.github.xxyy.mtc.api.module.ModuleManager;
-import org.bukkit.plugin.Plugin;
+import io.github.xxyy.mtc.api.module.inject.Injectable;
 
 /**
  * A plugin instance used by MTC to interface with the Bukkit API.
@@ -18,7 +20,7 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-12-30
  */
-public interface MTCPlugin extends Plugin, XyPluggable {
+public interface MTCPlugin extends Plugin, XyPluggable, Injectable {
 
     /**
      * @return the module manager used by this plugin

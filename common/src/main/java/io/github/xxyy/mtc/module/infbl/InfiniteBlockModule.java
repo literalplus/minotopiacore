@@ -7,18 +7,6 @@
 
 package io.github.xxyy.mtc.module.infbl;
 
-import io.github.xxyy.common.chat.ComponentSender;
-import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.misc.XyLocation;
-import io.github.xxyy.lib.intellij_annotations.NotNull;
-import io.github.xxyy.mtc.api.MTCPlugin;
-import io.github.xxyy.mtc.api.command.CommandBehaviours;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
-import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-import io.github.xxyy.mtc.module.InjectModule;
-import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,6 +32,19 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.misc.XyLocation;
+import io.github.xxyy.lib.intellij_annotations.NotNull;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
+import io.github.xxyy.mtc.api.module.inject.InjectMe;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.misc.cmd.MTCCommandExecutor;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+import io.github.xxyy.mtc.module.fulltag.FullTagModule;
+
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,7 +59,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //keeping legacy constant for backwards compatibility
     private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
     private List<XyLocation> infiniteBlockLocations;
-    @InjectModule
+    @InjectMe
     private FullTagModule fullTagModule;
 
     public InfiniteBlockModule() {

@@ -8,18 +8,21 @@
 package io.github.xxyy.mtc.module;
 
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.common.util.PredicateHelper;
+
 import io.github.xxyy.lib.guava17.base.Preconditions;
+import io.github.xxyy.lib.guava17.collect.ImmutableSet;
 import io.github.xxyy.lib.intellij_annotations.NotNull;
 import io.github.xxyy.lib.intellij_annotations.Nullable;
 import io.github.xxyy.mtc.api.MTCPlugin;
 import io.github.xxyy.mtc.api.module.MTCModule;
+import io.github.xxyy.mtc.api.module.inject.InjectionTarget;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Handles loading, enabling, injecting and disabling of MTC nodules.
@@ -28,14 +31,11 @@ import java.util.stream.Collectors;
  * @since 18/06/15
  */
 class ModuleLoader {
-    private final MTCModuleManager manager;
+    private final SimpleModuleManager manager;
 
-    private final Set<MTCModuleRuntimeMeta<?>> moduleMetas = new HashSet<>(); //not necessarily initialised
-
-    ModuleLoader(MTCModuleManager manager) {
+    ModuleLoader(SimpleModuleManager manager) {
         this.manager = manager;
     }
-
 
     /**
      * Gets a loaded module by its class.
@@ -43,36 +43,29 @@ class ModuleLoader {
      * @param moduleClass the class to match
      * @return the loaded module, or null if there is no such module
      */
-    @Nullable //amateur benchmark: traditional for is faster than streams, but not too much to worry about it
-    public <T extends MTCModule> MTCModuleRuntimeMeta<T> getLoadedModule(@NotNull Class<T> moduleClass) {
-        //noinspection unchecked
-        return (MTCModuleRuntimeMeta<T>) moduleMetas.stream()
-                .filter(m -> m.getClazz().equals(moduleClass) && m.isInitialised())
+    @SuppressWarnings("unchecked")
+    @Nullable
+    //amateur benchmark: traditional for is faster than streams, but not too much to worry about it
+    <T extends MTCModule> InjectionTarget<T> getLoadedModule(@NotNull Class<T> moduleClass) {
+        return (InjectionTarget<T>) manager.getInjector().getTargets().stream()
+                .filter(m -> m.getClazz().equals(moduleClass) && m.hasInstance())
                 .findFirst().orElse(null);
-    }
-
-    @NotNull
-    private <T extends MTCModule> MTCModuleRuntimeMeta<T> getModuleMeta(@NotNull Class<T> moduleClass) {
-        @SuppressWarnings("unchecked")
-        MTCModuleRuntimeMeta<T> meta = (MTCModuleRuntimeMeta<T>) moduleMetas.stream()
-                .filter(m -> m.getClazz().equals(moduleClass))
-                .findFirst().orElse(null);
-
-        if (meta == null) {
-            meta = new MTCModuleRuntimeMeta<>(moduleClass);
-            moduleMetas.add(meta);
-        }
-
-        return meta;
     }
 
     /**
      * @return the set of loaded modules
      */
-    public Collection<MTCModuleRuntimeMeta<?>> getLoadedModules() {
-        return moduleMetas.stream()
-                .filter(MTCModuleRuntimeMeta::isInitialised)
-                .collect(Collectors.toSet());
+    @SuppressWarnings("unchecked")
+    Collection<InjectionTarget<? extends MTCModule>> getLoadedModules() {
+        ImmutableSet.Builder<InjectionTarget<? extends MTCModule>> targets = ImmutableSet.builder();
+
+        for (InjectionTarget<?> target : manager.getInjector().getTargets()) {
+            if (target.hasInstance() && MTCModule.class.isAssignableFrom(target.getClazz())) {
+                targets.add((InjectionTarget<? extends MTCModule>) target);
+            }
+        }
+
+        return targets.build();
     }
 
     /**
@@ -88,86 +81,83 @@ class ModuleLoader {
      *                                  {@link MTCModule#canBeEnabled(MTCPlugin)}
      * @throws IllegalStateException    if dependency injection fails
      */
-    public List<MTCModule> setEnabled(@NotNull MTCModule module, boolean enabled) {
+    List<MTCModule> setEnabled(@NotNull MTCModule module, boolean enabled) {
         Preconditions.checkNotNull(module, "module");
-        MTCModuleRuntimeMeta<?> meta = getLoadedModule(module.getClass());
+        InjectionTarget<? extends MTCModule> meta = getLoadedModule(module.getClass());
 
         Preconditions.checkNotNull(meta, "Module not known to this loader: %s", meta);
-        Preconditions.checkState(meta.isInitialised(), "Cannot enable non-initialised module: %s", meta);
+        Preconditions.checkState(meta.hasInstance(), "Cannot enable non-initialised module: %s", meta);
         //noinspection ConstantConditions
-        Preconditions.checkArgument(module.equals(meta.getModule()),
+        Preconditions.checkArgument(module.equals(meta.getInstance()),
                 "Cannot enable/disable module not managed by this loader: %s (mine: %s)", meta, meta);
 
         return setEnabled(meta, enabled);
     }
 
-    public List<MTCModule> setEnabled(@NotNull MTCModuleRuntimeMeta<?> meta, boolean enabled) {
+    List<MTCModule> setEnabled(@NotNull InjectionTarget<? extends MTCModule> meta,
+                               boolean enabled) {
         return setEnabled(meta, enabled, new Stack<>());
     }
 
-    private List<MTCModule> setEnabled(@NotNull MTCModuleRuntimeMeta<?> meta, boolean enabled,
-                                       @NotNull Stack<MTCModuleRuntimeMeta<?>> dependencyStack) {
+    private List<MTCModule> setEnabled(@NotNull InjectionTarget<?> target,
+                                       boolean enabled,
+                                       @NotNull Stack<InjectionTarget<?>> dependencyStack) {
+        Preconditions.checkArgument(target.hasInstance(),
+                "instance must have instance: %s", target.getClazz());
 
-        if (manager.isEnabled(meta.getModule()) == enabled) {
-            return ImmutableList.of();
+        MTCModule module;
+        if (target.getInstance() instanceof MTCModule) {
+            module = (MTCModule) target.getInstance();
+
+            if (manager.isEnabled(module) == enabled) {
+                return ImmutableList.of();
+            }
+            if (enabled) {
+                Preconditions.checkArgument(module.canBeEnabled(manager.getPlugin()),
+                        "Module not ready to be enabled: %s", target);
+            }
+        } else {
+            module = null;
         }
 
         List<MTCModule> changedModules;
-        dependencyStack.push(meta);
+        dependencyStack.push(target);
 
         if (enabled) {
-            Preconditions.checkArgument(meta.getModule().canBeEnabled(manager.getPlugin()),
-                    "Module not ready to be enabled: %s", meta);
 
-            changedModules = meta.getRequiredDependencyStream()
-                    .filter(PredicateHelper.not(dependencyStack::contains)) //prevents infinite recursion
-                    .flatMap(d -> setEnabled(d, true, dependencyStack).stream())
+            changedModules = target.getDependencies().values().stream()
+                    .filter(inj -> !dependencyStack.contains(inj.getDependency())) //prevents infinite recursion
+                    .flatMap(inj -> {
+                        if (inj.getAnnotation().required() || !inj.getDependency().isModule()) {
+                            return setEnabled(inj.getDependency(), true, dependencyStack).stream();
+                        } else {
+                            return Stream.of();
+                        }
+                    })
                     .collect(Collectors.toList());
 
-            inject(meta, meta.getModule());
+            manager.getInjector().injectAll(target, target.getInstance());
         } else {
-            //Disable everything that requires this module
-            changedModules = meta.getInjectionTargets().stream()
-                    .filter(t -> t.getAnnotation().required())
-                    .filter(t -> !dependencyStack.contains(t.getMeta())) //prevents infinite recursion
-                    .flatMap(target -> setEnabled(target.getMeta(), false, dependencyStack).stream())
+            //Disable everything that requires this target
+            changedModules = target.getDependants().values().stream()
+                    .filter(inj -> inj.getAnnotation().required())
+                    .filter(inj -> !dependencyStack.contains(inj.getDependant())) //prevents infinite recursion
+                    .flatMap(inj -> setEnabled(inj.getDependant(), false, dependencyStack).stream())
                     .collect(Collectors.toList());
 
-            inject(meta, null);
+            manager.getInjector().injectAll(target, null);
         }
 
-        manager.registerEnabled(meta.getModule(), enabled);
+        if (module != null) {
+            manager.registerEnabled(module, enabled);
+            changedModules.add(module);
+        }
         dependencyStack.pop();
-        changedModules.add(meta.getModule());
         return changedModules;
     }
 
-    protected void inject(MTCModuleRuntimeMeta<?> meta, Object value) {
-        for (MTCModuleRuntimeMeta.InjectionTarget target : meta.getInjectionTargets()) {
-            if (!target.getField().isAccessible()) {
-                target.getField().setAccessible(true);
-            }
-
-            MTCModule targetModule = target.getMeta().getModule();
-            if (targetModule == null) {
-                manager.getPlugin().getLogger().warning(String.format("Uninitialised injection target %s: %s",
-                        target.getMeta().getClazz().getName(), target.getField().toString()));
-                continue;
-            }
-
-            try {
-                target.getField().set(targetModule, value);
-            } catch (IllegalAccessException e) {
-                throw new AssertionError(e); //Actually, this should never happen, but.
-            } catch (ExceptionInInitializerError e) {
-                throw new IllegalStateException(String.format("Failed to inject %s into %s:",
-                        meta.getClazz().getSimpleName(), targetModule.getName()), e);
-            }
-        }
-    }
-
     /**
-     * Attempts to load MTC modules from a list of classes. If an error occurrs while loading any plugin, the error
+     * Attempts to load MTC modules from a list of classes. If an error occurs while loading any plugin, the error
      * consumer will be called with the caught {@link Throwable} and loading will be continued. This allows to deal
      * with errors, (e.g. logging them) while not losing the "sandbox" preventing faulty modules from crashing the
      * whole plugin with an unexpected exception or error.
@@ -175,16 +165,15 @@ class ModuleLoader {
      * @param moduleClasses the classes to be loaded
      * @param errorConsumer a consumer which is called when an error is encountered
      */
-    public void loadAll(List<Class<? extends MTCModule>> moduleClasses,
-                        BiConsumer<MTCModuleRuntimeMeta<?>, Throwable> errorConsumer) {
+    void loadAll(List<Class<? extends MTCModule>> moduleClasses,
+                 BiConsumer<InjectionTarget<?>, Throwable> errorConsumer) {
 
-        Stack<Class<? extends MTCModule>> dependencyStack = new Stack<>();
-
+        Stack<Class<?>> dependencyStack = new Stack<>();
         moduleClasses.stream()
-                .map(this::getModuleMeta)
+                .map(manager.getInjector()::getTarget)
                 .forEach(meta -> {
                     try {
-                        initialise(meta, dependencyStack);
+                        manager.getDependencyManager().initialise(meta, dependencyStack);
                     } catch (Throwable t) {
                         /* this is kind of a sandbox, so that a single broken module can't break the
                            whole plugin. Not using Exception because of more nasty stuff like NoClassDefFoundError,
@@ -192,68 +181,5 @@ class ModuleLoader {
                         errorConsumer.accept(meta, t); //The main reason for using a consumer is proper unit testing
                     }
                 });
-    }
-
-    private void initialise(MTCModuleRuntimeMeta<?> meta, Stack<Class<? extends MTCModule>> dependencyStack)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException {
-
-        if (meta.isInitialised()) {
-            return;
-        }
-
-        try {
-            discoverInjections(meta, dependencyStack); //throws IllegalArgumentException
-
-            meta.createInstance();
-            meta.setInitialised();
-
-        } catch (NoSuchMethodException e) {
-            //Wrap this specific problem with a more helpful error message to simplify usage for developers
-            throw new IllegalArgumentException("Modules must specify a default constructor!", e);
-        }
-    }
-
-    private boolean discoverInjections(MTCModuleRuntimeMeta<?> meta, Stack<Class<? extends MTCModule>> dependencyStack)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
-
-        dependencyStack.push(meta.getClazz());
-
-        for (Field field : meta.getClazz().getDeclaredFields()) {
-            InjectModule annotation = field.getAnnotation(InjectModule.class);
-            if (annotation == null) {
-                continue;
-            }
-
-            if (!MTCModule.class.isAssignableFrom(field.getType())) {
-                manager.getPlugin().getLogger().severe(String.format("Uninjectable type annotated @InjectModule %s at %s",
-                        field.getType().getName(), field.getName()));
-                continue;
-            }
-
-            Class<? extends MTCModule> dependencyType = field.getType().asSubclass(MTCModule.class);
-            MTCModuleRuntimeMeta<?> dependency = getModuleMeta(dependencyType);
-            dependency.registerForInjection(meta, field);
-
-            if (!dependency.isInitialised()) {
-                if (dependencyStack.contains(dependencyType)) { //Can't check directly on object because infinite recursion, also easier ok
-                    if (annotation.required()) {
-                        throw new IllegalArgumentException(String.format("Cyclic dependencies can't be required: %s (from %s)",
-                                dependencyType.getSimpleName(), dependencyStack.toString()));
-                    } else {
-                        continue; //dependencies and injections have our record, we can't load now though
-                    }
-                }
-
-                initialise(dependency, dependencyStack);
-            }
-
-            if (annotation.required() && !dependency.isInitialised()) {
-                throw new IllegalArgumentException(String.format("Unable to load required module dependency: %s (from %s)",
-                        dependencyType.getSimpleName(), dependencyStack.toString()));
-            }
-        }
-
-        dependencyStack.pop();
-        return true;
     }
 }
