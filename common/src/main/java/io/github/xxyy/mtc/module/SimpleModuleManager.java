@@ -8,6 +8,7 @@
 package io.github.xxyy.mtc.module;
 
 import org.apache.logging.log4j.Logger;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.Plugin;
 import org.reflections.Reflections;
@@ -184,9 +185,14 @@ public class SimpleModuleManager implements ModuleManager {
                 enabledModules.remove(module.getClass());
                 module.disable(plugin);
             }
-        } catch (Exception | NoClassDefFoundError e) { //occurs at disable when reloading with replaced jar
+        } catch (Exception | NoClassDefFoundError e) {
             if (!"ignore".equals(e.getMessage())) { //unit tests, let's pretend it's a feature
-                LOGGER.error("Module " + module.getName() + " failed to change enabled state:", e);
+                String message = String.format(
+                        "Module %s failed to change enabled state to %s",
+                        module.getName(), enabled
+                );
+                LOGGER.error(message, e);
+                Command.broadcastCommandMessage(getPlugin().getServer().getConsoleSender(), message);
             }
         }
     }
