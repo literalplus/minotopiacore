@@ -2,6 +2,11 @@ package io.github.xxyy.mtc.module.shop.ui.text;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.command.CommandSender;
+
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
@@ -9,10 +14,6 @@ import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -258,7 +259,8 @@ public class ShopTextOutput {
                 .append(" reduziert!", ChatColor.GOLD)
                 .create();
         module.getPlugin().getServer().getOnlinePlayers().forEach(plr -> plr.spigot().sendMessage(notification));
-        ComponentSender.sendTo(notification, module.getPlugin().getServer().getConsoleSender());
+        //This spams the console, so nah:
+        //ComponentSender.sendTo(notification, module.getPlugin().getServer().getConsoleSender());
     }
 
     /**
