@@ -7,17 +7,6 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
-import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.misc.HelpManager;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.chat.MTCChatHelper;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.CacheHelper;
-import io.github.xxyy.mtc.misc.ClearCacheEvent;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,6 +24,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.misc.HelpManager;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.chat.MTCChatHelper;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.cron.RunnableCronjob5Minutes;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.CacheHelper;
+import io.github.xxyy.mtc.misc.ClearCacheEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,7 +65,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                 return true;
             }
 
-            sender.sendMessage("§eMinoTopiaCore AKA MTC AKA MTS AKA XyUtil by xxyy98. http://bit.ly/_xy");
+            sender.sendMessage("§eMinoTopiaCore by Literallie. https://l1t.li/");
             sender.sendMessage("§9Version " + MTC.PLUGIN_VERSION.toString() + ")");
             sender.sendMessage("§3Hilfe? /" + label + " help | Kommandos? /help minotopiacore");
             return true;
