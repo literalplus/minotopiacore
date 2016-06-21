@@ -7,12 +7,15 @@
 
 package io.github.xxyy.mtc.module.shop;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.module.inject.InjectMe;
 import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
 import io.github.xxyy.mtc.module.ConfigurableMTCModule;
-import io.github.xxyy.mtc.module.InjectModule;
 import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.task.UpdateDiscountTask;
@@ -21,8 +24,6 @@ import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenuListener;
 import io.github.xxyy.mtc.module.shop.ui.text.CommandShop;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopTextOutput;
 import io.github.xxyy.mtc.module.shop.ui.text.admin.CommandShopAdmin;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * Manages the shop module. That module provides a more-or-less simple admin shop that allows players to buy and sell
@@ -40,7 +41,7 @@ public class ShopModule extends ConfigurableMTCModule {
     private ShopItemConfiguration itemConfig;
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
-    @InjectModule
+    @InjectMe
     private FullTagModule fullTagModule;
     private UpdateDiscountTask updateDiscountTask = new UpdateDiscountTask(this); //needs to be a field so that update interval can be reloaded on-the-fly
 

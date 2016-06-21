@@ -7,7 +7,6 @@
 
 package io.github.xxyy.mtc.module.shop;
 
-import io.github.xxyy.common.test.util.MockHelper;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -19,10 +18,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import io.github.xxyy.common.test.util.MockHelper;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -156,6 +160,15 @@ public class ShopItemTest {
         ShopItem item = createAnyItem();
         item.setSellWorth(42D);
         item.setBuyCost(12D); //must not be less than sell worth, free money otherwise
+        item.setSellWorth(ShopItem.NOT_SELLABLE);
+        item.setBuyCost(50D); //must be settable when not sellable
+    }
+
+    @Test
+    public void testSetBuyCost__validation__unsellable() throws Exception {
+        ShopItem item = createAnyItem();
+        item.setSellWorth(ShopItem.NOT_SELLABLE);
+        item.setBuyCost(50D); //must be settable when not sellable
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -171,6 +184,15 @@ public class ShopItemTest {
         ShopItem item = createAnyItem();
         item.setBuyCost(12D);
         item.setSellWorth(15D); //must not be greater than buy cost, free money otherwise
+        item.setBuyCost(ShopItem.NOT_BUYABLE);
+        item.setSellWorth(15D);
+    }
+
+    @Test
+    public void testSetSellWorth__validation__unbuyable() throws Exception {
+        ShopItem item = createAnyItem();
+        item.setBuyCost(ShopItem.NOT_BUYABLE);
+        item.setSellWorth(15D);
     }
 
     @Test(expected = IllegalArgumentException.class)

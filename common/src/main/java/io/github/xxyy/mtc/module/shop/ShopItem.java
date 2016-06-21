@@ -9,12 +9,13 @@ package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
 import java.util.List;
 
@@ -299,7 +300,8 @@ public class ShopItem {
      */
     public void setSellWorth(double sellWorth) {
         if (sellWorth != NOT_SELLABLE) {
-            Preconditions.checkArgument(Double.isFinite(sellWorth) && sellWorth < buyCost && sellWorth > 0,
+            Preconditions.checkArgument((buyCost == NOT_BUYABLE || sellWorth < buyCost) &&
+                            (Double.isFinite(sellWorth) && sellWorth > 0),
                     "sellWorth must be a finite positive number less than the buy cost");
             Preconditions.checkArgument(!isDiscountable() || sellWorth < discountedPrice,
                     "sellWorth must be less than the discounted price");
