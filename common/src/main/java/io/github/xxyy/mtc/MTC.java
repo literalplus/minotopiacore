@@ -118,9 +118,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         log(Level.INFO, "(Re)loading MTC config...");
         super.reloadConfig();
         ConfigHelper.onConfigReload(this);
-        log(Level.DEBUG, "Reloading MTC module configs...");
-        moduleManager.getEnabledModules().forEach(m -> m.reload(this));
-        log(Level.DEBUG, "Reloaded MTC configs!");
+        if (moduleManager != null) {
+            log(Level.DEBUG, "Reloading MTC module configs...");
+            moduleManager.getEnabledModules().forEach(m -> m.reload(this));
+            log(Level.DEBUG, "Reloaded MTC configs!");
+        }
     }
 
     @Override
