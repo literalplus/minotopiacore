@@ -82,7 +82,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     private AntiLogoutHandler logoutHandler;
     private PexHook pexHook;
     private PlayerGameManager gameManager;
-    private SimpleModuleManager moduleManager = new SimpleModuleManager(this, this.getDataFolder());
+    private SimpleModuleManager moduleManager;
     private Logger logger;
 
     public MTC() {
@@ -176,6 +176,8 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             logger = LogManager.getLogger(getClass());
             logger.info("====== Enabling {}...", PLUGIN_VERSION.toString());
             logger.info("Container: {}", getServer().getVersion());
+
+            moduleManager = new SimpleModuleManager(this, this.getDataFolder());
 
             this.reloadConfig();
             final PluginManager pluginManager = this.getServer().getPluginManager();
