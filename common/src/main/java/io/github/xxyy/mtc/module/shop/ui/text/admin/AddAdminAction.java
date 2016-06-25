@@ -1,13 +1,14 @@
 package io.github.xxyy.mtc.module.shop.ui.text.admin;
 
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.text.AbstractShopAction;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
@@ -37,9 +38,9 @@ class AddAdminAction extends AbstractShopAction {
             return;
         }
 
-        byte dataValue;
+        short dataValue;
         try {
-            dataValue = Byte.parseByte(dataValueInput);
+            dataValue = Short.parseShort(dataValueInput);
         } catch (NumberFormatException ignore) {
             dataValue = -2;
         }

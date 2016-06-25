@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
 import java.util.List;
@@ -55,19 +54,19 @@ public class ShopItem {
     /**
      * Magic data value that indicates that this item matches all data values that do not have specific items defined.
      */
-    public static final byte WILDCARD_DATA_VALUE = -1;
+    public static final short WILDCARD_DATA_VALUE = -1;
 
     private final ShopItemManager manager;
     private final Material material;
-    private final byte dataValue;
+    private final short dataValue;
     private final List<String> aliases;
     private double buyCost;
     private double sellWorth;
     private double discountedPrice;
     private int discountPercentage; //does not get serialized - internal cache value
 
-    public ShopItem(ShopItemManager manager, double buyCost, double sellWorth, Material material, byte dataValue,
-                    List<String> aliases, double discountedPrice) {
+    public ShopItem(ShopItemManager manager, double buyCost, double sellWorth, Material material,
+                    short dataValue, List<String> aliases, double discountedPrice) {
         Preconditions.checkNotNull(material, "material");
         Preconditions.checkNotNull(aliases, "aliases");
         Preconditions.checkArgument(buyCost >= 0, "buyCost must be greater than or equal to 0");
@@ -93,7 +92,7 @@ public class ShopItem {
      * @param section the section to read from
      * @param manager the manager managing the shiny new item
      * @return an item with the serialized properties
-     * @throws NumberFormatException if the data value is not a byte
+     * @throws NumberFormatException if the data value is not a short
      * @throws ClassCastException    if anything else is not parsable
      */
     public static ShopItem deserialize(ConfigurationSection section, ShopItemManager manager)
@@ -102,7 +101,7 @@ public class ShopItem {
 
         String[] arr = section.getName().split(":");
         String materialName = arr[0];
-        byte dataValue = arr.length > 1 ? Byte.parseByte(arr[1]) : WILDCARD_DATA_VALUE;
+        short dataValue = arr.length > 1 ? Short.parseShort(arr[1]) : WILDCARD_DATA_VALUE;
 
         List<String> aliases = section.getStringList(ALIASES_PATH);
         double cost = section.getDouble(BUY_COST_PATH);
@@ -136,13 +135,13 @@ public class ShopItem {
      */
     @SuppressWarnings("deprecation")
     public ItemStack toItemStack(int amount) {
-        ItemStackFactory factory = new ItemStackFactory(material).amount(amount);
+        ItemStack stack = new ItemStack(material, amount);
 
         if (dataValue != WILDCARD_DATA_VALUE) {
-            factory.legacyData(dataValue);
+            stack.setDurability(dataValue);
         }
 
-        return factory.produce();
+        return stack;
     }
 
     /**
@@ -160,7 +159,7 @@ public class ShopItem {
         Preconditions.checkNotNull(stack, "stack");
 
         if (dataValue != WILDCARD_DATA_VALUE &&
-                stack.getData().getData() != dataValue) {
+                stack.getDurability() != dataValue) {
             return false;
         }
 
@@ -189,9 +188,11 @@ public class ShopItem {
     }
 
     /**
+     * Gets the item's data value. The data value is {@link ItemStack#getDurability()}.
+     *
      * @return the item's data value, {@link #WILDCARD_DATA_VALUE} means any
      */
-    public byte getDataValue() {
+    public short getDataValue() {
         return dataValue;
     }
 

@@ -8,12 +8,13 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.collect.Lists;
-import io.github.xxyy.lib.guava17.collect.Table;
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.junit.Before;
 import org.junit.Test;
+
+import io.github.xxyy.lib.guava17.collect.Table;
+import io.github.xxyy.mtc.MTC;
 
 import java.io.File;
 import java.util.Map;
@@ -32,7 +33,7 @@ import static org.mockito.Mockito.mock;
 public class ShopItemConfigurationTest {
     private static ShopItem POTATO = new ShopItem(null, 3, 1, Material.POTATO, ShopItem.WILDCARD_DATA_VALUE,
             Lists.newArrayList("yolo", "potatos", "Kartoffel"), ShopItem.NOT_DISCOUNTABLE);
-    private static ShopItem DIAMOND = new ShopItem(null, 7, 5, Material.DIAMOND, (byte) 42,
+    private static ShopItem DIAMOND = new ShopItem(null, 7, 5, Material.DIAMOND, (short) 42,
             Lists.newArrayList("[dai-mond]", "Diamant", "dia:shiny"), 6);
     private ShopItemConfiguration config;
 
@@ -45,7 +46,7 @@ public class ShopItemConfigurationTest {
     @Test
     public void testLoadFromString() throws Exception {
         String serialized = config.saveToString();
-        Table<Material, Byte, ShopItem> items = config.getShopItemTable(); //FIXME: exposing implementation details
+        Table<Material, Short, ShopItem> items = config.getShopItemTable(); //FIXME: exposing implementation details
         Map<String, ShopItem> aliases = config.getItemAliases();
 
         config.loadFromString(serialized);
@@ -79,7 +80,7 @@ public class ShopItemConfigurationTest {
         assertThat("Diamond wrongly mapped to arbitrary stack",
                 config.getItem(new ItemStack(Material.DIAMOND)), is(nullValue()));
         assertThat("Diamond not mapped to stack with correct data value",
-                config.getItem(new ItemStack(Material.DIAMOND, 2, (short) 12, (byte) 42)), is(DIAMOND));
+                config.getItem(new ItemStack(Material.DIAMOND, 2, (short) 42)), is(DIAMOND));
     }
 
     private void subTestGetByAliases() {
@@ -94,13 +95,13 @@ public class ShopItemConfigurationTest {
         assertThat("Potato not mapped to data value 0", config.getItem(Material.POTATO.name() + ":0"), is(POTATO));
         assertThat("Potato not mapped to data value 1", config.getItem(Material.POTATO.name() + ":1"), is(POTATO));
         assertThat("Potato not mapped to data value 127", config.getItem(Material.POTATO.name() + ":127"), is(POTATO));
-        assertThat("Potato not mapped to data value 127 (native)", config.getItem(Material.POTATO, (byte) 127), is(POTATO));
+        assertThat("Potato not mapped to data value 127 (native)", config.getItem(Material.POTATO, (short) 127), is(POTATO));
 
         //reverse case - items with specific data value should only be mapped to that value
         assertThat("Diamond mapped to data value 0", config.getItem(Material.DIAMOND.name() + ":0"), is(nullValue()));
         assertThat("Diamond mapped to data value 1", config.getItem(Material.DIAMOND.name() + ":1"), is(nullValue()));
         assertThat("Diamond mapped to data value 127", config.getItem(Material.DIAMOND.name() + ":127"), is(nullValue()));
-        assertThat("Diamond mapped to data value 127 (native)", config.getItem(Material.DIAMOND, (byte) 127), is(nullValue()));
+        assertThat("Diamond mapped to data value 127 (native)", config.getItem(Material.DIAMOND, (short) 127), is(nullValue()));
         assertThat("Diamond not mapped to own data value",
                 config.getItem(Material.DIAMOND.name() + ":" + DIAMOND.getDataValue()), is(DIAMOND));
     }

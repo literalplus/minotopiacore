@@ -1,11 +1,12 @@
 package io.github.xxyy.mtc.module.shop.api;
 
-import io.github.xxyy.mtc.api.misc.Cache;
-import io.github.xxyy.mtc.module.shop.ShopItem;
-import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.mtc.api.misc.Cache;
+import io.github.xxyy.mtc.module.shop.ShopItem;
+import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public interface ShopItemManager extends Cache {
      * @param dataValue the data value to find the item for
      * @return the found item for the specific data value, if found, the wildcard item, if found, or {@code null} otherwise.
      */
-    ShopItem getItem(Material material, byte dataValue);
+    ShopItem getItem(Material material, short dataValue);
 
     /**
      * Gets the wildcard item for a given material, if any. A wildcard item matches all data values and is represented

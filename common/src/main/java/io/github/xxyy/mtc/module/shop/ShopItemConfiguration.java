@@ -8,6 +8,13 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.lib.guava17.collect.HashBasedTable;
 import io.github.xxyy.lib.guava17.collect.ImmutableTable;
 import io.github.xxyy.lib.guava17.collect.Table;
@@ -17,15 +24,14 @@ import io.github.xxyy.mtc.module.fulltag.FullTagModule;
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.yaml.ManagedConfiguration;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
@@ -40,7 +46,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     private final MTCPlugin plugin;
     private final FullTagModule fullTagModule;
     private final DiscountManager discountManager;
-    private Table<Material, Byte, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
+    private Table<Material, Short, ShopItem> shopItems = HashBasedTable.create(); //maps Material to data val, -1 = any
     private Map<String, ShopItem> itemAliases = new HashMap<>(Material.values().length); //stored in lower case
 
     protected ShopItemConfiguration(File file, MTCPlugin plugin, FullTagModule fullTagModule) {
@@ -79,9 +85,9 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
             return item;    // value - Users can manually specify their aliases with colon notation though.
         }
 
-        String[] parts = input.split(":", 2); //name:data notation, where data is a byte
+        String[] parts = input.split(":", 2); //name:data notation, where data is a short
         Material material = Material.matchMaterial(parts[0]); //This also checks for IDs! (although deprecated)
-        byte dataValue = 0;
+        short dataValue = 0;
 
         if (material == null) { //Nothing matched by that name :(
             return null;
@@ -93,7 +99,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
                     && (StringUtils.isNumeric(dataPart)
                     || (dataPart.startsWith("-") //TODO: Does explicitly specifying a wildcard item allow for exploits?
                     && StringUtils.isNumeric(dataPart.substring(1))))) {
-                dataValue = Byte.parseByte(dataPart);
+                dataValue = Short.parseShort(dataPart);
             }
         }
 
@@ -110,7 +116,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
         if (stack == null || stack.getType() == Material.AIR || isTradeProhibited(stack)) {
             return null;
         }
-        return getItem(stack.getType(), stack.getData().getData());
+        return getItem(stack.getType(), stack.getDurability());
     }
 
     @Override
@@ -125,7 +131,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
     }
 
     @Override
-    public ShopItem getItem(Material material, byte dataValue) {
+    public ShopItem getItem(Material material, short dataValue) {
         Preconditions.checkArgument(dataValue >= 0, "dataValue must be positive: {}", dataValue);
         ShopItem foundItem = shopItems.get(material, dataValue); //check specific values before wildcard
         if (foundItem != null || dataValue == ShopItem.WILDCARD_DATA_VALUE) { //wildcard not found, ne need to check again
@@ -171,7 +177,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
      */
     public boolean removeItem(ShopItem item) {
         Validate.notNull(item, "item");
-        Table.Cell<Material, Byte, ShopItem> key = shopItems.cellSet().stream()
+        Table.Cell<Material, Short, ShopItem> key = shopItems.cellSet().stream()
                 .filter(e -> e.getValue().equals(item))
                 .findAny().orElse(null);
 
@@ -198,7 +204,7 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
         return shopItem.getSellWorth(); //nothing to change here....yet
     }
 
-    public Table<Material, Byte, ShopItem> getShopItemTable() {
+    public Table<Material, Short, ShopItem> getShopItemTable() {
         return ImmutableTable.copyOf(shopItems);
     }
 

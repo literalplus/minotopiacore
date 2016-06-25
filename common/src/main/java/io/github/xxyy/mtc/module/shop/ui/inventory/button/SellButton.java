@@ -8,6 +8,11 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 
 import com.google.common.base.Preconditions;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.logging.LogManager;
@@ -17,10 +22,6 @@ import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -62,7 +63,7 @@ public class SellButton implements MenuButton {
             clearSoldItems(menu);
             sellMenu.clearCanvas();
             menu.getModule().getTextOutput()
-                    .sendPrefixed(menu.getPlayer(), "Du hast durch deinen Verkauf §e" +
+                    .sendPrefixed(menu.getPlayer(), "Du hast §e" +
                             ShopStringAdaptor.getCurrencyString(totalWorth) +
                             "§6 eingenommen.");
         } else {

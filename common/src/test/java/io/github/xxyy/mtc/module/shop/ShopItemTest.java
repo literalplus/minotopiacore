@@ -59,8 +59,7 @@ public class ShopItemTest {
 
     @Test
     public void testToItemStack() throws Exception {
-        ItemStack sourceStack = new ItemStack(Material.COAL_BLOCK, 12);
-        sourceStack.getData().setData((byte) 42);
+        ItemStack sourceStack = new ItemStack(Material.COAL_BLOCK, 12, (short) 42);
         ShopItem item = createItemFromStack(sourceStack);
         ItemStack generatedStack = item.toItemStack(12);
         assertThat("toItemStack() item stack does not match source stack", generatedStack, is(sourceStack));
@@ -71,7 +70,7 @@ public class ShopItemTest {
         ItemStack sourceStack = new ItemStack(Material.COAL_BLOCK, 12);
         ShopItem item = createItemFromMaterialAndData(Material.COAL_BLOCK, ShopItem.WILDCARD_DATA_VALUE);
         ItemStack generatedStack = item.toItemStack(12);
-        assertThat("toItemStack() generates items with data -1", generatedStack.getData().getData(), is(not(-1)));
+        assertThat("toItemStack() generates items with data -1", generatedStack.getDurability(), is(not((short) -1)));
         assertThat("toItemStack() item stack does not match source stack", generatedStack, is(sourceStack));
     }
 
@@ -273,11 +272,11 @@ public class ShopItemTest {
 
     @Nonnull
     private ShopItem createItemFromStack(ItemStack stack) {
-        return createItemFromMaterialAndData(stack.getType(), stack.getData().getData());
+        return createItemFromMaterialAndData(stack.getType(), stack.getDurability());
     }
 
     @Nonnull
-    private ShopItem createItemFromMaterialAndData(Material type, byte dataValue) {
+    private ShopItem createItemFromMaterialAndData(Material type, short dataValue) {
         return new ShopItem(null, ShopItem.NOT_BUYABLE, ShopItem.NOT_SELLABLE,
                 type, dataValue,
                 new ArrayList<>(), ShopItem.NOT_DISCOUNTABLE);
