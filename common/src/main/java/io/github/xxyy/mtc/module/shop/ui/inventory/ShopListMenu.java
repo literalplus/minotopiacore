@@ -10,6 +10,7 @@ package io.github.xxyy.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
@@ -75,24 +76,31 @@ public class ShopListMenu extends ShopMenu {
         for (int canvasId = 0; canvasId < numberOfSlotsToFill; canvasId++) {
             ShopItem item = items.get(itemStart + canvasId);
             if (item != null) {
-                int slotId = ROW_SIZE + canvasId;
-                displayedItems[canvasId] = item;
-
+                ItemStack stack;
                 if (vaultHook != null && currentBalance < item.getBuyCost()) {
-                    getInventory().setItem(slotId, new ItemStackFactory(item.toItemStack(1))
+                    stack = new ItemStackFactory(item.toItemStack(1))
                             .displayName(item.getDisplayName())
                             .lore("§cDas kannst du dir nicht leisten!")
                             .lore("§4Stückpreis: §c" +
                                     ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
-                            .produce());
+                            .produce();
                 } else {
-                    getInventory().setItem(slotId, ShopInventoryHelper.createInfoStack(
-                            item, true)
-                    );
+                    stack = ShopInventoryHelper.createInfoStack(item, true);
                 }
+                setItem(canvasId, item, stack);
             }
         }
+        if (numberOfSlotsToFill < CANVAS_SIZE) {
+            for (int canvasId = numberOfSlotsToFill; canvasId < CANVAS_SIZE; canvasId++) {
+                setItem(canvasId, null, null);
+            }
+        }
+    }
+
+    private void setItem(int canvasId, ShopItem item, ItemStack stack) {
+        displayedItems[canvasId] = item;
+        getInventory().setItem(canvasId + ROW_SIZE, stack);
     }
 
     /**
