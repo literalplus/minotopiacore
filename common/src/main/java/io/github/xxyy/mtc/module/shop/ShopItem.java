@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 19/01/15
  */
-public class ShopItem {
+public class ShopItem implements Comparable<ShopItem> {
     public static final String ALIASES_PATH = "aliases";
     public static final String BUY_COST_PATH = "buy";
     public static final String SELL_WORTH_PATH = "sell";
@@ -434,5 +435,17 @@ public class ShopItem {
                 ", sellWorth=" + sellWorth +
                 ", discountedPrice=" + discountedPrice +
                 '}'; //IntelliJ says that this is "at least as efficient or more efficient" than StringBuilder
+    }
+
+    /**
+     * Compares this shop item's display name to another item's display name lexicographically.
+     *
+     * @param other the item to compare to
+     * @return an integer indicating the relation
+     * @see String#compareToIgnoreCase(String)
+     */
+    @Override
+    public int compareTo(@Nonnull ShopItem other) {
+        return getDisplayName().compareToIgnoreCase(other.getDisplayName());
     }
 }

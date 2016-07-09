@@ -8,6 +8,9 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.module.shop.ShopItem;
@@ -16,11 +19,9 @@ import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  */
 public class ShopListMenu extends ShopMenu {
     private ShopItem[] displayedItems = new ShopItem[CANVAS_SIZE];
-    private Collection<ShopItem> rawItems;
+    private List<ShopItem> rawItems;
     private List<ShopItem> items;
     private boolean onlyShowBuyableItems = false;
 
@@ -96,14 +97,19 @@ public class ShopListMenu extends ShopMenu {
      *
      * @param unfilteredItems the items to be shown in this menu
      */
-    public void setItems(Collection<ShopItem> unfilteredItems) {
+    public void setItems(List<ShopItem> unfilteredItems) {
         this.rawItems = new ArrayList<>();
         DiscountManager discountManager = getModule().getItemManager().getDiscountManager();
         if (discountManager.hasDiscount()) {
             this.rawItems.add(discountManager.getDiscountedItem());
         }
         this.rawItems.addAll(unfilteredItems);
+        sortItems();
         filterItems();
+    }
+
+    private void sortItems() {
+        Collections.sort(this.rawItems, ShopItem::compareTo);
     }
 
     private void filterItems() {
