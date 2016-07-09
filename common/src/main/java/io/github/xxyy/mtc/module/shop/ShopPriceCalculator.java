@@ -1,10 +1,11 @@
 package io.github.xxyy.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
-import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.mtc.module.shop.api.ShopItemManager;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -72,7 +73,7 @@ public class ShopPriceCalculator {
     private ToDoubleFunction<ItemStack> toItemWorthFunction(TransactionType type) {
         return stack -> {
             ShopItem item = itemManager.getItem(stack);
-            if (item == null) {
+            if (item == null || !type.isTradable(item)) {
                 return 0D;
             } else {
                 return calculatePrice(item, stack.getAmount(), type);
