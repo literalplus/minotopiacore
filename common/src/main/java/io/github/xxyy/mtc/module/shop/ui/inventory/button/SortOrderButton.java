@@ -40,5 +40,7 @@ public class SortOrderButton implements MenuButton<ShopListMenu> {
     @Override
     public void handleMenuClick(InventoryClickEvent evt, ShopListMenu menu) {
         menu.getItemComparator().setAscending(!menu.getItemComparator().isAscending());
+        menu.sortItems();
+        menu.render(0);
     }
 }

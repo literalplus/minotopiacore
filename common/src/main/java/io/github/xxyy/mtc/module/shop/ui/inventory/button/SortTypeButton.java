@@ -47,7 +47,7 @@ public class SortTypeButton implements MenuButton<ShopListMenu> {
     @Override
     public void handleMenuClick(InventoryClickEvent evt, ShopListMenu menu) {
         ShopItemComparator comparator = menu.getItemComparator();
-        int index = comparatorOrder.indexOf(comparator) + 1;
+        int index = comparatorOrder.indexOf(comparator) + 1; //handles -1
         if (comparatorOrder.size() > index) {
             index = 0;
         }
