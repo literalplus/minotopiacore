@@ -7,10 +7,11 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.ShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.ShopItem;
 
 /**
  * Static helper class to provide generic utility methods for the Shop inventory interface.
@@ -40,13 +41,13 @@ public class ShopInventoryHelper {
             }
             factory.lore(lore + item.getManager().getBuyCost(item));
         } else {
-            factory.lore("§cKann nicht verkauft werden");
+            factory.lore("§cKann nicht gekauft werden");
         }
 
         if (item.canBeSold()) {
             factory.lore("§eVerkaufspreis: §7" + item.getSellWorth());
         } else {
-            factory.lore("§cKann nicht gekauft werden");
+            factory.lore("§cKann nicht verkauft werden");
         }
 
         return factory.produce();
