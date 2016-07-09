@@ -32,7 +32,7 @@ import java.util.Arrays;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-04-18
  */
-public class SellButton implements MenuButton {
+public class SellButton implements MenuButton<ShopSellMenu> {
     private static final Logger LOGGER = LogManager.getLogger(SellButton.class);
     private final ShopPriceCalculator priceCalculator;
 
@@ -41,7 +41,7 @@ public class SellButton implements MenuButton {
     }
 
     @Override
-    public ItemStack getItemStack(ShopMenu menu) {
+    public ItemStack getItemStack(ShopSellMenu menu) {
         return new ItemStackFactory(Material.SKULL_ITEM)
                 .skullOwner("MHF_TNT2")
                 .displayName("§3§lJetzt verkaufen!")
@@ -51,17 +51,13 @@ public class SellButton implements MenuButton {
     }
 
     @Override
-    public void handleMenuClick(InventoryClickEvent evt, ShopMenu menu) {
-        Preconditions.checkArgument(menu instanceof ShopSellMenu,
-                "menu must be ShopSellMenu, got %s", menu.getClass());
-
-        ShopSellMenu sellMenu = (ShopSellMenu) menu;
+    public void handleMenuClick(InventoryClickEvent evt, ShopSellMenu menu) {
         double totalWorth = calculateMenuWorth(menu);
         VaultHook vaultHook = menu.getModule().getPlugin().getVaultHook();
         if (vaultHook != null) {
             vaultHook.depositPlayer(menu.getPlayer(), totalWorth);
             clearSoldItems(menu);
-            sellMenu.clearCanvas();
+            menu.clearCanvas();
             menu.getModule().getTextOutput()
                     .sendPrefixed(menu.getPlayer(), "Du hast §e" +
                             ShopStringAdaptor.getCurrencyString(totalWorth) +

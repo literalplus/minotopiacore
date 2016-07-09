@@ -9,17 +9,28 @@ package io.github.xxyy.mtc.module.shop.ui.inventory.comparator;
 
 import io.github.xxyy.mtc.module.shop.ShopItem;
 
-import java.util.Comparator;
-
 /**
  * Sorts shop items based on their display name.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-07-10
  */
-public class NameBasedComparator implements Comparator<ShopItem> {
+public class NameBasedComparator extends AbstractShopItemComparator {
+    public static NameBasedComparator INSTANCE = new NameBasedComparator();
+
+    private NameBasedComparator() {
+
+    }
+
     @Override
     public int compare(ShopItem o1, ShopItem o2) {
-        return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
+        return applyOrder(
+                o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName())
+        );
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Nach Name (alphabetisch)";
     }
 }

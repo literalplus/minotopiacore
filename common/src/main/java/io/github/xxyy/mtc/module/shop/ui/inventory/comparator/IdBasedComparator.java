@@ -9,15 +9,19 @@ package io.github.xxyy.mtc.module.shop.ui.inventory.comparator;
 
 import io.github.xxyy.mtc.module.shop.ShopItem;
 
-import java.util.Comparator;
-
 /**
  * Sorts shop items based on the underlying material id and data value.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-07-10
  */
-public class IdBasedItemComparator implements Comparator<ShopItem> {
+public class IdBasedComparator extends AbstractShopItemComparator {
+    public static final IdBasedComparator INSTANCE = new IdBasedComparator();
+
+    private IdBasedComparator() {
+
+    }
+
     @Override
     public int compare(ShopItem o1, ShopItem o2) {
         int result;
@@ -25,6 +29,12 @@ public class IdBasedItemComparator implements Comparator<ShopItem> {
         if (result == 0) {
             result = Short.compare(o1.getDataValue(), o2.getDataValue());
         }
-        return result;
+        return applyOrder(result);
     }
+
+    @Override
+    public String getDisplayName() {
+        return "Nach Item-ID";
+    }
+
 }

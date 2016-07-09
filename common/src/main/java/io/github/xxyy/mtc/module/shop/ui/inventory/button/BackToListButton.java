@@ -7,12 +7,13 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 
 /**
  * A singleton button directing players back to a {@link io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu} on
@@ -21,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-04-17
  */
-public class BackToListButton implements MenuButton {
+public class BackToListButton implements MenuButton<ShopMenu> {
     public static final BackToListButton INSTANCE = new BackToListButton();
 
     private BackToListButton() {

@@ -8,12 +8,13 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 
 import com.google.common.base.Preconditions;
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopListMenu;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 
 /**
  * Represents pagination buttons visualised through player heads to be used with {@link ShopListMenu}.
@@ -21,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-04-17
  */
-public class PaginationButton implements MenuButton {
+public class PaginationButton implements MenuButton<ShopListMenu> {
     public static final PaginationButton FIRST_PAGE = new PaginationButton(PaginationAction.FIRST);
     public static final PaginationButton PREVIOUS_PAGE = new PaginationButton(PaginationAction.PREVIOUS);
     public static final PaginationButton NEXT_PAGE = new PaginationButton(PaginationAction.NEXT);
@@ -40,18 +41,13 @@ public class PaginationButton implements MenuButton {
     }
 
     @Override
-    public ItemStack getItemStack(ShopMenu menu) {
+    public ItemStack getItemStack(ShopListMenu menu) {
         return itemStack;
     }
 
     @Override
-    public void handleMenuClick(InventoryClickEvent evt, ShopMenu menu) {
-        if (menu instanceof ShopListMenu) {
-            ShopListMenu shopListMenu = (ShopListMenu) menu;
-            shopListMenu.render(action.getTargetItemStart(shopListMenu));
-        } else {
-            throw new IllegalArgumentException("Cannot use PaginationButton on " + menu.getClass());
-        }
+    public void handleMenuClick(InventoryClickEvent evt, ShopListMenu menu) {
+        menu.render(action.getTargetItemStart(menu));
     }
 
     private enum PaginationAction {

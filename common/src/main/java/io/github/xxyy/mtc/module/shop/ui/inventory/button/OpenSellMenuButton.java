@@ -7,12 +7,13 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 
-import io.github.xxyy.common.util.inventory.ItemStackFactory;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.common.util.inventory.ItemStackFactory;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 
 /**
  * A button that forwards the player to a new {@link io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu}.
@@ -20,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-04-18
  */
-public class OpenSellMenuButton implements MenuButton {
+public class OpenSellMenuButton implements MenuButton<ShopMenu> {
     public static final OpenSellMenuButton INSTANCE = new OpenSellMenuButton();
 
     @Override

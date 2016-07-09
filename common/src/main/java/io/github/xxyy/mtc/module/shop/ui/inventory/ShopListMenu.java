@@ -16,15 +16,16 @@ import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.hook.VaultHook;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
-import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
-import io.github.xxyy.mtc.module.shop.ui.inventory.comparator.NameBasedComparator;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.SortOrderButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.button.SortTypeButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.comparator.IdBasedComparator;
+import io.github.xxyy.mtc.module.shop.ui.inventory.comparator.ShopItemComparator;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class ShopListMenu extends ShopMenu {
     private ShopItem[] displayedItems = new ShopItem[CANVAS_SIZE];
     private List<ShopItem> rawItems;
     private List<ShopItem> items;
-    private Comparator<ShopItem> itemComparator;
+    private ShopItemComparator itemComparator;
     private boolean onlyShowBuyableItems = false;
 
     private int currentItemStart;
@@ -52,7 +53,9 @@ public class ShopListMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, PaginationButton.FIRST_PAGE);
         setTopRowButton(1, PaginationButton.PREVIOUS_PAGE);
+        setTopRowButton(3, SortTypeButton.INSTANCE);
         setTopRowButton(4, OpenSellMenuButton.INSTANCE);
+        setTopRowButton(5, SortOrderButton.INSTANCE);
         setTopRowButton(7, PaginationButton.NEXT_PAGE);
         setTopRowButton(8, PaginationButton.LAST_PAGE);
     }
@@ -109,18 +112,16 @@ public class ShopListMenu extends ShopMenu {
      * @param unfilteredItems the items to be shown in this menu
      */
     public void setItems(List<ShopItem> unfilteredItems) {
-        this.rawItems = new ArrayList<>();
-        DiscountManager discountManager = getModule().getItemManager().getDiscountManager();
-        if (discountManager.hasDiscount()) {
-            this.rawItems.add(discountManager.getDiscountedItem());
-        }
-        this.rawItems.addAll(unfilteredItems);
+        this.rawItems = new ArrayList<>(unfilteredItems);
         sortItems();
-        filterItems();
     }
 
-    private void sortItems() {
+    /**
+     * Sorts this menu's items according to the {@link #getItemComparator() item comparator}.
+     */
+    public void sortItems() {
         Collections.sort(this.rawItems, getItemComparator());
+        filterItems();
     }
 
     private void filterItems() {
@@ -195,10 +196,24 @@ public class ShopListMenu extends ShopMenu {
         return "§9§lMinoTopia Shop";
     }
 
-    public Comparator<ShopItem> getItemComparator() {
+    /**
+     * @return the current comparator used by this menu, never null (lazy init)
+     */
+    public ShopItemComparator getItemComparator() {
         if (itemComparator == null) {
-            itemComparator = new NameBasedComparator();
+            itemComparator = IdBasedComparator.INSTANCE;
         }
         return itemComparator;
+    }
+
+    /**
+     * Sets the item comparator for this menu and updates the view. Renders the first page.
+     *
+     * @param itemComparator the new comparator
+     */
+    public void setItemComparator(ShopItemComparator itemComparator) {
+        this.itemComparator = itemComparator;
+        sortItems();
+        render(0);
     }
 }

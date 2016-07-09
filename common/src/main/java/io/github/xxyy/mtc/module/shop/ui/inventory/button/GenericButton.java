@@ -7,10 +7,11 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory.button;
 
-import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import io.github.xxyy.mtc.module.shop.ui.inventory.ShopMenu;
 
 /**
  * A generic button implementation with behaviour and icon defined at construction time.
@@ -18,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-04-17
  */
-public class GenericButton implements MenuButton {
+public class GenericButton implements MenuButton<ShopMenu> {
     private final ItemStack itemStack;
     private final ClickHandler clickHandler;
 
