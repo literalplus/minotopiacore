@@ -101,7 +101,12 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
         abstract int getTargetItemStart(ShopListMenu menu);
 
         int lastPage(ShopListMenu menu) {
-            return Math.max(menu.getItems().size(), ShopMenu.CANVAS_SIZE) - ShopMenu.CANVAS_SIZE;
+            if (menu.getItems().size() <= ShopMenu.CANVAS_SIZE) {
+                return firstPage();
+            }
+            int itemsOnLastPage = menu.getItems().size() % ShopMenu.CANVAS_SIZE;
+            int freeSlotsOnLastPage = ShopMenu.CANVAS_SIZE - itemsOnLastPage;
+            return menu.getItems().size() - ShopMenu.CANVAS_SIZE + freeSlotsOnLastPage;
         }
 
         private static int firstPage() {
