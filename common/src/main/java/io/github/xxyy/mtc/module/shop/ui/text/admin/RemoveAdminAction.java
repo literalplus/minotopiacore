@@ -7,11 +7,12 @@
 
 package io.github.xxyy.mtc.module.shop.ui.text.admin;
 
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.text.AbstractShopAction;
-import org.bukkit.entity.Player;
 
 /**
  * Admin action that removes an existing shop item from the shop.
@@ -30,7 +31,7 @@ class RemoveAdminAction extends AbstractShopAction {
     public void execute(String[] args, Player plr, String label) {
         String itemName = StringHelper.varArgsString(args, 0, false);
         ShopItem item = module.getItemManager().getItem(itemName);
-        if (!module.getTextOutput().checkNonExistant(plr, item, itemName)) {
+        if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
         }
         module.getItemConfig().removeItem(item);
