@@ -18,10 +18,12 @@ import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.manager.DiscountManager;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.PaginationButton;
+import io.github.xxyy.mtc.module.shop.ui.inventory.comparator.NameBasedComparator;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class ShopListMenu extends ShopMenu {
     private ShopItem[] displayedItems = new ShopItem[CANVAS_SIZE];
     private List<ShopItem> rawItems;
     private List<ShopItem> items;
+    private Comparator<ShopItem> itemComparator;
     private boolean onlyShowBuyableItems = false;
 
     private int currentItemStart;
@@ -109,7 +112,7 @@ public class ShopListMenu extends ShopMenu {
     }
 
     private void sortItems() {
-        Collections.sort(this.rawItems, ShopItem::compareTo);
+        Collections.sort(this.rawItems, getItemComparator());
     }
 
     private void filterItems() {
@@ -182,5 +185,12 @@ public class ShopListMenu extends ShopMenu {
     @Override
     protected String getInventoryTitle() {
         return "§9§lMinoTopia Shop";
+    }
+
+    public Comparator<ShopItem> getItemComparator() {
+        if (itemComparator == null) {
+            itemComparator = new NameBasedComparator();
+        }
+        return itemComparator;
     }
 }
