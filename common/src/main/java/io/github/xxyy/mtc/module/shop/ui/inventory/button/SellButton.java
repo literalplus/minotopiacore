@@ -42,8 +42,7 @@ public class SellButton implements MenuButton<ShopSellMenu> {
 
     @Override
     public ItemStack getItemStack(ShopSellMenu menu) {
-        return new ItemStackFactory(Material.SKULL_ITEM)
-                .skullOwner("MHF_TNT2")
+        return new ItemStackFactory(Material.EMERALD)
                 .displayName("§3§lJetzt verkaufen!")
                 .lore("§6Gesamtwert:")
                 .lore("§e" + calculateMenuWorth(menu))

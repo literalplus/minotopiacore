@@ -26,8 +26,7 @@ public class OpenSellMenuButton implements MenuButton<ShopMenu> {
 
     @Override
     public ItemStack getItemStack(ShopMenu menu) {
-        return new ItemStackFactory(Material.SKULL_ITEM)
-                .skullOwner("MHF_Cake")
+        return new ItemStackFactory(Material.EMERALD)
                 .displayName("§eItems verkaufen...")
                 .lore("§7Klicke hier, um Items zu verkaufen.")
                 .produce();

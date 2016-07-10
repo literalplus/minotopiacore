@@ -34,8 +34,7 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
     PaginationButton(PaginationAction action) {
         Preconditions.checkNotNull(action, "action");
         this.action = action;
-        this.itemStack = new ItemStackFactory(Material.SKULL_ITEM)
-                .skullOwner(action.getHeadName())
+        this.itemStack = new ItemStackFactory(action.getDisplayMaterial())
                 .displayName("§b" + action.getDisplayName())
                 .produce();
     }
@@ -51,13 +50,13 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
     }
 
     private enum PaginationAction {
-        FIRST("MHF_ArrowUp", "<< Zur ersten Seite") {
+        FIRST(Material.POWERED_MINECART, "<< Zur ersten Seite") {
             @Override
             int getTargetItemStart(ShopListMenu menu) {
                 return firstPage();
             }
         },
-        PREVIOUS("MHF_ArrowLeft", "< Zur vorherigen Seite") {
+        PREVIOUS(Material.MINECART, "< Zur vorherigen Seite") {
             @Override
             int getTargetItemStart(ShopListMenu menu) {
                 if (menu.getCurrentItemStart() < ShopMenu.CANVAS_SIZE) {
@@ -67,7 +66,7 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
                 }
             }
         },
-        NEXT("MHF_ArrowRight", "Zur nächsten Seite >") {
+        NEXT(Material.MINECART, "Zur nächsten Seite >") {
             @Override
             int getTargetItemStart(ShopListMenu menu) {
                 if (menu.getCurrentItemStart() >= lastPage(menu)) {
@@ -77,18 +76,18 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
                 }
             }
         },
-        LAST("MHF_ArrowDown", "Zur letzten Seite >>") {
+        LAST(Material.POWERED_MINECART, "Zur letzten Seite >>") {
             @Override
             int getTargetItemStart(ShopListMenu menu) {
                 return lastPage(menu);
             }
         };
 
-        private final String headName;
+        private final Material displayMaterial;
         private final String displayName;
 
-        PaginationAction(String headName, String displayName) {
-            this.headName = headName;
+        PaginationAction(Material displayMaterial, String displayName) {
+            this.displayMaterial = displayMaterial;
             this.displayName = displayName;
         }
 
@@ -113,8 +112,8 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
             return 0;
         }
 
-        public String getHeadName() {
-            return headName;
+        public Material getDisplayMaterial() {
+            return displayMaterial;
         }
 
         public String getDisplayName() {

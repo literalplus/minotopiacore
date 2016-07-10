@@ -31,8 +31,7 @@ public class BackToListButton implements MenuButton<ShopMenu> {
 
     @Override
     public ItemStack getItemStack(ShopMenu menu) {
-        return new ItemStackFactory(Material.SKULL_ITEM)
-                .skullOwner("MHF_ArrowLeft")
+        return new ItemStackFactory(Material.WOODEN_DOOR)
                 .displayName("§b<< Zurück zum Hauptmenü")
                 .produce();
     }

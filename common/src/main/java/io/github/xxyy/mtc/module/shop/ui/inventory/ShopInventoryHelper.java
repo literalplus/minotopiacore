@@ -29,8 +29,7 @@ public class ShopInventoryHelper {
         if (realItem) {
             factory = new ItemStackFactory(item.toItemStack(1));
         } else {
-            factory = new ItemStackFactory(Material.SKULL_ITEM)
-                    .skullOwner("MHF_Exclamation")
+            factory = new ItemStackFactory(Material.BOOK)
                     .displayName("§lInfo: §f" + item.getDisplayName());
         }
 

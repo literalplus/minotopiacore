@@ -7,17 +7,18 @@
 
 package io.github.xxyy.mtc.module.shop.ui.inventory;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.BackToListButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.GenericButton;
 import io.github.xxyy.mtc.module.shop.ui.inventory.button.SellButton;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
@@ -37,8 +38,7 @@ public class ShopSellMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, BackToListButton.INSTANCE);
         setTopRowButton(3, new GenericButton(
-                new ItemStackFactory(Material.SKULL_ITEM)
-                        .skullOwner("MHF_Question")
+                new ItemStackFactory(Material.BOOK)
                         .displayName("§6Info")
                         .lore("§7Um etwas zu verkaufen, ziehe")
                         .lore("§7es in dieses Inventar.")
