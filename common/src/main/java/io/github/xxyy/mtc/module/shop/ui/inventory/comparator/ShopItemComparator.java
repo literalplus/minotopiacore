@@ -28,10 +28,6 @@ public interface ShopItemComparator extends Comparator<ShopItem> {
      */
     boolean isAscending();
 
-    /**
-     * Sets whether this comparator sorts in ascending order. (descending otherwise)
-     *
-     * @param ascending whether this comparator sorts in ascending order
-     */
-    void setAscending(boolean ascending);
+    @Override
+    ShopItemComparator reversed();
 }

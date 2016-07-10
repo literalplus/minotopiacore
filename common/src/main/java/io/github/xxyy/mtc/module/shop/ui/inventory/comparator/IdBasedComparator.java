@@ -16,10 +16,11 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
  * @since 2016-07-10
  */
 public class IdBasedComparator extends AbstractShopItemComparator {
-    public static final IdBasedComparator INSTANCE = new IdBasedComparator();
+    public static final IdBasedComparator ASCENDING = new IdBasedComparator(true);
+    public static final IdBasedComparator DESCENDING = new IdBasedComparator(false);
 
-    private IdBasedComparator() {
-
+    private IdBasedComparator(boolean ascending) {
+        super(ascending);
     }
 
     @Override
@@ -37,4 +38,8 @@ public class IdBasedComparator extends AbstractShopItemComparator {
         return "Nach Item-ID";
     }
 
+    @Override
+    public ShopItemComparator reversed() {
+        return isAscending() ? DESCENDING : ASCENDING;
+    }
 }

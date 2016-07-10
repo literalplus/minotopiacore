@@ -201,7 +201,7 @@ public class ShopListMenu extends ShopMenu {
      */
     public ShopItemComparator getItemComparator() {
         if (itemComparator == null) {
-            itemComparator = IdBasedComparator.INSTANCE;
+            itemComparator = IdBasedComparator.ASCENDING;
         }
         return itemComparator;
     }

@@ -8,7 +8,9 @@
 package io.github.xxyy.mtc.module.shop.ui.inventory.comparator;
 
 /**
- * Abstract base class for shop item comparators.
+ * Abstract base class for shop item comparators. Implementations must respect
+ * {@link #isAscending()}. There is {@link #applyOrder(int) a convenience method} provided to
+ * easily apply order to normal results.
  *
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-07-10
@@ -16,19 +18,22 @@ package io.github.xxyy.mtc.module.shop.ui.inventory.comparator;
 public abstract class AbstractShopItemComparator implements ShopItemComparator {
     private boolean ascending = true;
 
+    /**
+     * Creates a new abstract comparator.
+     *
+     * @param ascending whether the comparator sorts in ascending order
+     */
+    public AbstractShopItemComparator(boolean ascending) {
+        this.ascending = ascending;
+    }
+
     @Override
     public boolean isAscending() {
         return ascending;
     }
 
-    @Override
-    public void setAscending(boolean ascending) {
-        this.ascending = ascending;
-    }
-
     /**
-     * Applies this comparator's {@link #setAscending(boolean) sorting order} to a comparator
-     * result.
+     * Applies this comparator's {@link #isAscending() sorting order} to a comparator result.
      *
      * @param result the ascending result to apply to
      * @return the adapted result

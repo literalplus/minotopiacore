@@ -30,8 +30,10 @@ public class SortTypeButton implements MenuButton<ShopListMenu> {
     public static final SortTypeButton INSTANCE = new SortTypeButton();
     private final ItemStackFactory iconFactory = new ItemStackFactory(Material.SIGN)
             .displayName("§eSortierung:");
-    private static final List<ShopItemComparator> comparatorOrder =
-            Arrays.asList(IdBasedComparator.INSTANCE, NameBasedComparator.INSTANCE);
+    private static final List<ShopItemComparator> ascComparators =
+            Arrays.asList(IdBasedComparator.ASCENDING, NameBasedComparator.ASCENDING);
+    private static final List<ShopItemComparator> descComparators =
+            Arrays.asList(IdBasedComparator.DESCENDING, NameBasedComparator.DESCENDING);
 
     private SortTypeButton() {
 
@@ -47,11 +49,12 @@ public class SortTypeButton implements MenuButton<ShopListMenu> {
     @Override
     public void handleMenuClick(InventoryClickEvent evt, ShopListMenu menu) {
         ShopItemComparator comparator = menu.getItemComparator();
-        int index = comparatorOrder.indexOf(comparator) + 1; //handles -1
-        if (index >= comparatorOrder.size()) {
+        List<ShopItemComparator> comparators =
+                comparator.isAscending() ? ascComparators : descComparators;
+        int index = comparators.indexOf(comparator) + 1; //handles -1
+        if (index >= comparators.size()) {
             index = 0;
         }
-        menu.setItemComparator(comparatorOrder.get(index));
+        menu.setItemComparator(comparators.get(index));
     }
-
 }

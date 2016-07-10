@@ -16,10 +16,11 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
  * @since 2016-07-10
  */
 public class NameBasedComparator extends AbstractShopItemComparator {
-    public static NameBasedComparator INSTANCE = new NameBasedComparator();
+    public static NameBasedComparator ASCENDING = new NameBasedComparator(true);
+    public static NameBasedComparator DESCENDING = new NameBasedComparator(false);
 
-    private NameBasedComparator() {
-
+    private NameBasedComparator(boolean ascending) {
+        super(ascending);
     }
 
     @Override
@@ -32,5 +33,10 @@ public class NameBasedComparator extends AbstractShopItemComparator {
     @Override
     public String getDisplayName() {
         return "Nach Name (alphabetisch)";
+    }
+
+    @Override
+    public ShopItemComparator reversed() {
+        return isAscending() ? DESCENDING : ASCENDING;
     }
 }
