@@ -264,7 +264,10 @@ public class ShopTextOutput {
         Preconditions.checkArgument(item.isDiscountable(), "item must be discountable");
         BaseComponent[] notification = module.getPrefixBuilder()
                 .append("Jetzt billiger: ", ChatColor.GOLD, ChatColor.BOLD)
+                .tooltip("Nur für kurze Zeit!!!1")
                 .append(item.getDisplayName(), ChatColor.YELLOW).bold(false)
+                .event(createItemHover(item))
+                .command("/shop preis " + item.getSerializationName())
                 .append(" um ", ChatColor.GOLD)
                 .append(item.getDiscountPercentage() + "%", ChatColor.YELLOW)
                 .append(" reduziert!", ChatColor.GOLD)
