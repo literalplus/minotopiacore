@@ -1,12 +1,13 @@
 package io.github.xxyy.mtc.module.shop.ui.text.admin;
 
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.text.ShopAction;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopActionHelper;
-import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor {
         actionList.add(new SellWorthAdminAction(module));
         actionList.add(new ForceDiscountAdminAction(module));
         actionList.add(new DiscountAdminAction(module));
+        actionList.add(new InfoAdminAction(module));
     }
 
     @Override
