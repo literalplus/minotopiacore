@@ -82,7 +82,7 @@ class AddAdminAction extends AbstractShopAction {
         ComponentSender.sendTo(
                 new XyComponentBuilder("Nächste Schritte mit deinem Item: ", ChatColor.GOLD)
                         .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
-                        .suggest(infoCmd), plr
+                        .hintedCommand(infoCmd), plr
         );
     }
 
