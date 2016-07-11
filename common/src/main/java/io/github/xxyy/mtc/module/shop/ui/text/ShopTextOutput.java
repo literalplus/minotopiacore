@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.CommandSender;
 
@@ -137,22 +138,29 @@ public class ShopTextOutput {
             return;
         }
 
+        receiver.sendMessage("§e »»»  Shopitem: " + item.getDisplayName() + "  «««");
+
         if (item.canBeBought()) {
-            XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                    .append(" kann für ", ChatColor.GOLD)
+            XyComponentBuilder builder = module.getPrefixBuilder()
+                    .append("Kaufpreis: ", ChatColor.GOLD)
                     .append(ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)), ChatColor.YELLOW);
             if (item.getManager().getDiscountManager().isDiscounted(item)) {
                 builder.append(" statt ", ChatColor.GOLD)
-                        .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()), ChatColor.YELLOW);
+                        .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()),
+                                ChatColor.YELLOW, ChatColor.STRIKETHROUGH);
             }
-            builder.append(" gekauft werden.", ChatColor.GOLD);
+            builder.append(" ", ComponentBuilder.FormatRetention.NONE)
+                    .append("[kaufen...]", ChatColor.GREEN, ChatColor.UNDERLINE)
+                    .hintedCommand("/shop buy " + item.getSerializationName());
             ComponentSender.sendTo(builder, receiver);
         }
         if (item.canBeSold()) {
-            XyComponentBuilder builder = module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
-                    .append(" kann für ", ChatColor.GOLD)
+            XyComponentBuilder builder = module.getPrefixBuilder()
+                    .append("Verkaufspreis: ", ChatColor.GOLD)
                     .append(ShopStringAdaptor.getCurrencyString(item.getManager().getSellWorth(item)), ChatColor.YELLOW)
-                    .append(" verkauft werden.", ChatColor.GOLD);
+                    .append(" ", ComponentBuilder.FormatRetention.NONE)
+                    .append("[verkaufen...]", ChatColor.GREEN, ChatColor.UNDERLINE)
+                    .hintedCommand("/shop sell");
             ComponentSender.sendTo(builder, receiver);
         }
         if (item.getAliases().size() > 1) {
