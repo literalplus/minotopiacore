@@ -138,7 +138,7 @@ public class ShopTextOutput {
             return;
         }
 
-        receiver.sendMessage("§e »»»  Shopitem: " + item.getDisplayName() + "  «««");
+        receiver.sendMessage(module.getChatPrefix() + " »»»  Shopitem: " + item.getDisplayName() + "  «««");
 
         if (item.canBeBought()) {
             XyComponentBuilder builder = module.getPrefixBuilder()
