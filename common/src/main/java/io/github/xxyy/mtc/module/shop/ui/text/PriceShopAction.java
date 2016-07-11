@@ -1,15 +1,16 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Handles the price action for the shop command.
@@ -51,7 +52,7 @@ class PriceShopAction extends AbstractShopAction {
         String lastArg = args[args.length - 1];
         int amount = 1;
         int stripArgs = 0; //amount of arguments to ignore for item name, starting with the last one
-        if (StringUtils.isNumeric(lastArg)) {
+        if (StringUtils.isNumeric(lastArg) && args.length != 1) { //single argument is item id
             amount = Integer.parseInt(lastArg);
             stripArgs = 1;
         }
