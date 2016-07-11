@@ -35,6 +35,7 @@ class RemoveAdminAction extends AbstractShopAction {
             return;
         }
         module.getItemConfig().removeItem(item);
+        module.getItemConfig().asyncSave(module.getPlugin());
         plr.sendMessage("§aDas Item §6" + item.getDisplayName() + "§a wurde aus dem Shop entfernt.");
         if (item.getManager().getDiscountManager().isDiscounted(item)) {
             ShopItem discountedItem = item.getManager().getDiscountManager().selectDiscountedItem(item.getManager());
