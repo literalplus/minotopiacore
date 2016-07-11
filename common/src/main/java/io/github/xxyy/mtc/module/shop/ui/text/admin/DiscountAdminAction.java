@@ -7,6 +7,11 @@
 
 package io.github.xxyy.mtc.module.shop.ui.text.admin;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.util.CommandHelper;
@@ -15,10 +20,6 @@ import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
 import io.github.xxyy.mtc.module.shop.ui.text.AbstractShopAction;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * Admin action that displays or sets the discounted price for shop items.
@@ -75,13 +76,13 @@ class DiscountAdminAction extends AbstractShopAction {
     }
 
     private boolean handleSet(ShopItem item, CommandSender sender, double discountedPrice) {
-        if (discountedPrice < item.getSellWorth()) {
+        if (discountedPrice < item.getSellWorth() && discountedPrice != ShopItem.NOT_DISCOUNTABLE) {
             return !CommandHelper.msg(String.format(
                     "§cDer reduzierte Preis §e%s §ckann nicht geringer als der Verkaufswert §e%s §csein!",
                     discountedPrice, item.getSellWorth()
             ), sender);
         }
-        if (discountedPrice >= item.getBuyCost()) {
+        if (discountedPrice >= item.getBuyCost() && discountedPrice != ShopItem.NOT_DISCOUNTABLE) {
             return !CommandHelper.msg(String.format(
                     "§cDer reduzierte Preis §e%s §cmuss geringer als der Kaufpreis §e%s §csein!",
                     discountedPrice, item.getBuyCost()
