@@ -34,9 +34,13 @@ class RemoveAdminAction extends AbstractShopAction {
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
         }
-        module.getItemConfig().removeItem(item);
+        boolean removed = module.getItemConfig().removeItem(item);
         module.getItemConfig().asyncSave(module.getPlugin());
-        plr.sendMessage("§aDas Item §6" + item.getDisplayName() + "§a wurde aus dem Shop entfernt.");
+        if (removed) {
+            plr.sendMessage("§aDas Item §6" + item.getDisplayName() + "§a wurde aus dem Shop entfernt.");
+        } else {
+            plr.sendMessage("§cFehler beim Entfernen, wieso auch immer.");
+        }
         if (item.getManager().getDiscountManager().isDiscounted(item)) {
             ShopItem discountedItem = item.getManager().getDiscountManager().selectDiscountedItem(item.getManager());
             if (discountedItem != null) {

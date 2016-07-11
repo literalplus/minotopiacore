@@ -181,6 +181,8 @@ public class ShopItemConfiguration extends ManagedConfiguration implements ShopI
                 .filter(e -> e.getValue().equals(item))
                 .findAny().orElse(null);
 
+        set(item.getSerializationName(), null); //nothing ever overrides that otherwise
+
         if (key == null) {
             return false;
         }
