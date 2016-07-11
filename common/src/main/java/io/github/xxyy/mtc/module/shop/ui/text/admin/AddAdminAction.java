@@ -77,12 +77,12 @@ class AddAdminAction extends AbstractShopAction {
 
         plr.sendMessage("§aDas Item " + createdItem.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
 
-        String aliasCmd = "/sa alias add " + createdItem.getMaterial() + ':' + createdItem.getDataValue() + " <alias>";
+        String infoCmd = "/sa info " + createdItem.getMaterial() + ':' + createdItem.getDataValue();
 
         ComponentSender.sendTo(
-                new XyComponentBuilder("Setze als nächstes einen Anzeigenamen: ", ChatColor.GOLD)
+                new XyComponentBuilder("Nächste Schritte mit deinem Item: ", ChatColor.GOLD)
                         .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
-                        .suggest(aliasCmd), plr
+                        .suggest(infoCmd), plr
         );
     }
 
