@@ -289,14 +289,25 @@ public class ShopTextOutput {
                     new XyComponentBuilder("Unbekanntes Item", ChatColor.RED).create());
         }
 
-        return new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new XyComponentBuilder("Item: ", ChatColor.GOLD)
-                        .append(item.getDisplayName(), ChatColor.YELLOW)
-                        .append("\nKaufen: ", ChatColor.GOLD)
-                        .append(item.canBeBought() ? item.getBuyCost() : "nein", ChatColor.YELLOW)
-                        .append("\nVerkaufen: ", ChatColor.GOLD)
-                        .append(item.canBeSold() ? item.getSellWorth() : "nein", ChatColor.YELLOW)
-                        .create()
-        );
+        XyComponentBuilder builder = new XyComponentBuilder("Item: ", ChatColor.GOLD)
+                .append(item.getDisplayName(), ChatColor.YELLOW)
+                .append("\nKaufen: ", ChatColor.GOLD);
+
+        if (module.getItemManager().getDiscountManager().isDiscounted(item)) {
+            builder.append(item.getBuyCost(), ChatColor.GRAY, ChatColor.STRIKETHROUGH)
+                    .append(" ", ComponentBuilder.FormatRetention.NONE)
+                    .append(module.getItemManager().getBuyCost(item), ChatColor.GOLD);
+        } else {
+            builder.append(item.canBeBought() ?
+                    module.getItemManager().getBuyCost(item) :
+                    "nein", ChatColor.YELLOW);
+        }
+
+        builder.append("\nVerkaufen: ", ChatColor.GOLD)
+                .append(item.canBeSold() ?
+                        module.getItemManager().getSellWorth(item) :
+                        "nein", ChatColor.YELLOW);
+
+        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create());
     }
 }
