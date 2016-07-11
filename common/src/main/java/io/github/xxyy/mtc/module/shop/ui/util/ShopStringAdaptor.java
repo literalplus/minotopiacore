@@ -44,6 +44,18 @@ public class ShopStringAdaptor {
     }
 
     /**
+     * Just formats a currency value for display according to the internal currency format. Does not
+     * append currency name.
+     *
+     * @param amount the amount to format
+     * @return the formatted value
+     * @see #getCurrencyString(double)
+     */
+    public static String format(double amount) {
+        return CURRENCY_FORMAT.format(amount);
+    }
+
+    /**
      * Gets the human-readable display string of given item with given amount.
      *
      * @param item   the item to format

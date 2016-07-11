@@ -142,12 +142,15 @@ public class ShopTextOutput {
 
         if (item.canBeBought()) {
             XyComponentBuilder builder = module.getPrefixBuilder()
-                    .append("Kaufpreis: ", ChatColor.GOLD)
-                    .append(ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)), ChatColor.YELLOW);
+                    .append("Kaufpreis: ", ChatColor.GOLD);
+            double actualCost = item.getManager().getBuyCost(item);
             if (item.getManager().getDiscountManager().isDiscounted(item)) {
-                builder.append(" statt ", ChatColor.GOLD)
+                builder.append(ShopStringAdaptor.format(actualCost), ChatColor.YELLOW)
+                        .append(" statt ", ChatColor.GOLD)
                         .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()),
                                 ChatColor.YELLOW, ChatColor.STRIKETHROUGH);
+            } else {
+                builder.append(ShopStringAdaptor.getCurrencyString(actualCost), ChatColor.YELLOW);
             }
             builder.append(" ", ComponentBuilder.FormatRetention.NONE)
                     .append("[kaufen...]", ChatColor.GREEN, ChatColor.UNDERLINE)
@@ -194,7 +197,7 @@ public class ShopTextOutput {
                             .append((amount == 1 ? " kostet " : " kosten "), ChatColor.GOLD)
                             .append(ShopStringAdaptor.getCurrencyString(finalPrice), ChatColor.YELLOW)
                             .append(". ", ChatColor.GOLD)
-                            .append("[" + displayName + " kaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                            .append("[kaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
                             .hintedCommand("/shop kaufen " + item.getSerializationName() + " " + amount)
                             .create(), receiver
             );
@@ -208,7 +211,7 @@ public class ShopTextOutput {
                             .append((amount == 1 ? " ist " : " sind "), ChatColor.GOLD)
                             .append(ShopStringAdaptor.getCurrencyString(finalPrice), ChatColor.YELLOW)
                             .append(" wert. ", ChatColor.GOLD)
-                            .append("[" + displayName + " verkaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                            .append("[verkaufen]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
                             .hintedCommand("/shop verkaufen " + item.getSerializationName() + " " + amount)
                             .create(), receiver
             );
