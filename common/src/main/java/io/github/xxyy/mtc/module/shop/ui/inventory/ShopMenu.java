@@ -44,10 +44,6 @@ public abstract class ShopMenu implements InventoryHolder {
     }
 
     public void open() {
-        if (player.getOpenInventory() != null) {
-            player.closeInventory();
-        }
-
         player.openInventory(getInventory());
     }
 
@@ -55,10 +51,18 @@ public abstract class ShopMenu implements InventoryHolder {
     public Inventory getInventory() {
         //lazy init to circumvent title possibly being unknown at creation time
         if (inventory == null) {
-            inventory = module.getPlugin().getServer()
-                    .createInventory(this, INVENTORY_SIZE, getInventoryTitle());
+            createNewInventory();
         }
         return inventory;
+    }
+
+    /**
+     * Replaces this menu's inventory with a new one with the current title. Does not send this
+     * change to the player.
+     */
+    protected void createNewInventory() {
+        inventory = module.getPlugin().getServer()
+                .createInventory(this, INVENTORY_SIZE, getInventoryTitle());
     }
 
     /**
