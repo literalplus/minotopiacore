@@ -86,9 +86,11 @@ public class SellButton implements MenuButton<ShopSellMenu> {
         Preconditions.checkArgument(menu instanceof ShopSellMenu,
                 "menu must be ShopSellMenu, got %s", menu.getClass());
         ItemStack[] contents = menu.getInventory().getContents();
+        //we don't want to sell the top menu, lel
+        ItemStack[] canvasContents = Arrays.copyOfRange(contents, ShopMenu.ROW_SIZE, contents.length);
 
         return priceCalculator.sumPrices(
-                Arrays.asList(contents),
+                Arrays.asList(canvasContents),
                 TransactionType.SELL
         );
     }
