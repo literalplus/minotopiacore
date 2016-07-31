@@ -43,7 +43,7 @@ public class ShopListMenu extends ShopMenu {
     private ShopItemComparator itemComparator;
     private boolean onlyShowBuyableItems = false;
 
-    private int currentItemStart;
+    private int currentItemStart = 0;
 
     ShopListMenu(Player player, ShopModule module) {
         super(player, module);
@@ -62,22 +62,17 @@ public class ShopListMenu extends ShopMenu {
 
     /**
      * Renders this menu in the associated inventory.
-     *
-     * @param itemStart the index of the first shop item to render (for paging)
      */
-    public void render(int itemStart) {
-        Preconditions.checkArgument(itemStart < items.size(),
-                "itemStart %s must be less than items size %s!", itemStart, items.size());
-        this.currentItemStart = itemStart;
+    public void render() {
         renderTopMenu();
 
-        int numberOfItemsToDisplay = items.size() - itemStart;
+        int numberOfItemsToDisplay = items.size() - currentItemStart;
         int numberOfSlotsToFill = Math.min(numberOfItemsToDisplay, CANVAS_SIZE);
         VaultHook vaultHook = module.getPlugin().getVaultHook();
         double currentBalance = vaultHook == null ? 0 : vaultHook.getBalance(getPlayer());
 
         for (int canvasId = 0; canvasId < numberOfSlotsToFill; canvasId++) {
-            ShopItem item = items.get(itemStart + canvasId);
+            ShopItem item = items.get(currentItemStart + canvasId);
             if (item != null) {
                 ItemStack stack;
                 if (vaultHook != null && currentBalance < item.getBuyCost()) {
@@ -99,6 +94,26 @@ public class ShopListMenu extends ShopMenu {
                 setItem(canvasId, null, null);
             }
         }
+    }
+
+    /**
+     * @param itemStart the index of the first item to be displayed when {@link #render()} is called
+     */
+    public void setItemStart(int itemStart) {
+        Preconditions.checkArgument(itemStart < items.size(),
+                "itemStart %s must be less than items size %s!", itemStart, items.size());
+        this.currentItemStart = itemStart;
+    }
+
+    /**
+     * Renders the page currently defined by {@link #setItemStart(int)} by calling
+     * {@link #render()}, but reopens the inventory before, so that the page count in the title
+     * is updated.
+     */
+    public void renderCurrentPage() {
+        createNewInventory(); //updates the title
+        open(); //overrides current inventory
+        render();
     }
 
     private void setItem(int canvasId, ShopItem item, ItemStack stack) {
@@ -170,7 +185,7 @@ public class ShopListMenu extends ShopMenu {
         ShopListMenu shopMenu = new ShopListMenu(plr, module);
         shopMenu.setItems(module.getItemManager().getItems());
         shopMenu.open();
-        shopMenu.render(0);
+        shopMenu.render();
         return shopMenu;
     }
 
@@ -193,8 +208,20 @@ public class ShopListMenu extends ShopMenu {
 
     @Override
     protected String getInventoryTitle() {
-        return "§9§lMinoTopia Shop";
+        return String.format("§9§lMinoTopia Shop §9(%d/%d)", findCurrentPageNum(), findPageCount());
     }
+
+    private int findPageCount() {
+        return ceilDiv(items.size(), CANVAS_SIZE);
+    }
+
+    private int findCurrentPageNum() {
+        return ceilDiv(currentItemStart + 1, CANVAS_SIZE); //+1 because, usually, itemStart is exactly a multiple of CANVAS_SIZE, leading to the page count being too low
+    }
+
+    private int ceilDiv(int x, int y) { //this should be in a utility class
+        return -Math.floorDiv(-x, y); // http://stackoverflow.com/a/27643634/1117552
+    } //why is there no Math.ceilDiv? http://stackoverflow.com/q/38683837/1117552
 
     /**
      * @return the current comparator used by this menu, never null (lazy init)
@@ -214,6 +241,7 @@ public class ShopListMenu extends ShopMenu {
     public void setItemComparator(ShopItemComparator itemComparator) {
         this.itemComparator = itemComparator;
         sortItems();
-        render(0);
+        setItemStart(0);
+        render();
     }
 }

@@ -46,7 +46,8 @@ public class PaginationButton implements MenuButton<ShopListMenu> {
 
     @Override
     public void handleMenuClick(InventoryClickEvent evt, ShopListMenu menu) {
-        menu.render(action.getTargetItemStart(menu));
+        menu.setItemStart(action.getTargetItemStart(menu));
+        menu.renderCurrentPage();
     }
 
     private enum PaginationAction {
