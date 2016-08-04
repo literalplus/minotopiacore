@@ -7,6 +7,13 @@
 
 package io.github.xxyy.mtc.module.truefalse;
 
+import net.md_5.bungee.api.ChatColor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.chat.ComponentSender;
 import io.github.xxyy.common.chat.XyComponentBuilder;
 import io.github.xxyy.common.misc.XyLocation;
@@ -14,12 +21,6 @@ import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.common.util.inventory.ItemStackFactory;
 import io.github.xxyy.mtc.helper.MTCHelper;
-import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
@@ -169,6 +170,7 @@ class CommandTrueFalse implements CommandExecutor {
                                             .append("[-]", ChatColor.DARK_RED, ChatColor.UNDERLINE)
                                             .hintedCommand("/wf remq " + i), sender
                             );
+                            i++;
                         }
                         return true;
                     case "next":
