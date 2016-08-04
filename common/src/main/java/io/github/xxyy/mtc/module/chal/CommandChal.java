@@ -7,17 +7,18 @@
 
 package io.github.xxyy.mtc.module.chal;
 
-import io.github.xxyy.common.chat.ComponentSender;
-import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.UUIDHelper;
-import io.github.xxyy.mtc.hook.XLoginHook;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.UUIDHelper;
+import io.github.xxyy.mtc.hook.XLoginHook;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,13 +54,13 @@ class CommandChal implements CommandExecutor {
                     return true;
                 case "delete":
                 case "remove":
-                    sender.sendMessage("§cZerstöre einfach die jeweilige Kiste! :)");
+                    sender.sendMessage("§aZerstöre einfach die jeweilige Kiste! :)");
                     return true;
                 case "chest":
                     if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                         return true;
                     } else if (args.length < 2) {
-                        sender.sendMessage("§c/chal chest [Monat-Tag]");
+                        sender.sendMessage("§a/chal chest [Monat-Tag]");
                         return true;
                     }
 
@@ -76,7 +77,7 @@ class CommandChal implements CommandExecutor {
                     return true;
                 case "reset":
                     if (args.length < 2) {
-                        sender.sendMessage("§c/chal reset [Name oder UUID]");
+                        sender.sendMessage("§a/chal reset [Name oder UUID]");
                         return true;
                     }
 
@@ -88,10 +89,10 @@ class CommandChal implements CommandExecutor {
                         if (profiles.size() == 1) {
                             uuid = profiles.get(0).getUniqueId();
                         } else if (profiles.isEmpty()) {
-                            sender.sendMessage("§cSo einen Spieler kennen wir nicht!");
+                            sender.sendMessage("§aSo einen Spieler kennen wir nicht!");
                             return true;
                         } else {
-                            sender.sendMessage("§cMehere Spieler gefunden:");
+                            sender.sendMessage("§aMehrere Spieler gefunden:");
                             profiles.forEach(profile -> ComponentSender.sendTo(
                                     new XyComponentBuilder(profile.getName(), ChatColor.GOLD)
                                             .append(" => ", ChatColor.YELLOW)

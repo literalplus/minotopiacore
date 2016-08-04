@@ -7,11 +7,12 @@
 
 package io.github.xxyy.mtc.listener;
 
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import io.github.xxyy.mtc.MTC;
 
 
 public final class MoveNetherRoofListener implements Listener {
@@ -30,10 +31,10 @@ public final class MoveNetherRoofListener implements Listener {
             if (e.getPlayer().hasPermission("mtc.ignore")) {
                 return;
             }
-            e.getPlayer().sendMessage("§c[MTC] §eDu darfst nicht über das Netherdach :)");
-            e.getPlayer().sendMessage("§c[MTC] §eViel Spaß beim Spawn.");
-            e.getPlayer().sendMessage("§c[MTC] §eDeine Koordinaten: §c" + e.getPlayer().getLocation().toString());
-            e.getPlayer().sendMessage("§c[MTC] §eWenn du mit dieser automatisierten Entscheidung unzufrieden bist, wende dich " +
+            e.getPlayer().sendMessage(MTC.chatPrefix + "§eDu darfst nicht über das Netherdach :)");
+            e.getPlayer().sendMessage(MTC.chatPrefix + "§eViel Spaß beim Spawn.");
+            e.getPlayer().sendMessage(MTC.chatPrefix + "§eDeine Koordinaten: §a" + e.getPlayer().getLocation().toString());
+            e.getPlayer().sendMessage(MTC.chatPrefix + "§eWenn du mit dieser automatisierten Entscheidung unzufrieden bist, wende dich " +
                     "bitte mit Screenshot dieser Nachricht an das Team! (Forum!)");
 
             if (plugin.getXLoginHook().getSpawnLocation() == null) {

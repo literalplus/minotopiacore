@@ -7,15 +7,6 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.ConfigHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.clan.ClanInfo;
-import io.github.xxyy.mtc.clan.ClanMemberInfo;
-import io.github.xxyy.mtc.clan.ClanPermission;
-import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.ChatColor;
@@ -25,6 +16,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.ConfigHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanInfo;
+import io.github.xxyy.mtc.clan.ClanMemberInfo;
+import io.github.xxyy.mtc.clan.ClanPermission;
+import io.github.xxyy.mtc.logging.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ public final class ChatListener implements Listener {
         if (Pattern.compile("\\b([lL]+[aA4]+[gG]+)\\b").matcher(finalMsg).find()) {
             if (!plr.hasPermission("mtc.ignore")) {
                 LOGGER.warn("=>LAG MESSAGE=>{}({}): {}", plrName, plr.getAddress(), ChatColor.stripColor(finalMsg));
-                plr.sendMessage(MTC.chatPrefix + "Bitte keine Lagnachrichten :) §b/rules");
+                plr.sendMessage(MTC.chatPrefix + "Bitte keine Lagnachrichten :) §a/rules");
                 e.setCancelled(true);
                 return;
             }
@@ -92,9 +93,9 @@ public final class ChatListener implements Listener {
                 plr.sendMessage(MTC.chatPrefix + "Du hast den Werbefilter ignoriert. Na toll!");
             } else {
                 e.setCancelled(true);
-                plr.sendMessage(MTC.chatPrefix + "§cWerbung ist ein Armutszeugnis.");
-                CommandHelper.broadcast(MTC.chatPrefix + "Der Spieler §b" + plrName + "§6 hat den Werbefilter ausgelöst:", "mtc.adinfo");
-                CommandHelper.broadcast(MTC.chatPrefix + "§b   " + finalMsg, "mtc.adinfo");
+                plr.sendMessage(MTC.chatPrefix + "§aWerbung ist ein Armutszeugnis.");
+                CommandHelper.broadcast(MTC.chatPrefix + "Der Spieler §a" + plrName + "§6 hat den Werbefilter ausgelöst:", "mtc.adinfo");
+                CommandHelper.broadcast(MTC.chatPrefix + "§a   " + finalMsg, "mtc.adinfo");
                 return;
             }
         }
@@ -113,7 +114,7 @@ public final class ChatListener implements Listener {
                 ClanInfo ci = ClanHelper.getClanInfoByPlayerName(plrName);
                 ClanMemberInfo cmi = ClanHelper.getMemberInfoByPlayerName(plrName);
                 if (ci.id < 0 || cmi.clanId < 0) {
-                    clanTag = "§cERR" + "§7*";
+                    clanTag = "§aERR" + "§7*";
                 } else {
                     if (isClanChat) {
                         e.setCancelled(true);
@@ -128,7 +129,7 @@ public final class ChatListener implements Listener {
             } else {
                 if (isClanChat) {
                     e.setCancelled(true);
-                    plr.sendMessage(MTC.chatPrefix + "Du bist in keinem Clan! §b/clan");
+                    plr.sendMessage(MTC.chatPrefix + "Du bist in keinem Clan! §a/clan");
                     return;
                 }
             }
@@ -148,7 +149,7 @@ public final class ChatListener implements Listener {
 
         //mute!!111
         if (MuteHelper.isPlayerMuted(plrName) && !plr.hasPermission("mtc.ignore")) {
-            plr.sendMessage(MTC.chatPrefix + "Du bist gemuted. Mehr Info: §b/mute info " + plrName);
+            plr.sendMessage(MTC.chatPrefix + "Du bist gemuted. Mehr Info: §a/mute info " + plrName);
             e.setCancelled(true);
             return;
         }

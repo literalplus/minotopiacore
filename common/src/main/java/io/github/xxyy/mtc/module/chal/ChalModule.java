@@ -7,13 +7,6 @@
 
 package io.github.xxyy.mtc.module.chal;
 
-import io.github.xxyy.lib.guava17.collect.ListMultimap;
-import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
-import io.github.xxyy.mtc.api.MTCPlugin;
-import io.github.xxyy.mtc.api.command.CommandBehaviours;
-import io.github.xxyy.mtc.helper.MTCHelper;
-import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
-import io.github.xxyy.mtc.module.ConfigurableMTCModule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +20,21 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.*;
+import io.github.xxyy.lib.guava17.collect.ListMultimap;
+import io.github.xxyy.lib.guava17.collect.MultimapBuilder;
+import io.github.xxyy.mtc.api.MTCPlugin;
+import io.github.xxyy.mtc.api.command.CommandBehaviours;
+import io.github.xxyy.mtc.helper.MTCHelper;
+import io.github.xxyy.mtc.misc.ClearCacheBehaviour;
+import io.github.xxyy.mtc.module.ConfigurableMTCModule;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -214,7 +221,7 @@ public class ChalModule extends ConfigurableMTCModule {
             if (block.hasMetadata(METADATA_KEY)) {
                 ChestLocation location = (ChestLocation) block.getMetadata(METADATA_KEY).get(0).value();
                 removeChest(location);
-                evt.getPlayer().sendMessage("§cChal-Kiste entfernt.");
+                evt.getPlayer().sendMessage("§aChal-Kiste entfernt.");
             }
         }
     }

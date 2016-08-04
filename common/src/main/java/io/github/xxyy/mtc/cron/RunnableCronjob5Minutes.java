@@ -7,6 +7,11 @@
 
 package io.github.xxyy.mtc.cron;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
 import io.github.xxyy.mtc.MTC;
 import io.github.xxyy.mtc.chat.MTCChatHelper;
 import io.github.xxyy.mtc.chat.PrivateChat;
@@ -14,10 +19,6 @@ import io.github.xxyy.mtc.chat.cmdspy.CommandSpyFilters;
 import io.github.xxyy.mtc.clan.ClanHelper;
 import io.github.xxyy.mtc.logging.LogManager;
 import io.github.xxyy.mtc.misc.CacheHelper;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class RunnableCronjob5Minutes implements Runnable {
                         if (!chat.recipients.isEmpty()) {
                             chat.recipients.stream()
                                     .filter(OfflinePlayer::isOnline)
-                                    .forEach(plr -> plr.sendMessage(MTC.chatPrefix + "Der Chat §b#" + chat.chatId + "§6 wurde gelöscht."));
+                                    .forEach(plr -> plr.sendMessage(MTC.chatPrefix + "Der Chat §a#" + chat.chatId + "§6 wurde gelöscht."));
                         }
                         continue;
                     }

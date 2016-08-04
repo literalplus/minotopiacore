@@ -7,12 +7,17 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.logging.LogManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 
 public class PrivateChat { //REFACTOR
@@ -47,8 +52,8 @@ public class PrivateChat { //REFACTOR
                 PrivateChat.recChats.put(plr, list);
             }
             if (!plr.getName().equalsIgnoreCase(leader.getName())) {
-                plr.sendMessage(MTC.chatPrefix + "§b" + leader.getName() + "§6 hat dich zu einem privaten Chat eingeladen.");
-                plr.sendMessage(MTC.chatPrefix + "Annehmen: §b/chat switch " + this.chatId + " §a§k| §6Deine Chats: §b/chat list");
+                plr.sendMessage(MTC.chatPrefix + "§a" + leader.getName() + "§6 hat dich zu einem privaten Chat eingeladen.");
+                plr.sendMessage(MTC.chatPrefix + "Annehmen: §a/chat switch " + this.chatId + " §a§k| §6Deine Chats: §a/chat list");
             }
         }
         PrivateChat.updateActiveChat(leader, this);
@@ -86,7 +91,7 @@ public class PrivateChat { //REFACTOR
             PrivateChat.activeChats.remove(plr);
         }
         PrivateChat.recChats.put(plr, lst);
-        pc.sendMessage(MTC.chatPrefix + "§b" + plr.getName() + " §6hat den Chat verlassen.");
+        pc.sendMessage(MTC.chatPrefix + "§a" + plr.getName() + " §6hat den Chat verlassen.");
         if (pc.leader.getName().equalsIgnoreCase(plr.getName())) {
             if (pc.activeRecipients.isEmpty()) {
                 MTCChatHelper.directChats.remove(pc.chatId);
@@ -94,7 +99,7 @@ public class PrivateChat { //REFACTOR
             }
             int newLeaderId = (new Random()).nextInt(pc.activeRecipients.size());
             pc.leader = pc.activeRecipients.get(newLeaderId);
-            pc.sendMessage(MTC.chatPrefix + "§b" + pc.leader.getName() + "§6 ist der neue Leiter dieses Chats!");
+            pc.sendMessage(MTC.chatPrefix + "§a" + pc.leader.getName() + "§6 ist der neue Leiter dieses Chats!");
         }
     }
 
@@ -119,7 +124,7 @@ public class PrivateChat { //REFACTOR
             pc.activeRecipients.add(plr);
         }
         previousChat.activeRecipients.remove(plr);
-        previousChat.sendMessage(MTC.chatPrefix + "§b" + plr.getName() + " §6hat den Chat gewechselt.");
+        previousChat.sendMessage(MTC.chatPrefix + "§a" + plr.getName() + " §6hat den Chat gewechselt.");
         return null;
     }
 

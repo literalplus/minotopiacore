@@ -13,7 +13,7 @@ lang:
   XU-name: 'MinoTopiaCore'
   XU-desc: 'MinoTopiaCore - Verschiedene Utility-Befehle und /war.'
   XU-ccglo: '&8[&6&lMTC&8] &6Der globale Chat wurde geleert!'
-  XU-ccex: '&8[&6&lMTC&8] &6&6%1$s &bhat den globalen Chat geleert!'
+  XU-ccex: '&8[&6&lMTC&8] &a%1$s &6hat den globalen Chat geleert!'
   XU-epcancelled: 'Du darfst keine Enderperlen benutzen!'
   XU-epbedrock: 'Du kannst keine Enderperlen auf Bedrock werfen!'
   XU-welcome: '&1->&9&lWillkommen auf &oMinoTopia&9&l, %1$s!&1<--'
@@ -31,23 +31,23 @@ lang:
   XC-cmierror: '&cFehler beim Erstellen deiner Benutzerdatei: %1$d'
   XC-created: |
    Clan erstellt!
-   &8[&6&lMTC&8] &6Spieler einladen: %1$s/clan invite [Name]
-  XC-invalidchars: '&cIm %1$s d&uuml;rfen keine Sonderzeichen enthalten sein!'
+   &8[&6&lMTC&8] &6Spieler einladen: &a%1$s/clan invite [Name]
+  XC-invalidchars: '&cIm &a%1$s d&uuml;rfen keine Sonderzeichen enthalten sein!'
   XC-removewarning: '&cACHTUNG! Wenn du deinen Clan l&ouml;scht, wird er f&uuml;r &4IMMER&c &o(eine lange Zeit!)&c verloren sein und alle Mitglieder werden entfernt! Um zu best&auml;tigen, schreibe &4&l/clan remove sure&c.'
-  XC-removedbroadcast: '&c%1$s &4hat deinen Clan gel&ouml;scht! Du bist jetzt obdachlos'
+  XC-removedbroadcast: '&a%1$s &4hat deinen Clan gel&ouml;scht! Du bist jetzt obdachlos'
   XC-removed: '&4Clan gel&ouml;scht. Das &uuml;brige Geld aus der Clankasse wurde dir gutgeschrieben.'
-  XC-cifetcherr: '&cFehler beim Laden des Clans: %1$d' 
+  XC-cifetcherr: '&aFehler beim Laden des Clans: %1$d'
   XC-notleader: '&cDu bist nicht Leiter dieses Clans!'
   XC-leaderleave: '&cAls Leiter dieses Clans musst du zuerst jemanden anderen  zum Leiter erkl&auml;ren, bevor du ihn verlassen kannst.'
   XC-leave: 'Du hast deinen Clan verlassen.'
   XC-cmifetcherr: '&cFehler beim Laden der Spielerdaten: %1$d' 
-  XC-leavebroadcast: '&b%1$s&6 hat deinen Clan verlassen.'
+  XC-leavebroadcast: '&a%1$s&6 hat deinen Clan verlassen.'
   XC-inviteusage: '&cVerwendung: /clan invite [Name]'
   XC-invitenotonline: |
    Dieser Spieler ist nicht online.
-   &8[&6&lMTC&8] &6Er wird benachrichtigt, sobald er online kommt.
+   &8[&6&lMTC&8] &6Sie/Er wird benachrichtigt, sobald sie/er online kommt.
   XC-invitation: |
-   Du wurdest in den Clan %2$s%1$s%3$s eingeladen!
+   Du wurdest in den Clan &a%2$s%1$s%3$s&6 eingeladen!
    &8[&6&lMTC&8] &6Annehmen? %2$s/clan join %4$d &7&k| %3$sAblehnen? %2$s/clan ignore %4$d
   XC-noinvs: 'Keine Einladungen vorhanden :('
   XC-inviteself: 'Du kannst dich nicht selbst einladen :D'
@@ -84,8 +84,8 @@ lang:
   XC-revokedbroadcast: '%2$s%1$s%3$s hat %2$s%4$s%3$s%5$ss Claneinladung entfernt.'
   XC-setrankusage: '&cVerwendung: /clan setrank {[Name] [Rang]|help}'
   XC-setrankhelp: |
-   &9--- &6/clan setrank &9---
-   &6/clan setrank [Name] [Rang]
+   &6--- &a/clan setrank &6---
+   &a/clan setrank [Name] [Rang]
    &6R&auml;nge: &7Mitglied(0) &8| &7Moderator(1)
    &7       Admin(2) &8| &7Leiter(3)
    &8Beim Setzen des Leiters wird der alte Leiter zum Admin degradiert.
@@ -112,39 +112,39 @@ lang:
   XC-clanhit: 'Du kannst Mitglieder deines Clans nicht schlagen!'
   XC-setleader: 'Neuer Leiter gesetzt. Du bist nun Administrator.'
   XC-infoformat: |
-    &9=================== &6%1$s &9===================
-    &6Chatprefix: &e%2$s
-    &6Leiter:  &e%3$s &6Mitglieder: &e%8$s 
-    &6Clankasse: &e%4$s &6Clanlevel: &e%9$s
-    &6Kills: &e%5$s &6Deaths: &e%6$s
-    &6K/D: &e%7$s
+    &6=================== &a%1$s &6===================
+    &6Chatprefix: &a%2$s
+    &6Leiter:  &a%3$s &6Mitglieder: &a%8$s
+    &6Clankasse: &a%4$s &6Clanlevel: &a%9$s
+    &6Kills: &a%5$s &6Deaths: &a%6$s
+    &6K/D: &a%7$s
   XC-404: '404 Clan nicht gefunden.'
   XC-infohelp: |
-    &6/clan info [ID|Prefix|Name] &eSucht einen Clan.
-    &6/clan info player [Spielername] &eSucht den Clan eines Spielers.
-    &6/clan info &eZeigt deinen eigenen Clan.
+    &a/clan info [ID|Prefix|Name] &6Sucht einen Clan.
+    &a/clan info player [Spielername] &6Sucht den Clan eines Spielers.
+    &a/clan info &6Zeigt deinen eigenen Clan.
   XU-listformat: '&9--->&a%1$s&7/&d%2$s&9<---'
   XC-plrnotinclan: 'Dieser Spieler ist in keinem Clan.'
   XC-memberheadernameformat: ' &6%1$s&9 '
   XC-memberformat: |
     &9%1$s
-    &6Leiter: &e%2$s
+    &6Leiter: &a%2$s
     %3$s
   XC-membersempty: '&7{leer}'
   XC-memberson: '&a%1$s'
   XC-membersoff: '&c%1$s'
-  XU-giveallbroadcast: '&8[&6&lMTC&8] &6Alle Spieler haben das Item &3%1$s&6 bekommen!'
-  XU-givealladmin: '&8[&6&lMTC&8] &6Der edle Spender der Items: &3%1$s'
+  XU-giveallbroadcast: '&8[&6&lMTC&8] &6Alle Spieler haben das Item &a%1$s&6 bekommen!'
+  XU-givealladmin: '&8[&6&lMTC&8] &6Der edle Spender der Items: &a%1$s'
   XU-snowball: '&aTreffer: %1$s&a%2$s (%3$s%4$s)'
-  XU-snowballchance: '&c%1$s hat deinen Schneeball abgewehrt!'
+  XU-snowballchance: '&a%1$s hat deinen Schneeball abgewehrt!'
   XU-snowballtarget: '%1$s wirft einen magischen Schneeball nach dir!'
   XC-ownmemberformat: |
     &9%1$s
     %2$s
-  XC-membersleader: '&4&lLeiter: &c'
-  XC-membersadmins: '&cAdmins: &c'
-  XC-membersmods: '&9Moderatoren: &c'
-  XC-membersmembers: '&7Mitglieder: &c'
+  XC-membersleader: '&4&lLeiter: &a'
+  XC-membersadmins: '&aAdmins: &a'
+  XC-membersmods: '&9Moderatoren: &a'
+  XC-membersmembers: '&7Mitglieder: &a'
   XU-ishelp: '/invsee <Spieler>'
   XU-hit: '%1$s&7%2$s &a(%3$s&4%4$s&a)'
   XU-snowballwait: '&cDu kannst nur alle 10 Minuten einen magischen Schneeball werfen!'
@@ -156,21 +156,21 @@ lang:
     &9/%1$s revoke <Spieler> &7&oZieht ein Friedensangebot zur&uuml;ck.
     &9/%1$s <Spieler> &7&oFragt Frieden mit <Spieler> an, best&auml;tigt <Spieler>'s Friedensanfrage oder l&ouml;st den Frieden mit <Spieler> auf.
   XU-nopeace: 'Du hast mit Niemandem Frieden geschlossen.'
-  XU-plrpeace: 'Du hast mit &b%1$s&6 Frieden geschlossen.'
-  XU-plrnopeace: 'Du hast &c&onicht&6 mit &b%1$s &6Frieden geschlossen.'
-  XU-preqpending: '&b%1$s&6 hat deine Friedensanfrage noch nicht angenommen!'
-  XU-preqpendingown: 'Du hast die Friedensanfrage von &b%1$s&6 noch nicht angenommen!'
-  XU-prevoked: 'Du hast den Frieden mit &b%1$s&6 aufgel&ouml;st.'
+  XU-plrpeace: 'Du hast mit &a%1$s&6 Frieden geschlossen.'
+  XU-plrnopeace: 'Du hast &c&onicht&6 mit &a%1$s &6Frieden geschlossen.'
+  XU-preqpending: '&a%1$s&6 hat deine Friedensanfrage noch nicht angenommen!'
+  XU-preqpendingown: 'Du hast die Friedensanfrage von &a%1$s&6 noch nicht angenommen!'
+  XU-prevoked: 'Du hast den Frieden mit &a%1$s&6 aufgel&ouml;st.'
   XU-prevokedother: '&1%1$s&9 hat den Frieden mit dir aufgel&ouml;st!'
   XU-palreadysent: |
-    Du hast &b%1$s&6 bereits eine Friedensanfrage gesendet.
-    &8[&6&lMTC&8] &6Ziehe dein Angebot zur&uuml;ck mit &b/frieden revoke %1$s&6.
-  XU-paccepted: 'Du hast die Friedensanfrage von &b%1$s&6 angenommen.'
+    Du hast &a%1$s&6 bereits eine Friedensanfrage gesendet.
+    &8[&6&lMTC&8] &6Ziehe dein Angebot zur&uuml;ck mit &a/frieden revoke %1$s&6.
+  XU-paccepted: 'Du hast die Friedensanfrage von &a%1$s&6 angenommen.'
   XU-preqaccepted: '&1%1$s &9hat deine Friedensanfrage angenommen!'
   XU-preqreceived: '&1%1$s &9hat dir eine Friedensanfrage geschickt!'
-  XU-nopreqsent: 'Du hast &b%1$s&6 keine Friedensanfrage geschickt!'
+  XU-nopreqsent: 'Du hast &a%1$s&6 keine Friedensanfrage geschickt!'
   XU-preqrevokedbyother: '&1%1$s&9 hat sein/ihr Friedensangebot zur&uuml;ckgezogen.'
-  XU-preqrevoked: 'Du hast dein Friedensangebot an &b%1$s&6 zur&uuml;ckgezogen.'
+  XU-preqrevoked: 'Du hast dein Friedensangebot an &a%1$s&6 zur&uuml;ckgezogen.'
   XU-ppageempty: 'Auf dieser Seite ist nichts.'
   XU-pmorepages: '  &9Um die n&auml;chste Seite zu sehen, verwende &1/%1$s list %2$s&9.'
   XU-peacehit2: '&9Du hast Frieden mit &1%s &a(%s&4%s&a)&9!'
@@ -178,7 +178,7 @@ lang:
   XU-fightcmd: |
     &cDu kannst im Kampf nur folgende Befehle benutzen:
     &8[&6&lMTC&8] &6&7%s
-  XU-fightlogout: '&e%s&c hat sich im Kampf ausgeloggt!'
+  XU-fightlogout: '&a%s&6 hat sich im Kampf ausgeloggt!'
   XU-fighttp: '&cDu kannst dich im Kampf nicht teleportieren.'
   XU-fightstart: 'Du bist jetzt in einem Kampf mit %s!'
   XU-infdisphelp: |
@@ -195,8 +195,8 @@ lang:
   XU-rdmplr404: 'Dieser Spieler ist nciht online.'
   XU-nordmplrs: 'F&uuml;r diese Kriterien ist kein Spieler online.'
   XU-randomplr: '&9Es wird ein zuf&auml;lliger Spieler ausgew&auml;hlt....'
-  XU-chosenone: '&b%s &9ist der/die Auserw&auml;hlte!'
-  XU-chosenone2: '&9Der/die Auserw&auml;hlte ist offline gegangen. =('
+  XU-chosenone: '&a%s &9ist die/der Auserw&auml;hlte!'
+  XU-chosenone2: '&9Die/der Auserw&auml;hlte ist offline gegangen. =('
   whois1: |
     &6UUID: &e%s &6Name: &e%s
     &6Leben: %s
@@ -228,7 +228,7 @@ lang:
   XU-qzanswer: |
     &6[&aQuiz&6] &o%s &6hat gewonnen! Die richtige Antwort war:
     &6[&aQuiz&6] &d%s
-  XU-qzabort: '&6[&aQuiz&6] &cDas Quiz wure abgebrochen.'
+  XU-qzabort: '&6[&aQuiz&6] &aDas Quiz wure abgebrochen.'
   XU-chopendenied: '&4[&2Adventskalender&4] &6Du kannst dieses T&uuml;rchen nur am %s &ouml;ffnen!'
   XU-chopened: |
     &4[&2Adventskalender&4] &6Du hast die Tür &e%d&6 geöffnet!

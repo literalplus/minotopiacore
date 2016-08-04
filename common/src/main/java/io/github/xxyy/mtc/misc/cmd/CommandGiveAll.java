@@ -7,9 +7,6 @@
 
 package io.github.xxyy.mtc.misc.cmd;
 
-import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -19,7 +16,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import static net.md_5.bungee.api.ChatColor.*;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+
+import static net.md_5.bungee.api.ChatColor.AQUA;
+import static net.md_5.bungee.api.ChatColor.BLUE;
+import static net.md_5.bungee.api.ChatColor.GOLD;
 
 public final class CommandGiveAll extends MTCCommandExecutor {
 
@@ -71,7 +74,8 @@ public final class CommandGiveAll extends MTCCommandExecutor {
                         }
                         if (StringUtils.isNumeric(itemInfo[0])) {
                             finalStack = new ItemStack(Integer.parseInt(itemInfo[0]), Integer.parseInt(args[1]), damage);
-                            sender.sendMessage("§cACHTUNG! In zukünftigen Minecraft-Updates wirst du diese Methode nicht mehr benutzen können! "
+                            sender.sendMessage("§cACHTUNG! In zukünftigen Minecraft-Updates wirst" +
+                                    " du diese Methode nicht mehr benutzen können! "
                                     + "§cIch habe dir mal verziehen, aber bitte nutze beim nächsten Mal "
                                     + "§4/" + label + " " + finalStack.getType().name() + (damage == 0 ? "" : ":" + damage)
                                     + " " + finalStack.getAmount());

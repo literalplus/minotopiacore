@@ -7,14 +7,15 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.common.util.StringHelper;
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.common.util.StringHelper;
+import io.github.xxyy.mtc.MTC;
 
 import java.util.Set;
 
@@ -40,26 +41,26 @@ public final class CommandMute implements CommandExecutor {
                 MuteHelper.unmutePlayer(args[0]);
 
                 if (target != null && target.isOnline()) {
-                    target.sendMessage(String.format("%sDu wurdest von §b%s§6 entmuted.%s",
+                    target.sendMessage(String.format("%sDu wurdest von §a%s§6 entmuted.%s",
                             MTC.chatPrefix, sender.getName(), reasonString));
                 }
-                sender.sendMessage(String.format("%sDu hast §b%s§6 entmuted.%s",
+                sender.sendMessage(String.format("%sDu hast §a%s§6 entmuted.%s",
                         MTC.chatPrefix, args[0], reasonString));
-                CommandHelper.broadcast(String.format("%s§b%s§6 hat §b%s§6 entmuted.%s",
+                CommandHelper.broadcast(String.format("%s§a%s§6 hat §a%s§6 entmuted.%s",
                         MTC.chatPrefix, sender.getName(), args[0], reasonString), "mtc.spy");
             } else {
                 if (reason.isEmpty()) {
-                    sender.sendMessage(MTC.chatPrefix + "§cDu musst einen Grund angeben!");
+                    sender.sendMessage(MTC.chatPrefix + "§aDu musst einen Grund angeben!");
                     return true;
                 }
                 MuteHelper.mutePlayer(args[0], reason, sender.getName());
                 if (target != null && target.isOnline()) {
-                    target.sendMessage(String.format("%sDu wurdest von §b%s§6 gemuted. Grund: §7%s",
+                    target.sendMessage(String.format("%sDu wurdest von §a%s§6 gemuted. Grund: §7%s",
                             MTC.chatPrefix, sender.getName(), reason));
                 }
-                sender.sendMessage(String.format("%sDu hast §b%s§6 gemuted.%s",
+                sender.sendMessage(String.format("%sDu hast §a%s§6 gemuted.%s",
                         MTC.chatPrefix, args[0], reason.equalsIgnoreCase("") ? "" : " Grund: §7" + reason));
-                CommandHelper.broadcast(String.format("%s§b%s§6 hat §b%s§6 gemuted. Grund: §7%s",
+                CommandHelper.broadcast(String.format("%s§a%s§6 hat §a%s§6 gemuted. Grund: §7%s",
                         MTC.chatPrefix, sender.getName(), args[0], reason), "mtc.spy");
             }
             return true;
@@ -77,12 +78,12 @@ public final class CommandMute implements CommandExecutor {
                 try {
                     pageNum = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(String.format("%sDie Seitenzahl '%s' ist keine Zahl! §b/mute list <Seite>",
+                    sender.sendMessage(String.format("%sDie Seitenzahl '%s' ist keine Zahl! §a/mute list <Seite>",
                             MTC.chatPrefix, args[1]));
                     return true;
                 }
             }
-            sender.sendMessage("§6------ §bGemutete Spieler - Seite " + pageNum + " §6------");
+            sender.sendMessage("§6------ §aGemutete Spieler - Seite " + pageNum + " §6------");
             int i = 1;
             pageNum--;
             for (String path : paths) {
@@ -90,24 +91,24 @@ public final class CommandMute implements CommandExecutor {
                     i++;
                     continue;
                 }
-                sender.sendMessage(String.format("§b#%d: §6%s§b %s§6 - §b von §6%s",
+                sender.sendMessage(String.format("§a#%d: §6%s§a %s§6 - §a von §6%s",
                         i, path, MuteHelper.getMuteTimeByPath(path), MuteHelper.getMuterByPath(path)));
-                sender.sendMessage("   §bwegen: §e" + MuteHelper.getReasonByPath(path));
+                sender.sendMessage("   §awegen: §e" + MuteHelper.getReasonByPath(path));
                 i++;
             }
             if ((pageNum + 1) * 5 < paths.size()) {
-                sender.sendMessage("§6Nächste Seite: §b/mute list " + (pageNum + 2));
+                sender.sendMessage("§6Nächste Seite: §a/mute list " + (pageNum + 2));
             }
             return true;
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("info")) {
             String targetName = args.length > 1 ? args[1] : sender.getName();
             if (MuteHelper.isPlayerMuted(targetName)) {
-                sender.sendMessage("§6------ §bMuteInfo: " + targetName + "§6 ------");
-                sender.sendMessage("§6Mutegrund: §e" + MuteHelper.getReasonByPath(targetName));
-                sender.sendMessage("§6gemuted von: §b" + MuteHelper.getMuterByPath(targetName));
-                sender.sendMessage("§6Mutezeit: §e" + MuteHelper.getMuteTimeByPath(targetName));
+                sender.sendMessage("§6------ §aMuteInfo: " + targetName + "§6 ------");
+                sender.sendMessage("§6Mutegrund: §a" + MuteHelper.getReasonByPath(targetName));
+                sender.sendMessage("§6gemuted von: §a" + MuteHelper.getMuterByPath(targetName));
+                sender.sendMessage("§6Mutezeit: §a" + MuteHelper.getMuteTimeByPath(targetName));
             } else {
-                sender.sendMessage("§6Der Spieler §b" + targetName + "§6 ist §lnicht §6gemutet.");
+                sender.sendMessage("§6Der Spieler §a" + targetName + "§6 ist §lnicht §6gemutet.");
                 return true;
             }
         } else {
@@ -115,9 +116,9 @@ public final class CommandMute implements CommandExecutor {
                 return true;
             }
             sender.sendMessage("§cUnbekannte Aktion. Verwendung:");
-            sender.sendMessage("§b/mute <Spieler> <Grund> §6Muted/Entmuted einen Spieler.");
-            sender.sendMessage("§b/mute info <Spieler> §6Zeigt Muteinformationen zu einem Spieler");
-            sender.sendMessage("§b/mute list [Seite] §6Listet alle aktiven Mutes auf");
+            sender.sendMessage("§a/mute <Spieler> <Grund> §6Muted/Entmuted einen Spieler.");
+            sender.sendMessage("§a/mute info <Spieler> §6Zeigt Muteinformationen zu einem Spieler");
+            sender.sendMessage("§a/mute list [Seite] §6Listet alle aktiven Mutes auf");
         }
         return true;
     }

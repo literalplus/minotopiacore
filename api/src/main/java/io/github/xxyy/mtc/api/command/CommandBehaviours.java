@@ -7,9 +7,10 @@
 
 package io.github.xxyy.mtc.api.command;
 
-import io.github.xxyy.common.util.CommandHelper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.util.CommandHelper;
 
 /**
  * Static utility class providing some commonly used behaviours
@@ -81,7 +82,7 @@ public class CommandBehaviours {
 
     private static boolean checkPermissionWithMessage(CommandSender sender, String permission) {
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage(String.format("§cDu darfst diesen Befehl nicht ausführen! §7(%s)", permission));
+            sender.sendMessage(String.format("§cDu darfst diesen Befehl nicht ausführen! §6(%s)", permission));
             return false;
         } else {
             return true;

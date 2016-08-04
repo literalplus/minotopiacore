@@ -7,10 +7,6 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.sql.SafeSql;
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.logging.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,9 +15,18 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.github.xxyy.common.sql.SafeSql;
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.logging.LogManager;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MTCChatHelper extends ChatHelper {
@@ -173,7 +178,7 @@ public class MTCChatHelper extends ChatHelper {
         PrivateChat pc = PrivateChat.getActiveChat(sender);
         LOGGER.info("[P-{}]{}: {}", pc.chatId, senderName, msg);
         if (pc.activeRecipients.isEmpty() || pc.activeRecipients.size() == 1) {
-            return "Niemand hört dich. Spieler einladen? §b/chat add <Spieler>";
+            return "Niemand hört dich. Spieler einladen? §a/chat add <Spieler>";
         }
         pc.sendMessage(finalMsg);
         MTCChatHelper.sendSpyMsg("§d[P-" + pc.chatId + "]§7" + senderName + ": §o" + msg);

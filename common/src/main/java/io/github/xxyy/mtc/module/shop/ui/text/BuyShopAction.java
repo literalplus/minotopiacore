@@ -29,8 +29,6 @@ class BuyShopAction extends AbstractShopAction {
         int amount = -1;
         int ignoreArgsEnd = 0; //how many args to strip from the name, from right to left
         if (StringUtils.isNumeric(finalArg)) {
-            //plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + finalArg + ")");
-            //return;
             amount = Integer.parseInt(finalArg);
             ignoreArgsEnd = 1;
         }

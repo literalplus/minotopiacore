@@ -7,11 +7,6 @@
 
 package io.github.xxyy.mtc.module.pvpstats;
 
-import io.github.xxyy.common.chat.ComponentSender;
-import io.github.xxyy.common.chat.XyComponentBuilder;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.hook.XLoginHook;
-import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
@@ -19,10 +14,19 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.github.xxyy.common.chat.ComponentSender;
+import io.github.xxyy.common.chat.XyComponentBuilder;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.hook.XLoginHook;
+import io.github.xxyy.mtc.module.pvpstats.model.PlayerStats;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static net.md_5.bungee.api.ChatColor.*;
+import static net.md_5.bungee.api.ChatColor.DARK_RED;
+import static net.md_5.bungee.api.ChatColor.GOLD;
+import static net.md_5.bungee.api.ChatColor.UNDERLINE;
+import static net.md_5.bungee.api.ChatColor.YELLOW;
 
 /**
  * Executes the /stats command, which allows users to view their own stats and administrators to manage stats.
@@ -120,7 +124,7 @@ public class CommandStats implements CommandExecutor {
                     showKills = false;
                     break;
                 default:
-                    sender.sendMessage("§c/stats top [kills|deaths] [Anzahl]");
+                    sender.sendMessage("§a/stats top [kills|deaths] [Anzahl]");
                     return true;
             }
             if (args.length > 2) {

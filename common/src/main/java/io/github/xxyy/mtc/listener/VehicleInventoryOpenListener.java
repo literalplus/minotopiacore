@@ -12,6 +12,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
+import io.github.xxyy.mtc.MTC;
+
 
 public final class VehicleInventoryOpenListener implements Listener {
 
@@ -19,7 +21,7 @@ public final class VehicleInventoryOpenListener implements Listener {
     public void onInvOpen(InventoryOpenEvent evt) {
         if (evt.getPlayer().isInsideVehicle()) {
             evt.setCancelled(true);
-            evt.getPlayer().sendMessage("§c[MTC]§8 Du darfst in Vehikeln keine Inventare öffnen! (Bugusing)");
+            evt.getPlayer().sendMessage(MTC.chatPrefix + "Du darfst in Vehikeln keine Inventare öffnen! (Bugusing)");
         }
     }
 }

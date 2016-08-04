@@ -7,6 +7,9 @@
 
 package io.github.xxyy.mtc.module.villagertradepermission;
 
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
+
 import io.github.xxyy.common.util.CommandHelper;
 import io.github.xxyy.mtc.misc.cmd.MTCPlayerOnlyCommandExecutor;
 import io.github.xxyy.mtc.module.villagertradepermission.actions.Action;
@@ -14,8 +17,6 @@ import io.github.xxyy.mtc.module.villagertradepermission.actions.ActionManager;
 import io.github.xxyy.mtc.module.villagertradepermission.actions.PermissionInfoAction;
 import io.github.xxyy.mtc.module.villagertradepermission.actions.RemovePermissionAction;
 import io.github.xxyy.mtc.module.villagertradepermission.actions.SetPermissionAction;
-import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
 
 /**
  * A command handler for setting permissions on villagers and to get information about current permissions.
@@ -42,7 +43,7 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
             case "setperm":
             case "setpermission": {
                 if (args.length != 2) { //require exact argument count to make sure everyone knows that permissions are spaceless
-                    return CommandHelper.msg("§cFalsche Benutzung.\n§6Syntax: §c/" + label + ' ' + args[0].toLowerCase() + " <permission>", plr);
+                    return CommandHelper.msg("§cFalsche Benutzung.\n§6Syntax: §a/" + label + ' ' + args[0].toLowerCase() + " <permission>", plr);
                 }
                 schedule(plr, new SetPermissionAction(module, args[1]));
                 break;
@@ -77,7 +78,7 @@ public class VillagerPermissionCommand extends MTCPlayerOnlyCommandExecutor {
                 break;
             }
             default: {
-                plr.sendMessage("§cUnbekannte Aktion §6" + args[0] + "§c. Hilfe mit §6/" + label + " help§c.");
+                plr.sendMessage("§cUnbekannte Aktion §a" + args[0] + "§a. Hilfe mit §a/" + label + " help§a.");
                 break;
             }
             case "help": {

@@ -7,13 +7,14 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.util.ChatHelper;
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import io.github.xxyy.common.util.ChatHelper;
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
 
 
 public final class CommandGlobalMute implements CommandExecutor {
@@ -27,7 +28,7 @@ public final class CommandGlobalMute implements CommandExecutor {
 		String msg = MTC.chatPrefix+"GlobalMute wurde "+((ChatHelper.isGlobalMute) ? "" : "de")+"aktiviert!";
 		String reason = "";
 		if(args.length >= 1){
-			reason = " §bGrund: §7";
+			reason = " §aGrund: §7";
 			for(int i = 0; i < args.length; i++){
 				reason += (i == 0 ? "" : " ")+args[i];
 			}

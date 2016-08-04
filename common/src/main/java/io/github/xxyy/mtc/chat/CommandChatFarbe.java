@@ -7,11 +7,6 @@
 
 package io.github.xxyy.mtc.chat;
 
-import io.github.xxyy.common.util.CommandHelper;
-import io.github.xxyy.mtc.MTC;
-import io.github.xxyy.mtc.clan.ClanHelper;
-import io.github.xxyy.mtc.clan.ClanInfo;
-import io.github.xxyy.mtc.clan.ClanMemberInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -20,6 +15,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import io.github.xxyy.common.util.CommandHelper;
+import io.github.xxyy.mtc.MTC;
+import io.github.xxyy.mtc.clan.ClanHelper;
+import io.github.xxyy.mtc.clan.ClanInfo;
+import io.github.xxyy.mtc.clan.ClanMemberInfo;
 
 
 public final class CommandChatFarbe implements CommandExecutor {
@@ -67,12 +68,12 @@ public final class CommandChatFarbe implements CommandExecutor {
             printChatFarbeTo(sender, (Player) sender);
             return true;
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
-            sender.sendMessage("§6###§b/chatfarbe§6###");
-            sender.sendMessage("§b/chatfarbe §6Zeigt deine Chatfarbe.");
-            sender.sendMessage("§b/chatfarbe <neue Chatfarbe> §6Setzt deine Chatfarbe.");
+            sender.sendMessage("§6###§a/chatfarbe§6###");
+            sender.sendMessage("§a/chatfarbe §6Zeigt deine Chatfarbe.");
+            sender.sendMessage("§a/chatfarbe <neue Chatfarbe> §6Setzt deine Chatfarbe.");
             if (sender.hasPermission("mtc.chatfarbe.player")) {
-                sender.sendMessage("§b/chatfarbe player <Spieler> §6Zeigt die Chatfarbe eines Spielers.");
-                sender.sendMessage("§b/chatfarbe player <Spieler> <neue Chatfarbe> §6Setzt die Chatfarbe eines Spielers.");
+                sender.sendMessage("§a/chatfarbe player <Spieler> §6Zeigt die Chatfarbe eines Spielers.");
+                sender.sendMessage("§a/chatfarbe player <Spieler> <neue Chatfarbe> §6Setzt die Chatfarbe eines Spielers.");
             }
             return true;
         } else if (args.length >= 2 && args[0].equalsIgnoreCase("player")) {
@@ -119,7 +120,7 @@ public final class CommandChatFarbe implements CommandExecutor {
                 clanTag = ClanHelper.getFormattedPrefix(ci);
             }
         }
-        sender.sendMessage(MTC.chatPrefix + (sender.getName().equalsIgnoreCase(targetName) ? "Deine aktuelle Chatfarbe:" : "§b" + targetName + "§6's aktuelle Chatfarbe:"));
+        sender.sendMessage(MTC.chatPrefix + (sender.getName().equalsIgnoreCase(targetName) ? "Deine aktuelle Chatfarbe:" : "§a" + targetName + "§6's aktuelle Chatfarbe:"));
         String color = (target.isOnline() ? MTCChatHelper.getFinalChatColorByCSender(target.getPlayer()) : MTCChatHelper.getFinalChatColorByNameIgnorePerms(targetName));
         sender.sendMessage("§6 => §r" + pexUserPrefix + " " + clanTag + "§7" + targetName + "§7:§f " + color + "cogito ergo sum");
     }
