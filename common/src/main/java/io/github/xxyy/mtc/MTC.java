@@ -69,8 +69,8 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     public static final PluginVersion PLUGIN_VERSION = PluginVersion.ofClass(MTC.class);
     public static int speedOnJoinPotency = -1; //TODO <--
     public static String priChatCol = "§6";
-    public static String codeChatCol = "§3";
-    public static String chatPrefix = "§6[§bMTS§6] ";
+    public static String codeChatCol = "§a";
+    public static String chatPrefix = "§8[§6§lMTC§8] §6";
     private static MTC instance;
     private static boolean useHologram = false;
     public String serverName = "UnknownServer"; //TODO whatever
