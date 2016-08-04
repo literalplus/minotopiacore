@@ -12,8 +12,8 @@ info:
 lang:
   XU-name: 'MinoTopiaCore'
   XU-desc: 'MinoTopiaCore - Verschiedene Utility-Befehle und /war.'
-  XU-ccglo: '&6[&bMTS&6] Der globale Chat wurde geleert!'
-  XU-ccex: '&6[&bMTS&6] &6%1$s &bhat den globalen Chat geleert!'
+  XU-ccglo: '&8[&6&lMTC&8] &6Der globale Chat wurde geleert!'
+  XU-ccex: '&8[&6&lMTC&8] &6&6%1$s &bhat den globalen Chat geleert!'
   XU-epcancelled: 'Du darfst keine Enderperlen benutzen!'
   XU-epbedrock: 'Du kannst keine Enderperlen auf Bedrock werfen!'
   XU-welcome: '&1->&9&lWillkommen auf &oMinoTopia&9&l, %1$s!&1<--'
@@ -31,7 +31,7 @@ lang:
   XC-cmierror: '&cFehler beim Erstellen deiner Benutzerdatei: %1$d'
   XC-created: |
    Clan erstellt!
-   &6[&bMTS&6] Spieler einladen: %1$s/clan invite [Name]
+   &8[&6&lMTC&8] &6Spieler einladen: %1$s/clan invite [Name]
   XC-invalidchars: '&cIm %1$s d&uuml;rfen keine Sonderzeichen enthalten sein!'
   XC-removewarning: '&cACHTUNG! Wenn du deinen Clan l&ouml;scht, wird er f&uuml;r &4IMMER&c &o(eine lange Zeit!)&c verloren sein und alle Mitglieder werden entfernt! Um zu best&auml;tigen, schreibe &4&l/clan remove sure&c.'
   XC-removedbroadcast: '&c%1$s &4hat deinen Clan gel&ouml;scht! Du bist jetzt obdachlos'
@@ -45,10 +45,10 @@ lang:
   XC-inviteusage: '&cVerwendung: /clan invite [Name]'
   XC-invitenotonline: |
    Dieser Spieler ist nicht online.
-   &6[&bMTS&6] Er wird benachrichtigt, sobald er online kommt.
+   &8[&6&lMTC&8] &6Er wird benachrichtigt, sobald er online kommt.
   XC-invitation: |
    Du wurdest in den Clan %2$s%1$s%3$s eingeladen!
-   &6[&bMTS&6] Annehmen? %2$s/clan join %4$d &7&k| %3$sAblehnen? %2$s/clan ignore %4$d
+   &8[&6&lMTC&8] &6Annehmen? %2$s/clan join %4$d &7&k| %3$sAblehnen? %2$s/clan ignore %4$d
   XC-noinvs: 'Keine Einladungen vorhanden :('
   XC-inviteself: 'Du kannst dich nicht selbst einladen :D'
   XC-inviteyourclan: 'Dieser Spieler ist bereits in deinem Clan!'
@@ -91,7 +91,7 @@ lang:
    &8Beim Setzen des Leiters wird der alte Leiter zum Admin degradiert.
   XC-invalidrank: |
    &cInvalider Rang. &6Valide R&auml;nge:
-   &6[&bMTS&6] &7Mitglied(0) &8| &7Moderator(1) &8| &7Admin(2) &8| &7Leiter(3)
+   &8[&6&lMTC&8] &6&7Mitglied(0) &8| &7Moderator(1) &8| &7Admin(2) &8| &7Leiter(3)
   XC-sethigherrank: '&cDieser Rang ist h&ouml;her als dein aktueller.'
   XC-ranksetbroadcast: '%2$s%1$s%3$s ist jetzt %2$s%4$s%3$s!'
   XC-invalidclan: '&cDieser Clan existiert nicht.'
@@ -133,8 +133,8 @@ lang:
   XC-membersempty: '&7{leer}'
   XC-memberson: '&a%1$s'
   XC-membersoff: '&c%1$s'
-  XU-giveallbroadcast: '&6[&bMTS&6] Alle Spieler haben das Item &3%1$s&6 bekommen!'
-  XU-givealladmin: '&6[&bMTS&6] Der edle Spender der Items: &3%1$s'
+  XU-giveallbroadcast: '&8[&6&lMTC&8] &6Alle Spieler haben das Item &3%1$s&6 bekommen!'
+  XU-givealladmin: '&8[&6&lMTC&8] &6Der edle Spender der Items: &3%1$s'
   XU-snowball: '&aTreffer: %1$s&a%2$s (%3$s%4$s)'
   XU-snowballchance: '&c%1$s hat deinen Schneeball abgewehrt!'
   XU-snowballtarget: '%1$s wirft einen magischen Schneeball nach dir!'
@@ -164,7 +164,7 @@ lang:
   XU-prevokedother: '&1%1$s&9 hat den Frieden mit dir aufgel&ouml;st!'
   XU-palreadysent: |
     Du hast &b%1$s&6 bereits eine Friedensanfrage gesendet.
-    &6[&bMTS&6] Ziehe dein Angebot zur&uuml;ck mit &b/frieden revoke %1$s&6. 
+    &8[&6&lMTC&8] &6Ziehe dein Angebot zur&uuml;ck mit &b/frieden revoke %1$s&6.
   XU-paccepted: 'Du hast die Friedensanfrage von &b%1$s&6 angenommen.'
   XU-preqaccepted: '&1%1$s &9hat deine Friedensanfrage angenommen!'
   XU-preqreceived: '&1%1$s &9hat dir eine Friedensanfrage geschickt!'
@@ -177,7 +177,7 @@ lang:
   XU-preqsent: 'Deine Anfrage wurde verschickt!'
   XU-fightcmd: |
     &cDu kannst im Kampf nur folgende Befehle benutzen:
-    &6[&bMTS&6] &7%s
+    &8[&6&lMTC&8] &6&7%s
   XU-fightlogout: '&e%s&c hat sich im Kampf ausgeloggt!'
   XU-fighttp: '&cDu kannst dich im Kampf nicht teleportieren.'
   XU-fightstart: 'Du bist jetzt in einem Kampf mit %s!'
