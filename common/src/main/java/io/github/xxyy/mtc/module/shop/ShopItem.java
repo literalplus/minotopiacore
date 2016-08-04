@@ -233,7 +233,7 @@ public class ShopItem {
      *
      * @param removeIndex the index to remove from
      * @return the removed alias
-     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getAliases().size())
+     * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= getAliases().size())
      */
     public String removeAlias(int removeIndex) throws IndexOutOfBoundsException {
         Preconditions.checkState(aliases != null, "null aliases collection for this item?!");
@@ -245,7 +245,6 @@ public class ShopItem {
      * Sets this item's display name and keeps the old display name as an alias.
      *
      * @param newDisplayName the new display name
-     * @implNote This implementation just adds the new display name as first alias
      */
     public void setDisplayName(String newDisplayName) {
         Preconditions.checkNotNull(newDisplayName, "newDisplayName");

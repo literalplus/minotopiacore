@@ -75,7 +75,7 @@ public abstract class ShopMenu implements InventoryHolder {
     /**
      * Gets the top row button with given index for this menu, or null if there is no button at that index.
      *
-     * @param index the index to get the button for (0 <= index < 9)
+     * @param index the index to get the button for (0 &lt;= index &lt; 9)
      * @return the button, or null if there is none
      */
     public MenuButton getTopRowButton(int index) {
@@ -87,7 +87,7 @@ public abstract class ShopMenu implements InventoryHolder {
     /**
      * Sets the top row button with given index for this menu.
      *
-     * @param index  the index to set the button for (0 <= index < 9)
+     * @param index  the index to set the button for (0 &lt;= index &lt; 9)
      * @param button the button to set, or null to set no button
      */
     protected void setTopRowButton(int index, MenuButton button) {
