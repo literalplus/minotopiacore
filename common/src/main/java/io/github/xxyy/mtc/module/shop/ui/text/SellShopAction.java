@@ -1,5 +1,9 @@
 package io.github.xxyy.mtc.module.shop.ui.text;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import io.github.xxyy.common.util.StringHelper;
 import io.github.xxyy.mtc.module.shop.ShopItem;
 import io.github.xxyy.mtc.module.shop.ShopModule;
@@ -7,9 +11,6 @@ import io.github.xxyy.mtc.module.shop.ShopPriceCalculator;
 import io.github.xxyy.mtc.module.shop.TransactionType;
 import io.github.xxyy.mtc.module.shop.ui.inventory.ShopSellMenu;
 import io.github.xxyy.mtc.module.shop.ui.util.ShopStringAdaptor;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,7 +69,7 @@ class SellShopAction extends AbstractShopAction {
             amount = itemInHand.getAmount();
         } else {
             if (!StringUtils.isNumeric(args[1])) {
-                plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[2] + ")");
+                plr.sendMessage("§cDie Anzahl der Items muss eine Zahl sein! (gegeben: " + args[1] + ")");
                 return;
             }
             amount = Integer.parseInt(args[1]);
