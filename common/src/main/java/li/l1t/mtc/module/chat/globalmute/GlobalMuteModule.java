@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.chat.globalmute;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.MTCModuleAdapter;
 import li.l1t.mtc.module.chat.ChatModule;
@@ -33,6 +34,8 @@ public class GlobalMuteModule extends MTCModuleAdapter {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         chatModule.registerHandler(new GlobalMuteHandler(this));
+        registerCommand(new CommandGlobalMute(this), "globalmute", "glomu")
+                .behaviour(CommandBehaviours.permissionChecking("mtc.globalmute.toggle"));
     }
 
     public boolean isGlobalMute() {

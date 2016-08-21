@@ -26,10 +26,6 @@ commands:
     description: "Spielerkopf-Tools. Mehr Info: /mtc help <command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [ph]
-  globalmute:
-    description: Aendert den Status von GlobalMute.
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [glomu, xglomu]
   chatclear:
     description: Leert den globalen Chat.
     usage: "/<command> nicht geladen. Ausgeschaltet?"

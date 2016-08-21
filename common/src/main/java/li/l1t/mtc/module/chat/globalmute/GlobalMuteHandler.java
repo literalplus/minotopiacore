@@ -43,6 +43,6 @@ class GlobalMuteHandler extends AbstractChatHandler {
         if (module.getGlobalMuteReason().isEmpty()) {
             return "";
         }
-        return "(§7Grund: " + module.getGlobalMuteReason() + "§7)";
+        return " (§aGrund: " + module.getGlobalMuteReason() + "§a)";
     }
 }
