@@ -53,10 +53,6 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
 
     }
 
-    public String formatMessage(String message, Object... params) {
-        return getChatPrefix() + String.format(message, params);
-    }
-
     /**
      * Attempts to register a chat handler with the dispatcher. Does not register the handler if it
      * is disabled in the configuration. The handler is identified by its {@link
@@ -113,6 +109,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
         this.dispatcher = dispatcher;
     }
 
+    @Override
     public String getChatPrefix() {
         return getPlugin().getChatPrefix();
     }

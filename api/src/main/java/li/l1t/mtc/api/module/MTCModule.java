@@ -65,4 +65,9 @@ public interface MTCModule extends Cache {
      * @return the plugin associated with this module
      */
     JavaPlugin getPlugin();
+
+    /**
+     * @return the prefix to be used by messages sent by this module
+     */
+    String getChatPrefix();
 }

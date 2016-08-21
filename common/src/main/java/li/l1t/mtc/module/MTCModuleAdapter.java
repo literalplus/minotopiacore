@@ -96,6 +96,15 @@ public abstract class MTCModuleAdapter implements MTCModule {
         return plugin;
     }
 
+    public String formatMessage(String message, Object... params) {
+        return getChatPrefix() + String.format(message, params);
+    }
+
+    @Override
+    public String getChatPrefix() {
+        return getPlugin().getChatPrefix();
+    }
+
     /**
      * Registers a command managed by this module with the corresponding server.
      *
