@@ -20,17 +20,17 @@
     <packaging>pom</packaging>
 
     <name>MinoTopiaCore Parent</name>
-    <url>http://xxyy.github.io/</url>
+    <url>https://l1t.li/</url>
 
     <scm>
-        <connection>scm:git://git@bitbucket.org:minotopia/minotopiacore.git</connection>
+        <connection>scm:git:git@bitbucket.org:minotopia/minotopiacore.git</connection>
     </scm>
 
     <distributionManagement>
         <downloadUrl>https://ci.minotopia.me/job/pvp~mtc/</downloadUrl>
         <repository>
             <id>xxyy-repo</id>
-            <url>https://repo.nowak-at.net/xxyy-private/</url>
+            <url>https://repo.l1t.li/xxyy-private/</url>
         </repository>
     </distributionManagement>
 
@@ -222,116 +222,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.7</version>
-                <!--<executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>-->
-                <configuration>
-                    <obfuscate>true</obfuscate>
-                    <injar>${project.build.finalName}.jar</injar>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <proguardInclude>obf.pro</proguardInclude>
-                    <attach>true</attach>
-                    <attachArtifactClassifier>obf</attachArtifactClassifier>
-                    <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                    </libs>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>com.sk89q</groupId>
-                            <artifactId>worldedit</artifactId>
-                            <!-- Classes at unexpected places -->
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.yaml</groupId>
-                            <artifactId>snakeyaml</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.bukkit</groupId>
-                            <artifactId>bukkit</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>com.google.guava</groupId>
-                            <artifactId>guava</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>com.sk89q</groupId>
-                            <artifactId>commandbook</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>org.khelekore</groupId>
-                            <artifactId>prtree</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>net.sf.opencsv</groupId>
-                            <artifactId>opencsv</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>io.github.xxyy</groupId>
-                            <artifactId>common</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>5.0</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <!--<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura.version}</version>
-                <configuration>
-                    <formats>
-                        <format>xml</format>
-                    </formats>
-                    <check>
-                        <branchRate>85</branchRate>
-                        <lineRate>85</lineRate>
-                        <haltOnFailure>true</haltOnFailure>
-                        <totalBranchRate>85</totalBranchRate>
-                        <totalLineRate>85</totalLineRate>
-                        <packageLineRate>85</packageLineRate>
-                        <packageBranchRate>85</packageBranchRate>
-                    </check>
-                </configuration>
-            </plugin>-->
-
-            <!--<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.4</version>
-                <configuration>
-                    <effort>min</effort>
-                    <threshold>low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    <failOnError>false</failOnError>
-                    <debug>true</debug>
-                    <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>analyze-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
@@ -345,15 +235,6 @@
                         <version>6.1.1</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.1</version>
-                <configuration>
-                    <generateBackupPoms>false</generateBackupPoms>
-                </configuration>
             </plugin>
 
             <plugin>

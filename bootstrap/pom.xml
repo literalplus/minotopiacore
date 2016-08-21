@@ -131,16 +131,12 @@
                     </artifactSet>
                     <relocations>
                         <relocation>
-                            <pattern>mkremins.fanciful</pattern>
-                            <shadedPattern>io.github.xxyy.lib.mkremins.fanciful</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>org.reflections</pattern>
-                            <shadedPattern>io.github.xxyy.lib.org.reflections</shadedPattern>
+                            <shadedPattern>li.l1t.lib.org.reflections</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.javassist</pattern>
-                            <shadedPattern>io.github.xxyy.lib.org.javassist</shadedPattern>
+                            <shadedPattern>li.l1t.lib.org.javassist</shadedPattern>
                         </relocation>
                     </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
