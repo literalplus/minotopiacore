@@ -26,7 +26,7 @@
             <artifactId>mtc-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.xxyy.common</groupId>
+            <groupId>li.l1t.common</groupId>
             <artifactId>xyc-bukkit</artifactId>
         </dependency>
         <dependency>
