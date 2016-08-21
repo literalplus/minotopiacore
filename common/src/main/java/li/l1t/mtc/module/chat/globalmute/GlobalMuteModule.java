@@ -44,8 +44,21 @@ public class GlobalMuteModule extends MTCModuleAdapter {
     }
 
     public void setGlobalMute(boolean globalMute, String reason) {
-        this.globalMute = globalMute;
+        setGlobalMute(globalMute);
         setGlobalMuteReason(reason);
+    }
+
+    private void setGlobalMute(boolean globalMute) {
+        this.globalMute = globalMute;
+        setGlobalMuteReason(null);
+    }
+
+    public void enableGlobalMute(String reason) {
+        setGlobalMute(true, reason);
+    }
+
+    public void disableGlobaleMute() {
+        setGlobalMute(false);
     }
 
     private void setGlobalMuteReason(String reason) {

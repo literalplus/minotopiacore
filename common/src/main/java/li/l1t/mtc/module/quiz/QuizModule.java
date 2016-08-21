@@ -8,8 +8,10 @@
 package li.l1t.mtc.module.quiz;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.chat.globalmute.GlobalMuteModule;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -39,6 +41,8 @@ public class QuizModule extends ConfigurableMTCModule {
     private final Map<UUID, QuizQuestion.Builder> questionSessions = Collections.synchronizedMap(new HashMap<>());
     private List<QuizQuestion> questions = Collections.synchronizedList(new LinkedList<>());
     private QuizGame game;
+    @InjectMe
+    private GlobalMuteModule globalMuteModule;
 
     public QuizModule() {
         super(NAME, "modules/quiz.conf.yml", ClearCacheBehaviour.SAVE, false);
@@ -94,7 +98,7 @@ public class QuizModule extends ConfigurableMTCModule {
 
     public QuizGame getGame() {
         if (game == null) {
-            game = new QuizGame(this); //hmmmmmm
+            game = new QuizGame(this, globalMuteModule); //hmmmmmm
         }
         return game;
     }

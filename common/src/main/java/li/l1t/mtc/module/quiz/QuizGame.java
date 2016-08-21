@@ -7,8 +7,8 @@
 
 package li.l1t.mtc.module.quiz;
 
-import li.l1t.common.util.ChatHelper;
 import li.l1t.mtc.helper.MTCHelper;
+import li.l1t.mtc.module.chat.globalmute.GlobalMuteModule;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,11 +21,13 @@ import org.bukkit.entity.Player;
  */
 public class QuizGame {
     private final QuizModule module;
+    private final GlobalMuteModule globalMuteModule;
     private QuizQuestion currentQuestion;
     private boolean wasGlobalMute = false; //Whether global mute was enabled when the quiz was started
 
-    public QuizGame(QuizModule module) {
+    public QuizGame(QuizModule module, GlobalMuteModule globalMuteModule) {
         this.module = module;
+        this.globalMuteModule = globalMuteModule;
     }
 
     public QuizQuestion getCurrentQuestion() {
@@ -43,11 +45,21 @@ public class QuizGame {
         Validate.isTrue(currentQuestion == null, "Cannot override question!");
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-qzquestion", "CONSOLE", false, question.getText()));
         currentQuestion = question;
+        startGlobalMute();
+    }
 
-        wasGlobalMute = ChatHelper.isGlobalMute;
-        if (wasGlobalMute) {
-            ChatHelper.isGlobalMute = false;
+    private void startGlobalMute() {
+        if (!isGlobalMuteSupported()) {
+            return;
         }
+        wasGlobalMute = globalMuteModule.isGlobalMute();
+        if (wasGlobalMute) {
+            globalMuteModule.disableGlobaleMute();
+        }
+    }
+
+    private boolean isGlobalMuteSupported() {
+        return globalMuteModule != null;
     }
 
     public void reset(Player winner) {
@@ -55,23 +67,20 @@ public class QuizGame {
         module.getPlugin().getServer().broadcastMessage(MTCHelper.locArgs("XU-qzanswer", "CONSOLE", false,
                 winner.getName(), getCurrentQuestion().getAnswer()));
         currentQuestion = null;
+        resetGlobalMute();
+    }
 
-        if (wasGlobalMute) {
-            ChatHelper.isGlobalMute = true;
+    private void resetGlobalMute() {
+        if (isGlobalMuteSupported() && wasGlobalMute) {
+            globalMuteModule.enableGlobalMute("WahrFalsch");
         }
-        wasGlobalMute = false;
     }
 
     public boolean abort(String reason) {
         Bukkit.broadcastMessage(MTCHelper.locArgs("XU-qzabort", "CONSOLE", false) +
                 (reason == null ? "" : " §7Grund: " + reason));
         module.setGame(null);
-
-        if (wasGlobalMute) {
-            ChatHelper.isGlobalMute = true;
-        }
-        wasGlobalMute = false;
-
+        resetGlobalMute();
         return true;
     }
 }
