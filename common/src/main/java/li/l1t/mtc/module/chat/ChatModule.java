@@ -8,10 +8,12 @@
 package li.l1t.mtc.module.chat;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.chat.api.ChatDispatcher;
 import li.l1t.mtc.module.chat.api.ChatHandler;
+import li.l1t.mtc.module.chat.command.CommandChatClear;
 import li.l1t.mtc.module.chat.handler.DefaultHandlers;
 import li.l1t.mtc.module.chat.impl.SimpleChatDispatcher;
 import org.bukkit.event.EventHandler;
@@ -42,6 +44,8 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
         super.enable(plugin);
         DefaultHandlers.registerAllWith(this);
         registerListener(this);
+        registerCommand(new CommandChatClear(this), "chatclear", "cc")
+                .behaviour(CommandBehaviours.permissionChecking("mtc.chatclear"));
     }
 
     @Override
@@ -50,7 +54,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     }
 
     public String formatMessage(String message, Object... params) {
-        return getPlugin().getChatPrefix() + String.format(message, params);
+        return getChatPrefix() + String.format(message, params);
     }
 
     /**
@@ -107,6 +111,10 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
 
     public void setDispatcher(ChatDispatcher dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    public String getChatPrefix() {
+        return getPlugin().getChatPrefix();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
