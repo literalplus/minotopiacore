@@ -34,10 +34,6 @@ commands:
     description: "Aendert deine Chatfarbe. Mehr: /<command> help"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [cf, chatcolor]
-  chat:
-    decription: "Private Chats mit einem User. Mehr Info: /<command> help"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [pchat]
   mute:
     description: "MTC Mute. Mehr Info: /<command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"

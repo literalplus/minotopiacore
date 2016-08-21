@@ -18,11 +18,8 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.chat.ChatListener;
-import li.l1t.mtc.chat.CommandChatClear;
 import li.l1t.mtc.chat.CommandChatFarbe;
-import li.l1t.mtc.chat.CommandGlobalMute;
 import li.l1t.mtc.chat.CommandMute;
-import li.l1t.mtc.chat.CommandPrivateChat;
 import li.l1t.mtc.chat.MTCChatHelper;
 import li.l1t.mtc.chat.cmdspy.CommandCmdSpy;
 import li.l1t.mtc.chat.cmdspy.CommandSpyListener;
@@ -276,10 +273,7 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             this.getCommand("breload").setExecutor(new CommandBReload(this));
         }
         if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
-            this.getCommand("globalmute").setExecutor(new CommandGlobalMute());
-            this.getCommand("chatclear").setExecutor(new CommandChatClear(this));
             this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe(this));
-            this.getCommand("chat").setExecutor(new CommandPrivateChat());
             this.getCommand("mute").setExecutor(new CommandMute());
         }
         if (ConfigHelper.isClanEnabled()) {
