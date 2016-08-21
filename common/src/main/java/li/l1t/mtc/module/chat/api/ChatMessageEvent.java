@@ -22,7 +22,8 @@ public interface ChatMessageEvent {
      *
      * @param errorMessage   the error message to send to the player if the message is denied,
      *                       without any prefix
-     * @param denyingHandler the handler that attempts to deny this message
+     * @param denyingHandler the handler that attempts to deny this message, or null to suppress any
+     *                       bypass notification
      * @return whether the denial was successful
      */
     boolean tryDenyMessage(String errorMessage, ChatHandler denyingHandler);

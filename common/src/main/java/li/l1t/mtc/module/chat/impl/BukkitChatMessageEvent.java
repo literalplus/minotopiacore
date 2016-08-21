@@ -40,15 +40,21 @@ public class BukkitChatMessageEvent implements ChatMessageEvent {
     @Override
     public boolean tryDenyMessage(String errorMessage, ChatHandler handler) {
         if (mayBypassFilters()) {
-            sendPrefixed(String.format(
-                    "Chatfilter %s ignoriert.",
-                    handler.getClass().getSimpleName()
-            ));
+            notifyBypassOf(handler);
             return false;
         }
         sendPrefixed(errorMessage);
         bukkitEvent.setCancelled(true);
         return true;
+    }
+
+    private void notifyBypassOf(ChatHandler handler) {
+        if (handler != null) {
+            sendPrefixed(String.format(
+                    "Chatfilter %s ignoriert.",
+                    handler.getClass().getSimpleName()
+            ));
+        }
     }
 
     @Override
