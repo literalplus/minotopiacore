@@ -89,6 +89,18 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     }
 
     /**
+     * Retrieves a string value from the configuration file, creating it if it does not yet exist.
+     *
+     * @param configPath the path of the value
+     * @param def        the default value
+     * @return the value, or the default if not found
+     */
+    public String getConfigString(String configPath, String def) {
+        setDefaultIfUnset(configPath, def);
+        return configuration.getString(configPath);
+    }
+
+    /**
      * Retrieves a list of strings from the configuration file, creating it with passed default
      * values if it does not yet exist.
      *
