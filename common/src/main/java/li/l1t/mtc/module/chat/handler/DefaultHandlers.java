@@ -24,5 +24,6 @@ public class DefaultHandlers {
         module.registerHandler(new VaultPrefixHandler());
         module.registerHandler(new LagMessageHandler());
         module.registerHandler(new AdFilterHandler());
+        module.registerHandler(new RepeatedMessageHandler());
     }
 }
