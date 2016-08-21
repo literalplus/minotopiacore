@@ -9,6 +9,7 @@ package li.l1t.mtc.api.module;
 
 import li.l1t.mtc.api.command.CommandBehaviour;
 import li.l1t.mtc.api.command.CommandBehaviours;
+import li.l1t.mtc.api.exception.DatabaseAccessException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
@@ -17,6 +18,7 @@ import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,11 +120,11 @@ public class ModuleCommand extends Command implements PluginIdentifiableCommand 
 
         try {
             success = executor.onCommand(sender, this, commandLabel, args);
+        } catch (DatabaseAccessException ex) {
+            sender.sendMessage("§4§lInterner Fehler: §cDatenbankfehler.");
+            throw wrapException(commandLabel, ex.getCause());
         } catch (Throwable ex) {
-            throw new CommandException(String.format(
-                    "Unhandled exception executing MTC module command '%s' in MTC %s module",
-                    commandLabel, module.getName()
-            ), ex);
+            throw wrapException(commandLabel, ex);
         }
 
         if (!success && usageMessage.length() > 0) {
@@ -132,6 +134,14 @@ public class ModuleCommand extends Command implements PluginIdentifiableCommand 
         }
 
         return success;
+    }
+
+    @Nonnull
+    private CommandException wrapException(String commandLabel, Throwable ex) {
+        return new CommandException(String.format(
+                "Unhandled exception executing MTC module command '%s' in MTC %s module",
+                commandLabel, module.getName()
+        ), ex);
     }
 
     @Override
