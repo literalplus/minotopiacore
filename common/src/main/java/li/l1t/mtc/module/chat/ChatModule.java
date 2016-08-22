@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.chat;
 
+import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
@@ -43,6 +44,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         DefaultHandlers.registerAllWith(this);
+        configuration.asyncSave(plugin); //shouldn't change any more after enabling
         registerListener(this);
         registerCommand(new CommandChatClear(this), "chatclear", "cc")
                 .behaviour(CommandBehaviours.permissionChecking("mtc.chatclear"));
@@ -83,9 +85,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     }
 
     private void setDefaultIfUnset(String configPath, Object def) {
-        if (!configuration.contains(configPath)) {
-            configuration.set(configPath, def);
-        }
+        configuration.addDefault(configPath, def);
     }
 
     /**
@@ -123,6 +123,26 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     public List<String> getConfigStringList(String configPath, String... defaults) {
         setDefaultIfUnset(configPath, Arrays.asList(defaults));
         return configuration.getStringList(configPath);
+    }
+
+    /**
+     * Retrieves a list of strings from the configuration file, creating it with passed default
+     * values if it does not yet exist.
+     *
+     * @param configPath the path of the list
+     * @param def        the default entries
+     * @return the list, or the defaults, if it was created
+     */
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getConfigList(String configPath, Class<? extends T> listType, List<T> def) {
+        setDefaultIfUnset(configPath, def);
+        List<?> anyList = configuration.getList(configPath);
+        Preconditions.checkArgument(
+                anyList.stream().allMatch(entry -> listType.isAssignableFrom(entry.getClass())),
+                "config list %s is of wrong type: expected %s",
+                configPath, listType
+        );
+        return (List<T>) anyList;
     }
 
     public ChatDispatcher getDispatcher() {

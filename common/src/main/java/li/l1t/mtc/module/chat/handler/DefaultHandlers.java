@@ -26,5 +26,6 @@ public class DefaultHandlers {
         module.registerHandler(new AdFilterHandler());
         module.registerHandler(new RepeatedMessageHandler());
         module.registerHandler(new CapsFilterHandler());
+        module.registerHandler(new FunReplaceHandler());
     }
 }
