@@ -21,7 +21,7 @@ class ChatSuffixHandler extends AbstractChatHandler {
     private final ChatSuffixModule module;
 
     ChatSuffixHandler(ChatSuffixModule module) {
-        super(ChatPhase.BLOCKING);
+        super(ChatPhase.INITIALISING);
         this.module = module;
     }
 
