@@ -24,7 +24,7 @@ class ClanChatHandler extends AbstractChatHandler {
     private final ClanSubsystemProxy proxy;
 
     ClanChatHandler(ClanSubsystemProxy proxy) {
-        super(ChatPhase.BLOCKING);
+        super(ChatPhase.FORWARDING);
         this.proxy = proxy;
     }
 
