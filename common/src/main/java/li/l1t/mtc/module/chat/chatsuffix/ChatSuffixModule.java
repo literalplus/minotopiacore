@@ -30,7 +30,7 @@ public class ChatSuffixModule extends MTCModuleAdapter {
     private ChatSuffixRepository repository;
 
     protected ChatSuffixModule() {
-        super("GlobalMute", true);
+        super("Chatfarbe", true);
     }
 
     @Override

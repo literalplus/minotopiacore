@@ -26,7 +26,7 @@ public class ClanChatModule extends MTCModuleAdapter {
     private ClanSubsystemProxy subsystemProxy;
 
     protected ClanChatModule() {
-        super("GlobalMute", true);
+        super("ClanChat", true);
     }
 
     @Override
