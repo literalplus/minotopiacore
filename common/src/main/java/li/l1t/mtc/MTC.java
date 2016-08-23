@@ -17,10 +17,6 @@ import li.l1t.common.xyplugin.SqlXyPlugin;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.module.ModuleManager;
-import li.l1t.mtc.chat.ChatListener;
-import li.l1t.mtc.chat.CommandChatFarbe;
-import li.l1t.mtc.chat.CommandMute;
-import li.l1t.mtc.chat.MTCChatHelper;
 import li.l1t.mtc.chat.cmdspy.CommandCmdSpy;
 import li.l1t.mtc.chat.cmdspy.CommandSpyListener;
 import li.l1t.mtc.clan.ui.CommandClan;
@@ -132,9 +128,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
             ///HELP
             HelpManager.clearHelpManagers();
-
-            //CHAT
-            MTCChatHelper.clearPrivateChats();
 
             //SCOREBOARD
             for (Player plr : Bukkit.getOnlinePlayers()) {
@@ -272,10 +265,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         if (this.getConfig().getBoolean("enable.command.breload", true)) {
             this.getCommand("breload").setExecutor(new CommandBReload(this));
         }
-        if (this.getConfig().getBoolean("enable.chat", true)) { //CHAT
-            this.getCommand("chatfarbe").setExecutor(new CommandChatFarbe(this));
-            this.getCommand("mute").setExecutor(new CommandMute());
-        }
         if (ConfigHelper.isClanEnabled()) {
             this.getCommand("xclan").setExecutor(new CommandClan(this));
             this.getCommand("clanadmin").setExecutor(new CommandClanAdmin());
@@ -291,9 +280,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
     private void registerEventListeners(PluginManager pm) {
         if (this.getConfig().getBoolean("enable.misc.lighting.cow", true)) {
             pm.registerEvents(new LightningListener(), this);
-        }
-        if (this.getConfig().getBoolean("enable.chat", true)) {
-            pm.registerEvents(new ChatListener(this), this);
         }
         if (ConfigHelper.isEnableTablist() || MTC.speedOnJoinPotency > 0 || ConfigHelper.isEnableItemOnJoin() || ConfigHelper.
                 isClanEnabled()) {

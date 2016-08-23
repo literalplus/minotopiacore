@@ -8,22 +8,16 @@
 package li.l1t.mtc.test.cmdspy;
 
 import li.l1t.common.test.util.MockHelper;
-import li.l1t.lib.guava17.collect.ImmutableList;
+import li.l1t.common.test.util.mokkit.MockServer;
 import li.l1t.mtc.chat.cmdspy.CommandSpyFilter;
 import li.l1t.mtc.chat.cmdspy.CommandSpyFilters;
 import li.l1t.mtc.chat.cmdspy.RegExCommandSpyFilter;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Tests functionality of CommandSpy.
@@ -33,19 +27,19 @@ import static org.mockito.Mockito.when;
  */
 @SuppressWarnings("unchecked") //Weird casts with Server#getOnlinePlayers()Ljava.lang.Collection;
 public class CommandSpyFilterTest {
-    private static final Server SERVER = MockHelper.mockServer();
+    private MockServer server = MockHelper.mockServer();
     private UUID targetId = UUID.randomUUID();
     private UUID otherId = UUID.randomUUID();
 
     @Test
     public void testGlobalFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(ImmutableList.of(fakeSpy));
+        server.setOnlinePlayers(fakeSpy);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
         Assert.assertTrue("Couldn't inject fake player to global filter!", CommandSpyFilters.toggleGlobalFilter(fakeSpy));
 
         CommandSpyFilter globalFilter = CommandSpyFilters.getSubscribedFilters(targetId)
-                .findAny().get();
+                .findAny().orElseThrow(AssertionError::new);
 
         Assert.assertTrue("Global filter didn't match!",
                 globalFilter.matches("/any-command I enter should match this filter, even then it's as long as this öne?!öäüß", fakeSpy)); //additional slashes shouldn't matter
@@ -55,7 +49,7 @@ public class CommandSpyFilterTest {
     public void testPlayerFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
         Player fakeTarget = MockHelper.mockPlayer(otherId, "target"); //Need that one online or the filter will be destroyed
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Arrays.asList(fakeSpy, fakeTarget));
+        server.setOnlinePlayers(fakeSpy, fakeTarget);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         CommandSpyFilter playerFilter = CommandSpyFilters.playerFilter(otherId);
@@ -69,7 +63,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testTextFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
+        server.setOnlinePlayers(fakeSpy);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "inert string";
@@ -84,7 +78,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testToggleTextFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
+        server.setOnlinePlayers(fakeSpy);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "inert string";
@@ -95,7 +89,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testRegexFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
+        server.setOnlinePlayers(fakeSpy);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String regex = "(open)?inv(see)?";
@@ -118,7 +112,7 @@ public class CommandSpyFilterTest {
     @Test
     public void testToggleRegExFilter() {
         Player fakeSpy = MockHelper.mockPlayer(targetId, "spy");
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(Collections.singletonList(fakeSpy));
+        server.setOnlinePlayers(fakeSpy);
         CommandSpyFilters.unsubscribeFromAll(targetId); //Security measure
 
         String targetString = "!r(.+?)woa\\2";

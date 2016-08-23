@@ -7,18 +7,15 @@
 
 package li.l1t.mtc.test.cmd;
 
-import com.google.common.collect.ImmutableList;
 import li.l1t.common.test.util.MockHelper;
 import li.l1t.mtc.MTC;
 import li.l1t.mtc.misc.cmd.CommandMTC;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
@@ -35,7 +32,6 @@ import static org.mockito.Mockito.when;
  * @since 5.7.14
  */
 public class CommandMTCTest {
-    private static final Server SERVER = MockHelper.mockServer();
     private static CommandMTC commandMTC;
     private static Player fakeSender;
     private static Command fakeCommand = mock(Command.class);
@@ -59,7 +55,7 @@ public class CommandMTCTest {
         Player otherPlayer = MockHelper.mockPlayer(UUID.randomUUID(), "other");
         when(otherPlayer.hasPermission(any(String.class))).thenReturn(false);
 
-        when((Collection<Player>) SERVER.getOnlinePlayers()).thenReturn(ImmutableList.of(otherPlayer));
+        MockHelper.mockServer().setOnlinePlayers(otherPlayer);
         commandMTC.catchCommand(fakeSender, null, fakeCommand, "mtc", new String[]{"fm", "&6wowe"});
 
 //        verify(fakeSender).sendMessage(eq("§7(/mtc fm|" + fakeSender.getName() + ")§f §6wowe")); //Can't really check JSON messages easily

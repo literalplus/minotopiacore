@@ -8,8 +8,6 @@
 package li.l1t.mtc.cron;
 
 import li.l1t.mtc.MTC;
-import li.l1t.mtc.chat.MTCChatHelper;
-import li.l1t.mtc.chat.PrivateChat;
 import li.l1t.mtc.chat.cmdspy.CommandSpyFilters;
 import li.l1t.mtc.clan.ClanHelper;
 import li.l1t.mtc.logging.LogManager;
@@ -17,9 +15,6 @@ import li.l1t.mtc.misc.CacheHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-
-import java.util.Map;
 
 
 /**
@@ -42,27 +37,6 @@ public class RunnableCronjob5Minutes implements Runnable {
     @Override
     public void run() {
         try {
-            //private chats //REFACTOR
-            if (!MTCChatHelper.directChats.isEmpty()) {
-                for (Map.Entry<Integer, PrivateChat> entry : MTCChatHelper.directChats.entrySet()) {
-                    PrivateChat chat = entry.getValue();
-
-                    if (chat.activeRecipients.isEmpty()) {
-                        MTCChatHelper.directChats.remove(entry.getKey());
-                        if (!chat.recipients.isEmpty()) {
-                            chat.recipients.stream()
-                                    .filter(OfflinePlayer::isOnline)
-                                    .forEach(plr -> plr.sendMessage(MTC.chatPrefix + "Der Chat §a#" + chat.chatId + "§6 wurde gelöscht."));
-                        }
-                        continue;
-                    }
-
-                    chat.recipients.stream()
-                            .filter(plr -> !plr.isOnline())
-                            .forEach(chat::removeRecipient);
-                }
-            }
-
             //Remove dead CommandSpy filters
             CommandSpyFilters.removeDeadFilters();
 

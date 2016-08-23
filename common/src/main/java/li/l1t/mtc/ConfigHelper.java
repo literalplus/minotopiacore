@@ -7,7 +7,6 @@
 
 package li.l1t.mtc;
 
-import li.l1t.common.util.ChatHelper;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.chat.cmdspy.CommandSpyFilters;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,11 +32,9 @@ public class ConfigHelper {
     private static boolean clanEnabled;
     private static int clanMaxUsers;
     private static int clanMaxUsersExtended;
-    private static boolean chatUseClan;
     private static ArrayList<PotionEffect> snowballEffects;
     private static boolean magicSnowballEnabled;
     private static long snowballTimeoutTicks;
-    private static boolean worldSpecificChat;
     private static boolean antiLogoutEnabled;
     private static int secsInFight;
     private static int hologramTimeout;
@@ -47,10 +44,6 @@ public class ConfigHelper {
 
     public static List<Integer> getAnvilAllowedItems() {
         return ConfigHelper.anvilAllowedItems;
-    }
-
-    public static boolean getChatUseClan() {
-        return ConfigHelper.chatUseClan;
     }
 
     public static int getClanMaxUsers() {
@@ -145,10 +138,6 @@ public class ConfigHelper {
         return ConfigHelper.prohibitCmdsInBoats;
     }
 
-    public static boolean isWorldSpecificChat() {
-        return ConfigHelper.worldSpecificChat;
-    }
-
     public static List<Integer> getBrewStackCheckpoints() {
         return brewStackCheckpoints;
     }
@@ -163,10 +152,6 @@ public class ConfigHelper {
     }
 
     private static void addChatDefaults(FileConfiguration cfg) {
-        cfg.addDefault("chat.adDetectionLevel", 1);
-        cfg.addDefault("chat.adDetectionLevelALLOWEDVALUES", "For Ad Detection: 0=number ips, 1 = tlds 2 = tlds w/ space-trimming 3 = regex (will filter ANY occurences of '.'");
-        cfg.addDefault("chat.adDetectionReplacepointLikeChars", false);
-        cfg.addDefault("chat.maxCapsInPercent", 50);
         cfg.addDefault("chat.farbe.default", "§f");
         cfg.addDefault("chat.farbe.allowed", "012356789AaBbCcDdEeFfRr");
         cfg.addDefault("chat.useclan", true);
@@ -187,17 +172,13 @@ public class ConfigHelper {
         cfg.addDefault("enable.command.playerhead.getall-op-notify", true);
         cfg.addDefault("enable.command.breload", true);
         cfg.addDefault("enable.command.mtc", true);
-        cfg.addDefault("enable.command.invsee", true);
         cfg.addDefault("enable.command.team", true);
         cfg.addDefault("enable.command.rename", true);
         cfg.addDefault("enable.misc.lighting.cow", true);
         cfg.addDefault("enable.help", true);
         cfg.addDefault("enable.msg.enablePlug", true);
         cfg.addDefault("enable.msg.disablePlug", true);
-        cfg.addDefault("enable.motd", false);
         cfg.addDefault("enable.cron.5m", true);
-        cfg.addDefault("enable.bans", true);
-        cfg.addDefault("enable.warns", true);
         cfg.addDefault("enable.anvilNbrewingstandStackFix", true);
         cfg.addDefault("enable.infPotionFix", true);
         cfg.addDefault("enable.netherrooffix", true);
@@ -218,9 +199,7 @@ public class ConfigHelper {
         cfg.addDefault("enable.signcolor", true);
         cfg.addDefault("enable.playerhide", false);
         cfg.addDefault("enable.peace", false);
-        cfg.addDefault("enable.worldspecificchat", false);
         cfg.addDefault("enable.antilogout", false);
-        cfg.addDefault("enable.infdisp", true);
     }
 
     private static void addFixDefaults(FileConfiguration cfg) {
@@ -252,7 +231,6 @@ public class ConfigHelper {
     }
 
     private static void initClassProperties(FileConfiguration cfg) {
-        ChatHelper.percentForCaps = cfg.getInt("chat.maxCapsInPercent", 50);
         ConfigHelper.tabListAllowedColors = cfg.getString("tablist.allowedColors", "7012345689abcdef");
         ConfigHelper.prohibitCmdsInBoats = cfg.getBoolean("enable.fixes.boatCmds", true);
         ConfigHelper.enableTablist = cfg.getBoolean("enable.tablist", true);
@@ -263,15 +241,12 @@ public class ConfigHelper {
         ConfigHelper.clanEnabled = cfg.getBoolean("enable.clan", true);
         ConfigHelper.clanMaxUsers = cfg.getInt("clan.maxusers", 15);
         ConfigHelper.clanMaxUsersExtended = cfg.getInt("clan.maxusersextended", 25);
-        ConfigHelper.chatUseClan = cfg.getBoolean("chat.useclan", true);
         ConfigHelper.initPotionProps(cfg);
         ConfigHelper.snowballTimeoutTicks = cfg.getLong("snowball.timeoutTicks", 12000L);
-        ConfigHelper.worldSpecificChat = cfg.getBoolean("enable.worldspecificchat", false);
         ConfigHelper.antiLogoutEnabled = cfg.getBoolean("enable.antilogout", false);
         ConfigHelper.secsInFight = cfg.getInt("antilogout.secsInFight", 20);
         ConfigHelper.hologramTimeout = cfg.getInt("antilogout.hologramTimeout", 60);
         ConfigHelper.fightAllowedCmds = cfg.getStringList("antilogout.allowedCmds");
-        ChatHelper.allowedChatColors = cfg.getString("chat.farbe.allowed", "012356789AaBbDdEeFfRr");
         ConfigHelper.vehicleAllowedCmds = cfg.getStringList("vehicles.allowedCmds");
         setBrewStackCheckpoints(cfg.getIntegerList("fixes.brewstack.checkpoints"));
         cfg.getStringList("badCmds").stream().forEach(CommandSpyFilters::addBadCommand);

@@ -250,7 +250,6 @@ public final class CommandMTC extends MTCCommandExecutor {
                     if (!CommandHelper.checkPermAndMsg(sender, "mtc.cmd.mtc.clearcache", label)) {
                         return true;
                     }
-                    MTCChatHelper.cfCache = new HashMap<>();
                     ClanHelper.clearCache();
                     plugin.getXLoginHook().resetSpawnLocation();
                     plugin.getServer().getPluginManager().callEvent(new ClearCacheEvent());

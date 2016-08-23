@@ -7,7 +7,6 @@
 
 package li.l1t.mtc.listener;
 
-import li.l1t.mtc.chat.MTCChatHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,10 +20,6 @@ public final class ColoredSignListener implements Listener {
         if (e.getPlayer().hasPermission("mtc.signcolor.all")) {
             for (int i = 0; i <= 3; i++) {
                 e.setLine(i, ChatColor.translateAlternateColorCodes('&', e.getLine(i)));
-            }
-        } else if (e.getPlayer().hasPermission("mtc.signcolor.limited")) {
-            for (int i = 0; i <= 3; i++) {
-                e.setLine(i, MTCChatHelper.convertStandardColors(e.getLine(i)));
             }
         }
     }

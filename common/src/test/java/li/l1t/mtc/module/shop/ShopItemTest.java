@@ -9,15 +9,11 @@ package li.l1t.mtc.module.shop;
 
 import li.l1t.common.test.util.MockHelper;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,14 +37,7 @@ public class ShopItemTest {
 
     @BeforeClass
     public static void setBukkitServer() {
-        Server server = MockHelper.mockServer();//need this for item stack hasItemMeta() ._.
-
-        ItemFactory itemFactory = Mockito.mock(ItemFactory.class);
-        //noinspection ResultOfMethodCallIgnored
-        Mockito.doAnswer(args -> args.getArguments()[0] == null)
-                .when(itemFactory).equals(Mockito.any(ItemMeta.class), Mockito.isNull(ItemMeta.class));
-
-        Mockito.when(server.getItemFactory()).thenReturn(itemFactory);
+        MockHelper.mockServer(); //sets itemFactory for itemMeta equals (Yes idk what even)
     }
 
     //@Test

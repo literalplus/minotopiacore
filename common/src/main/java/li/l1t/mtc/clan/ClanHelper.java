@@ -13,7 +13,9 @@ import li.l1t.mtc.MTC;
 import li.l1t.mtc.chat.MTCChatHelper;
 import li.l1t.mtc.helper.LaterMessageHelper;
 import li.l1t.mtc.helper.MTCHelper;
+import li.l1t.mtc.logging.LogManager;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +32,7 @@ import java.util.Set;
 
 
 public final class ClanHelper { //REFACTOR
-
+    private static final Logger LOGGER = LogManager.getLogger(ClanHelper.class);
     public static Map<Integer, ClanInfo> cacheById = new HashMap<>(); //TODO uuids
     public static Map<String, ClanInfo> cacheByName = new HashMap<>();
     public static Map<String, ClanMemberInfo> memberCache = new HashMap<>();
@@ -78,17 +80,17 @@ public final class ClanHelper { //REFACTOR
      */
     public static void sendChatMessage(ClanInfo clanInfo, String message, ClanMemberInfo senderInfo) {
         message = message.replaceFirst("#", "");
-        if (ClanPermission.has(senderInfo, ClanPermission.CHATCOLSPECIAL)) {
+        if (ClanPermission.has(senderInfo, ClanPermission.CHATCOLSPECIAL) ||
+                ClanPermission.has(senderInfo, ClanPermission.CHATCOL)) {
             message = ChatColor.translateAlternateColorCodes('&', message);
-        } else if (ClanPermission.has(senderInfo, ClanPermission.CHATCOL)) {
-            message = MTCChatHelper.convertStandardColors(message);
         }
         String strippedMessage = ChatColor.stripColor(message);
 
         ClanHelper.broadcast(clanInfo.id, "XC-chatformat", false,
                 ClanHelper.getNameFormatByRank(senderInfo.userName, senderInfo.getRank()), message);
         MTCChatHelper.sendClanSpyMsg(senderInfo.userName + ": " + strippedMessage, clanInfo.prefix);
-        MTCChatHelper.logClanChatMessage(strippedMessage, clanInfo.prefix, senderInfo.userName);
+        LOGGER.info("clan {} - {}: {}",
+                clanInfo.prefix, senderInfo.userName, ChatColor.stripColor(message));
     }
 
     /**

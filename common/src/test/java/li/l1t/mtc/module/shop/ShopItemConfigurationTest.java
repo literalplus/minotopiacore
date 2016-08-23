@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.shop;
 
 import com.google.common.collect.Lists;
-import li.l1t.lib.guava17.collect.Table;
+import com.google.common.collect.Table;
 import li.l1t.mtc.MTC;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
