@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.api.chat;
 
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -59,6 +60,20 @@ public enum MessageType {
      */
     public void sendTo(CommandSender sender, String message, Object... arguments) {
         sender.sendMessage(format(message, arguments));
+    }
+
+    /**
+     * Formats a message of this type and sends the formatted message to all players on given
+     * server.
+     *
+     * @param server    the server to get players from
+     * @param message   the message to format
+     * @param arguments the arguments for the message
+     * @see #format(String, Object...) for details on formatting
+     */
+    public void broadcast(Server server, String message, Object... arguments) {
+        String finalMessage = format(message, arguments);
+        server.getOnlinePlayers().forEach(player -> player.sendMessage(finalMessage));
     }
 
     public String getTemplate() {
