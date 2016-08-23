@@ -10,7 +10,7 @@
     <parent>
         <artifactId>mtc-parent</artifactId>
         <groupId>li.l1t.mtc</groupId>
-        <version>1.7.0-SNAPSHOT</version>
+        <version>1.7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mtc-common</artifactId>

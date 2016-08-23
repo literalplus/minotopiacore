@@ -10,7 +10,7 @@
 
     <groupId>li.l1t.mtc</groupId>
     <artifactId>mtc-parent</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.0</version>
     <modules>
         <module>common</module>
         <module>api</module>
@@ -23,7 +23,7 @@
 
     <scm>
         <connection>scm:git:git@bitbucket.org:minotopia/minotopiacore.git</connection>
-      <tag>HEAD</tag>
+      <tag>mtc-parent-1.7.0</tag>
   </scm>
 
     <distributionManagement>
