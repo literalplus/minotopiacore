@@ -58,7 +58,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     public static final String INFINITE_PERMISSION = "mtc.infinitedispenser"; //keeping legacy constant for backwards compatibility
     private static final String DATA_PATH = "dispensers"; //keeping legacy constant for backwards compatibility
     private List<XyLocation> infiniteBlockLocations;
-    @InjectMe
+    @InjectMe(required = false)
     private FullTagModule fullTagModule;
 
     public InfiniteBlockModule() {

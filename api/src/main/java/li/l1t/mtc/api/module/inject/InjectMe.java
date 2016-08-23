@@ -29,7 +29,15 @@ public @interface InjectMe {
      *
      * @return whether this injection is required
      */
-    boolean required() default false;
+    boolean required() default true;
+
+    /**
+     * Gets whether the module enabling should fail silently if the required dependency could not be
+     * injected. This is helpful for submodules.
+     *
+     * @return whether missing required dependencies should about loading but not log messages
+     */
+    boolean failSilently() default false;
 
     /**
      * @return a hint to the injector

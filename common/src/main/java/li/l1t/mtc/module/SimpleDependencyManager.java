@@ -59,6 +59,9 @@ class SimpleDependencyManager implements DependencyManager {
             }
 
             if (annotation.required() && !dependency.hasInstance()) {
+                if (annotation.failSilently()) {
+                    return false;
+                }
                 throw new IllegalArgumentException(String.format("Unable to load required module dependency: %s (from %s)",
                         dependencyType.getSimpleName(), dependencyStack.toString()));
             }
@@ -77,7 +80,9 @@ class SimpleDependencyManager implements DependencyManager {
         }
 
         try {
-            discoverInjections(meta, dependencyStack); //throws IllegalArgumentException
+            if (!discoverInjections(meta, dependencyStack)) { //fails silently if module is submodule
+                return;
+            }
             meta.createInstance();
         } catch (NoSuchMethodException e) {
             //Wrap this specific problem with a more helpful error message to simplify usage for developers

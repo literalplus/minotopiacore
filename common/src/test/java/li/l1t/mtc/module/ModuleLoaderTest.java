@@ -139,10 +139,10 @@ public class ModuleLoaderTest {
     }
 
     private static class Module2 extends MockMTCModule {
-        @InjectMe(required = true)
+        @InjectMe
         Module1 module1;
 
-        @InjectMe
+        @InjectMe(required = false)
         Module3 module3;
 
         Module1 ordinaryField;
@@ -153,13 +153,13 @@ public class ModuleLoaderTest {
     }
 
     private static class Module3 extends MockMTCModule {
-        @InjectMe
+        @InjectMe(required = false)
         Module1 module1;
 
-        @InjectMe
+        @InjectMe(required = false)
         Module2 module2;
 
-        @InjectMe
+        @InjectMe(required = false)
         Module4 module4;
 
         @InjectMe

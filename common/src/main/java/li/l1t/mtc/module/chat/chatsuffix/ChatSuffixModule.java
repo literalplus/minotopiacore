@@ -23,7 +23,7 @@ import li.l1t.mtc.module.chat.chatsuffix.data.SqlChatSuffixRepository;
  * @since 2016-08-21
  */
 public class ChatSuffixModule extends MTCModuleAdapter {
-    @InjectMe
+    @InjectMe(failSilently = true)
     private ChatModule chatModule;
     private boolean globalMute = false;
     private String globalMuteReason = "";

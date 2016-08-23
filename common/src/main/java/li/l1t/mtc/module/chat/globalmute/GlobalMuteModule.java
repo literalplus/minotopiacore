@@ -21,7 +21,7 @@ import li.l1t.mtc.module.chat.ChatModule;
  * @since 2016-08-21
  */
 public class GlobalMuteModule extends MTCModuleAdapter {
-    @InjectMe
+    @InjectMe(failSilently = true)
     private ChatModule chatModule;
     private boolean globalMute = false;
     private String globalMuteReason = "";

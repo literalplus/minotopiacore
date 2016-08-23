@@ -24,7 +24,7 @@ import li.l1t.mtc.module.chat.mute.yaml.YamlMuteManager;
  * @since 2016-08-21
  */
 public class PlayerMuteModule extends ConfigurableMTCModule {
-    @InjectMe
+    @InjectMe(failSilently = true)
     private ChatModule chatModule;
     private YamlMuteManager muteManager;
 

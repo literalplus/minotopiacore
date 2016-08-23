@@ -40,7 +40,7 @@ public class ShopModule extends ConfigurableMTCModule {
     private ShopItemConfiguration itemConfig;
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
-    @InjectMe
+    @InjectMe(required = false)
     private FullTagModule fullTagModule;
     private UpdateDiscountTask updateDiscountTask = new UpdateDiscountTask(this); //needs to be a field so that update interval can be reloaded on-the-fly
 

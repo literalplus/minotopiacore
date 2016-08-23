@@ -44,7 +44,7 @@ public class SimpleInjectionTarget<T> implements InjectionTarget<T> {
     @Override
     public <V> Injection<T> registerDependant(InjectionTarget<V> dependant, Field field) {
         InjectMe annotation = field.getAnnotation(InjectMe.class);
-        Preconditions.checkNotNull(annotation, "field must have @InjectModule annotation: %s", field);
+        Preconditions.checkNotNull(annotation, "field must have @InjectMe annotation: %s", field);
         Injection<T> injection = new Injection<>(field, annotation, this, dependant);
         dependants.put(dependant, injection);
         dependant.getDependencies().put(this, injection);

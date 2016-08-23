@@ -21,7 +21,7 @@ import li.l1t.mtc.module.chat.clanchat.proxy.LegacyClanProxy;
  * @since 2016-08-21
  */
 public class ClanChatModule extends MTCModuleAdapter {
-    @InjectMe
+    @InjectMe(failSilently = true)
     private ChatModule chatModule;
     private ClanSubsystemProxy subsystemProxy;
 

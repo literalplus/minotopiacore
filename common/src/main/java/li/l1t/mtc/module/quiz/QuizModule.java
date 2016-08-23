@@ -41,7 +41,7 @@ public class QuizModule extends ConfigurableMTCModule {
     private final Map<UUID, QuizQuestion.Builder> questionSessions = Collections.synchronizedMap(new HashMap<>());
     private List<QuizQuestion> questions = Collections.synchronizedList(new LinkedList<>());
     private QuizGame game;
-    @InjectMe
+    @InjectMe(required = false)
     private GlobalMuteModule globalMuteModule;
 
     public QuizModule() {
