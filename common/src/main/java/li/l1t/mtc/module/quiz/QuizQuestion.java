@@ -9,7 +9,6 @@ package li.l1t.mtc.module.quiz;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.configuration.serialization.SerializableAs;
 
 import java.util.HashMap;
@@ -25,11 +24,6 @@ import java.util.regex.Pattern;
  */
 @SerializableAs("mtc.quiz.question")
 public class QuizQuestion implements ConfigurationSerializable {
-    static {
-        ConfigurationSerialization.registerClass(QuizQuestion.class);
-        ConfigurationSerialization.registerClass(QuizQuestion.class, "io.github.xxyy.mtc.module.quiz.QuizQuestion"); //TODO: temporary compatibility measure
-    }
-
     private final String text;
     private final String answer;
     private final Pattern pattern;
