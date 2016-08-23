@@ -8,6 +8,7 @@
 package li.l1t.mtc.yaml;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.misc.Cache;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -282,5 +285,26 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
 
     public File getFile() {
         return file;
+    }
+
+    /**
+     * Retrieves a list of strings from this configuration, it it exists. Returns an empty list
+     * otherwise.
+     *
+     * @param configPath the path of the list
+     * @return the list, or the defaults, if it was created
+     */
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getListChecked(String configPath, Class<? extends T> listType) {
+        List<?> anyList = getList(configPath);
+        if (anyList == null) {
+            return new ArrayList<>();
+        }
+        Preconditions.checkArgument(
+                anyList.stream().allMatch(entry -> listType.isAssignableFrom(entry.getClass())),
+                "config list %s is of wrong type: expected %s",
+                configPath, listType
+        );
+        return (List<T>) anyList;
     }
 }
