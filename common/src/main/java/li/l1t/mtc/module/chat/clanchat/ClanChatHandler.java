@@ -32,11 +32,12 @@ class ClanChatHandler extends AbstractChatHandler {
     public void handle(ChatMessageEvent evt) {
         appendClanPrefixIfApplicable(evt);
         if (!isMessageClanScoped(evt.getPlayer(), evt.getInitialMessage())) {
-            removeEscapeSequenceIfPresent(evt);
+            removeEscapeSequencesIfPresent(evt);
             return;
         }
         if (sentByClanMember(evt)) {
             evt.dropMessage();
+            removeEscapeSequencesIfPresent(evt);
             broadcastToClanOfSender(evt);
         } else {
             evt.tryDenyMessage("Du bist in keinem Clan! §a/clan", null);
@@ -52,9 +53,12 @@ class ClanChatHandler extends AbstractChatHandler {
                 (message.startsWith("#") || ClanHelper.isInChat(player.getName()));
     }
 
-    private void removeEscapeSequenceIfPresent(ChatMessageEvent evt) {
-        if (evt.getMessage().startsWith(".#")) {
-            evt.setMessage(evt.getMessage().replaceFirst("\\.#", "#"));
+    private void removeEscapeSequencesIfPresent(ChatMessageEvent evt) {
+        String message = evt.getMessage();
+        if (message.startsWith(".#") || message.startsWith("!g")) {
+            evt.setMessage(message.substring(2));
+        } else if (message.startsWith("#")) {
+            evt.setMessage(message.substring(1));
         }
     }
 
