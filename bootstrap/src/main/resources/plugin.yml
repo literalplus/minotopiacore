@@ -26,10 +26,6 @@ commands:
     description: "Spielerkopf-Tools. Mehr Info: /mtc help <command>"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [ph]
-  chatclear:
-    description: Leert den globalen Chat.
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [cc, clearchat, xcc]
   cmdspy:
     description: "CommandSpy."
     usage: "/<command> nicht geladen. Ausgeschaltet?"

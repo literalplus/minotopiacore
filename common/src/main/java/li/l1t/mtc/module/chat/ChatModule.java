@@ -44,10 +44,10 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         DefaultHandlers.registerAllWith(this);
-        configuration.asyncSave(plugin); //shouldn't change any more after enabling
         registerListener(this);
         registerCommand(new CommandChatClear(this), "chatclear", "cc")
                 .behaviour(CommandBehaviours.permissionChecking("mtc.chatclear"));
+        configuration.save(); //shouldn't change any more after enabling
     }
 
     @Override
