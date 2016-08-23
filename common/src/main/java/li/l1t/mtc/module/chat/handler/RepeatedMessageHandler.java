@@ -75,8 +75,8 @@ public class RepeatedMessageHandler extends AbstractChatHandler implements Cache
         if (!evt.mayBypassFilters()) {
             if (messages.size() >= 3) {
                 messages.remove(0);
-                messages.add(evt.getMessage());
             }
+            messages.add(evt.getMessage());
         }
     }
 
