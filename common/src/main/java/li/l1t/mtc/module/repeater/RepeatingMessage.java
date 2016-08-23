@@ -9,6 +9,7 @@ package li.l1t.mtc.module.repeater;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.UUID;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 30/11/14
  */
+@SerializableAs("mtc.rpt.msg")
 public class RepeatingMessage implements ConfigurationSerializable {
     public static final String MESSAGE_PATH = "message";
     public static final String INTERVAL_PATH = "interval";

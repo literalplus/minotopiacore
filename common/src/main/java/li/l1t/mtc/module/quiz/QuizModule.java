@@ -13,7 +13,6 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.chat.globalmute.GlobalMuteModule;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,7 +45,6 @@ public class QuizModule extends ConfigurableMTCModule {
 
     public QuizModule() {
         super(NAME, "modules/quiz.conf.yml", ClearCacheBehaviour.SAVE, false);
-        ConfigurationSerialization.registerClass(QuizQuestion.class);
     }
 
     @Override

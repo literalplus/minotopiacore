@@ -49,7 +49,9 @@ public class TrueFalseModule extends ConfigurableMTCModule {
     public TrueFalseModule() {
         super(NAME, "modules/truefalse.conf.yml", ClearCacheBehaviour.SAVE, false);
         ConfigurationSerialization.registerClass(XyLocation.class); //Ensure the class is loaded - double call doesn't hurt (https://github.com/SpigotMC/Spigot-API/blob/master/src/main/java/org/bukkit/configuration/serialization/ConfigurationSerialization.java#L218)
+        ConfigurationSerialization.registerClass(XyLocation.class, "io.github.xxyy.common.misc.XyLocation"); //TODO: temporary
         ConfigurationSerialization.registerClass(TrueFalseQuestion.class);
+        ConfigurationSerialization.registerClass(TrueFalseQuestion.class, "io.github.xxyy.mtc.module.truefalse.TrueFalseQuestion");
     }
 
     @Override

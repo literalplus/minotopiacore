@@ -9,6 +9,7 @@ package li.l1t.mtc.module.truefalse;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 4.9.14
  */
+@SerializableAs("mtc.tf.question")
 public class TrueFalseQuestion implements ConfigurationSerializable {
 
     private final String text;

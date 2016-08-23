@@ -46,6 +46,7 @@ public class VillagerTradePermissionModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         ConfigurationSerialization.registerClass(VillagerInfo.class);
+        ConfigurationSerialization.registerClass(VillagerInfo.class, "io.github.xxyy.mtc.module.villagertradepermission.VillagerInfo"); //TODO: temp
         super.enable(plugin);
         listener = new VillagerClickListener(this);
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);

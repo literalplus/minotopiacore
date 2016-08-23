@@ -217,11 +217,13 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
         } catch (InvalidConfigurationException ex) { //Handle backups
             try {
                 File backupFile = new File(file.getAbsolutePath(), file.getName() + ".mtcbak");
+                //noinspection ResultOfMethodCallIgnored
+                backupFile.createNewFile();
                 Files.copy(file, backupFile); //We're using the other Files class in this class too
                 Bukkit.getLogger().log(Level.SEVERE, String.format("Invalid configuration syntax detected for %s! Backup is available at %s",
                         file, backupFile.getName()), ex);
             } catch (IOException e) {
-                Bukkit.getLogger().log(Level.SEVERE, "Failed to save backup for invalid configuration file at " + file + "!", ex);
+                Bukkit.getLogger().log(Level.SEVERE, "Failed to save backup for invalid configuration file at " + file + "!", e);
             }
             setError(ex);
         }

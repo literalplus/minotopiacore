@@ -37,6 +37,7 @@ public class RepeaterModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         ConfigurationSerialization.registerClass(RepeatingMessage.class);
+        ConfigurationSerialization.registerClass(RepeatingMessage.class, "io.github.xxyy.mtc.module.repeater.RepeatingMessage"); //TODO: temporary compat
         super.enable(plugin);
 
         registerCommand(new CommandRepeat(this), "repeat", "rpt")
