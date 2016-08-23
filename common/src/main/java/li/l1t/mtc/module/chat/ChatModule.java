@@ -15,8 +15,10 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.chat.api.ChatDispatcher;
 import li.l1t.mtc.module.chat.api.ChatHandler;
 import li.l1t.mtc.module.chat.command.CommandChatClear;
+import li.l1t.mtc.module.chat.config.ReplacementSpec;
 import li.l1t.mtc.module.chat.handler.DefaultHandlers;
 import li.l1t.mtc.module.chat.impl.SimpleChatDispatcher;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -43,6 +45,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
+        ConfigurationSerialization.registerClass(ReplacementSpec.class);
         DefaultHandlers.registerAllWith(this);
         registerListener(this);
         registerCommand(new CommandChatClear(this), "chatclear", "cc")

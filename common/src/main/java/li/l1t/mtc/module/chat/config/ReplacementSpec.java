@@ -9,6 +9,7 @@ package li.l1t.mtc.module.chat.config;
 
 import li.l1t.common.chat.TextOperators;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.function.UnaryOperator;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-08-22
  */
+@SerializableAs("mtc.chat.replace")
 public class ReplacementSpec implements ConfigurationSerializable {
     private static final String REPLACE_ENTIRELY_PATH = "replace-entirely";
     private static final String REGEX_PATH = "pattern-regex";
