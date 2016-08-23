@@ -47,6 +47,7 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
         registerListener(this);
         registerCommand(new CommandChatClear(this), "chatclear", "cc")
                 .behaviour(CommandBehaviours.permissionChecking("mtc.chatclear"));
+        configuration.options().copyDefaults(true);
         configuration.save(); //shouldn't change any more after enabling
     }
 
