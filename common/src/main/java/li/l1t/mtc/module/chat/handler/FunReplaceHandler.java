@@ -35,6 +35,9 @@ public class FunReplaceHandler extends AbstractChatHandler {
             new ReplacementSpec(false, "[a4](rsch)?[l1][o0\\(\\)]+(ch)?|[a4]rsch", "elegante Person"),
             new ReplacementSpec(false, "fuck", "fluff"),
             new ReplacementSpec(false, "[?!]{3,}", "."),
+            new ReplacementSpec(false, "<3", "❤"),
+            new ReplacementSpec(false, "shrug", "¯\\_(ツ)_/¯"),
+            new ReplacementSpec(false, ";\\)", "ツ"),
             new ReplacementSpec(true, "\\bez\\b", "Ich bedanke mich für den guten Kampf.")
     );
     private TextReplacementService service;
