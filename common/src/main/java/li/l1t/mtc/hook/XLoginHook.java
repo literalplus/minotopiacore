@@ -7,14 +7,23 @@
 
 package li.l1t.mtc.hook;
 
+import com.google.common.base.Preconditions;
+import li.l1t.common.chat.ComponentSender;
+import li.l1t.common.chat.XyComponentBuilder;
+import li.l1t.mtc.api.chat.MessageType;
+import li.l1t.mtc.api.exception.UserException;
 import li.l1t.mtc.hook.impl.XLoginHookImpl;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Helps interfacing with the xLogin plugin.
@@ -95,6 +104,61 @@ public class XLoginHook extends SimpleHookWrapper {
     public UUID getBestUniqueId(String nameOrId) {
         Profile profile = getBestProfile(nameOrId);
         return profile == null ? null : profile.getUniqueId();
+    }
+
+    /**
+     * Finds the single matching profile for an input string. If there are no matches, a descriptive
+     * exception is thrown. If there are too many matches, the sender is provided JSON chat links to
+     * select the correct result.
+     *
+     * @param input          the input string, either a unique id or player name
+     * @param sender         the sender to send messages to
+     * @param commandBuilder a function that provides the command lines to execute for each profile
+     * @return the single matching profile, never null
+     * @throws UserException if the match count is different from one
+     */
+    public XLoginHook.Profile findSingleMatchingProfileOrFail(String input, CommandSender sender,
+                                                              Function<Profile, String> commandBuilder) {
+        List<XLoginHook.Profile> profiles = getProfiles(input);
+        if (profiles.isEmpty()) {
+            throw new UserException("Unbekannter Spieler: %s", input);
+        } else if (profiles.size() > 1) {
+            MessageType.USER_ERROR.sendTo(sender, "Mehrere Spieler zu diesem Kriterium gefunden:");
+            profiles.forEach(profile -> sendProfileInfoTo(sender, profile, commandBuilder));
+            throw new UserException("Bitte wähle oben den gewünschten Spieler aus.");
+        }
+        return Preconditions.checkNotNull(profiles.get(0), "profiles.get(0), for ", input);
+    }
+
+    /**
+     * Sends a chat line to a sender, describing a given profile. Given function will be used to
+     * convert the profile into a Minecraft command line that will be linked next to the profile
+     * info.
+     *
+     * @param sender         the sender to send to
+     * @param profile        the profile to display
+     * @param commandBuilder the command line builder
+     */
+    public void sendProfileInfoTo(CommandSender sender, Profile profile, Function<Profile, String> commandBuilder) {
+        ComponentSender.sendTo(
+                new XyComponentBuilder("-➩ ", ChatColor.YELLOW).bold(true)
+                        .append(profile.getName() + " (").color(ChatColor.GOLD).bold(false)
+                        .append(formatPremiumStatus(profile)).color(getPremiumColor(profile))
+                        .append(")").color(ChatColor.GOLD)
+                        .append(" [Auswählen]").italic(true).color(ChatColor.GOLD)
+                        .hintedCommand(commandBuilder.apply(profile)),
+                sender
+        );
+    }
+
+    @Nonnull
+    private ChatColor getPremiumColor(Profile profile) {
+        return profile.isPremium() ? ChatColor.GREEN : ChatColor.RED;
+    }
+
+    @Nonnull
+    private String formatPremiumStatus(Profile profile) {
+        return profile.isPremium() ? "Premium" : "Cracked";
     }
 
     @Override
