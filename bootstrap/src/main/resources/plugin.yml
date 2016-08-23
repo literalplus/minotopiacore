@@ -30,14 +30,6 @@ commands:
     description: Leert den globalen Chat.
     usage: "/<command> nicht geladen. Ausgeschaltet?"
     aliases: [cc, clearchat, xcc]
-  chatfarbe:
-    description: "Aendert deine Chatfarbe. Mehr: /<command> help"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [cf, chatcolor]
-  mute:
-    description: "MTC Mute. Mehr Info: /<command>"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [mtcmute,mtsmute,mmute]
   cmdspy:
     description: "CommandSpy."
     usage: "/<command> nicht geladen. Ausgeschaltet?"
