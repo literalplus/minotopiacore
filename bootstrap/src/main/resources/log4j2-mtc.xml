@@ -74,7 +74,10 @@
         <Logger name="li.l1t.mtc.module.fulltag.dist" level="info" additivity="false">
             <AppenderRef ref="FullTagDistLogFile"/>
         </Logger>
-        <Logger name="li.l1t.mtc.chat" level="info" additivity="false">
+        <Logger name="li.l1t.mtc.module.chat" level="info" additivity="false">
+            <AppenderRef ref="ChatLogFile"/>
+        </Logger>
+        <Logger name="li.l1t.mtc.clan.ClanHelper" level="info" additivity="false">
             <AppenderRef ref="ChatLogFile"/>
         </Logger>
         <Logger name="li.l1t.mtc.chat.cmdspy.BadCommandSpyFilter" level="info" additivity="false">
