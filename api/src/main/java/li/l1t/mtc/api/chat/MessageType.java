@@ -21,10 +21,10 @@ public enum MessageType {
     WARNING("§e§lAchtung: §e%s"),
     USER_ERROR("§c§lFehler: §c%s"),
     INTERNAL_ERROR("§4§lInterner Fehler: §c%s"),
-    RESULT_LINE(String.format("§e§l%s §6", ChatConstants.LEFT_ARROW)),
-    RESULT_LINE_SUCCESS(String.format("§e§l%s §a", ChatConstants.LEFT_ARROW)),
-    LIST_HEADER(String.format("§e§l%s §e", ChatConstants.LEFT_ARROW)),
-    LIST_ITEM(String.format("§e§l-%s §6", ChatConstants.LEFT_ARROW)),
+    RESULT_LINE(String.format("§e§l%s §6%%s", ChatConstants.LEFT_ARROW)),
+    RESULT_LINE_SUCCESS(String.format("§e§l%s §a%%s", ChatConstants.LEFT_ARROW)),
+    LIST_HEADER(String.format("§e§l%s §e%%s", ChatConstants.LEFT_ARROW)),
+    LIST_ITEM(String.format("§e§l-%s §6%%s", ChatConstants.LEFT_ARROW)),
     HEADER("§x»»» §p%s §s«««"),
     BROADCAST("§x%s");
 

@@ -33,7 +33,7 @@ class CommandUnmute implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 3 || args[0].equalsIgnoreCase("help")) {
+        if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
             sendHelpTo(sender);
             return true;
         }
@@ -49,8 +49,7 @@ class CommandUnmute implements CommandExecutor {
     }
 
     private void sendHelpTo(CommandSender sender) {
-        sender.sendMessage("§a/mute [Spieler] [Dauer] [Grund...] §6Muted einen Spieler");
-        sender.sendMessage("§6Beispiele für Dauer: §a15m§6,§a 7d§6,§a5h");
+        sender.sendMessage("§a/unmute [Spieler] §6Entmuted einen Spieler");
     }
 
     private XLoginHook.Profile findSingleMatchingProfileOrFail(String input, CommandSender sender) {
