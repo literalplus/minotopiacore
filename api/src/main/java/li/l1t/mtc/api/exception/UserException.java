@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.api.exception;
 
+import li.l1t.mtc.api.chat.MessageType;
+
 /**
  * Represents an exception that will be shown to command senders as error they caused by providing
  * invalid arguments.
@@ -17,6 +19,17 @@ package li.l1t.mtc.api.exception;
 public class UserException extends PlayerReadableException {
     public UserException(String message) {
         super(message);
+    }
+
+    /**
+     * Creates a new UserException with a {@link String#format(String, Object...)}-like message
+     * pattern and parameters.
+     *
+     * @param messagePattern the pattern for the message
+     * @param params         the parameters
+     */
+    public UserException(String messagePattern, Object... params) {
+        super(String.format(messagePattern, params));
     }
 
     public UserException(String message, Throwable cause) {
@@ -41,7 +54,7 @@ public class UserException extends PlayerReadableException {
 
     @Override
     protected String formatMessage() {
-        return "§c§lFehler: §c" + getMessage();
+        return MessageType.USER_ERROR.format(getMessage());
     }
 
     @Override

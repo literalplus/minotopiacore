@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.api.exception;
 
+import li.l1t.mtc.api.chat.MessageType;
+
 import java.sql.SQLException;
 
 /**
@@ -39,7 +41,7 @@ public class InternalException extends PlayerReadableException {
 
     @Override
     protected String formatMessage() {
-        return "§4§lInterner Fehler: §c" + getMessage();
+        return MessageType.INTERNAL_ERROR.format(getMessage());
     }
 
     @Override
