@@ -27,5 +27,6 @@ public class DefaultHandlers {
         module.registerHandler(new RepeatedMessageHandler());
         module.registerHandler(new CapsFilterHandler());
         module.registerHandler(new FunReplaceHandler());
+        module.registerHandler(new ChatColorHandler());
     }
 }
