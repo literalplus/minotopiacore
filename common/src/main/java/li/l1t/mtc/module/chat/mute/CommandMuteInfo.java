@@ -18,6 +18,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
@@ -30,7 +32,7 @@ import java.util.Locale;
  */
 class CommandMuteInfo implements CommandExecutor {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-            .ofLocalizedDateTime(FormatStyle.MEDIUM)
+            .ofLocalizedDateTime(FormatStyle.LONG)
             .withLocale(Locale.GERMAN);
     private final XLoginHook xLoginHook;
     private final MuteManager muteManager;
@@ -75,13 +77,17 @@ class CommandMuteInfo implements CommandExecutor {
     private void sendMuteInfoTo(CommandSender sender, XLoginHook.Profile profile, Mute mute) {
         MessageType.RESULT_LINE.sendTo(sender, "§s%s §pist momentan gemuted.", profile.getName());
         MessageType.RESULT_LINE.sendTo(sender, "gemuted seit: §s%s",
-                DATE_TIME_FORMATTER.format(mute.getUpdateTime())
+                formatInstant(mute.getUpdateTime())
         );
         MessageType.RESULT_LINE.sendTo(sender, "gemuted bis: §s%s",
-                DATE_TIME_FORMATTER.format(mute.getExpiryTime())
+                formatInstant(mute.getExpiryTime())
         );
         MessageType.RESULT_LINE.sendTo(sender, "gemuted von: §s%s", formatMuteSource(mute));
         MessageType.RESULT_LINE.sendTo(sender, "Mutegrund: §s%s", mute.getReason());
+    }
+
+    private String formatInstant(Instant instant) {
+        return DATE_TIME_FORMATTER.format(instant.atZone(ZoneId.systemDefault()));
     }
 
     private String formatMuteSource(Mute mute) {
