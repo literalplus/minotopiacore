@@ -91,7 +91,7 @@ class CommandMuteInfo implements CommandExecutor {
     }
 
     private String formatMuteSource(Mute mute) {
-        XLoginHook.Profile profile = xLoginHook.getProfile(mute.getPlayerId());
+        XLoginHook.Profile profile = xLoginHook.getProfile(mute.getSourceId());
         if (profile == null) {
             return "???";
         } else {
