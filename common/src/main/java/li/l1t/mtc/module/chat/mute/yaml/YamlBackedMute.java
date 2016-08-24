@@ -22,7 +22,7 @@ import java.util.UUID;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-08-23
  */
-class YamlBackedMute implements ConfigurationSerializable, Mute {
+public class YamlBackedMute implements ConfigurationSerializable, Mute {
     private static final String PLAYER_ID_PATH = "player-id";
     private static final String UPDATE_TIME_PATH = "update-time";
     private static final String EXPIRY_TIME_PATH = "expiry-time";

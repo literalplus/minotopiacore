@@ -14,7 +14,9 @@ import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.chat.ChatModule;
+import li.l1t.mtc.module.chat.mute.yaml.YamlBackedMute;
 import li.l1t.mtc.module.chat.mute.yaml.YamlMuteManager;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 /**
  * Provides global mute functionality for the chat module. When global mute is enabled,
@@ -30,6 +32,7 @@ public class PlayerMuteModule extends ConfigurableMTCModule {
 
     protected PlayerMuteModule() {
         super("Mute", "modules/mute.lst.yml", ClearCacheBehaviour.SAVE, true);
+        ConfigurationSerialization.registerClass(YamlBackedMute.class);
     }
 
     @Override
