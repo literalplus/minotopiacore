@@ -40,12 +40,12 @@ public class ChatModule extends ConfigurableMTCModule implements Listener {
     protected ChatModule() {
         super(NAME, "modules/chat.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, true);
         dispatcher = new SimpleChatDispatcher(this);
+        ConfigurationSerialization.registerClass(ReplacementSpec.class);
     }
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
-        ConfigurationSerialization.registerClass(ReplacementSpec.class);
         DefaultHandlers.registerAllWith(this);
         registerListener(this);
         registerCommand(new CommandChatClear(this), "chatclear", "cc")
