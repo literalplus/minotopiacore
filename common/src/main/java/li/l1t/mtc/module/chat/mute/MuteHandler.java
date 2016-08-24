@@ -37,6 +37,6 @@ class MuteHandler extends AbstractChatHandler {
 
     @Nonnull
     private String getErrorMessage() {
-        return "Du bist gemuted und kannst nicht schreiben. Info: §a/mute";
+        return "Du bist gemuted und kannst nicht schreiben. §a/muteinfo";
     }
 }
