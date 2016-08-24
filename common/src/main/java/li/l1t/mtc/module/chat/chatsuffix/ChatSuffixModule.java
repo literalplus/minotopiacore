@@ -40,6 +40,7 @@ public class ChatSuffixModule extends MTCModuleAdapter {
         chatModule.registerHandler(new ChatSuffixHandler(this));
         registerCommand(new CommandChatSuffix(this), "chatfarbe", "cf")
                 .behaviour(CommandBehaviours.permissionChecking("mtc.chatfarbe.change"));
+        registerListener(new ChatSuffixJoinConverter(this));
     }
 
     public boolean isGlobalMute() {
