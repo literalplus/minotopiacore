@@ -43,7 +43,7 @@ public class YamlMuteManager implements MuteManager {
     }
 
     private void saveToConfiguration() {
-        config.set("mutes", mutes);
+        config.set("mutes", mutes.values());
         config.asyncSave(plugin);
     }
 
