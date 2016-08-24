@@ -151,7 +151,7 @@ class CommandChatSuffix implements CommandExecutor {
         if (checkModifyOthersPermission(sender) || checkArgumentCount(sender, args, 2)) {
             return true;
         }
-        String newSuffix = StringHelper.varArgsString(args, 1, true);
+        String newSuffix = StringHelper.varArgsString(args, 2, true);
         if (suffixExceedsMaxLength(sender, newSuffix)) {
             return true;
         }
