@@ -59,7 +59,7 @@ public class SqlChatSuffixRepository implements ChatSuffixRepository {
                 "INSERT INTO " + TABLE_NAME + " SET " +
                         "player_id = ?, suffix = ? " +
                         "ON DUPLICATE KEY UPDATE suffix = ?",
-                playerId, chatSuffix, chatSuffix
+                playerId.toString(), chatSuffix, chatSuffix
         );
     }
 
