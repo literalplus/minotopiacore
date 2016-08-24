@@ -78,7 +78,7 @@ class CommandChatSuffix implements CommandExecutor {
 
     private void showOwnChatSuffixTo(Player player) {
         String suffix = module.getRepository().findChatSuffixById(player.getUniqueId());
-        sendFormattedTo(player, "Deine Chatfarbe: §f'%stext", suffix);
+        sendFormattedTo(player, "Deine Chatfarbe: §f%stext", suffix);
     }
 
     private void sendFormattedTo(CommandSender sender, String format, Object... params) {
@@ -103,7 +103,7 @@ class CommandChatSuffix implements CommandExecutor {
         if (isSamePlayer(receiver, other)) {
             showOwnChatSuffixTo(((Player) receiver));
         } else {
-            sendFormattedTo(receiver, "Chatfarbe von %s: §f'%stext", other.getName(), suffix);
+            sendFormattedTo(receiver, "Chatfarbe von %s: §f%stext", other.getName(), suffix);
         }
     }
 
@@ -161,7 +161,7 @@ class CommandChatSuffix implements CommandExecutor {
             return true;
         }
         module.getRepository().saveChatSuffix(profile.getUniqueId(), newSuffix);
-        sendFormattedTo(sender, "Neue Chatfarbe von %s: §f'%stext", profile.getName(), newSuffix);
+        sendFormattedTo(sender, "Neue Chatfarbe von %s: §f%stext", profile.getName(), newSuffix);
         return true;
     }
 }
