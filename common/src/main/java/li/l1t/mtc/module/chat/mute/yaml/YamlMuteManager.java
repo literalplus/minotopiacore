@@ -14,6 +14,7 @@ import li.l1t.mtc.yaml.ManagedConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public class YamlMuteManager implements MuteManager {
     }
 
     private void saveToConfiguration() {
-        config.set("mutes", mutes.values());
+        config.set("mutes", new ArrayList<>(mutes.values()));
         config.asyncSave(plugin);
     }
 
