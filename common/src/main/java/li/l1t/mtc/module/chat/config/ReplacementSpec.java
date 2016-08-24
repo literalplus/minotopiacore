@@ -47,9 +47,9 @@ public class ReplacementSpec implements ConfigurationSerializable {
 
     public static ReplacementSpec deserialize(Map<String, Object> source) {
         return new ReplacementSpec(
-                (boolean) source.computeIfAbsent("global", key -> false),
-                (String) source.get("pattern-regex"),
-                (String) source.get("replacement")
+                (boolean) source.computeIfAbsent(REPLACE_ENTIRELY_PATH, key -> false),
+                (String) source.get(REGEX_PATH),
+                (String) source.get(REPLACEMENT_PATH)
         );
     }
 
