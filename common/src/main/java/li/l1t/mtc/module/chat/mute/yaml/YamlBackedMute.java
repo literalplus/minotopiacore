@@ -71,7 +71,7 @@ class YamlBackedMute implements ConfigurationSerializable, Mute {
 
     @Override
     public boolean hasExpired() {
-        return expiryTime.isAfter(Instant.now());
+        return expiryTime.isBefore(Instant.now());
     }
 
     @Override
