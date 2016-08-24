@@ -30,6 +30,7 @@ public class CachingChatSuffixRepository implements ChatSuffixRepository {
 
     @Override
     public void saveChatSuffix(UUID playerId, String chatSuffix) {
+        suffixCache.put(playerId, chatSuffix);
         proxy.saveChatSuffix(playerId, chatSuffix);
     }
 
