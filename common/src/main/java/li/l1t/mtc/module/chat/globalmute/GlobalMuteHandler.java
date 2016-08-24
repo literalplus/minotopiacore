@@ -36,13 +36,13 @@ class GlobalMuteHandler extends AbstractChatHandler {
 
     @Nonnull
     private String getErrorMessage() {
-        return "Du kannst nicht schreiben, während GlobalMute aktiviert ist!" + getReasonSuffix();
+        return "Du kannst nicht schreiben, während GlobalMute an ist!" + getReasonSuffix();
     }
 
     private String getReasonSuffix() {
         if (module.getGlobalMuteReason().isEmpty()) {
             return "";
         }
-        return " (§aGrund: " + module.getGlobalMuteReason() + "§a)";
+        return " (§aGrund: " + module.getGlobalMuteReason() + "§6)";
     }
 }

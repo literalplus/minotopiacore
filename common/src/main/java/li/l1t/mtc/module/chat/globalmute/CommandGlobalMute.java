@@ -44,7 +44,7 @@ public class CommandGlobalMute implements CommandExecutor {
 
     @Nonnull
     private String formatActivatedState() {
-        return module.isGlobalMute() ? "aktiviert" : "deaktiviert.";
+        return module.isGlobalMute() ? "aktiviert." : "deaktiviert.";
     }
 
     private String formatReasonSuffix() {
