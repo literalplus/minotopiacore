@@ -85,8 +85,14 @@ public class SimpleChatDispatcher implements ChatDispatcher {
     }
 
     private void writeBackChangesFromTo(ChatMessageEvent event, AsyncPlayerChatEvent bukkitEvent) {
-        bukkitEvent.setFormat(event.getPrefix() + "§7" + event.getPlayer().getName() + "§7: §f"
-                + event.getSuffix() + event.getMessage());
+        String message = escapeForStringFormat(event);
+        String format = event.getPrefix() + "§7" + event.getPlayer().getName() + "§7: §f"
+                + event.getSuffix() + message;
+        bukkitEvent.setFormat(format);
+    }
+
+    private String escapeForStringFormat(ChatMessageEvent event) {
+        return event.getMessage().replaceAll("%", "%%");
     }
 
     private BukkitChatMessageEvent createEvent(AsyncPlayerChatEvent bukkitEvent) {
