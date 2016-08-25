@@ -30,7 +30,7 @@ public class CapsFilterHandler extends AbstractChatHandler {
 
     @Override
     public boolean enable(ChatModule module) {
-        float capsFactor = module.getConfigInt("caps.max-percent-caps", 50) / 100;
+        float capsFactor = ((float) module.getConfigInt("caps.max-percent-caps", 50)) / 100F;
         int ignoreUntilLength = module.getConfigInt("caps.ignore-messages-shorter-than-characters", 5);
         service = new CapsFilterService(capsFactor, ignoreUntilLength);
         return true;
