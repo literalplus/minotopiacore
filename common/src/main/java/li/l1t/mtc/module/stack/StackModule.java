@@ -110,4 +110,8 @@ public class StackModule extends ConfigurableMTCModule {
         configuration.set(SPECS_PATH, specs);
         save();
     }
+
+    public List<ItemSpec> getAllowedSpecs() {
+        return specs;
+    }
 }
