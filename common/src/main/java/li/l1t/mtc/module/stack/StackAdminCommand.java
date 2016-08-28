@@ -102,9 +102,18 @@ class StackAdminCommand implements CommandExecutor {
     private void describeItemInHandTo(CommandSender sender, ItemStack itemInHand) {
         ItemSpec spec = new ItemSpec(itemInHand.getType(), itemInHand.getDurability());
         MessageType.RESULT_LINE.sendTo(sender, "Das Item in deiner Hand ist '%s'.", spec);
+        describeAllowedState(sender, itemInHand);
+    }
+
+    private void describeAllowedState(CommandSender sender, ItemStack itemInHand) {
+        int maxStackSize = itemInHand.getMaxStackSize();
+        MessageType.RESULT_LINE.sendTo(sender, "Es ist standardmäßig auf %s stackbar.", maxStackSize);
+        if (maxStackSize == 64) {
+            return;
+        }
         boolean currentlyAllowed = module.isCoveredByAllowedSpecs(itemInHand);
         String allowedString = currentlyAllowed ? "erlaubt" : "nicht erlaubt";
-        MessageType.RESULT_LINE.sendTo(sender, "Es ist momentan %s.", allowedString);
+        MessageType.RESULT_LINE.sendTo(sender, "Höhere Stacksizes sind momentan %s.", allowedString);
     }
 
     private boolean sendHelpTo(CommandSender sender) {
