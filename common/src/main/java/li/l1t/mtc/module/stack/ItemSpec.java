@@ -53,10 +53,10 @@ class ItemSpec implements ConfigurationSerializable {
         Material material;
         short damage = -1;
         if (!spec.contains(":")) {
-            material = Material.valueOf(spec);
+            material = Material.matchMaterial(spec);
         } else {
             String[] splitSpec = spec.split(":", 2);
-            material = Material.valueOf(splitSpec[0]);
+            material = Material.matchMaterial(splitSpec[0]);
             damage = Short.valueOf(splitSpec[1]);
         }
         return new ItemSpec(material, damage);
