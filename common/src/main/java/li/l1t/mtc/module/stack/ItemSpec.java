@@ -23,7 +23,7 @@ import java.util.Map;
  * @since 2016-08-28
  */
 @SerializableAs("itemspec")
-class ItemSpec implements ConfigurationSerializable {
+public class ItemSpec implements ConfigurationSerializable {
     private final Material material;
     private final short damage;
 
