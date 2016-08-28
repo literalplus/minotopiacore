@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * A module that provides a /stack command that can be controlled in a more fine-grained manner.
@@ -62,18 +61,11 @@ public class StackModule extends ConfigurableMTCModule {
         configuration.trySave();
         overrideSizes = new TreeSet<>(Collections.reverseOrder());
         overrideSizes.addAll(
-                configuration.getStringList(OVERRIDE_SIZES_PATH).stream()
-                        .map(str -> {
-                            try {
-                                return Integer.parseInt(str);
-                            } catch (NumberFormatException e) {
-                                return -1;
-                            }
-                        })
-                        .filter(i -> i > 1)
-                        .collect(Collectors.toSet())
+                configuration.getIntegerList(OVERRIDE_SIZES_PATH)
         );
+        configuration.set(OVERRIDE_SIZES_PATH, overrideSizes);
         specs = configuration.getListChecked(SPECS_PATH, ItemSpec.class);
+        configuration.set(SPECS_PATH, specs);
     }
 
     public boolean isStackingPermitted(ItemStack stack) {
