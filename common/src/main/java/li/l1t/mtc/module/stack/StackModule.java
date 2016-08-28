@@ -58,6 +58,8 @@ public class StackModule extends ConfigurableMTCModule {
     protected void reloadImpl() {
         configuration.addDefault(OVERRIDE_SIZES_PATH, new ArrayList<>(overrideSizes));
         configuration.addDefault(SPECS_PATH, specs);
+        configuration.options().copyDefaults(true);
+        configuration.trySave();
         overrideSizes = new TreeSet<>(Collections.reverseOrder());
         overrideSizes.addAll(
                 configuration.getStringList(OVERRIDE_SIZES_PATH).stream()
