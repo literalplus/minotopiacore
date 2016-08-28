@@ -58,7 +58,6 @@ public class StackModule extends ConfigurableMTCModule {
         configuration.addDefault(OVERRIDE_SIZES_PATH, new ArrayList<>(overrideSizes));
         configuration.addDefault(SPECS_PATH, specs);
         configuration.options().copyDefaults(true);
-        configuration.trySave();
         overrideSizes = new TreeSet<>(Collections.reverseOrder());
         overrideSizes.addAll(
                 configuration.getIntegerList(OVERRIDE_SIZES_PATH)
@@ -66,6 +65,7 @@ public class StackModule extends ConfigurableMTCModule {
         configuration.set(OVERRIDE_SIZES_PATH, overrideSizes);
         specs = configuration.getListChecked(SPECS_PATH, ItemSpec.class);
         configuration.set(SPECS_PATH, specs);
+        configuration.trySave();
     }
 
     public boolean isStackingPermitted(ItemStack stack) {
