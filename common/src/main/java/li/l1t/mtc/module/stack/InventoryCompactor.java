@@ -20,15 +20,15 @@ import java.util.function.Predicate;
  */
 public class InventoryCompactor {
     private final int maxOversizedStackSize;
-    private final Predicate<ItemStack> stackablePredicate;
+    private final Predicate<ItemStack> oversizablePredicate;
     private ItemStack[] items;
     private int firstUncheckedItem = 0;
     private int currentMaxStackSize;
     private ItemStack currentItem;
 
-    public InventoryCompactor(int maxOversizedStackSize, Predicate<ItemStack> stackablePredicate) {
+    public InventoryCompactor(int maxOversizedStackSize, Predicate<ItemStack> oversizedPredicate) {
         this.maxOversizedStackSize = sanitizeMaxStackSize(maxOversizedStackSize);
-        this.stackablePredicate = stackablePredicate;
+        this.oversizablePredicate = oversizedPredicate;
     }
 
     private int sanitizeMaxStackSize(int maxOversizedStackSize) {
@@ -50,29 +50,31 @@ public class InventoryCompactor {
         }
     }
 
-    private void attemptCompactionIfAllowed(ItemStack item) {
-        if (isEligibleForCompaction(item)) {
-            setCurrentItem(item);
+    private void attemptCompactionIfAllowed(ItemStack stack) {
+        if (isEligibleForCompaction(stack)) {
+            setCurrentItem(stack);
             mergeCurrentWithSimilarStacks();
         }
     }
 
-    private void setCurrentItem(ItemStack item) {
-        currentItem = item;
+    private void setCurrentItem(ItemStack stack) {
+        currentItem = stack;
         currentMaxStackSize = getMaxStackSizeFor(currentItem);
     }
 
-    private boolean isEligibleForCompaction(ItemStack item) {
-        return item != null && item.getAmount() > 0 &&
-                mayBeStackedFurther(item) &&
-                stackablePredicate.test(item);
+    private boolean isEligibleForCompaction(ItemStack stack) {
+        return stack != null && stack.getAmount() > 0 &&
+                mayBeStackedFurther(stack);
     }
 
-    private boolean mayBeStackedFurther(ItemStack item) {
-        return item.getAmount() < getMaxStackSizeFor(item);
+    private boolean mayBeStackedFurther(ItemStack stack) {
+        return stack.getAmount() < getMaxStackSizeFor(stack);
     }
 
     private int getMaxStackSizeFor(ItemStack stack) {
+        if (!oversizablePredicate.test(stack)) {
+            return stack.getMaxStackSize();
+        }
         if (stack.getMaxStackSize() > maxOversizedStackSize) {
             return stack.getMaxStackSize();
         } else {

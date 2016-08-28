@@ -33,11 +33,11 @@ class StackCommand extends MTCPlayerOnlyCommandExecutor {
     @Override
     public boolean catchCommand(Player player, String plrName, Command cmd, String label, String[] args) {
         int maxOversizedStackSize = findAllowedOversizedStackSizeFor(player);
-        Predicate<ItemStack> stackablePredicate = module::isStackingPermitted;
+        Predicate<ItemStack> oversizablePredicate = module::isStackingPermitted;
         if (!player.hasPermission("mtc.stack.all")) {
-            stackablePredicate.and(module::isCoveredByAllowedSpecs);
+            oversizablePredicate = oversizablePredicate.and(module::isCoveredByAllowedSpecs);
         }
-        InventoryCompactor compactor = new InventoryCompactor(maxOversizedStackSize, stackablePredicate);
+        InventoryCompactor compactor = new InventoryCompactor(maxOversizedStackSize, oversizablePredicate);
         compactor.compact(player.getInventory());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Dein Inventar wurde gestackt!");
         return true;
