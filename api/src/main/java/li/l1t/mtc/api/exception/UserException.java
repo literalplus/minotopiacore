@@ -52,6 +52,11 @@ public class UserException extends PlayerReadableException {
         return new UserException(message, cause);
     }
 
+    public static UserException wrapNotANumber(NumberFormatException nfe) {
+        String strippedMessage = nfe.getMessage().replace("For Input string: ", ""); //For input string: "notanint"
+        return new UserException("Das ist keine Zahl: %s", strippedMessage);
+    }
+
     @Override
     protected String formatMessage() {
         return MessageType.USER_ERROR.format(getMessage());
