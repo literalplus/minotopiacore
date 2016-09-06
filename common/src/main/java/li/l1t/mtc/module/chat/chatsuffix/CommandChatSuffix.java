@@ -128,7 +128,7 @@ class CommandChatSuffix implements CommandExecutor {
     }
 
     private boolean handleSet(CommandSender sender, String[] args) {
-        String newSuffix = StringHelper.varArgsString(args, 0, true);
+        String newSuffix = StringHelper.varArgsString(args, 1, true);
         if (CommandHelper.kickConsoleFromMethod(sender, "chatfarbe") ||
                 suffixExceedsMaxLength(sender, newSuffix)) {
             return true;
