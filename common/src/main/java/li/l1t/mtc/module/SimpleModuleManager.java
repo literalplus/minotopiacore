@@ -30,7 +30,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +71,11 @@ public class SimpleModuleManager implements ModuleManager {
         enabledModulesConfig.options()
                 .copyDefaults(true)
                 .copyHeader(true)
-                .header("Choose which modules to load. Note that modules may have dependencies.");
+                .header("Choose which modules to load. Note that modules may have dependencies.\n" +
+                        "Add command names to override-commands to force MTC to register these\n" +
+                        "commands if any module requests them, ignoring any other plugins that\n" +
+                        "might have already registered them.");
+        enabledModulesConfig.addDefault("override-commands", new ArrayList<>(Collections.singletonList("add-commands-here")));
     }
 
     @Override
@@ -171,9 +177,16 @@ public class SimpleModuleManager implements ModuleManager {
 
         MTCModuleCommand command = new MTCModuleCommand(module, name, executor, aliases);
 
+        if (shouldForceOverrideCommand(name)) {
+            commandRegistrationManager.unregisterCommandLabel(getPlugin().getServer(), name);
+        }
         commandRegistrationManager.registerCommand(command);
 
         return command;
+    }
+
+    private boolean shouldForceOverrideCommand(String label) {
+        return enabledModulesConfig.getStringList("override-commands").contains(label);
     }
 
     void registerEnabled(MTCModule module, boolean enabled) {
