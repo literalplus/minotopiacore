@@ -35,10 +35,11 @@ public class CommandRegistrationManager {
      * cached once retrieved.
      *
      * @param command the command to register
+     * @return whether the command was registered under its default label
      * @throws IllegalStateException if retrieval of the command map fails
      */
-    public <T extends Command & PluginIdentifiableCommand> void registerCommand(T command) throws IllegalStateException {
-        getCommandMap(command.getPlugin().getServer()).register("mtc", command);
+    public <T extends Command & PluginIdentifiableCommand> boolean registerCommand(T command) throws IllegalStateException {
+        return getCommandMap(command.getPlugin().getServer()).register("mtc", command);
     }
 
     /**
