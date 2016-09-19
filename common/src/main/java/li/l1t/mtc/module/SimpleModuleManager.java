@@ -64,7 +64,7 @@ public class SimpleModuleManager implements ModuleManager {
         this.plugin = plugin;
         enabledModulesConfig = ManagedConfiguration.fromFile(
                 new File(dataFolder, "enabled_modules.yml"),
-                ClearCacheBehaviour.SAVE
+                ClearCacheBehaviour.RELOAD_ON_FORCED
         );
         enabledModulesConfig.options()
                 .copyDefaults(true)
