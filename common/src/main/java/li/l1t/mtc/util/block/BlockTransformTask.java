@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.util.block;
 
+import com.google.common.base.Preconditions;
 import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import org.bukkit.plugin.Plugin;
 
@@ -18,7 +19,8 @@ import org.bukkit.plugin.Plugin;
  */
 class BlockTransformTask extends NonAsyncBukkitRunnable implements TransformTask {
     private final BasicBlockTransformer blockTransformer;
-    private Runnable completionCallback;
+    private Runnable completionCallback = () -> {
+    };
     private boolean done = false;
 
     public BlockTransformTask(BasicBlockTransformer blockTransformer) {
@@ -27,6 +29,7 @@ class BlockTransformTask extends NonAsyncBukkitRunnable implements TransformTask
 
     @Override
     public BlockTransformTask withCompletionCallback(Runnable callback) {
+        Preconditions.checkNotNull(callback, "callback");
         completionCallback = callback;
         return this;
     }
