@@ -5,8 +5,9 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.putindance.board.api;
+package li.l1t.mtc.module.putindance.api.board;
 
+import li.l1t.common.misc.XyLocation;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 
@@ -21,6 +22,14 @@ import java.util.Set;
  * @since 2016-09-20
  */
 public interface Layer {
+    Board getBoard();
+
+    XyLocation getFirstBoundary();
+
+    XyLocation getSecondBoundary();
+
+    int getYLevel();
+
     boolean hasBlocksLeft();
 
     Collection<Block> getBlocksByColor(DyeColor color);

@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.putindance.board.api;
+package li.l1t.mtc.module.putindance.api.board;
 
 import li.l1t.mtc.api.exception.InternalException;
 

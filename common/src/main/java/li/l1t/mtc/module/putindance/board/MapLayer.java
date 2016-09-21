@@ -8,7 +8,9 @@
 package li.l1t.mtc.module.putindance.board;
 
 import com.google.common.base.Preconditions;
-import li.l1t.mtc.module.putindance.board.api.Layer;
+import li.l1t.common.misc.XyLocation;
+import li.l1t.mtc.module.putindance.api.board.Board;
+import li.l1t.mtc.module.putindance.api.board.Layer;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +25,40 @@ import java.util.Set;
  * @since 2016-09-20
  */
 public class MapLayer implements Layer {
+    private final int yLevel;
+    private final Board board;
     private BlockColorMap blockColorMap = new BlockColorMap();
+
+    public MapLayer(int yLevel, Board board) {
+        this.yLevel = yLevel;
+        this.board = board;
+    }
+
+    @Override
+    public Board getBoard() {
+        return board;
+    }
+
+    @Override
+    public int getYLevel() {
+        return yLevel;
+    }
+
+    @Override
+    public XyLocation getFirstBoundary() {
+        return adjustYToLayerY(board.getFirstBoundary());
+    }
+
+    private XyLocation adjustYToLayerY(XyLocation initial) {
+        XyLocation loc = new XyLocation(initial);
+        loc.setY(yLevel);
+        return loc;
+    }
+
+    @Override
+    public XyLocation getSecondBoundary() {
+        return adjustYToLayerY(board.getSecondBoundary());
+    }
 
     @Override
     public boolean hasBlocksLeft() {

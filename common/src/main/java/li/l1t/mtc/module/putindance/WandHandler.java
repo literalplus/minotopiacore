@@ -46,7 +46,6 @@ class WandHandler implements Listener {
     public void startBoundarySession(Player player) {
         boundarySessions.add(player.getUniqueId());
         player.getInventory().addItem(createWandItem());
-        MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Hier ist dein Zauberstab!");
     }
 
     private ItemStack createWandItem() {

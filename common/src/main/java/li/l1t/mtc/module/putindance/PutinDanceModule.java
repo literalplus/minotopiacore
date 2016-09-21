@@ -7,9 +7,15 @@
 
 package li.l1t.mtc.module.putindance;
 
+import com.google.common.base.Preconditions;
+import li.l1t.common.misc.XyLocation;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.putindance.api.board.Board;
+import li.l1t.mtc.module.putindance.api.game.Game;
+import li.l1t.mtc.module.putindance.game.PutinTickStrategy;
+import li.l1t.mtc.module.putindance.game.SimpleGame;
 
 /**
  * A module that provides the PutinDance mini-game for events. PutinDance is based around a board
@@ -22,9 +28,12 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
  */
 public class PutinDanceModule extends ConfigurableMTCModule {
     public static final String NAME = "PutinDance";
+    public static final String CHAT_PREFIX = "§3[§6§lPD§3] §3";
     public static final String ADMIN_PERMISSION = "mtc.putindance.admin";
     private final PutinDanceConfig config = new PutinDanceConfig();
     private WandHandler wandHandler;
+    private Board currentBoard;
+    private SimpleGame currentGame;
 
     protected PutinDanceModule() {
         super(NAME, "modules/events/putindance.cfg.yml", ClearCacheBehaviour.SAVE, false);
@@ -50,5 +59,50 @@ public class PutinDanceModule extends ConfigurableMTCModule {
 
     public PutinDanceConfig getConfig() {
         return config;
+    }
+
+    public void setSpawnLocation(XyLocation spawnLocation) {
+        config.setSpawnLocation(spawnLocation);
+        if (hasGame()) {
+            getCurrentGame().setSpawnLocation(spawnLocation);
+        }
+    }
+
+    public WandHandler getWandHandler() {
+        return wandHandler;
+    }
+
+    public boolean hasGame() {
+        return currentGame != null;
+    }
+
+    public boolean hasOpenGame() {
+        return currentGame != null && currentGame.isOpen();
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+
+    public Board getCurrentBoard() {
+        return currentBoard;
+    }
+
+    public boolean hasBoard() {
+        return currentBoard != null;
+    }
+
+    public void newGame() {
+        Preconditions.checkState(!hasGame(), "there is already a game");
+        Preconditions.checkState(hasBoard(), "there is no current board");
+        PutinTickStrategy strategy = new PutinTickStrategy(plugin, config.getTickRemoveDelayTicks());
+        currentGame = new SimpleGame(getCurrentBoard(), strategy);
+        currentGame.openGame();
+    }
+
+    public void abortGame() {
+        Preconditions.checkState(hasGame(), "no current game");
+        currentGame.abortGame();
+        currentGame = null;
     }
 }

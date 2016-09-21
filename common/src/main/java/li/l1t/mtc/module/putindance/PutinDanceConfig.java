@@ -21,9 +21,11 @@ class PutinDanceConfig {
     private static final String FIRST_BOUNDARY_PATH = "boundaries.first";
     private static final String SECOND_BOUNDARY_PATH = "boundaries.second";
     private static final String SPAWN_LOCATION_PATH = "spawn";
+    private static final String REMOVE_DELAY_PATH = "tick-wool-remove-delay-ticks";
     private XyLocation firstBoardBoundary;
     private XyLocation secondBoardBoundary;
     private XyLocation spawnLocation;
+    private long tickRemoveDelayTicks;
 
     public PutinDanceConfig() {
         ConfigurationSerialization.registerClass(XyLocation.class);
@@ -33,12 +35,14 @@ class PutinDanceConfig {
         firstBoardBoundary = (XyLocation) config.get(FIRST_BOUNDARY_PATH);
         secondBoardBoundary = (XyLocation) config.get(SECOND_BOUNDARY_PATH);
         spawnLocation = (XyLocation) config.get(SPAWN_LOCATION_PATH);
+        tickRemoveDelayTicks = config.getLong(REMOVE_DELAY_PATH, 2L * 20L);
     }
 
     public void saveTo(ManagedConfiguration config) {
         config.set(FIRST_BOUNDARY_PATH, firstBoardBoundary);
         config.set(SECOND_BOUNDARY_PATH, secondBoardBoundary);
         config.set(SPAWN_LOCATION_PATH, spawnLocation);
+        config.set(REMOVE_DELAY_PATH, tickRemoveDelayTicks);
     }
 
     public XyLocation getFirstBoardBoundary() {
@@ -63,5 +67,13 @@ class PutinDanceConfig {
 
     public void setSpawnLocation(XyLocation spawnLocation) {
         this.spawnLocation = spawnLocation;
+    }
+
+    public long getTickRemoveDelayTicks() {
+        return tickRemoveDelayTicks;
+    }
+
+    public void setTickRemoveDelayTicks(long tickRemoveDelayTicks) {
+        this.tickRemoveDelayTicks = tickRemoveDelayTicks;
     }
 }

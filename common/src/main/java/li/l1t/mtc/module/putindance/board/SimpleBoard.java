@@ -8,9 +8,10 @@
 package li.l1t.mtc.module.putindance.board;
 
 import com.google.common.base.Preconditions;
-import li.l1t.mtc.module.putindance.board.api.Board;
-import li.l1t.mtc.module.putindance.board.api.Layer;
-import li.l1t.mtc.module.putindance.board.api.NoSuchLayerException;
+import li.l1t.common.misc.XyLocation;
+import li.l1t.mtc.module.putindance.api.board.Board;
+import li.l1t.mtc.module.putindance.api.board.Layer;
+import li.l1t.mtc.module.putindance.api.board.NoSuchLayerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,13 @@ import java.util.stream.Collectors;
  */
 public class SimpleBoard implements Board {
     private final List<Layer> allLayers = new ArrayList<>();
+    private final XyLocation firstBoundary;
+    private final XyLocation secondBoundary;
+
+    public SimpleBoard(XyLocation firstBoundary, XyLocation secondBoundary) {
+        this.firstBoundary = firstBoundary;
+        this.secondBoundary = secondBoundary;
+    }
 
     @Override
     public void addLayer(Layer layer) {
@@ -84,5 +92,15 @@ public class SimpleBoard implements Board {
             throw new NoSuchLayerException("no active layer below reference layer");
         }
         return activeLayers.get(belowIndex);
+    }
+
+    @Override
+    public XyLocation getFirstBoundary() {
+        return firstBoundary;
+    }
+
+    @Override
+    public XyLocation getSecondBoundary() {
+        return secondBoundary;
     }
 }

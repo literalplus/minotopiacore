@@ -5,7 +5,9 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.putindance.board.api;
+package li.l1t.mtc.module.putindance.api.board;
+
+import li.l1t.common.misc.XyLocation;
 
 import java.util.List;
 
@@ -17,6 +19,10 @@ import java.util.List;
  * @since 2016-09-20
  */
 public interface Board {
+    XyLocation getFirstBoundary();
+
+    XyLocation getSecondBoundary();
+
     List<Layer> getAllLayers();
 
     List<Layer> getActiveLayers();
