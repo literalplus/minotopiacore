@@ -7,7 +7,6 @@
 
 package li.l1t.mtc.util.block;
 
-import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -31,7 +30,7 @@ public interface BlockTransformer {
 
     void setTransformerFunction(Consumer<Block> transformer);
 
-    NonAsyncBukkitRunnable createTransformTask();
+    TransformTask createTransformTask();
 
     void setBlocksPerTick(int newBlocksPerTick);
 

@@ -8,6 +8,7 @@
 package li.l1t.mtc.util.block;
 
 import li.l1t.common.util.task.NonAsyncBukkitRunnable;
+import org.bukkit.plugin.Plugin;
 
 /**
  * A task for transforming a large amount of blocks in conjunction with a BlockTransformer.
@@ -15,8 +16,9 @@ import li.l1t.common.util.task.NonAsyncBukkitRunnable;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-09-21
  */
-class BlockTransformTask extends NonAsyncBukkitRunnable {
+class BlockTransformTask extends NonAsyncBukkitRunnable implements TransformTask {
     private final BasicBlockTransformer blockTransformer;
+    private Runnable completionCallback;
     private boolean done = false;
 
     public BlockTransformTask(BasicBlockTransformer blockTransformer) {
@@ -24,13 +26,26 @@ class BlockTransformTask extends NonAsyncBukkitRunnable {
     }
 
     @Override
+    public BlockTransformTask withCompletionCallback(Runnable callback) {
+        completionCallback = callback;
+        return this;
+    }
+
+    @Override
+    public void start(Plugin plugin, long delayBetweenExecutions) {
+        runTaskTimer(plugin, 0, delayBetweenExecutions);
+    }
+
+    @Override
     public void run() {
         done = blockTransformer.continueIteration();
         if (isDone()) {
+            completionCallback.run();
             tryCancel();
         }
     }
 
+    @Override
     public boolean isDone() {
         return done;
     }
