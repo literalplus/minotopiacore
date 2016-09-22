@@ -110,6 +110,7 @@ class PutinDanceCommand implements CommandExecutor {
     private boolean handleAddColor(CommandSender sender, String arg) {
         DyeColor color = parseDyeColor(arg);
         module.getConfig().getValidColors().add(color);
+        module.save();
         MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt im Spielfeld verwendet!", color);
         return true;
     }
@@ -125,6 +126,7 @@ class PutinDanceCommand implements CommandExecutor {
     private boolean handleRemoveColor(CommandSender sender, String arg) {
         DyeColor color = parseDyeColor(arg);
         module.getConfig().getValidColors().remove(color);
+        module.save();
         MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt nicht mehr im Spielfeld verwendet!", color);
         return true;
     }
