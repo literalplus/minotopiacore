@@ -53,7 +53,7 @@ public class PutinTickStrategy implements TickStrategy {
     @Override
     public void tick(Game game) {
         Layer layer = selectLayer(game);
-        if (game.getBoard().getLayerCount() == 1 && layer.getActiveColors().size() == 1) {
+        if (game.getBoard().getActiveLayerCount() == 1 && layer.getActiveColors().size() == 1) {
             tickVodkaMode(layer);
         } else if (layer.getActiveColors().size() == 1) {
             tickFinalColor(layer);
