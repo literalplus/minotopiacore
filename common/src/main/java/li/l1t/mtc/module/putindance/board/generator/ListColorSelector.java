@@ -25,7 +25,7 @@ public class ListColorSelector implements ColorSelector {
     private final List<DyeColor> validColors = new ArrayList<>(DyeColor.values().length);
 
     public void addValidColor(DyeColor color) {
-        if (validColors.contains(color)) {
+        if (!validColors.contains(color)) {
             validColors.add(color);
         }
     }
@@ -40,6 +40,9 @@ public class ListColorSelector implements ColorSelector {
 
     @Override
     public DyeColor nextColor(Layer layer) {
+        if (validColors.isEmpty()) {
+            return DyeColor.BLACK; //help
+        }
         return validColors.get(RandomUtils.nextInt(validColors.size()));
     }
 }
