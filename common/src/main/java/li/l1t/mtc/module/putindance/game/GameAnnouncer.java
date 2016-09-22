@@ -22,12 +22,12 @@ import java.util.Collection;
 class GameAnnouncer {
     private final String[] joinLines = new String[]{
             "Willkommen bei PutinDance!",
-            "Du bist russische/r Geheimagent/in und im Geheimauftrag von Putin.",
-            "Um deine Reaktionsfähigkeit und Loyalität zu testen, wirst du einem",
-            "Test unterzogen. Alle paar Sekunden konsumieren die Kapitalisten",
-            "alle Blöcke einer Farbe. Versuche, nicht runterzufallen!",
+            "Du bist Geheimagent/in und im Geheimauftrag von Putin.",
+            "Um deine Reaktionsfähigkeit und Loyalität zu testen, wirst",
+            "du einem Test unterzogen. Alle paar Sekunden konsumieren",
+            "die Kapitalisten alle Blöcke einer Farbe.",
             "Wer zuletzt noch auf einem Wollblock steht, hat gewonnen!",
-            "Als Hilfe bekommst du wiederholt eine sichere Farbe angezeigt."
+            "Putin gibt dir immer wieder Tipps."
     };
 
     public void announceGameJoin(Player player) {
