@@ -51,7 +51,7 @@ class PutinDanceConfig {
                 .map(this::parseDyeColor)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        minAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 70);
+        maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 70);
         minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 40);
     }
 
