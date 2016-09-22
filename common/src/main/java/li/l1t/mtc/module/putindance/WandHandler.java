@@ -19,7 +19,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,10 +36,12 @@ class WandHandler implements Listener {
     private static final String WAND_NAME = "§3Putins Zauberstab";
     private final Set<UUID> boundarySessions = new HashSet<>();
     private final PutinDanceConfig config;
+    private final PutinDanceModule module;
 
-    WandHandler(Plugin plugin, PutinDanceConfig config) {
-        this.config = config;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    WandHandler(PutinDanceModule module) {
+        this.module = module;
+        this.config = module.getConfig();
+        module.getPlugin().getServer().getPluginManager().registerEvents(this, module.getPlugin());
     }
 
     public void startBoundarySession(Player player) {
@@ -79,6 +80,7 @@ class WandHandler implements Listener {
         config.setSecondBoardBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Zweiter Eckpunkt gesetzt!");
         endBoundarySession(player);
+        module.save();
     }
 
     public void endBoundarySession(Player player) {

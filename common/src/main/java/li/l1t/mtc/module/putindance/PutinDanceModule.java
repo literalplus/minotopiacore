@@ -49,7 +49,7 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        wandHandler = new WandHandler(getPlugin(), config);
+        wandHandler = new WandHandler(this);
         registerCommand(new PutinDanceCommand(this), "pd");
     }
 
