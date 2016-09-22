@@ -24,8 +24,8 @@ class GameAnnouncer {
             "Willkommen bei PutinDance!",
             "Du bist Geheimagent/in und im Geheimauftrag von Putin.",
             "Um deine Reaktionsfähigkeit und Loyalität zu testen, wirst",
-            "du einem Test unterzogen. Alle paar Sekunden konsumieren",
-            "die Kapitalisten alle Blöcke einer Farbe.",
+            "du einem Test unterzogen. Alle paar Sekunden",
+            "konsumieren die Kapitalisten alle Blöcke einer Farbe.",
             "Wer zuletzt noch auf einem Wollblock steht, hat gewonnen!",
             "Putin gibt dir immer wieder Tipps."
     };
