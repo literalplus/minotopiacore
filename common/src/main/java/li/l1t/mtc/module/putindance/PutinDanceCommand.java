@@ -41,13 +41,24 @@ class PutinDanceCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0) {
-            if (sender instanceof Player && attemptHandlePlayerOnlyCommand((Player) sender, args)) {
-                return true;
-            } else if (attemptHandleAdminCommand(sender, args)) {
-                return true;
+            try {
+                if (attemptHandleCommand(sender, args)) {
+                    return true;
+                }
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                throw new UserException(e.getMessage());
             }
         }
         return sendHelpTo(sender);
+    }
+
+    private boolean attemptHandleCommand(CommandSender sender, String[] args) {
+        if (sender instanceof Player && attemptHandlePlayerOnlyCommand((Player) sender, args)) {
+            return true;
+        } else if (attemptHandleAdminCommand(sender, args)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean attemptHandlePlayerOnlyCommand(Player player, String[] args) {
