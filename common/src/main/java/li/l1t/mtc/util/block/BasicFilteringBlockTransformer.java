@@ -31,7 +31,11 @@ class BasicFilteringBlockTransformer extends BasicBlockTransformer implements Fi
 
     @Override
     protected boolean processSingleBlock(Block block) {
-        return filter.test(block) && super.processSingleBlock(block);
+        return test(block) && super.processSingleBlock(block);
+    }
+
+    private boolean test(Block block) {
+        return filter == null || filter.test(block);
     }
 
     @Override
