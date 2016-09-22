@@ -304,7 +304,7 @@ class PutinDanceCommand implements CommandExecutor {
     private boolean sendHelpTo(CommandSender receiver) {
         receiver.sendMessage("§9/pd join §2Betritt ein offenes Spiel");
         if (receiver.hasPermission(TrueFalseModule.ADMIN_PERMISSION)) {
-            receiver.sendMessage("§9/pd wand §2Gibt dir ein Tool, mit dem du die Ränder des Spielfelds markieren kannst");
+            receiver.sendMessage("§9/pd wand §2Gibt den Zauberstab zum Markieren der Spielfeldränder");
             receiver.sendMessage("§9/pd new §2Öffnet ein neues Spiel");
             receiver.sendMessage("§9/pd close §2Schließt das Spiel, d.h. kein /pd join mehr");
             receiver.sendMessage("§9/pd stop §2Beendet das aktuelle Spiel");
