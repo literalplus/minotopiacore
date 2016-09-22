@@ -135,6 +135,7 @@ class PutinDanceCommand implements CommandExecutor {
 
     private boolean handleSetSpawn(Player player) {
         module.setSpawnLocation(XyLocation.of(player.getLocation()));
+        module.save();
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Spawn gesetzt!");
         return true;
     }
