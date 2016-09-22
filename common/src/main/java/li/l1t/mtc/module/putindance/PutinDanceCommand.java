@@ -186,8 +186,10 @@ class PutinDanceCommand implements CommandExecutor {
     }
 
     private Game getOpenGameOrFail() {
-        if (!module.hasOpenGame()) {
+        if (!module.hasGame()) {
             throw new UserException("Es läuft momentan kein Spiel :(");
+        } else if (!module.hasOpenGame()) {
+            throw new UserException("Das aktuelle Spiel hat leider schon begonnen! :(");
         }
         return module.getCurrentGame();
     }
