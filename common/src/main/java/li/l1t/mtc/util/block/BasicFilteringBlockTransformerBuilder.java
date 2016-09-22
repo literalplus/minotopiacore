@@ -24,7 +24,7 @@ public class BasicFilteringBlockTransformerBuilder extends AbstractBlockTransfor
     @Override
     public BasicFilteringBlockTransformer build() {
         BasicFilteringBlockTransformer instance = super.build();
-        instance.setFilter(filter == null ? any -> true : null);
+        instance.setFilter(filter == null ? any -> true : filter);
         return instance;
     }
 
