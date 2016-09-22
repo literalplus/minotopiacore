@@ -92,6 +92,8 @@ class PutinDanceCommand implements CommandExecutor {
                     return handleStart();
                 case "gen":
                     return handleRequestGeneration(sender);
+                case "tick":
+                    return handleTick(sender);
                 case "status":
                     return handleStatus(sender);
                 case "addcolor":
@@ -105,6 +107,16 @@ class PutinDanceCommand implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    private boolean handleTick(CommandSender sender) {
+        checkThatThereIsCurrentlyAGame();
+        if (!module.getCurrentGame().isTickable()) {
+            throw new UserException("Der letzte Tick ist noch nicht fertig!");
+        }
+        module.getCurrentGame().tick();
+        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "Tick!");
+        return true;
     }
 
     private boolean handleAddColor(CommandSender sender, String arg) {
@@ -296,6 +308,7 @@ class PutinDanceCommand implements CommandExecutor {
             receiver.sendMessage("§9/pd new §2Öffnet ein neues Spiel");
             receiver.sendMessage("§9/pd close §2Schließt das Spiel, d.h. kein /pd join mehr");
             receiver.sendMessage("§9/pd stop §2Beendet das aktuelle Spiel");
+            receiver.sendMessage("§9/pd tick §2Entfernt die nächste Farbe");
             receiver.sendMessage("§9/pd setspawn §2Setzt den Spawn");
             receiver.sendMessage("§9/pd spawn §2Teleportiert dich zum Spawn");
             receiver.sendMessage("§9/pd status §2zeigt Infos zum Spiel und Spielfeld");
