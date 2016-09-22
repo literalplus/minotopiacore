@@ -97,16 +97,24 @@ class PutinDanceCommand implements CommandExecutor {
     }
 
     private boolean handleAddColor(CommandSender sender, String arg) {
-        DyeColor color = DyeColor.valueOf(arg);
+        DyeColor color = parseDyeColor(arg);
         module.getConfig().getValidColors().add(color);
-        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt im Spielfeld verwendet!");
+        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt im Spielfeld verwendet!", color);
         return true;
     }
 
+    private DyeColor parseDyeColor(String arg) {
+        try {
+            return DyeColor.valueOf(arg.toUpperCase().replace("-", "_"));
+        } catch (IllegalArgumentException e) {
+            throw new UserException(e.getMessage());
+        }
+    }
+
     private boolean handleRemoveColor(CommandSender sender, String arg) {
-        DyeColor color = DyeColor.valueOf(arg);
+        DyeColor color = parseDyeColor(arg);
         module.getConfig().getValidColors().remove(color);
-        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt nicht mehr im Spielfeld verwendet!");
+        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt nicht mehr im Spielfeld verwendet!", color);
         return true;
     }
 
@@ -277,6 +285,7 @@ class PutinDanceCommand implements CommandExecutor {
             receiver.sendMessage("§9/pd stop §2Beendet das aktuelle Spiel");
             receiver.sendMessage("§9/pd setspawn §2Setzt den Spawn");
             receiver.sendMessage("§9/pd spawn §2Teleportiert dich zum Spawn");
+            receiver.sendMessage("§9/pd status §2zeigt Infos zum Spiel und Spielfeld");
             receiver.sendMessage("§9/pd addcolor §2Verwendet eine Farbe im Spielfeld");
             receiver.sendMessage("§9/pd removecolor §2Verwendet eine Farbe nicht mehr im Spielfeld");
             receiver.sendMessage("§9/pd listcolors §2Zeigt verwendete Wollfarben für das Spielfeld");
