@@ -46,6 +46,7 @@ class PutinDanceCommand implements CommandExecutor {
                     return true;
                 }
             } catch (IllegalArgumentException | IllegalStateException e) {
+                e.printStackTrace();
                 throw new UserException(e.getMessage());
             }
         }
