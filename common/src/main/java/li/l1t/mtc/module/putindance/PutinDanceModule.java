@@ -16,12 +16,15 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
+import li.l1t.mtc.module.putindance.api.game.LayerSelector;
 import li.l1t.mtc.module.putindance.board.generator.DelegatingGenerationStrategy;
 import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
 import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
 import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
+import li.l1t.mtc.module.putindance.game.AnyLayerSelector;
 import li.l1t.mtc.module.putindance.game.PutinTickStrategy;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
+import li.l1t.mtc.module.putindance.game.TopMostLayerSelector;
 
 /**
  * A module that provides the PutinDance mini-game for events. PutinDance is based around a board
@@ -119,10 +122,22 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public void newGame() {
         Preconditions.checkState(!hasGame(), "there is already a game");
         Preconditions.checkState(hasBoard(), "there is no current board");
-        PutinTickStrategy strategy = new PutinTickStrategy(plugin, config.getTickRemoveDelayTicks());
+        PutinTickStrategy strategy = createTickStrategy();
         currentGame = new SimpleGame(getCurrentBoard(), strategy);
         currentGame.setSpawnLocation(config.getSpawnLocation());
         currentGame.openGame();
+    }
+
+    private PutinTickStrategy createTickStrategy() {
+        return new PutinTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
+    }
+
+    private LayerSelector createLayerSelector() {
+        if (config.isSelectOnlyTopMostLayers()) {
+            return new TopMostLayerSelector();
+        } else {
+            return new AnyLayerSelector();
+        }
     }
 
     public void abortGame() {

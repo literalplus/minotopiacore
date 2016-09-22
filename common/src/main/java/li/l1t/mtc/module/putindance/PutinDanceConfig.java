@@ -30,6 +30,7 @@ class PutinDanceConfig {
     private static final String VALID_COLORS_PATH = "valid-wool-colors-for-generation";
     private static final String MIN_AIR_PERCENT_PATH = "min-air-percent-per-layer";
     private static final String MAX_AIR_PERCENT_PATH = "max-air-percent-per-layer";
+    private static final String ONLY_TOPMOST_LAYER_PATH = "select-only-topmost-layers-on-tick";
     private XyLocation firstBoardBoundary;
     private XyLocation secondBoardBoundary;
     private XyLocation spawnLocation;
@@ -37,6 +38,7 @@ class PutinDanceConfig {
     private List<DyeColor> validColors;
     private int minAirPercent;
     private int maxAirPercent;
+    private boolean selectOnlyTopMostLayers;
 
     public PutinDanceConfig() {
         ConfigurationSerialization.registerClass(XyLocation.class);
@@ -53,6 +55,7 @@ class PutinDanceConfig {
                 .collect(Collectors.toList());
         maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 60);
         minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 30);
+        selectOnlyTopMostLayers = config.getBoolean(ONLY_TOPMOST_LAYER_PATH, false);
     }
 
     private DyeColor parseDyeColor(String str) {
@@ -71,6 +74,7 @@ class PutinDanceConfig {
         config.set(VALID_COLORS_PATH, validColors.stream().map(DyeColor::name).collect(Collectors.toList()));
         config.set(MIN_AIR_PERCENT_PATH, minAirPercent);
         config.set(MAX_AIR_PERCENT_PATH, maxAirPercent);
+        config.set(ONLY_TOPMOST_LAYER_PATH, selectOnlyTopMostLayers);
     }
 
     public XyLocation getFirstBoardBoundary() {
@@ -123,5 +127,13 @@ class PutinDanceConfig {
 
     public void setMaxAirPercent(int maxAirPercent) {
         this.maxAirPercent = maxAirPercent;
+    }
+
+    public boolean isSelectOnlyTopMostLayers() {
+        return selectOnlyTopMostLayers;
+    }
+
+    public void setSelectOnlyTopMostLayers(boolean selectOnlyTopMostLayers) {
+        this.selectOnlyTopMostLayers = selectOnlyTopMostLayers;
     }
 }

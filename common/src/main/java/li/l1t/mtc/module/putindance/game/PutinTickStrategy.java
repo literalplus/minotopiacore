@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.module.putindance.game;
 
-import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.Layer;
 import li.l1t.mtc.module.putindance.api.game.Game;
+import li.l1t.mtc.module.putindance.api.game.LayerSelector;
 import li.l1t.mtc.module.putindance.api.game.TickStrategy;
 import li.l1t.mtc.util.block.BlockTransformers;
 import li.l1t.mtc.util.block.FilteringBlockTransformer;
@@ -37,12 +37,14 @@ public class PutinTickStrategy implements TickStrategy {
     private final Plugin plugin;
     private final long removeDelayTicks;
     private final TickAnnouncer tickAnnouncer;
+    private final LayerSelector layerSelector;
     private TransformTask removeTask;
 
-    public PutinTickStrategy(Plugin plugin, long removeDelayTicks) {
+    public PutinTickStrategy(Plugin plugin, long removeDelayTicks, LayerSelector layerSelector) {
         this.plugin = plugin;
         this.removeDelayTicks = removeDelayTicks;
         this.tickAnnouncer = new TickAnnouncer(plugin);
+        this.layerSelector = layerSelector;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class PutinTickStrategy implements TickStrategy {
 
     @Override
     public void tick(Game game) {
-        Layer layer = selectLayer(game);
+        Layer layer = layerSelector.selectLayer(game.getBoard());
         if (game.getBoard().getActiveLayerCount() == 1 && layer.getActiveColors().size() == 1) {
             tickVodkaMode(layer);
         } else if (layer.getActiveColors().size() == 1) {
@@ -60,19 +62,6 @@ public class PutinTickStrategy implements TickStrategy {
         } else {
             tickNormally(layer);
         }
-    }
-
-    private Layer selectLayer(Game game) {
-        Board board = game.getBoard();
-        Layer layer = board.getTopMostActiveLayer();
-        if (isEligibleForLowerLayerSelection(board, layer)) {
-            layer = board.getNextActiveLayerBelow(layer);
-        }
-        return layer;
-    }
-
-    private boolean isEligibleForLowerLayerSelection(Board board, Layer layer) {
-        return layer.getActiveColors().size() <= 2 && board.getActiveLayerCount() > 1 && RandomUtils.nextInt(4) == 0;
     }
 
     private void tickVodkaMode(Layer layer) {
