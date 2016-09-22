@@ -261,7 +261,7 @@ class PutinDanceCommand implements CommandExecutor {
     private String buildLayerColorString(Layer layer) {
         StringBuilder sb = new StringBuilder();
         layer.getActiveColors().forEach(dye -> sb
-                .append(DyeColorConversions.chatColorFromDye(dye)).append(dye.name()).append(" ")
+                .append(DyeColorConversions.chatColorFromDye(dye)).append(layer.getBlocksByColor(dye).size()).append(" ")
         );
         return sb.toString();
     }
