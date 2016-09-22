@@ -50,6 +50,7 @@ public class PutinDanceModule extends ConfigurableMTCModule {
         super.enable(plugin);
 
         wandHandler = new WandHandler(getPlugin(), config);
+        registerCommand(new PutinDanceCommand(this), "pd");
     }
 
     @Override
