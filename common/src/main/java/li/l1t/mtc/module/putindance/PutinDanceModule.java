@@ -107,7 +107,7 @@ public class PutinDanceModule extends ConfigurableMTCModule {
         );
         generator.setCompletionCallback(board -> {
             currentBoard = board;
-            CommandHelper.broadcast(ADMIN_PERMISSION, CHAT_PREFIX + "Spielfeld fertig generiert! /pd start");
+            CommandHelper.broadcast(CHAT_PREFIX + "Spielfeld fertig generiert! /pd start", ADMIN_PERMISSION);
         });
         return generator;
     }
