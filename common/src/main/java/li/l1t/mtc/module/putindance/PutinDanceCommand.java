@@ -112,6 +112,9 @@ class PutinDanceCommand implements CommandExecutor {
 
     private boolean handleTick(CommandSender sender) {
         checkThatThereIsCurrentlyAGame();
+        if (module.getCurrentGame().isOpen()) {
+            throw new UserException("Bitte starte zuerst das Spiel! /pd start");
+        }
         if (!module.getCurrentGame().isTickable()) {
             throw new UserException("Der letzte Tick ist noch nicht fertig!");
         }
