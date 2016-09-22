@@ -308,20 +308,20 @@ class PutinDanceCommand implements CommandExecutor {
 
 
     private boolean sendHelpTo(CommandSender receiver) {
-        receiver.sendMessage("§9/pd join §2Betritt ein offenes Spiel");
+        receiver.sendMessage("§9/pd join §2betritt ein offenes Spiel");
         if (receiver.hasPermission(TrueFalseModule.ADMIN_PERMISSION)) {
-            receiver.sendMessage("§9/pd wand §2Gibt den Zauberstab zum Markieren der Spielfeldränder");
-            receiver.sendMessage("§9/pd new §2Öffnet ein neues Spiel");
-            receiver.sendMessage("§9/pd start §2Startet das Spiel, d.h. kein /pd join mehr");
-            receiver.sendMessage("§9/pd stop §2Beendet das aktuelle Spiel");
-            receiver.sendMessage("§9/pd tick §2Entfernt die nächste Farbe");
-            receiver.sendMessage("§9/pd setspawn §2Setzt den Spawn");
-            receiver.sendMessage("§9/pd spawn §2Teleportiert dich zum Spawn");
+            receiver.sendMessage("§9/pd wand §2Zauberstab zum Markieren der Spielfeldränder");
+            receiver.sendMessage("§9/pd new §2öffnet ein neues Spiel");
+            receiver.sendMessage("§9/pd start §2startet das Spiel, d.h. kein /pd join mehr");
+            receiver.sendMessage("§9/pd stop §2beendet das aktuelle Spiel");
+            receiver.sendMessage("§9/pd tick §2entfernt die nächste Farbe");
+            receiver.sendMessage("§9/pd setspawn §2setzt den Spawn");
+            receiver.sendMessage("§9/pd spawn §2teleportiert dich zum Spawn");
             receiver.sendMessage("§9/pd status §2zeigt Infos zum Spiel und Spielfeld");
-            receiver.sendMessage("§9/pd addcolor §2Verwendet eine Farbe im Spielfeld");
-            receiver.sendMessage("§9/pd removecolor §2Verwendet eine Farbe nicht mehr im Spielfeld");
-            receiver.sendMessage("§9/pd listcolors §2Zeigt verwendete Wollfarben für das Spielfeld");
-            receiver.sendMessage("§9/pd listallcolors §2Zeigt verfügbare Wollfarben für das Spielfeld");
+            receiver.sendMessage("§9/pd addcolor §2verwendet eine Farbe im Spielfeld");
+            receiver.sendMessage("§9/pd removecolor §2verwendet eine Farbe nicht mehr im Spielfeld");
+            receiver.sendMessage("§9/pd listcolors §2zeigt verwendete Wollfarben für das Spielfeld");
+            receiver.sendMessage("§9/pd listallcolors §2zeigt verfügbare Wollfarben für das Spielfeld");
         }
         return true;
     }
