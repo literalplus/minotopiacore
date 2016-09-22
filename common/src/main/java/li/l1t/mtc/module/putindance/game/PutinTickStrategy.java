@@ -99,7 +99,11 @@ public class PutinTickStrategy implements TickStrategy {
                     block.setType(Material.AIR);
                 }).build();
         removeTask = transformer.createTransformTask();
-        removeTask.start(plugin, removeDelayTicks);
+        removeTask.withCompletionCallback(() -> removeTask = null);
+        plugin.getServer().getScheduler().runTaskLater(plugin,
+                () -> removeTask.start(plugin, 2L),
+                removeDelayTicks);
+
     }
 
     @SuppressWarnings("deprecation")
