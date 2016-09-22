@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -54,6 +55,8 @@ public class PutinTickStrategy implements TickStrategy {
         Layer layer = selectLayer(game);
         if (game.getBoard().getLayerCount() == 1 && layer.getActiveColors().size() == 1) {
             tickVodkaMode(layer);
+        } else if (layer.getActiveColors().size() == 1) {
+            tickFinalColor(layer);
         } else {
             tickNormally(layer);
         }
@@ -75,6 +78,14 @@ public class PutinTickStrategy implements TickStrategy {
     private void tickVodkaMode(Layer layer) {
         tickAnnouncer.announceVodkaMode();
         scheduleBlockRemove(layer, block -> RandomUtils.nextInt(4) == 0);
+    }
+
+    private void tickFinalColor(Layer layer) {
+        DyeColor finalColor = layer.getActiveColors().stream().findFirst().orElseThrow(AssertionError::new);
+        List<DyeColor> eligibleColors = new ArrayList<>(Arrays.asList(DyeColor.values()));
+        eligibleColors.remove(finalColor);
+        tickAnnouncer.announceSafeColor(eligibleColors.get(RandomUtils.nextInt(eligibleColors.size())));
+        scheduleBlockRemove(layer, woolColorPredicate(finalColor));
     }
 
     private void tickNormally(Layer layer) {
