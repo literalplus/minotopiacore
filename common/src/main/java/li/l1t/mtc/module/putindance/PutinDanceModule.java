@@ -121,6 +121,7 @@ public class PutinDanceModule extends ConfigurableMTCModule {
         Preconditions.checkState(hasBoard(), "there is no current board");
         PutinTickStrategy strategy = new PutinTickStrategy(plugin, config.getTickRemoveDelayTicks());
         currentGame = new SimpleGame(getCurrentBoard(), strategy);
+        currentGame.setSpawnLocation(config.getSpawnLocation());
         currentGame.openGame();
     }
 
