@@ -42,7 +42,7 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     private SimpleGame currentGame;
 
     protected PutinDanceModule() {
-        super(NAME, "modules/events/putindance.cfg.yml", ClearCacheBehaviour.SAVE, false);
+        super(NAME, "modules/events/putindance.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
     }
 
     @Override
