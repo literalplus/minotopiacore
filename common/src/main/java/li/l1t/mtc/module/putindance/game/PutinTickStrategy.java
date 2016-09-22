@@ -84,16 +84,20 @@ public class PutinTickStrategy implements TickStrategy {
         DyeColor finalColor = layer.getActiveColors().stream().findFirst().orElseThrow(AssertionError::new);
         List<DyeColor> eligibleColors = new ArrayList<>(Arrays.asList(DyeColor.values()));
         eligibleColors.remove(finalColor);
-        tickAnnouncer.announceSafeColor(eligibleColors.get(RandomUtils.nextInt(eligibleColors.size())));
-        scheduleBlockRemove(layer, woolColorPredicate(finalColor));
+        announceSafeAndRemove(layer, eligibleColors.get(RandomUtils.nextInt(eligibleColors.size())), finalColor);
+    }
+
+    private void announceSafeAndRemove(Layer layer, DyeColor safeColor, DyeColor colorToRemove) {
+        tickAnnouncer.announceSafeColor(safeColor);
+        scheduleBlockRemove(layer, woolColorPredicate(colorToRemove));
+        layer.removeBlocksByColor(colorToRemove);
     }
 
     private void tickNormally(Layer layer) {
         ArrayList<DyeColor> eligibleColors = new ArrayList<>(layer.getActiveColors());
         DyeColor safeColor = selectRandomColor(eligibleColors);
-        tickAnnouncer.announceSafeColor(safeColor);
         DyeColor colorToRemove = selectRandomColor(eligibleColors);
-        scheduleBlockRemove(layer, woolColorPredicate(colorToRemove));
+        announceSafeAndRemove(layer, safeColor, colorToRemove);
     }
 
     private DyeColor selectRandomColor(List<DyeColor> eligibleColors) {
