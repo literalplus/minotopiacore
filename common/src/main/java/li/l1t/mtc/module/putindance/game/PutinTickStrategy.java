@@ -7,13 +7,13 @@
 
 package li.l1t.mtc.module.putindance.game;
 
-import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.Layer;
 import li.l1t.mtc.module.putindance.api.game.Game;
 import li.l1t.mtc.module.putindance.api.game.TickStrategy;
 import li.l1t.mtc.util.block.BlockTransformers;
 import li.l1t.mtc.util.block.FilteringBlockTransformer;
+import li.l1t.mtc.util.block.TransformTask;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -36,7 +36,7 @@ public class PutinTickStrategy implements TickStrategy {
     private final Plugin plugin;
     private final long removeDelayTicks;
     private final TickAnnouncer tickAnnouncer;
-    private NonAsyncBukkitRunnable removeTask;
+    private TransformTask removeTask;
 
     public PutinTickStrategy(Plugin plugin, long removeDelayTicks) {
         this.plugin = plugin;
@@ -99,7 +99,7 @@ public class PutinTickStrategy implements TickStrategy {
                     block.setType(Material.AIR);
                 }).build();
         removeTask = transformer.createTransformTask();
-        removeTask.runTaskLater(plugin, removeDelayTicks);
+        removeTask.start(plugin, removeDelayTicks);
     }
 
     @SuppressWarnings("deprecation")

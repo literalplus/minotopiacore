@@ -8,7 +8,6 @@
 package li.l1t.mtc.util.block;
 
 import li.l1t.common.misc.XyLocation;
-import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -48,7 +47,7 @@ class BasicBlockTransformer implements BlockTransformer {
     }
 
     @Override
-    public NonAsyncBukkitRunnable createTransformTask() {
+    public BlockTransformTask createTransformTask() {
         return new BlockTransformTask(this);
     }
 
