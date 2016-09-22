@@ -12,6 +12,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.exception.UserException;
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.Layer;
+import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
 import li.l1t.mtc.module.truefalse.TrueFalseModule;
 import li.l1t.mtc.util.DyeColorConversions;
@@ -77,7 +78,7 @@ class PutinDanceCommand implements CommandExecutor {
                 case "start":
                     return handleStart();
                 case "gen":
-                    return handleRequestGeneration();
+                    return handleRequestGeneration(sender);
                 case "status":
                     return handleStatus(sender);
             }
@@ -121,9 +122,14 @@ class PutinDanceCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean handleRequestGeneration() {
-        //FIXME: generation logic
-        return false;
+    private boolean handleRequestGeneration(CommandSender sender) {
+        checkThatNoGameIsRunning();
+        BoardGenerator generator = module.createGenerator();
+        generator.startGeneration(module.getPlugin(), 2L);
+        MessageType.RESULT_LINE.sendTo(sender, "Generiere Spielfeld für PutinDance...");
+        MessageType.RESULT_LINE.sendTo(sender, "Dies kann einige Sekunden dauern.");
+        MessageType.RESULT_LINE.sendTo(sender, "Du wirst benachrichtigt, sobald es fertig ist.");
+        return true;
     }
 
     private boolean handleStatus(CommandSender sender) {

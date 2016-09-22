@@ -9,11 +9,17 @@ package li.l1t.mtc.module.putindance;
 
 import com.google.common.base.Preconditions;
 import li.l1t.common.misc.XyLocation;
+import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.putindance.api.board.Board;
+import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
+import li.l1t.mtc.module.putindance.board.generator.DelegatingGenerationStrategy;
+import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
+import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
+import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
 import li.l1t.mtc.module.putindance.game.PutinTickStrategy;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
 
@@ -86,6 +92,23 @@ public class PutinDanceModule extends ConfigurableMTCModule {
 
     public Board getCurrentBoard() {
         return currentBoard;
+    }
+
+    public BoardGenerator createGenerator() {
+        RangeAirStrategy airStrategy = new RangeAirStrategy();
+        airStrategy.setAirPercentRange(config.getMinAirPercent(), config.getMaxAirPercent());
+        ListColorSelector colorSelector = new ListColorSelector();
+        config.getValidColors().forEach(colorSelector::addValidColor);
+        DelegatingGenerationStrategy strategy = new DelegatingGenerationStrategy(airStrategy, colorSelector);
+        TransformerBoardGenerator generator = new TransformerBoardGenerator(
+                config.getFirstBoardBoundary(), config.getSecondBoardBoundary(),
+                strategy, 200
+        );
+        generator.setCompletionCallback(board -> {
+            currentBoard = board;
+            CommandHelper.broadcast(ADMIN_PERMISSION, CHAT_PREFIX + "Spielfeld fertig generiert! /pd start");
+        });
+        return generator;
     }
 
     public boolean hasBoard() {

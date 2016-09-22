@@ -9,7 +9,12 @@ package li.l1t.mtc.module.putindance;
 
 import li.l1t.common.misc.XyLocation;
 import li.l1t.mtc.yaml.ManagedConfiguration;
+import org.bukkit.DyeColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Manages the configuration file of PutinDance.
@@ -22,10 +27,16 @@ class PutinDanceConfig {
     private static final String SECOND_BOUNDARY_PATH = "boundaries.second";
     private static final String SPAWN_LOCATION_PATH = "spawn";
     private static final String REMOVE_DELAY_PATH = "tick-wool-remove-delay-ticks";
+    private static final String VALID_COLORS_PATH = "valid-wool-colors-for-generation";
+    private static final String MIN_AIR_PERCENT_PATH = "min-air-percent-per-layer";
+    private static final String MAX_AIR_PERCENT_PATH = "max-air-percent-per-layer";
     private XyLocation firstBoardBoundary;
     private XyLocation secondBoardBoundary;
     private XyLocation spawnLocation;
     private long tickRemoveDelayTicks;
+    private List<DyeColor> validColors;
+    private int minAirPercent;
+    private int maxAirPercent;
 
     public PutinDanceConfig() {
         ConfigurationSerialization.registerClass(XyLocation.class);
@@ -36,6 +47,20 @@ class PutinDanceConfig {
         secondBoardBoundary = (XyLocation) config.get(SECOND_BOUNDARY_PATH);
         spawnLocation = (XyLocation) config.get(SPAWN_LOCATION_PATH);
         tickRemoveDelayTicks = config.getLong(REMOVE_DELAY_PATH, 2L * 20L);
+        validColors = config.getStringList(VALID_COLORS_PATH).stream()
+                .map(this::parseDyeColor)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        minAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 70);
+        minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 40);
+    }
+
+    private DyeColor parseDyeColor(String str) {
+        try {
+            return DyeColor.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public void saveTo(ManagedConfiguration config) {
@@ -43,6 +68,9 @@ class PutinDanceConfig {
         config.set(SECOND_BOUNDARY_PATH, secondBoardBoundary);
         config.set(SPAWN_LOCATION_PATH, spawnLocation);
         config.set(REMOVE_DELAY_PATH, tickRemoveDelayTicks);
+        config.set(VALID_COLORS_PATH, validColors.stream().map(DyeColor::name).collect(Collectors.toList()));
+        config.set(MIN_AIR_PERCENT_PATH, minAirPercent);
+        config.set(MAX_AIR_PERCENT_PATH, maxAirPercent);
     }
 
     public XyLocation getFirstBoardBoundary() {
@@ -75,5 +103,25 @@ class PutinDanceConfig {
 
     public void setTickRemoveDelayTicks(long tickRemoveDelayTicks) {
         this.tickRemoveDelayTicks = tickRemoveDelayTicks;
+    }
+
+    public List<DyeColor> getValidColors() {
+        return validColors;
+    }
+
+    public int getMinAirPercent() {
+        return minAirPercent;
+    }
+
+    public void setMinAirPercent(int minAirPercent) {
+        this.minAirPercent = minAirPercent;
+    }
+
+    public int getMaxAirPercent() {
+        return maxAirPercent;
+    }
+
+    public void setMaxAirPercent(int maxAirPercent) {
+        this.maxAirPercent = maxAirPercent;
     }
 }

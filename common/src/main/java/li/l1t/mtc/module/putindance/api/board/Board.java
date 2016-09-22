@@ -23,6 +23,10 @@ public interface Board {
 
     XyLocation getSecondBoundary();
 
+    int getMaxYLevel();
+
+    int getMinYLevel();
+
     List<Layer> getAllLayers();
 
     List<Layer> getActiveLayers();

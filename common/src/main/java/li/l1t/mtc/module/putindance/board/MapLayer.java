@@ -27,11 +27,21 @@ import java.util.Set;
 public class MapLayer implements Layer {
     private final int yLevel;
     private final Board board;
+    private final XyLocation firstBoundary;
+    private final XyLocation secondBoundary;
     private BlockColorMap blockColorMap = new BlockColorMap();
 
     public MapLayer(int yLevel, Board board) {
         this.yLevel = yLevel;
         this.board = board;
+        this.firstBoundary = adjustToLayerY(board.getFirstBoundary());
+        this.secondBoundary = adjustToLayerY(board.getSecondBoundary());
+    }
+
+    private XyLocation adjustToLayerY(XyLocation initial) {
+        XyLocation loc = new XyLocation(initial);
+        loc.setY(yLevel);
+        return loc;
     }
 
     @Override
@@ -46,18 +56,12 @@ public class MapLayer implements Layer {
 
     @Override
     public XyLocation getFirstBoundary() {
-        return adjustYToLayerY(board.getFirstBoundary());
-    }
-
-    private XyLocation adjustYToLayerY(XyLocation initial) {
-        XyLocation loc = new XyLocation(initial);
-        loc.setY(yLevel);
-        return loc;
+        return firstBoundary;
     }
 
     @Override
     public XyLocation getSecondBoundary() {
-        return adjustYToLayerY(board.getSecondBoundary());
+        return secondBoundary;
     }
 
     @Override

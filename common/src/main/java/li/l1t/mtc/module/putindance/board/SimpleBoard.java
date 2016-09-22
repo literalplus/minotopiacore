@@ -27,10 +27,24 @@ public class SimpleBoard implements Board {
     private final List<Layer> allLayers = new ArrayList<>();
     private final XyLocation firstBoundary;
     private final XyLocation secondBoundary;
+    private final int minYLevel;
+    private final int maxYLevel;
 
     public SimpleBoard(XyLocation firstBoundary, XyLocation secondBoundary) {
         this.firstBoundary = firstBoundary;
         this.secondBoundary = secondBoundary;
+        maxYLevel = Math.max(firstBoundary.getBlockY(), secondBoundary.getBlockY());
+        minYLevel = Math.min(firstBoundary.getBlockY(), secondBoundary.getBlockY());
+    }
+
+    @Override
+    public int getMinYLevel() {
+        return minYLevel;
+    }
+
+    @Override
+    public int getMaxYLevel() {
+        return maxYLevel;
     }
 
     @Override
