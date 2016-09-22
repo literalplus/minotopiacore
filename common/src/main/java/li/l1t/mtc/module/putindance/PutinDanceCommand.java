@@ -16,11 +16,13 @@ import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
 import li.l1t.mtc.module.truefalse.TrueFalseModule;
 import li.l1t.mtc.util.DyeColorConversions;
+import org.bukkit.DyeColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -81,9 +83,48 @@ class PutinDanceCommand implements CommandExecutor {
                     return handleRequestGeneration(sender);
                 case "status":
                     return handleStatus(sender);
+                case "addcolor":
+                    return handleAddColor(sender, args[1]);
+                case "removecolor":
+                    return handleRemoveColor(sender, args[1]);
+                case "listcolors":
+                    return handleListColors(sender);
+                case "listallcolors":
+                    return handleListAllColors(sender);
             }
         }
         return false;
+    }
+
+    private boolean handleAddColor(CommandSender sender, String arg) {
+        DyeColor color = DyeColor.valueOf(arg);
+        module.getConfig().getValidColors().add(color);
+        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt im Spielfeld verwendet!");
+        return true;
+    }
+
+    private boolean handleRemoveColor(CommandSender sender, String arg) {
+        DyeColor color = DyeColor.valueOf(arg);
+        module.getConfig().getValidColors().remove(color);
+        MessageType.RESULT_LINE_SUCCESS.sendTo(sender, "%s wird jetzt nicht mehr im Spielfeld verwendet!");
+        return true;
+    }
+
+    private boolean handleListColors(CommandSender sender) {
+        MessageType.LIST_HEADER.sendTo(sender, "Folgende Farben werden im Spielfeld verwendet:");
+        module.getConfig().getValidColors().forEach(color -> sendColorInfo(sender, color));
+        return true;
+    }
+
+    private boolean handleListAllColors(CommandSender sender) {
+        MessageType.LIST_HEADER.sendTo(sender, "Folgende Farben sind verfügbar:");
+        Arrays.stream(DyeColor.values()).forEach(color -> sendColorInfo(sender, color));
+        return true;
+    }
+
+    private void sendColorInfo(CommandSender sender, DyeColor color) {
+        MessageType.LIST_ITEM.sendTo(
+                sender, "%s%s", DyeColorConversions.chatColorFromDye(color), color);
     }
 
     private boolean handleGetWand(Player player) {
@@ -235,6 +276,10 @@ class PutinDanceCommand implements CommandExecutor {
             receiver.sendMessage("§9/pd stop §2Beendet das aktuelle Spiel");
             receiver.sendMessage("§9/pd setspawn §2Setzt den Spawn");
             receiver.sendMessage("§9/pd spawn §2Teleportiert dich zum Spawn");
+            receiver.sendMessage("§9/pd addcolor §2Verwendet eine Farbe im Spielfeld");
+            receiver.sendMessage("§9/pd removecolor §2Verwendet eine Farbe nicht mehr im Spielfeld");
+            receiver.sendMessage("§9/pd listcolors §2Zeigt verwendete Wollfarben für das Spielfeld");
+            receiver.sendMessage("§9/pd listallcolors §2Zeigt verfügbare Wollfarben für das Spielfeld");
         }
         return true;
     }
