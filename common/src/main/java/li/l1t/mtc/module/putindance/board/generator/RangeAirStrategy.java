@@ -60,6 +60,9 @@ public class RangeAirStrategy implements AirStrategy {
         int minY = layer.getBoard().getMinYLevel();
         int layerHeight = layer.getYLevel() - minY;
         int boardHeight = maxY - minY;
+        if (boardHeight == 0) {
+            return 1D;
+        }
         return 1D - (double) (layerHeight / boardHeight);
     }
 
