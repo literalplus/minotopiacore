@@ -69,7 +69,7 @@ public class PutinTickStrategy implements TickStrategy {
     }
 
     private boolean isEligibleForLowerLayerSelection(Board board, Layer layer) {
-        return layer.getActiveColors().size() < 4 && board.getActiveLayerCount() > 1 && RandomUtils.nextInt(4) == 0;
+        return layer.getActiveColors().size() <= 2 && board.getActiveLayerCount() > 1 && RandomUtils.nextInt(4) == 0;
     }
 
     private void tickVodkaMode(Layer layer) {
