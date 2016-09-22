@@ -35,8 +35,8 @@ public class RangeAirStrategy implements AirStrategy {
     }
 
     public void setAirPercentRange(int min, int max) {
-        Preconditions.checkArgument(isPercent(min) && min < max, "required: 0 <= min(%d) <= 100 && < max(%d)", min, max);
-        Preconditions.checkArgument(isPercent(max), "required: 0 <= max(%d)", max);
+        Preconditions.checkArgument(isPercent(min) && min < max, "required: 0 <= min <= 100 && < max", min, max);
+        Preconditions.checkArgument(isPercent(max), "required: 0 <= max", max);
         this.minAirPercent = min;
         this.maxAirPercent = max;
         this.rangeWidth = max - min;
