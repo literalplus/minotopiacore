@@ -51,8 +51,8 @@ class PutinDanceConfig {
                 .map(this::parseDyeColor)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 70);
-        minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 40);
+        maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 60);
+        minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 30);
     }
 
     private DyeColor parseDyeColor(String str) {
