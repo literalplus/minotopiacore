@@ -7,7 +7,8 @@
 
 package li.l1t.mtc.module.putindance.api.board;
 
-import li.l1t.mtc.api.exception.InternalException;
+
+import li.l1t.common.exception.InternalException;
 
 /**
  * Thrown if a layer does not exist in a board.

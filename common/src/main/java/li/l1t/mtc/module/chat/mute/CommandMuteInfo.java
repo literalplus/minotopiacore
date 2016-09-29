@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.module.chat.mute;
 
+import li.l1t.common.exception.UserException;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.exception.UserException;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.chat.mute.api.Mute;
 import li.l1t.mtc.module.chat.mute.api.MuteManager;

@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.module.stack;
 
+import li.l1t.common.exception.UserException;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.exception.UserException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

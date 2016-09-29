@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.api.module;
 
+import li.l1t.common.exception.NonSensitiveException;
 import li.l1t.mtc.api.command.CommandBehaviour;
 import li.l1t.mtc.api.command.CommandBehaviours;
-import li.l1t.mtc.api.exception.PlayerReadableException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
@@ -120,8 +120,8 @@ public class ModuleCommand extends Command implements PluginIdentifiableCommand 
 
         try {
             success = executor.onCommand(sender, this, commandLabel, args);
-        } catch (PlayerReadableException ex) {
-            ex.sendMessageTo(sender);
+        } catch (NonSensitiveException ex) {
+            sender.sendMessage(ex.getColoredMessage());
             if (ex.needsLogging()) {
                 throw wrapException(commandLabel, ex.getCause());
             } else {

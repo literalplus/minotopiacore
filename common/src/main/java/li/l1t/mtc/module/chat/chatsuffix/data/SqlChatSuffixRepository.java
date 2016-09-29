@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.module.chat.chatsuffix.data;
 
+import li.l1t.common.exception.InternalException;
 import li.l1t.common.sql.QueryResult;
 import li.l1t.common.sql.SpigotSql;
-import li.l1t.mtc.api.exception.InternalException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

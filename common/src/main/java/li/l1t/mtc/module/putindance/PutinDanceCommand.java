@@ -7,9 +7,9 @@
 
 package li.l1t.mtc.module.putindance;
 
+import li.l1t.common.exception.UserException;
 import li.l1t.common.misc.XyLocation;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.exception.UserException;
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.Layer;
 import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
