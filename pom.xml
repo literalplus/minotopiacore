@@ -62,11 +62,6 @@
             <url>http://pex-repo.aoeu.xyz/</url>
         </repository>
         <repository>
-            <id>vault-repo</id>
-            <!-- Vault -->
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
-        </repository>
-        <repository>
             <id>jcenter</id>
             <!-- PowerMock -->
             <url>http://jcenter.bintray.com/</url>
@@ -77,14 +72,9 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>xxyy-libs-snapshot</id>
-            <!-- HolographicDisplays -->
-            <url>https://repo.nowak-at.net/ext-release-local/</url>
-        </repository>
-        <repository>
             <id>xxyy-repo</id>
-            <!-- xLogin, etc. -->
-            <url>https://repo.nowak-at.net/xxyy-private/</url>
+            <!-- HolographicDisplays, xLogin, etc. -->
+            <url>https://repo.l1t.li/libs-all/</url>
         </repository>
         <repository>
             <id>dmulloy2-repo</id>
