@@ -52,14 +52,9 @@
 
     <repositories>
         <repository>
-            <id>sk89q-repo</id>
-            <!-- WorldGuard -->
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>pex-repo</id>
-            <!-- PermissionsEx -->
-            <url>http://pex-repo.aoeu.xyz/</url>
+            <id>xxyy-repo</id>
+            <!-- HolographicDisplays, xLogin, etc. -->
+            <url>https://repo.l1t.li/libs-all/</url>
         </repository>
         <repository>
             <id>jcenter</id>
@@ -72,14 +67,19 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>xxyy-repo</id>
-            <!-- HolographicDisplays, xLogin, etc. -->
-            <url>https://repo.l1t.li/libs-all/</url>
+            <id>sk89q-repo</id>
+            <!-- WorldGuard -->
+            <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
             <id>dmulloy2-repo</id>
             <!-- ProtocolLib -->
             <url>http://repo.dmulloy2.net/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>pex-repo</id>
+            <!-- PermissionsEx -->
+            <url>http://pex-repo.aoeu.xyz/</url>
         </repository>
         <repository>
             <id>puha-repo</id>
