@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-13
  */
-abstract class AbstractTransformTask extends NonAsyncBukkitRunnable implements TransformTask {
+public abstract class AbstractTransformTask extends NonAsyncBukkitRunnable implements TransformTask {
     private Runnable completionCallback = () -> {
     };
     private boolean done = false;
