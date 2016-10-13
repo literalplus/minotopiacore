@@ -78,10 +78,12 @@ class PutinDanceConfig {
         config.set(SECOND_BOUNDARY_PATH, secondBoardBoundary);
         config.set(SPAWN_LOCATION_PATH, spawnLocation);
         config.set(REMOVE_DELAY_PATH, tickRemoveDelayTicks);
+        config.set(REVERT_DELAY_PATH, tickRevertDelayTicks);
         config.set(VALID_COLORS_PATH, validColors.stream().map(DyeColor::name).collect(Collectors.toList()));
         config.set(MIN_AIR_PERCENT_PATH, minAirPercent);
         config.set(MAX_AIR_PERCENT_PATH, maxAirPercent);
         config.set(ONLY_TOPMOST_LAYER_PATH, selectOnlyTopMostLayers);
+        config.set(TEMPORARY_REMOVAL_PATH, useTemporaryRemovalStrategy);
     }
 
     public XyLocation getFirstBoardBoundary() {
