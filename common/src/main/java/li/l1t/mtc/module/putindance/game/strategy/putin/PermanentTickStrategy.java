@@ -26,10 +26,10 @@ import java.util.List;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-09-21
  */
-public class PutinTickStrategy extends AbstractPermanentTickStrategy {
+public class PermanentTickStrategy extends AbstractPermanentTickStrategy {
     private final LayerSelector layerSelector;
 
-    public PutinTickStrategy(Plugin plugin, long removeDelayTicks, LayerSelector layerSelector) {
+    public PermanentTickStrategy(Plugin plugin, long removeDelayTicks, LayerSelector layerSelector) {
         super(removeDelayTicks, plugin);
         this.layerSelector = layerSelector;
     }

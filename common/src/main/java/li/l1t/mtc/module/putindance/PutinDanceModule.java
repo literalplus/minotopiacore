@@ -24,7 +24,7 @@ import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
 import li.l1t.mtc.module.putindance.game.AnyLayerSelector;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
 import li.l1t.mtc.module.putindance.game.TopMostLayerSelector;
-import li.l1t.mtc.module.putindance.game.strategy.putin.PutinTickStrategy;
+import li.l1t.mtc.module.putindance.game.strategy.putin.PermanentTickStrategy;
 
 /**
  * A module that provides the PutinDance mini-game for events. PutinDance is based around a board
@@ -122,14 +122,14 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public void newGame() {
         Preconditions.checkState(!hasGame(), "there is already a game");
         Preconditions.checkState(hasBoard(), "there is no current board");
-        PutinTickStrategy strategy = createTickStrategy();
+        PermanentTickStrategy strategy = createTickStrategy();
         currentGame = new SimpleGame(getCurrentBoard(), strategy);
         currentGame.setSpawnLocation(config.getSpawnLocation());
         currentGame.openGame();
     }
 
-    private PutinTickStrategy createTickStrategy() {
-        return new PutinTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
+    private PermanentTickStrategy createTickStrategy() {
+        return new PermanentTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
     }
 
     private LayerSelector createLayerSelector() {
