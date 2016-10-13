@@ -86,7 +86,9 @@ public class TemporaryTickStrategy implements TickStrategy {
     }
 
     private void startRevert(RevertableBlockTransformer transformer) {
-        new TypeIdAndDataReverter(transformer)
+        currentTask = new TypeIdAndDataReverter(transformer);
+        currentTask
+                .withCompletionCallback(() -> currentTask = null)
                 .startDelayed(plugin, revertDelayTicks, 2L);
     }
 
