@@ -8,7 +8,6 @@
 package li.l1t.mtc.util.block;
 
 import li.l1t.common.misc.XyLocation;
-import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
@@ -44,7 +43,7 @@ class BasicRevertableBlockTransformer extends BasicFilteringBlockTransformer imp
     }
 
     @Override
-    public NonAsyncBukkitRunnable getRevertTask() {
+    public BlockRevertTask createRevertTask() {
         return new BlockRevertTask(this);
     }
 }

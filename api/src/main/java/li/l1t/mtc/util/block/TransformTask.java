@@ -21,4 +21,6 @@ public interface TransformTask {
     TransformTask withCompletionCallback(Runnable callback);
 
     void start(Plugin plugin, long delayBetweenExecutions);
+
+    void startDelayed(Plugin plugin, long delay, long delayBetweenExecutions);
 }

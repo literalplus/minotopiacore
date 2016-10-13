@@ -7,7 +7,6 @@
 
 package li.l1t.mtc.util.block;
 
-import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import org.bukkit.block.BlockState;
 
 import java.util.Queue;
@@ -21,5 +20,5 @@ import java.util.Queue;
 public interface RevertableBlockTransformer extends BlockTransformer {
     Queue<BlockState> getRevertableBlocks();
 
-    NonAsyncBukkitRunnable getRevertTask();
+    TransformTask createRevertTask();
 }
