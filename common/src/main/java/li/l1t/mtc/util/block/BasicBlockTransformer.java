@@ -64,6 +64,7 @@ class BasicBlockTransformer implements BlockTransformer {
                 for (; curY <= maxY; curY++) {
                     Block block = world.getBlockAt(curX, curY, curZ);
                     if (processSingleBlock(block) && ++processed >= maxBlocksPerTick) {
+                        curY++; //we just processed that block
                         return false;
                     }
                 }
