@@ -82,14 +82,14 @@ public class TemporaryTickStrategy implements TickStrategy {
     private void startRemove(RevertableBlockTransformer transformer) {
         currentTask = transformer.createTransformTask();
         currentTask.withCompletionCallback(() -> startRevert(transformer));
-        currentTask.startDelayed(plugin, removeDelayTicks, 2L);
+        currentTask.startDelayed(plugin, removeDelayTicks, 1L);
     }
 
     private void startRevert(RevertableBlockTransformer transformer) {
         currentTask = new TypeIdAndDataReverter(transformer);
         currentTask
                 .withCompletionCallback(() -> currentTask = null)
-                .startDelayed(plugin, revertDelayTicks, 2L);
+                .startDelayed(plugin, revertDelayTicks, 1L);
     }
 
     @Override
