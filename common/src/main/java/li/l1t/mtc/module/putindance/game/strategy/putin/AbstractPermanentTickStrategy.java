@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  * @since 2016-10-13
  */
 abstract class AbstractPermanentTickStrategy implements TickStrategy {
-    protected final Plugin plugin;
+    private final Plugin plugin;
     private final long removeDelayTicks;
     private final TickAnnouncer tickAnnouncer;
     private TransformTask removeTask;
@@ -68,10 +68,8 @@ abstract class AbstractPermanentTickStrategy implements TickStrategy {
                     block.setType(Material.AIR);
                 }).build();
         removeTask = transformer.createTransformTask();
-        removeTask.withCompletionCallback(() -> removeTask = null);
-        plugin.getServer().getScheduler().runTaskLater(plugin,
-                () -> removeTask.start(plugin, 2L),
-                removeDelayTicks);
+        removeTask.withCompletionCallback(() -> removeTask = null)
+                .startDelayed(plugin, removeDelayTicks, 2L);
 
     }
 
