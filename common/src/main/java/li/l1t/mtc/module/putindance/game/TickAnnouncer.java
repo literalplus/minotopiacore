@@ -22,10 +22,10 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-09-21
  */
-class TickAnnouncer {
+public class TickAnnouncer {
     private final TitleManagerHook hook;
 
-    TickAnnouncer(Plugin plugin) {
+    public TickAnnouncer(Plugin plugin) {
         hook = new TitleManagerHook(plugin);
     }
 

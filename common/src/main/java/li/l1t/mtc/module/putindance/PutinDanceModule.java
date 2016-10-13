@@ -22,9 +22,9 @@ import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
 import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
 import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
 import li.l1t.mtc.module.putindance.game.AnyLayerSelector;
-import li.l1t.mtc.module.putindance.game.PutinTickStrategy;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
 import li.l1t.mtc.module.putindance.game.TopMostLayerSelector;
+import li.l1t.mtc.module.putindance.game.strategy.putin.PutinTickStrategy;
 
 /**
  * A module that provides the PutinDance mini-game for events. PutinDance is based around a board
