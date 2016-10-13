@@ -72,7 +72,8 @@ public class TemporaryTickStrategy implements TickStrategy {
                 .withLocations(layer.getFirstBoundary(), layer.getSecondBoundary())
                 .withBlocksPerTick(400)
                 .withFilter(filter)
-                .withTransformer(block -> block.setType(Material.AIR)).build();
+                .withTransformer(block -> block.setType(Material.AIR))
+                .build();
         startRemove(transformer);
     }
 

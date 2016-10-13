@@ -24,7 +24,7 @@ public class BasicRevertableBlockTransformerBuilder extends AbstractBlockTransfo
     @Override
     public BasicRevertableBlockTransformer build() {
         BasicRevertableBlockTransformer instance = super.build();
-        instance.setFilter(filter == null ? any -> true : null);
+        instance.setFilter(filter);
         return instance;
     }
 

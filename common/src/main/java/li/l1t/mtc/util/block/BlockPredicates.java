@@ -23,15 +23,20 @@ public class BlockPredicates {
     private BlockPredicates() {
     }
 
-    @SuppressWarnings("deprecation")
+    /**
+     * @param expected the color to match
+     * @return a predicate that matches only blocks of given wool color
+     */
     public static Predicate<Block> woolColor(DyeColor expected) {
-        return block -> {
-            if (block.getType() != Material.WOOL) {
-                return false;
-            }
-            byte rawData = block.getData();
-            DyeColor actual = DyeColor.getByWoolData(rawData);
-            return actual == expected;
-        };
+        return block -> findWoolColor(block) == expected;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static DyeColor findWoolColor(Block block) {
+        if (block.getType() != Material.WOOL) {
+            return null;
+        }
+        byte rawData = block.getData();
+        return DyeColor.getByWoolData(rawData);
     }
 }
