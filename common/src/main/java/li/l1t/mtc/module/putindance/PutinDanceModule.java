@@ -17,6 +17,7 @@ import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
 import li.l1t.mtc.module.putindance.api.game.LayerSelector;
+import li.l1t.mtc.module.putindance.api.game.TickStrategy;
 import li.l1t.mtc.module.putindance.board.generator.DelegatingGenerationStrategy;
 import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
 import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
@@ -24,6 +25,7 @@ import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
 import li.l1t.mtc.module.putindance.game.layerselector.AnyLayerSelector;
 import li.l1t.mtc.module.putindance.game.layerselector.TopMostLayerSelector;
+import li.l1t.mtc.module.putindance.game.strategy.hardcore.TemporaryTickStrategy;
 import li.l1t.mtc.module.putindance.game.strategy.putin.PermanentTickStrategy;
 
 /**
@@ -128,14 +130,18 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public void newGame() {
         Preconditions.checkState(!hasGame(), "there is already a game");
         Preconditions.checkState(hasBoard(), "there is no current board");
-        PermanentTickStrategy strategy = createTickStrategy();
+        TickStrategy strategy = createTickStrategy();
         currentGame = new SimpleGame(getCurrentBoard(), strategy);
         currentGame.setSpawnLocation(config.getSpawnLocation());
         currentGame.openGame();
     }
 
-    private PermanentTickStrategy createTickStrategy() {
-        return new PermanentTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
+    private TickStrategy createTickStrategy() {
+        if (config.isUseTemporaryRemovalStrategy()) {
+            return new TemporaryTickStrategy(plugin, config.getTickRemoveDelayTicks(), config.getTickRevertDelayTicks());
+        } else {
+            return new PermanentTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
+        }
     }
 
     private LayerSelector createLayerSelector() {

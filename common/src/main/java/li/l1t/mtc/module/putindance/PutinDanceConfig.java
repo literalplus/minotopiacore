@@ -27,19 +27,23 @@ class PutinDanceConfig {
     private static final String FIRST_BOUNDARY_PATH = "boundaries.first";
     private static final String SECOND_BOUNDARY_PATH = "boundaries.second";
     private static final String SPAWN_LOCATION_PATH = "spawn";
-    private static final String REMOVE_DELAY_PATH = "tick-wool-remove-delay-ticks";
+    private static final String REMOVE_DELAY_PATH = "tick.wool-remove-delay-ticks";
+    private static final String REVERT_DELAY_PATH = "tick.wool-revert-delay-ticks";
     private static final String VALID_COLORS_PATH = "valid-wool-colors-for-generation";
     private static final String MIN_AIR_PERCENT_PATH = "min-air-percent-per-layer";
     private static final String MAX_AIR_PERCENT_PATH = "max-air-percent-per-layer";
     private static final String ONLY_TOPMOST_LAYER_PATH = "select-only-topmost-layers-on-tick";
+    private static final String TEMPORARY_REMOVAL_PATH = "tick.remove-unsafe-colors-temporarily-hardcore-mode";
     private XyLocation firstBoardBoundary;
     private XyLocation secondBoardBoundary;
     private XyLocation spawnLocation;
     private long tickRemoveDelayTicks;
+    private long tickRevertDelayTicks;
     private List<DyeColor> validColors;
     private int minAirPercent;
     private int maxAirPercent;
     private boolean selectOnlyTopMostLayers;
+    private boolean useTemporaryRemovalStrategy;
 
     public PutinDanceConfig() {
         ConfigurationSerialization.registerClass(XyLocation.class);
@@ -50,6 +54,7 @@ class PutinDanceConfig {
         secondBoardBoundary = (XyLocation) config.get(SECOND_BOUNDARY_PATH);
         spawnLocation = (XyLocation) config.get(SPAWN_LOCATION_PATH);
         tickRemoveDelayTicks = config.getLong(REMOVE_DELAY_PATH, 2L * 20L);
+        tickRevertDelayTicks = config.getLong(REVERT_DELAY_PATH, 2L * 20L);
         validColors = config.getStringList(VALID_COLORS_PATH).stream()
                 .map(this::parseDyeColor)
                 .filter(Objects::nonNull)
@@ -57,6 +62,7 @@ class PutinDanceConfig {
         maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 60);
         minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 30);
         selectOnlyTopMostLayers = config.getBoolean(ONLY_TOPMOST_LAYER_PATH, false);
+        useTemporaryRemovalStrategy = config.getBoolean(TEMPORARY_REMOVAL_PATH, false);
     }
 
     private DyeColor parseDyeColor(String str) {
@@ -138,5 +144,13 @@ class PutinDanceConfig {
 
     public void setSelectOnlyTopMostLayers(boolean selectOnlyTopMostLayers) {
         this.selectOnlyTopMostLayers = selectOnlyTopMostLayers;
+    }
+
+    public long getTickRevertDelayTicks() {
+        return tickRevertDelayTicks;
+    }
+
+    public boolean isUseTemporaryRemovalStrategy() {
+        return useTemporaryRemovalStrategy;
     }
 }

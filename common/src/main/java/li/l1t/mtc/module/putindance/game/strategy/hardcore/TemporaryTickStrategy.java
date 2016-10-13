@@ -39,16 +39,15 @@ import static li.l1t.common.util.PredicateHelper.not;
 public class TemporaryTickStrategy implements TickStrategy {
     private final Plugin plugin;
     private final long removeDelayTicks;
-    private final long replaceDelayTicks;
+    private final long revertDelayTicks;
     private final TickAnnouncer tickAnnouncer;
     private TransformTask currentTask;
 
-    public TemporaryTickStrategy(Plugin plugin, long removeDelayTicks, long replaceDelayTicks,
-                                 TickAnnouncer tickAnnouncer) {
+    public TemporaryTickStrategy(Plugin plugin, long removeDelayTicks, long revertDelayTicks) {
         this.plugin = plugin;
         this.removeDelayTicks = removeDelayTicks;
-        this.replaceDelayTicks = replaceDelayTicks;
-        this.tickAnnouncer = tickAnnouncer;
+        this.revertDelayTicks = revertDelayTicks;
+        this.tickAnnouncer = new TickAnnouncer(plugin);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class TemporaryTickStrategy implements TickStrategy {
         currentTask = transformer.createTransformTask();
         currentTask.withCompletionCallback(() -> {
             currentTask = transformer.createRevertTask();
-            currentTask.startDelayed(plugin, replaceDelayTicks, 2L);
+            currentTask.startDelayed(plugin, revertDelayTicks, 2L);
         });
         currentTask.startDelayed(plugin, removeDelayTicks, 2L);
     }
