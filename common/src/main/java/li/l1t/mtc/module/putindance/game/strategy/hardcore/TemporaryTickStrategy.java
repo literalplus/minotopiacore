@@ -76,17 +76,17 @@ public class TemporaryTickStrategy implements TickStrategy {
                 .withFilter(filter)
                 .withTransformer(block -> block.setType(Material.AIR))
                 .build();
-        startRemove(transformer);
+        startRemove(transformer, layer);
     }
 
-    private void startRemove(RevertableBlockTransformer transformer) {
+    private void startRemove(RevertableBlockTransformer transformer, Layer layer) {
         currentTask = transformer.createTransformTask();
-        currentTask.withCompletionCallback(() -> startRevert(transformer));
+        currentTask.withCompletionCallback(() -> startRevert(transformer, layer));
         currentTask.startDelayed(plugin, removeDelayTicks, 1L);
     }
 
-    private void startRevert(RevertableBlockTransformer transformer) {
-        currentTask = new TypeIdAndDataReverter(transformer);
+    private void startRevert(RevertableBlockTransformer transformer, Layer layer) {
+        currentTask = new TypeIdAndDataReverter(transformer, layer);
         currentTask
                 .withCompletionCallback(() -> currentTask = null)
                 .startDelayed(plugin, revertDelayTicks, 1L);

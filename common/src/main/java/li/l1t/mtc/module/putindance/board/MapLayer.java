@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -73,6 +74,11 @@ public class MapLayer implements Layer {
     public Collection<Block> getBlocksByColor(DyeColor color) {
         Preconditions.checkNotNull(color, "color");
         return blockColorMap.getBlocksView(color);
+    }
+
+    @Override
+    public Collection<Map.Entry<Block, DyeColor>> getBlocks() {
+        return blockColorMap.getBlockToColorMap();
     }
 
     @Override

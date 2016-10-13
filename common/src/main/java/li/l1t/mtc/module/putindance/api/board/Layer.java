@@ -12,6 +12,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,6 +34,8 @@ public interface Layer {
     boolean hasBlocksLeft();
 
     Collection<Block> getBlocksByColor(DyeColor color);
+
+    Collection<Map.Entry<Block, DyeColor>> getBlocks();
 
     Set<DyeColor> getActiveColors();
 

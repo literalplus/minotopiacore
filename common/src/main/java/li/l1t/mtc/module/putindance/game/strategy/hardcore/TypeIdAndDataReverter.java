@@ -7,10 +7,15 @@
 
 package li.l1t.mtc.module.putindance.game.strategy.hardcore;
 
+import li.l1t.mtc.module.putindance.api.board.Layer;
 import li.l1t.mtc.util.block.AbstractTransformTask;
 import li.l1t.mtc.util.block.RevertableBlockTransformer;
-import org.bukkit.block.BlockState;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -21,10 +26,12 @@ import java.util.Queue;
  */
 public class TypeIdAndDataReverter extends AbstractTransformTask {
     private final RevertableBlockTransformer blockTransformer;
-    private Queue<BlockState> revertQueue = null;
+    private final Layer layer;
+    private Queue<Map.Entry<Block, DyeColor>> revertQueue = null;
 
-    public TypeIdAndDataReverter(RevertableBlockTransformer blockTransformer) {
+    public TypeIdAndDataReverter(RevertableBlockTransformer blockTransformer, Layer layer) {
         this.blockTransformer = blockTransformer;
+        this.layer = layer;
     }
 
     @Override
@@ -34,19 +41,22 @@ public class TypeIdAndDataReverter extends AbstractTransformTask {
                 setDoneAndCancel();
                 return;
             }
-            BlockState toRevert = queue().poll();
+            Map.Entry<Block, DyeColor> toRevert = queue().poll();
             revertTypeIdAndData(toRevert);
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void revertTypeIdAndData(BlockState toRevert) {
-        toRevert.getBlock().setTypeIdAndData(toRevert.getTypeId(), toRevert.getRawData(), false);
+    private void revertTypeIdAndData(Map.Entry<Block, DyeColor> toRevert) {
+        byte data = toRevert.getValue().getWoolData();
+        Block block = toRevert.getKey();
+        block.setTypeIdAndData(Material.WOOL.getId(), data, false);
+//        toRevert.getBlock().setTypeIdAndData(toRevert.getTypeId(), toRevert.getRawData(), false);
     }
 
-    private Queue<BlockState> queue() {
+    private Queue<Map.Entry<Block, DyeColor>> queue() {
         if (revertQueue == null) {
-            revertQueue = blockTransformer.getRevertableBlocks();
+            revertQueue = new LinkedList<>(layer.getBlocks());
         }
         return revertQueue;
     }

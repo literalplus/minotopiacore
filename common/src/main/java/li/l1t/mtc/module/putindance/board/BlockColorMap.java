@@ -58,6 +58,10 @@ class BlockColorMap {
         return color;
     }
 
+    public Collection<Map.Entry<Block, DyeColor>> getBlockToColorMap() {
+        return colorByBlock.entrySet();
+    }
+
     public boolean isEmpty() {
         return blocksByColor.isEmpty();
     }
