@@ -21,9 +21,9 @@ import li.l1t.mtc.module.putindance.board.generator.DelegatingGenerationStrategy
 import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
 import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
 import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
-import li.l1t.mtc.module.putindance.game.AnyLayerSelector;
 import li.l1t.mtc.module.putindance.game.SimpleGame;
-import li.l1t.mtc.module.putindance.game.TopMostLayerSelector;
+import li.l1t.mtc.module.putindance.game.layerselector.AnyLayerSelector;
+import li.l1t.mtc.module.putindance.game.layerselector.TopMostLayerSelector;
 import li.l1t.mtc.module.putindance.game.strategy.putin.PermanentTickStrategy;
 
 /**

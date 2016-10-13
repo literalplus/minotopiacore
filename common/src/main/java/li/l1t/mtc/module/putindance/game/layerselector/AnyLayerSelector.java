@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.putindance.game;
+package li.l1t.mtc.module.putindance.game.layerselector;
 
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.Layer;
