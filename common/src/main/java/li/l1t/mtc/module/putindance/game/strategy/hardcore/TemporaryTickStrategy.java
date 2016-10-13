@@ -87,7 +87,7 @@ public class TemporaryTickStrategy implements TickStrategy {
 
     @Override
     public boolean isReady() {
-        return currentTask != null;
+        return currentTask == null;
     }
 
     @Override
