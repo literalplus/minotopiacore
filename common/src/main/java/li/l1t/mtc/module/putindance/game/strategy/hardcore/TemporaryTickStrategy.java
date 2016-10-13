@@ -80,7 +80,8 @@ public class TemporaryTickStrategy implements TickStrategy {
         currentTask = transformer.createTransformTask();
         currentTask.withCompletionCallback(() -> {
             currentTask = transformer.createRevertTask();
-            currentTask.startDelayed(plugin, revertDelayTicks, 2L);
+            currentTask.withCompletionCallback(() -> currentTask = null)
+                    .startDelayed(plugin, revertDelayTicks, 2L);
         });
         currentTask.startDelayed(plugin, removeDelayTicks, 2L);
     }

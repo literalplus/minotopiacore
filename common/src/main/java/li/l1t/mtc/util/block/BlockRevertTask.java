@@ -19,6 +19,7 @@ import java.util.Queue;
  */
 class BlockRevertTask extends AbstractTransformTask {
     private final RevertableBlockTransformer blockTransformer;
+    private Queue<BlockState> revertQueue = null;
 
     public BlockRevertTask(RevertableBlockTransformer blockTransformer) {
         this.blockTransformer = blockTransformer;
@@ -26,14 +27,20 @@ class BlockRevertTask extends AbstractTransformTask {
 
     @Override
     public void run() {
-        Queue<BlockState> queue = blockTransformer.getRevertableBlocks();
         for (int i = 0; i < blockTransformer.getBlocksPerTick(); i++) {
-            if (queue.isEmpty()) {
+            if (queue().isEmpty()) {
                 setDoneAndCancel();
                 return;
             }
-            BlockState toRevert = queue.poll();
+            BlockState toRevert = queue().poll();
             toRevert.update(true, false);
         }
+    }
+
+    private Queue<BlockState> queue() {
+        if (revertQueue == null) {
+            revertQueue = blockTransformer.getRevertableBlocks();
+        }
+        return revertQueue;
     }
 }
