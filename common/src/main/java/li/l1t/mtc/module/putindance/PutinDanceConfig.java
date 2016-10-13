@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.putindance;
 
+import com.google.common.base.Preconditions;
 import li.l1t.common.misc.XyLocation;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 import org.bukkit.DyeColor;
@@ -82,6 +83,7 @@ class PutinDanceConfig {
     }
 
     public void setFirstBoardBoundary(XyLocation firstBoardBoundary) {
+        Preconditions.checkNotNull(firstBoardBoundary, "firstBoardBoundary");
         this.firstBoardBoundary = firstBoardBoundary;
     }
 
@@ -90,6 +92,7 @@ class PutinDanceConfig {
     }
 
     public void setSecondBoardBoundary(XyLocation secondBoardBoundary) {
+        Preconditions.checkNotNull(secondBoardBoundary, "secondBoardBoundary");
         this.secondBoardBoundary = secondBoardBoundary;
     }
 

@@ -31,6 +31,7 @@ public class SimpleGame implements Game {
     public SimpleGame(Board board, TickStrategy tickStrategy) {
         this.board = Preconditions.checkNotNull(board, "board");
         this.tickStrategy = Preconditions.checkNotNull(tickStrategy, "tickStrategy");
+        tickStrategy.checkBoard(board.getFirstBoundary(), board.getSecondBoundary());
     }
 
     @Override

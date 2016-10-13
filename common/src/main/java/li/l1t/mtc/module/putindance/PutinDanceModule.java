@@ -78,6 +78,12 @@ public class PutinDanceModule extends ConfigurableMTCModule {
         }
     }
 
+    public void setBoardBoundaries(XyLocation first, XyLocation second) {
+        config.setFirstBoardBoundary(first);
+        config.setSecondBoardBoundary(second);
+        save();
+    }
+
     public WandHandler getWandHandler() {
         return wandHandler;
     }

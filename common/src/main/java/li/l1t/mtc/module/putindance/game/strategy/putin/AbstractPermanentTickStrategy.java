@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.putindance.game.strategy.putin;
 
+import li.l1t.common.misc.XyLocation;
 import li.l1t.mtc.module.putindance.api.board.Layer;
 import li.l1t.mtc.module.putindance.api.game.TickStrategy;
 import li.l1t.mtc.module.putindance.game.TickAnnouncer;
@@ -76,5 +77,10 @@ abstract class AbstractPermanentTickStrategy implements TickStrategy {
 
     protected TickAnnouncer announcer() {
         return tickAnnouncer;
+    }
+
+    @Override
+    public void checkBoard(XyLocation firstBoundary, XyLocation secondBoundary) {
+        //we can handle all the things
     }
 }

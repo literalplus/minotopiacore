@@ -7,9 +7,11 @@
 
 package li.l1t.mtc.module.putindance;
 
+import li.l1t.common.collections.Couple;
 import li.l1t.common.misc.XyLocation;
 import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.api.chat.MessageType;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,8 +23,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -34,18 +36,16 @@ import java.util.UUID;
 class WandHandler implements Listener {
     private static final Material WAND_MATERIAL = Material.BLAZE_ROD;
     private static final String WAND_NAME = "§3Putins Zauberstab";
-    private final Set<UUID> boundarySessions = new HashSet<>();
-    private final PutinDanceConfig config;
+    private final Map<UUID, Couple<XyLocation>> boundarySessions = new HashMap<>();
     private final PutinDanceModule module;
 
     WandHandler(PutinDanceModule module) {
         this.module = module;
-        this.config = module.getConfig();
         module.getPlugin().getServer().getPluginManager().registerEvents(this, module.getPlugin());
     }
 
     public void startBoundarySession(Player player) {
-        boundarySessions.add(player.getUniqueId());
+        boundarySessions.put(player.getUniqueId(), Couple.of(null, null));
         player.getInventory().addItem(createWandItem());
     }
 
@@ -77,22 +77,51 @@ class WandHandler implements Listener {
     }
 
     private void handleWandLeftClick(PlayerInteractEvent evt, Player player) {
-        config.setSecondBoardBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
+        cacheSecondBoundary(player, evt.getClickedBlock().getLocation());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Zweiter Eckpunkt gesetzt!");
-        endBoundarySession(player);
-        module.save();
-    }
-
-    public void endBoundarySession(Player player) {
-        if (isWandItem(player.getItemInHand())) {
-            player.setItemInHand(new ItemStack(Material.AIR));
-        }
-        boundarySessions.remove(player.getUniqueId());
     }
 
     private void handleWandRightClick(PlayerInteractEvent evt, Player player) {
-        config.setFirstBoardBoundary(new XyLocation(evt.getClickedBlock().getLocation()));
+        cacheFirstBoundary(player, evt.getClickedBlock().getLocation());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Erster Eckpunkt gesetzt!");
+    }
+
+    private void cacheFirstBoundary(Player player, Location location) {
+        boundarySessions.computeIfPresent(
+                player.getUniqueId(),
+                (key, oldValue) -> oldValue.withLeft(XyLocation.of(location))
+        );
+        tryFinishBoundarySession(player);
+    }
+
+    private void cacheSecondBoundary(Player player, Location location) {
+        boundarySessions.computeIfPresent(
+                player.getUniqueId(),
+                (key, oldValue) -> oldValue.withRight(XyLocation.of(location))
+        );
+        tryFinishBoundarySession(player);
+    }
+
+    private void tryFinishBoundarySession(Player player) {
+        if (boundarySessions.containsKey(player.getUniqueId())) {
+            Couple<XyLocation> locations = boundarySessions.get(player.getUniqueId());
+            if (locations.getLeft() != null && locations.getRight() != null) {
+                finishBoundarySession(player);
+            }
+        }
+    }
+
+    private void finishBoundarySession(Player player) {
+        Couple<XyLocation> locations = boundarySessions.remove(player.getUniqueId());
+        module.setBoardBoundaries(locations.getLeft(), locations.getRight());
+        MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Spielfeldränder gesetzt!");
+        takeWandItemFrom(player);
+    }
+
+    private void takeWandItemFrom(Player player) {
+        if (isWandItem(player.getItemInHand())) {
+            player.setItemInHand(new ItemStack(Material.AIR));
+        }
     }
 
     private boolean isWandInteraction(PlayerInteractEvent evt, ItemStack item) {
@@ -101,7 +130,7 @@ class WandHandler implements Listener {
     }
 
     public boolean hasBoundarySession(UUID playerId) {
-        return boundarySessions.contains(playerId);
+        return boundarySessions.containsKey(playerId);
     }
 
     private boolean isWandItem(ItemStack item) {
