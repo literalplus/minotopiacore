@@ -40,14 +40,16 @@ public class TemporaryTickStrategy implements TickStrategy {
     private final Plugin plugin;
     private final long removeDelayTicks;
     private final long revertDelayTicks;
+    private final int blocksPerTick;
     private final TickAnnouncer tickAnnouncer;
     private TransformTask currentTask;
 
-    public TemporaryTickStrategy(Plugin plugin, long removeDelayTicks, long revertDelayTicks) {
+    public TemporaryTickStrategy(Plugin plugin, long removeDelayTicks, long revertDelayTicks, int blocksPerTick) {
         this.plugin = plugin;
         this.removeDelayTicks = removeDelayTicks;
         this.revertDelayTicks = revertDelayTicks;
         this.tickAnnouncer = new TickAnnouncer(plugin);
+        this.blocksPerTick = blocksPerTick;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class TemporaryTickStrategy implements TickStrategy {
     private void scheduleBlockRemove(Layer layer, Predicate<Block> filter) {
         RevertableBlockTransformer transformer = BlockTransformers.revertableFiltering()
                 .withLocations(layer.getFirstBoundary(), layer.getSecondBoundary())
-                .withBlocksPerTick(400)
+                .withBlocksPerTick(blocksPerTick)
                 .withFilter(filter)
                 .withTransformer(block -> block.setType(Material.AIR))
                 .build();

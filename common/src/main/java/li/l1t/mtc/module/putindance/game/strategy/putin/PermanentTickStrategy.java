@@ -29,8 +29,8 @@ import java.util.List;
 public class PermanentTickStrategy extends AbstractPermanentTickStrategy {
     private final LayerSelector layerSelector;
 
-    public PermanentTickStrategy(Plugin plugin, long removeDelayTicks, LayerSelector layerSelector) {
-        super(removeDelayTicks, plugin);
+    public PermanentTickStrategy(Plugin plugin, long removeDelayTicks, LayerSelector layerSelector, int blocksPerTick) {
+        super(removeDelayTicks, plugin, blocksPerTick);
         this.layerSelector = layerSelector;
     }
 

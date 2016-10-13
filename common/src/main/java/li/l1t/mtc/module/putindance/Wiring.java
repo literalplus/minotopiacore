@@ -83,14 +83,14 @@ class Wiring {
 
     private PermanentTickStrategy wirePermanentStrategy() {
         return new PermanentTickStrategy(
-                module.getPlugin(), config.getTickRemoveDelayTicks(), wireLayerSelector()
+                module.getPlugin(), config.getTickRemoveDelayTicks(), wireLayerSelector(), config.getBlocksPerTick()
         );
     }
 
     private TemporaryTickStrategy wireTemporaryStrategy() {
         return new TemporaryTickStrategy(
-                module.getPlugin(), config.getTickRemoveDelayTicks(), config.getTickRevertDelayTicks()
-        );
+                module.getPlugin(), config.getTickRemoveDelayTicks(), config.getTickRevertDelayTicks(),
+                config.getBlocksPerTick());
     }
 
     public LayerSelector wireLayerSelector() {

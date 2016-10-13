@@ -35,12 +35,14 @@ abstract class AbstractPermanentTickStrategy implements TickStrategy {
     private final Plugin plugin;
     private final long removeDelayTicks;
     private final TickAnnouncer tickAnnouncer;
+    private final int blocksPerTick;
     private TransformTask removeTask;
 
-    AbstractPermanentTickStrategy(long removeDelayTicks, Plugin plugin) {
+    AbstractPermanentTickStrategy(long removeDelayTicks, Plugin plugin, int blocksPerTick) {
         this.removeDelayTicks = removeDelayTicks;
         this.tickAnnouncer = new TickAnnouncer(plugin);
         this.plugin = plugin;
+        this.blocksPerTick = blocksPerTick;
     }
 
     @Override
@@ -61,7 +63,7 @@ abstract class AbstractPermanentTickStrategy implements TickStrategy {
     protected void scheduleBlockRemove(Layer layer, Predicate<Block> filter) {
         FilteringBlockTransformer transformer = BlockTransformers.filtering()
                 .withLocations(layer.getFirstBoundary(), layer.getSecondBoundary())
-                .withBlocksPerTick(400)
+                .withBlocksPerTick(blocksPerTick)
                 .withFilter(filter)
                 .withTransformer(block -> {
                     layer.removeBlock(block);

@@ -34,6 +34,7 @@ class PutinDanceConfig {
     private static final String MAX_AIR_PERCENT_PATH = "max-air-percent-per-layer";
     private static final String ONLY_TOPMOST_LAYER_PATH = "select-only-topmost-layers-on-tick";
     private static final String TEMPORARY_REMOVAL_PATH = "tick.remove-unsafe-colors-temporarily-hardcore-mode";
+    private static final String BLOCKS_PER_TICK_PATH = "tick.blocks-per-tick";
     private XyLocation firstBoardBoundary;
     private XyLocation secondBoardBoundary;
     private XyLocation spawnLocation;
@@ -42,6 +43,7 @@ class PutinDanceConfig {
     private List<DyeColor> validColors;
     private int minAirPercent;
     private int maxAirPercent;
+    private int blocksPerTick;
     private boolean selectOnlyTopMostLayers;
     private boolean useTemporaryRemovalStrategy;
 
@@ -61,6 +63,7 @@ class PutinDanceConfig {
                 .collect(Collectors.toList());
         maxAirPercent = config.getInt(MAX_AIR_PERCENT_PATH, 60);
         minAirPercent = config.getInt(MIN_AIR_PERCENT_PATH, 30);
+        blocksPerTick = config.getInt(BLOCKS_PER_TICK_PATH, 200);
         selectOnlyTopMostLayers = config.getBoolean(ONLY_TOPMOST_LAYER_PATH, false);
         useTemporaryRemovalStrategy = config.getBoolean(TEMPORARY_REMOVAL_PATH, false);
     }
@@ -82,6 +85,7 @@ class PutinDanceConfig {
         config.set(VALID_COLORS_PATH, validColors.stream().map(DyeColor::name).collect(Collectors.toList()));
         config.set(MIN_AIR_PERCENT_PATH, minAirPercent);
         config.set(MAX_AIR_PERCENT_PATH, maxAirPercent);
+        config.set(BLOCKS_PER_TICK_PATH, blocksPerTick);
         config.set(ONLY_TOPMOST_LAYER_PATH, selectOnlyTopMostLayers);
         config.set(TEMPORARY_REMOVAL_PATH, useTemporaryRemovalStrategy);
     }
@@ -138,6 +142,10 @@ class PutinDanceConfig {
 
     public void setMaxAirPercent(int maxAirPercent) {
         this.maxAirPercent = maxAirPercent;
+    }
+
+    public int getBlocksPerTick() {
+        return blocksPerTick;
     }
 
     public boolean isSelectOnlyTopMostLayers() {
