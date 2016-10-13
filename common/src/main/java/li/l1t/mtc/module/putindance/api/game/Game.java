@@ -24,9 +24,13 @@ public interface Game {
 
     void startGame();
 
+    void openGame();
+
     void tick();
 
     boolean isTickable();
+
+    void abortGame();
 
     Board getBoard();
 

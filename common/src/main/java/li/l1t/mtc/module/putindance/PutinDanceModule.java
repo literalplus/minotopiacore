@@ -16,17 +16,6 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.putindance.api.board.Board;
 import li.l1t.mtc.module.putindance.api.board.generator.BoardGenerator;
 import li.l1t.mtc.module.putindance.api.game.Game;
-import li.l1t.mtc.module.putindance.api.game.LayerSelector;
-import li.l1t.mtc.module.putindance.api.game.TickStrategy;
-import li.l1t.mtc.module.putindance.board.generator.DelegatingGenerationStrategy;
-import li.l1t.mtc.module.putindance.board.generator.ListColorSelector;
-import li.l1t.mtc.module.putindance.board.generator.RangeAirStrategy;
-import li.l1t.mtc.module.putindance.board.generator.TransformerBoardGenerator;
-import li.l1t.mtc.module.putindance.game.SimpleGame;
-import li.l1t.mtc.module.putindance.game.layerselector.AnyLayerSelector;
-import li.l1t.mtc.module.putindance.game.layerselector.TopMostLayerSelector;
-import li.l1t.mtc.module.putindance.game.strategy.hardcore.TemporaryTickStrategy;
-import li.l1t.mtc.module.putindance.game.strategy.putin.PermanentTickStrategy;
 
 /**
  * A module that provides the PutinDance mini-game for events. PutinDance is based around a board
@@ -42,9 +31,10 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public static final String CHAT_PREFIX = "§3[§6§lPD§3] §3";
     public static final String ADMIN_PERMISSION = "mtc.putindance.admin";
     private final PutinDanceConfig config = new PutinDanceConfig();
+    private final Wiring wiring = new Wiring(config, this);
     private WandHandler wandHandler;
     private Board currentBoard;
-    private SimpleGame currentGame;
+    private Game currentGame;
 
     protected PutinDanceModule() {
         super(NAME, "modules/events/putindance.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
@@ -107,20 +97,10 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     }
 
     public BoardGenerator createGenerator() {
-        RangeAirStrategy airStrategy = new RangeAirStrategy();
-        airStrategy.setAirPercentRange(config.getMinAirPercent(), config.getMaxAirPercent());
-        ListColorSelector colorSelector = new ListColorSelector();
-        config.getValidColors().forEach(colorSelector::addValidColor);
-        DelegatingGenerationStrategy strategy = new DelegatingGenerationStrategy(airStrategy, colorSelector);
-        TransformerBoardGenerator generator = new TransformerBoardGenerator(
-                config.getFirstBoardBoundary(), config.getSecondBoardBoundary(),
-                strategy, 200
-        );
-        generator.setCompletionCallback(board -> {
+        return wiring.wireGenerator(board -> {
             currentBoard = board;
-            CommandHelper.broadcast(CHAT_PREFIX + "Spielfeld fertig generiert! §6/pd new", ADMIN_PERMISSION);
+            CommandHelper.broadcast(CHAT_PREFIX + "Spielfeld fertig generiert! §6/pd new", PutinDanceModule.ADMIN_PERMISSION);
         });
-        return generator;
     }
 
     public boolean hasBoard() {
@@ -130,27 +110,11 @@ public class PutinDanceModule extends ConfigurableMTCModule {
     public void newGame() {
         Preconditions.checkState(!hasGame(), "there is already a game");
         Preconditions.checkState(hasBoard(), "there is no current board");
-        TickStrategy strategy = createTickStrategy();
-        currentGame = new SimpleGame(getCurrentBoard(), strategy);
-        currentGame.setSpawnLocation(config.getSpawnLocation());
+        currentGame = wiring.wireGame(getCurrentBoard());
         currentGame.openGame();
     }
 
-    private TickStrategy createTickStrategy() {
-        if (config.isUseTemporaryRemovalStrategy()) {
-            return new TemporaryTickStrategy(plugin, config.getTickRemoveDelayTicks(), config.getTickRevertDelayTicks());
-        } else {
-            return new PermanentTickStrategy(plugin, config.getTickRemoveDelayTicks(), createLayerSelector());
-        }
-    }
 
-    private LayerSelector createLayerSelector() {
-        if (config.isSelectOnlyTopMostLayers()) {
-            return new TopMostLayerSelector();
-        } else {
-            return new AnyLayerSelector();
-        }
-    }
 
     public void abortGame() {
         Preconditions.checkState(hasGame(), "no current game");

@@ -45,6 +45,7 @@ public class SimpleGame implements Game {
         return open;
     }
 
+    @Override
     public void openGame() {
         gameAnnouncer.announceGameOpen(Bukkit.getOnlinePlayers());
         open = true;
@@ -66,6 +67,7 @@ public class SimpleGame implements Game {
         open = false;
     }
 
+    @Override
     public void abortGame() {
         gameAnnouncer.announceGameAbort(Bukkit.getOnlinePlayers());
         open = false;
