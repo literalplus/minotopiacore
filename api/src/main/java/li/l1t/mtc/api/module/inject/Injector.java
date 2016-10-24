@@ -37,11 +37,12 @@ public interface Injector {
     void injectInto(Injection<?> receiver, Object value);
 
     /**
-     * Convenience method to register a new injection target with this injector.
+     * Registers an instance with the injector. If there is already a target for given instance's
+     * class, the instance is set on that, overriding any existing instance. If there is not yet a
+     * target, a new one is created to hold the instance.
      *
-     * @param instance the new object to register
+     * @param instance the instance to register
      * @param <T>      the type of the object to register
-     * @throws IllegalStateException if an instance is already registered for that class
      */
     <T> void registerInstance(T instance);
 
