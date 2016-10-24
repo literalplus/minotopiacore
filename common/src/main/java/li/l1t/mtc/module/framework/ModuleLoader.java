@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module;
+package li.l1t.mtc.module.framework;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;

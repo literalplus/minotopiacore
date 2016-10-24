@@ -5,9 +5,10 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module;
+package li.l1t.mtc.module.framework;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.module.MTCModuleAdapter;
 
 class MockMTCModule extends MTCModuleAdapter {
     protected MockMTCModule(String name) {

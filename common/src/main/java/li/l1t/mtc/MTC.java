@@ -42,7 +42,7 @@ import li.l1t.mtc.misc.cmd.CommandPeace;
 import li.l1t.mtc.misc.cmd.CommandPlayerHead;
 import li.l1t.mtc.misc.cmd.CommandRandom;
 import li.l1t.mtc.misc.cmd.CommandTeam;
-import li.l1t.mtc.module.SimpleModuleManager;
+import li.l1t.mtc.module.framework.SimpleModuleManager;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;

@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module;
+package li.l1t.mtc.module.framework;
 
 import li.l1t.mtc.MTC;
 import li.l1t.mtc.api.MTCPlugin;
@@ -15,7 +15,7 @@ import li.l1t.mtc.api.module.inject.InjectionTarget;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -42,12 +42,12 @@ import static org.mockito.Mockito.mock;
  * @since 18/06/15
  */
 public class ModuleLoaderTest {
-    private static SimpleModuleManager moduleManager;
-    private static ModuleLoader loader;
-    private static MTC mtc;
+    private SimpleModuleManager moduleManager;
+    private ModuleLoader loader;
+    private MTC mtc;
 
-    @BeforeClass
-    public static void initClass() {
+    @Before
+    public void initClass() {
         mtc = mock(MTC.class);
         moduleManager = new SimpleModuleManager(mtc, new File("./target/"));
         loader = new ModuleLoader(moduleManager);
