@@ -7,10 +7,11 @@
 
 package li.l1t.mtc.api.module;
 
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.api.module.inject.InjectionTarget;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Stack;
+import li.l1t.mtc.api.module.inject.exception.CyclicDependencyException;
+import li.l1t.mtc.api.module.inject.exception.InjectionException;
+import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
 /**
  * Manages dependencies for dependency injection.
@@ -19,9 +20,20 @@ import java.util.Stack;
  * @since 12.6.16
  */
 public interface DependencyManager {
-    boolean discoverInjections(InjectionTarget<?> meta, Stack<Class<?>> dependencyStack)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException;
-
-    void initialise(InjectionTarget<?> meta, Stack<Class<?>> dependencyStack)
-            throws InvocationTargetException, InstantiationException, IllegalAccessException;
+    /**
+     * Initialises given target with its declared dependencies. <p>Dependencies that have not yet
+     * been initialised themselves are initialised when discovered. If such dependency fails to
+     * initialise and is required by the target, an exception is thrown. If it is not required, it
+     * is silently ignored.</p>
+     *
+     * @param meta the target to initialise with its dependencies according to {@link InjectMe}
+     *             annotations
+     * @throws InjectionException        if a general error occurs trying to inject a dependency
+     * @throws CyclicDependencyException if an {@linkplain CyclicDependencyException illegal cyclic
+     *                                   dependency} is detected
+     * @throws SilentFailException       if a {@linkplain SilentFailException silent initialisation
+     *                                   failure} occurs attempting to inject a direct dependency of
+     *                                   the target or a required transiative dependency
+     */
+    void initialise(InjectionTarget<?> meta) throws InjectionException;
 }

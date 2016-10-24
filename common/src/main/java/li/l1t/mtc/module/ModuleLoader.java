@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableSet;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.MTCModule;
 import li.l1t.mtc.api.module.inject.InjectionTarget;
+import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -168,13 +169,14 @@ class ModuleLoader {
      */
     void loadAll(List<Class<? extends MTCModule>> moduleClasses,
                  BiConsumer<InjectionTarget<?>, Throwable> errorConsumer) {
-
-        Stack<Class<?>> dependencyStack = new Stack<>();
         moduleClasses.stream()
                 .map(manager.getInjector()::getTarget)
                 .forEach(meta -> {
                     try {
-                        manager.getDependencyManager().initialise(meta, dependencyStack);
+                        manager.getDependencyManager().initialise(meta);
+                    } catch (SilentFailException ignore) {
+                        //silent failure: This module doesn't make sense without the dependency, so
+                        // we don't need to send an error message
                     } catch (Throwable t) {
                         /* this is kind of a sandbox, so that a single broken module can't break the
                            whole plugin. Not using Exception because of more nasty stuff like NoClassDefFoundError,
