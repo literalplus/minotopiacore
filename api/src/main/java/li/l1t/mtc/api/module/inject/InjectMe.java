@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.api.module.inject;
 
+import li.l1t.mtc.api.module.inject.exception.SilentFailException;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,17 +27,18 @@ import java.lang.annotation.Target;
 public @interface InjectMe {
     /**
      * Gets whether this injection is a required injection. If a required injection cannot be
-     * performed, some kind of error will be raised during the injection process.
+     * performed, some kind of error will be raised during the injection process. Note that
+     * constructor injections are always required and therefore this parameter is ignored.
      *
      * @return whether this injection is required
      */
     boolean required() default true;
 
     /**
-     * Gets whether the module enabling should fail silently if the required dependency could not be
-     * injected. This is helpful for submodules.
+     * Gets whether the module enabling should fail silently if this dependency could not be
+     * injected and it is required. See {@link SilentFailException} for details.
      *
-     * @return whether missing required dependencies should about loading but not log messages
+     * @return whether missing required dependencies should abort loading but not log messages
      */
     boolean failSilently() default false;
 
