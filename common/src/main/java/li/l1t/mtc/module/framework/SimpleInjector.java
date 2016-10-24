@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.framework;
 
+import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.ConstructorInjection;
 import li.l1t.mtc.api.module.inject.FieldInjection;
@@ -77,9 +78,9 @@ class SimpleInjector implements Injector {
     }
 
     @Override
-    public <T> void registerInstance(T instance) {
-        @SuppressWarnings("unchecked")
-        InjectionTarget<T> target = getTarget((Class<T>) instance.getClass());
+    public <T> void registerInstance(T instance, Class<? super T> clazz) {
+        Preconditions.checkArgument(clazz.isAssignableFrom(instance.getClass()), "instance must inherit from clazz", instance, clazz);
+        InjectionTarget<? super T> target = getTarget(clazz);
         if (!instance.equals(target.getInstance())) {
             target.setInstance(instance);
         }

@@ -42,9 +42,10 @@ public interface Injector {
      * target, a new one is created to hold the instance.
      *
      * @param instance the instance to register
+     * @param clazz    the class to register as
      * @param <T>      the type of the object to register
      */
-    <T> void registerInstance(T instance);
+    <T> void registerInstance(T instance, Class<? super T> clazz);
 
     /**
      * Gets or creates a creation target for given class.
