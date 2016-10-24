@@ -23,13 +23,13 @@ import java.util.LinkedList;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-06-11
  */
-class SimpleDependencyResolver implements DependencyManager {
+class ReflectionDependencyResolver implements DependencyManager {
     private final ModuleManager moduleManager;
     private final Deque<Class<?>> dependencyStack = new LinkedList<>();
     private final FieldDependencyResolver fieldResolver = new FieldDependencyResolver(this);
     private final ConstructorDependencyResolver constructorResolver = new ConstructorDependencyResolver(this);
 
-    SimpleDependencyResolver(ModuleManager moduleManager) {
+    ReflectionDependencyResolver(ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
 

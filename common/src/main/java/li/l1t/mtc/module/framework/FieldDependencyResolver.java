@@ -22,9 +22,9 @@ import java.lang.reflect.Field;
  * @since 2016-10-25
  */
 class FieldDependencyResolver {
-    private final SimpleDependencyResolver parent;
+    private final ReflectionDependencyResolver parent;
 
-    FieldDependencyResolver(SimpleDependencyResolver parent) {
+    FieldDependencyResolver(ReflectionDependencyResolver parent) {
         this.parent = parent;
     }
 

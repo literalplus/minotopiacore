@@ -23,9 +23,9 @@ import java.util.Arrays;
  * @since 2016-10-25
  */
 class ConstructorDependencyResolver {
-    private final SimpleDependencyResolver parent;
+    private final ReflectionDependencyResolver parent;
 
-    ConstructorDependencyResolver(SimpleDependencyResolver parent) {
+    ConstructorDependencyResolver(ReflectionDependencyResolver parent) {
         this.parent = parent;
     }
 

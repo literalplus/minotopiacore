@@ -50,7 +50,7 @@ public class SimpleModuleManager implements ModuleManager {
     private final MTC plugin;
     private final ModuleLoader loader = new ModuleLoader(this);
     private final Injector injector = new SimpleInjector(this);
-    private final DependencyManager dependencyManager = new SimpleDependencyResolver(this);
+    private final DependencyManager dependencyManager = new ReflectionDependencyResolver(this);
 
     private final Map<Class<? extends MTCModule>, MTCModule> enabledModules = new HashMap<>();
     private final CommandRegistrationManager commandRegistrationManager = new CommandRegistrationManager();
