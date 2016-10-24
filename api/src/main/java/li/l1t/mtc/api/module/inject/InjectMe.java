@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-06-11
  */
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface InjectMe {

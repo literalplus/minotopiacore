@@ -16,7 +16,9 @@ import li.l1t.mtc.api.module.inject.exception.CyclicDependencyException;
 import li.l1t.mtc.api.module.inject.exception.InjectionException;
 import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -77,24 +79,49 @@ class SimpleDependencyManager implements DependencyManager {
         }
     }
 
-    private void discoverAndInitialiseDependencies(InjectionTarget<?> target) {
+    private <D> void discoverAndInitialiseDependencies(InjectionTarget<D> target) {
+        Constructor<D> constructor = target.getInjectableConstructor();
+        if (constructor != null && constructor.getParameterCount() > 0) {
+            declareConstructorDependencies(target, constructor);
+        }
+
         for (Field field : target.getClazz().getDeclaredFields()) {
-            examineField(target, field);
+            declareFieldDependencies(target, field);
         }
     }
 
-    private void examineField(InjectionTarget<?> target, Field field) {
+    private <D> void declareConstructorDependencies(InjectionTarget<D> target, Constructor<D> constructor) {
+        Arrays.stream(constructor.getParameterTypes())
+                .forEach(parameterType -> resolveAndInstantiateConstructorDependency(target, constructor, parameterType));
+    }
+
+    private <D> void resolveAndInstantiateConstructorDependency(InjectionTarget<D> target, Constructor<D> constructor, Class<?> parameterType) {
+        InjectionTarget<?> dependency = declareDependency(target, constructor, parameterType);
+        instantiateConstructorDependencyIfPossible(dependency, constructor, parameterType);
+    }
+
+    private void declareFieldDependencies(InjectionTarget<?> target, Field field) {
         InjectMe annotation = field.getAnnotation(InjectMe.class);
         if (isInjectable(annotation)) {
-            resolveAndInstantiateDependency(target, field, annotation);
+            resolveAndInstantiateFieldDependency(target, field, annotation);
         }
+    }
+
+    private void instantiateConstructorDependencyIfPossible(InjectionTarget<?> dependency, Constructor<?> constructor, Class<?> parameterType) {
+        if (isCyclicDependency(parameterType)) {
+            throw new CyclicDependencyException(
+                    constructor.getDeclaringClass(), parameterType,
+                    "constructor dependency in " + constructor
+            );
+        }
+        instantiateDependencyIfNecessary(dependency, constructor);
     }
 
     private boolean isInjectable(InjectMe annotation) {
         return annotation != null;
     }
 
-    private void resolveAndInstantiateDependency(InjectionTarget<?> target, Field field, InjectMe annotation) {
+    private void resolveAndInstantiateFieldDependency(InjectionTarget<?> target, Field field, InjectMe annotation) {
         InjectionTarget<?> dependency = declareDependency(target, field);
         instantiateFieldIfPossible(field, annotation, dependency);
     }
@@ -104,16 +131,13 @@ class SimpleDependencyManager implements DependencyManager {
         InjectionTarget<?> dependency = moduleManager.getInjector().getTarget(dependencyType);
         dependency.registerDependant(dependant, field);
         return dependency;
+    }
 
-        //TODO: Why is/was this necessary?
-        // This checks whether the dependency has actually been instantiated
-        // However, that shouldn't happen since that should throw an exception
-//        if (annotation.required() && !alreadyInstantiated(dependency) && !annotation.failSilently()) {
-//            throw new IllegalArgumentException(String.format(
-//                    "Unable to load required module dependency: %s (from %s)",
-//                    dependencyType.getSimpleName(), dependencyStack.toString()
-//            ));
-//        }
+    private <D> InjectionTarget<?> declareDependency(InjectionTarget<D> dependant,
+                                                     Constructor<D> constructor, Class<?> dependencyType) {
+        InjectionTarget<?> dependency = moduleManager.getInjector().getTarget(dependencyType);
+        dependency.registerDependant(dependant, constructor);
+        return dependency;
     }
 
     private void instantiateFieldIfPossible(Field field, InjectMe annotation, InjectionTarget<?> dependency) {
@@ -150,6 +174,19 @@ class SimpleDependencyManager implements DependencyManager {
         if (annotation.required()) {
             if (annotation.failSilently()) {
                 throw new SilentFailException(dependency + ", required by: " + dependencyStack.toString(), e);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private void instantiateDependencyIfNecessary(InjectionTarget<?> dependency, Constructor<?> constructor) {
+        try {
+            initialiseIfNecessary(dependency);
+        } catch (InjectionException e) {
+            InjectMe annotation = constructor.getAnnotation(InjectMe.class);
+            if (annotation != null) {
+                handleInitialisationFailure(dependency, annotation, e);
             } else {
                 throw e;
             }

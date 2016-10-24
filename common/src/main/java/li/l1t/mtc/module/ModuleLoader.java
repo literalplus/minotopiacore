@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.MTCModule;
+import li.l1t.mtc.api.module.inject.Injection;
 import li.l1t.mtc.api.module.inject.InjectionTarget;
 import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
@@ -104,7 +105,7 @@ class ModuleLoader {
                                        boolean enabled,
                                        @Nonnull Stack<InjectionTarget<?>> dependencyStack) {
         Preconditions.checkArgument(target.hasInstance(),
-                "instance must have instance: %s", target.getClazz());
+                "injectable must have instance: %s", target.getClazz());
 
         MTCModule module;
         if (target.getInstance() instanceof MTCModule) {
@@ -129,7 +130,7 @@ class ModuleLoader {
             changedModules = target.getDependencies().values().stream()
                     .filter(inj -> !dependencyStack.contains(inj.getDependency())) //prevents infinite recursion
                     .flatMap(inj -> {
-                        if (inj.getAnnotation().required() || !inj.getDependency().isModule()) {
+                        if (inj.isRequired() || !inj.getDependency().isModule()) {
                             return setEnabled(inj.getDependency(), true, dependencyStack).stream();
                         } else {
                             return Stream.of();
@@ -141,7 +142,7 @@ class ModuleLoader {
         } else {
             //Disable everything that requires this target
             changedModules = target.getDependants().values().stream()
-                    .filter(inj -> inj.getAnnotation().required())
+                    .filter(Injection::isRequired)
                     .filter(inj -> !dependencyStack.contains(inj.getDependant())) //prevents infinite recursion
                     .flatMap(inj -> setEnabled(inj.getDependant(), false, dependencyStack).stream())
                     .collect(Collectors.toList());

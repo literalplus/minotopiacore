@@ -7,6 +7,9 @@
 
 package li.l1t.mtc.api.module.inject;
 
+import li.l1t.mtc.api.module.inject.exception.InjectionException;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -27,6 +30,15 @@ public interface InjectionTarget<T> {
      * @param field     the field in dependant where this target is injected
      */
     <V> Injection<T> registerDependant(InjectionTarget<V> dependant, Field field);
+
+    /**
+     * Registers with this injection target a new dependant that depends on this target. This is
+     * used to notify/disable dependants when this target is no longer available.
+     *
+     * @param dependant   the dependant to register
+     * @param constructor the constructor in dependant where this target is injected
+     */
+    <V> Injection<T> registerDependant(InjectionTarget<V> dependant, Constructor<V> constructor);
 
     /**
      * Checks whether this target depends on another target.
@@ -54,13 +66,26 @@ public interface InjectionTarget<T> {
      * Creates a new instance of this target.
      *
      * @return a new instance of this target
-     * @throws NoSuchMethodException     if the target does not have a default constructor
-     * @throws IllegalAccessException    if the target's default constructor is inaccessible
+     * @throws IllegalAccessException    if the {@link #getInjectableConstructor() injectable
+     *                                   constructor} is inaccessible
      * @throws InvocationTargetException if an error occurs instantiating the target
      * @throws InstantiationException    if an error occurs instantiating the target
+     * @throws InjectionException        if the parameters of the {@link #getInjectableConstructor()
+     *                                   injectable constructor} are not declared as dependencies of
+     *                                   this target
      */
-    T createInstance() throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, InstantiationException;
+    T createInstance() throws IllegalAccessException, InvocationTargetException, InstantiationException;
+
+    /**
+     * Finds the constructor that this target uses for injection, if any. The parameters of the
+     * constructor, if any, are dependencies that need to be resolved before construction.
+     *
+     * @return the injectable constructor, or null if this target does not use create new instances
+     * @throws InjectionException if there are multiple {@link InjectMe} constructors
+     * @throws InjectionException if there are no {@link InjectMe} constructors and there is no
+     *                            default constructor
+     */
+    Constructor<T> getInjectableConstructor() throws InjectionException;
 
     boolean isModule();
 

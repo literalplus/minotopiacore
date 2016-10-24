@@ -7,85 +7,25 @@
 
 package li.l1t.mtc.api.module.inject;
 
-import java.lang.reflect.Field;
-
 /**
- * Stores information about a single dependency injection into a single field of a single class.
+ * Represents something that may be injected.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 2016-06-11
+ * @author <a href="https://l1t.li/">Literallie</a>
+ * @since 2016-10-24
  */
-public class Injection<T> {
-    private final Field field;
-    private final InjectMe annotation;
-    private final InjectionTarget<T> dependency;
-    private final InjectionTarget<?> dependant;
-
-    /**
-     * Creates a new injection.
-     *
-     * @param field      the field this injection targets
-     * @param annotation the injection annotation on field
-     * @param dependency the dependency of the injection, e.g. what we inject
-     * @param dependant  the dependant of the injection, e.g. what we inject into
-     */
-    Injection(Field field, InjectMe annotation, InjectionTarget<T> dependency, InjectionTarget<?> dependant) {
-        this.field = field;
-        this.annotation = annotation;
-        this.dependency = dependency;
-        this.dependant = dependant;
-    }
-
-    /**
-     * @return the field this injection targets, e.g. what we inject into
-     */
-    public Field getField() {
-        return field;
-    }
-
-    /**
-     * @return the injection annotation on the field, e.g. how we inject
-     */
-    public InjectMe getAnnotation() {
-        return annotation;
-    }
-
+public interface Injection<T> {
     /**
      * @return the dependency of the injection, e.g. what we inject
      */
-    public InjectionTarget<T> getDependency() {
-        return dependency;
-    }
+    InjectionTarget<T> getDependency();
 
     /**
      * @return the dependant of this injection, e.g. what we inject into
      */
-    public InjectionTarget<?> getDependant() {
-        return dependant;
-    }
+    InjectionTarget<?> getDependant();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Injection)) return false;
-
-        Injection<?> injection = (Injection<?>) o;
-
-        return field != null ? field.equals(injection.field) : injection.field == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return field != null ? field.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Injection: dependency=" + dependency +
-                "into field=" + field +
-                "of dependant=" + dependant +
-                "with annotation=" + annotation +
-                '}';
-    }
+    /**
+     * @return whether this injection represents a required dependency
+     */
+    boolean isRequired();
 }

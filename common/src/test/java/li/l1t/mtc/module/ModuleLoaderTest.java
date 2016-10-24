@@ -22,11 +22,15 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -55,38 +59,46 @@ public class ModuleLoaderTest {
 
     @Test
     public void testLoadAll() throws Exception {
-        loader.loadAll(Arrays.asList(Module3.class, TestModules.IndependentModule.class, Module2.class, TestModules.IndependentModule.class, Module4.class),
-                (meta, thrown) -> {
-                    thrown.printStackTrace();
-                    Assert.fail("Exception while loading " + meta + "!");
-                });
+        loader.loadAll(Arrays.asList(Module3.class, TestModules.IndependentModule.class, Module2.class, Module4.class),
+                errorConsumer());
 
         List<MTCModule> loaded2 = loader.setEnabled(instance(Module2.class), true);
         assertTrue(loaded2.stream().anyMatch(m -> m instanceof TestModules.IndependentModule)); //check that it actually returns enabled modules
         assertTrue(loaded2.stream().anyMatch(m -> m instanceof Module2));
 
         assertEnabledStates(true, true, false, false);
-        assertThat(moduleManager.getModule(Module2.class).independentModule, is(moduleManager.getModule(TestModules.IndependentModule.class)));
-        assertThat(moduleManager.getModule(Module2.class).module3, is(nullValue()));
+        assertThat(module(Module2.class).independentModule, is(module(TestModules.IndependentModule.class)));
+        assertThat(module(Module2.class).module3, is(nullValue()));
 
         loader.setEnabled(instance(Module3.class), true);
         assertEnabledStates(true, true, true, false);
-        assertThat(moduleManager.getModule(Module3.class).independentModule, is(moduleManager.getModule(TestModules.IndependentModule.class)));
-        assertThat(moduleManager.getModule(Module3.class).module2, is(moduleManager.getModule(Module2.class)));
-        assertThat(moduleManager.getModule(Module3.class).module4, is(nullValue()));
-        assertThat(moduleManager.getModule(Module2.class).module3, is(moduleManager.getModule(Module3.class)));
+        assertThat(module(Module3.class).independentModule, is(module(TestModules.IndependentModule.class)));
+        assertThat(module(Module3.class).module2, is(module(Module2.class)));
+        assertThat(module(Module3.class).module4, is(nullValue()));
+        assertThat(module(Module2.class).module3, is(module(Module3.class)));
 
         loader.setEnabled(instance(TestModules.IndependentModule.class), false);
         assertEnabledStates(false, false, true, false);
-        assertThat(moduleManager.getModule(Module3.class).independentModule, is(nullValue()));
-        assertThat(moduleManager.getModule(Module3.class).module2, is(nullValue()));
-        assertThat(moduleManager.getModule(TestModules.IndependentModule.class), is(nullValue()));
-        assertThat(moduleManager.getModule(Module2.class), is(nullValue()));
-        assertThat(moduleManager.getModule(Module3.class).module4, is(moduleManager.getModule(Module4.class)));
+        assertThat(module(Module3.class).independentModule, is(nullValue()));
+        assertThat(module(Module3.class).module2, is(nullValue()));
+        assertThat(module(TestModules.IndependentModule.class), is(nullValue()));
+        assertThat(module(Module2.class), is(nullValue()));
+        assertThat(module(Module3.class).module4, is(module(Module4.class)));
 
         loader.setEnabled(instance(TestModules.IndependentModule.class), true);
         assertEnabledStates(true, false, true, false);
-        assertThat(moduleManager.getModule(Module3.class).independentModule, is(moduleManager.getModule(TestModules.IndependentModule.class)));
+        assertThat(module(Module3.class).independentModule, is(module(TestModules.IndependentModule.class)));
+    }
+
+    private <M extends MTCModule> M module(Class<M> clazz) {
+        return moduleManager.getModule(clazz);
+    }
+
+    private BiConsumer<InjectionTarget<?>, Throwable> errorConsumer() {
+        return (meta, thrown) -> {
+            thrown.printStackTrace();
+            Assert.fail("Exception while loading " + meta + "!");
+        };
     }
 
     @Test
@@ -107,6 +119,18 @@ public class ModuleLoaderTest {
         Field field = JavaPlugin.class.getDeclaredField("logger");
         field.setAccessible(true);
         field.set(mtc, logger); // we need this for the logger call in registerEnabled(...)
+    }
+
+    @Test
+    public void testConstructorInjection() {
+        loader.loadAll(
+                Arrays.asList(TestModules.IndependentModule.class, TestModules.ConstructorInjectionModule.class),
+                errorConsumer()
+        );
+        List<MTCModule> enabled = loader.setEnabled(instance(TestModules.ConstructorInjectionModule.class), true);
+        assertThat(enabled, hasItem(any(TestModules.IndependentModule.class)));
+        assertThat(module(TestModules.ConstructorInjectionModule.class).module, is(not(nullValue())));
+        assertThat(module(TestModules.ConstructorInjectionModule.class).wow, is(not(nullValue())));
     }
 
     private void assertEnabledStates(boolean m1, boolean m2, boolean m3, boolean m4) {

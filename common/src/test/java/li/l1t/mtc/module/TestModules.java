@@ -8,6 +8,7 @@
 package li.l1t.mtc.module;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.api.module.inject.Injectable;
 
 /**
@@ -51,6 +52,18 @@ class TestModules {
         @Override
         public void disable(MTCPlugin plugin) {
             throw new NullPointerException("random exception in disable");
+        }
+    }
+
+    static class ConstructorInjectionModule extends MockMTCModule {
+        public final ObjectInjectable wow;
+        public final IndependentModule module;
+
+        @InjectMe
+        protected ConstructorInjectionModule(ObjectInjectable wow, IndependentModule module) {
+            super("ConstructorInjectionModules");
+            this.wow = wow;
+            this.module = module;
         }
     }
 }

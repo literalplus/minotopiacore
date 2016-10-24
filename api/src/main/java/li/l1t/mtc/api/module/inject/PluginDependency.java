@@ -10,6 +10,7 @@ package li.l1t.mtc.api.module.inject;
 import com.google.common.base.Preconditions;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -31,10 +32,15 @@ public class PluginDependency<T extends JavaPlugin> extends SimpleInjectionTarge
     }
 
     @Override
-    public T createInstance() throws NoSuchMethodException, IllegalAccessException,
+    public T createInstance() throws IllegalAccessException,
             InvocationTargetException, InstantiationException {
         T plugin = JavaPlugin.getPlugin(getClazz());
         setInstance(plugin);
         return plugin;
+    }
+
+    @Override
+    public Constructor<T> getInjectableConstructor() {
+        return null;
     }
 }

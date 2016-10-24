@@ -8,6 +8,8 @@
 package li.l1t.mtc.module;
 
 import li.l1t.mtc.api.module.ModuleManager;
+import li.l1t.mtc.api.module.inject.ConstructorInjection;
+import li.l1t.mtc.api.module.inject.FieldInjection;
 import li.l1t.mtc.api.module.inject.Injection;
 import li.l1t.mtc.api.module.inject.InjectionTarget;
 import li.l1t.mtc.api.module.inject.Injector;
@@ -41,7 +43,18 @@ class SimpleInjector implements Injector {
     }
 
     @Override
+    @SuppressWarnings("StatementWithEmptyBody")
     public void injectInto(Injection<?> injection, Object value) {
+        if (injection instanceof FieldInjection<?>) {
+            injectIntoField((FieldInjection<?>) injection, value);
+        } else if (injection instanceof ConstructorInjection<?, ?>) {
+            //no-op, since injection already occurred at construction time
+        } else {
+            throw new IllegalArgumentException("unsupported injection type: " + injection.getClass() + " " + injection);
+        }
+    }
+
+    private void injectIntoField(FieldInjection<?> injection, Object value) {
         if (!injection.getField().isAccessible()) {
             injection.getField().setAccessible(true);
         }
@@ -56,7 +69,7 @@ class SimpleInjector implements Injector {
         try {
             injection.getField().set(receivingInstance, value);
         } catch (IllegalAccessException e) {
-            throw new AssertionError(e); //Actually, this should never happen, but.
+            throw new AssertionError(e);
         } catch (ExceptionInInitializerError e) {
             throw new IllegalStateException(String.format("Failed to inject %s into %s:",
                     String.valueOf(value), receivingInstance.getClass().getSimpleName()), e);
@@ -76,20 +89,21 @@ class SimpleInjector implements Injector {
     @SuppressWarnings("unchecked")
     @Override
     public <T> InjectionTarget<T> getTarget(@Nonnull Class<T> clazz) {
-        InjectionTarget<T> target = (InjectionTarget<T>) targets.stream()
+        return (InjectionTarget<T>) targets.stream()
                 .filter(m -> m.getClazz().equals(clazz))
-                .findFirst().orElse(null);
+                .findFirst().orElseGet(() -> createTargetFor(clazz));
+    }
 
-        if (target == null) {
-            if (JavaPlugin.class.isAssignableFrom(clazz)) {
-                target = (InjectionTarget<T>)
-                        new PluginDependency<>(clazz.<JavaPlugin>asSubclass(JavaPlugin.class));
-            } else {
-                target = new SimpleInjectionTarget<>(clazz);
-            }
-            targets.add(target);
+    @SuppressWarnings("unchecked")
+    private <T> InjectionTarget<T> createTargetFor(@Nonnull Class<T> clazz) {
+        InjectionTarget<T> target;
+        if (JavaPlugin.class.isAssignableFrom(clazz)) {
+            target = (InjectionTarget<T>) //<-- unchecked
+                    new PluginDependency<>(clazz.<JavaPlugin>asSubclass(JavaPlugin.class));
+        } else {
+            target = new SimpleInjectionTarget<>(clazz);
         }
-
+        targets.add(target);
         return target;
     }
 
