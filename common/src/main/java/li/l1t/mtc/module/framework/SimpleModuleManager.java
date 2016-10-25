@@ -76,6 +76,7 @@ public class SimpleModuleManager implements ModuleManager {
                         "commands if any module requests them, ignoring any other plugins that\n" +
                         "might have already registered them.");
         enabledModulesConfig.addDefault("override-commands", new ArrayList<>(Collections.singletonList("add-commands-here")));
+        new DefaultInjectionProvider(plugin, injector).registerAll();
     }
 
     @Override
