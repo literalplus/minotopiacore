@@ -30,6 +30,10 @@
             <artifactId>xyc-bukkit</artifactId>
         </dependency>
         <dependency>
+            <groupId>li.l1t.common</groupId>
+            <artifactId>lanatus-sql</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
         </dependency>
