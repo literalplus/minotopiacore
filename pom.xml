@@ -5,7 +5,9 @@
   ~ or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>li.l1t.mtc</groupId>
@@ -23,8 +25,8 @@
 
     <scm>
         <connection>scm:git:git@bitbucket.org:minotopia/minotopiacore.git</connection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <downloadUrl>https://ci.minotopia.me/job/pvp~mtc/</downloadUrl>
@@ -38,7 +40,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <powermock.version>1.6.2</powermock.version>
+        <powermock.version>1.6.5</powermock.version>
         <xyc.version>4.2.0.1</xyc.version>
         <minecraft.version>1.8.3</minecraft.version>
         <spigot-api.release>R0.1</spigot-api.release>
@@ -179,19 +181,6 @@
                 <artifactId>mtc-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.10.19</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hamcrest</groupId>
-                        <artifactId>hamcrest-library</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -209,6 +198,11 @@
                         <artifactId>hamcrest-library</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>1.10.19</version>
             </dependency>
             <dependency>
                 <groupId>org.powermock</groupId>
@@ -239,7 +233,8 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
                 <configuration>
-                    <configLocation>${project.checkstyle-config-path}</configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
+                    <configLocation>${project.checkstyle-config-path}
+                    </configLocation><!-- Ignore warnings, this needs to be here so that modules can find the file too - someone needs to find a better way to do this some time -->
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -329,7 +324,8 @@
                 </file>
             </activation>
             <properties>
-                <project.checkstyle-config-path>${project.basedir}/../checkstyle.xml</project.checkstyle-config-path>
+                <project.checkstyle-config-path>${project.basedir}/../checkstyle.xml
+                </project.checkstyle-config-path>
             </properties>
         </profile>
         <profile>
@@ -340,7 +336,8 @@
                 </file>
             </activation>
             <properties>
-                <project.checkstyle-config-path>${project.basedir}/checkstyle.xml</project.checkstyle-config-path>
+                <project.checkstyle-config-path>${project.basedir}/checkstyle.xml
+                </project.checkstyle-config-path>
             </properties>
         </profile>
     </profiles>

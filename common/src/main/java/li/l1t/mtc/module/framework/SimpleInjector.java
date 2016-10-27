@@ -79,11 +79,10 @@ class SimpleInjector implements Injector {
 
     @Override
     public <T> void registerInstance(T instance, Class<? super T> clazz) {
-        Preconditions.checkArgument(clazz.isAssignableFrom(instance.getClass()), "instance must inherit from clazz", instance, clazz);
+        Preconditions.checkNotNull(clazz, "clazz");
+        Preconditions.checkArgument(instance == null || clazz.isAssignableFrom(instance.getClass()), "instance must inherit from clazz", instance, clazz);
         InjectionTarget<? super T> target = getTarget(clazz);
-        if (!instance.equals(target.getInstance())) {
-            target.setInstance(instance);
-        }
+        target.setInstance(instance);
     }
 
     @Nonnull

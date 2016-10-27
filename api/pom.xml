@@ -25,6 +25,10 @@
             <groupId>li.l1t.common</groupId>
             <artifactId>xyc-bukkit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

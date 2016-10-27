@@ -170,9 +170,12 @@ public class SimpleInjectionTarget<T> implements InjectionTarget<T> {
 
     @Override
     public void setInstance(T instance) {
-        Preconditions.checkNotNull(instance, "instance");
-        Preconditions.checkArgument(getClazz().isAssignableFrom(instance.getClass()));
-        this.instance = instance;
+        if (instance == null) {
+            this.instance = null;
+        } else {
+            Preconditions.checkArgument(getClazz().isAssignableFrom(instance.getClass()));
+            this.instance = instance;
+        }
     }
 
     @Override
