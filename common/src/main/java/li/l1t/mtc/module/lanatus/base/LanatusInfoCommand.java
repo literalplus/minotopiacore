@@ -104,7 +104,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
                 .append("[Items]", ChatColor.DARK_PURPLE)
                 .hintedCommand("/lainfo ilist " + profile.getUniqueId())
                 .append("  ", ChatColor.YELLOW)
-                .appendIf(exec.sender().hasPermission(LanatusBaseModule.GIVE_PERMISSION), "[Melonen]")
+                .appendIf(exec.sender().hasPermission(LanatusBaseModule.GIVE_PERMISSION), "[Melonen geben]")
                 .suggest("/lagive " + profile.getUniqueId() + " ").tooltip("Klicken, um \nMelonen zu geben")
                 .append("  ", ChatColor.RED)
                 .appendIf(exec.sender().hasPermission(LanatusBaseModule.RANK_PERMISSION), "[Rang setzen]")
