@@ -102,6 +102,10 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         return instant.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
+    private String readableInstantDate(Instant instant) {
+        return instant.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
     private void respondAccountActions(CommandExecution exec, XLoginHook.Profile profile) {
         exec.respond(resultLineBuilder()
                 .append("[Käufe]", ChatColor.DARK_GREEN)
@@ -128,7 +132,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct())
                 .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), " (aktiv)", ChatColor.YELLOW)
                 .append(" am ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE).underlined(false)
-                .append(readableInstant(purchase.getCreationInstant()), ChatColor.GREEN)
+                .append(readableInstantDate(purchase.getCreationInstant()), ChatColor.GREEN)
                 .append(" ")
                 .append("[Details]", ChatColor.DARK_GREEN).underlined(true)
                 .hintedCommand("/lainfo purchase " + purchase.getUniqueId())
@@ -143,7 +147,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(RESULT_LINE, "§pKaufpreis: §s%s§p Melonen (Käufer: §s%s§p)", purchase.getMelonsCost(), playerName);
         exec.respond(RESULT_LINE, "Daten: §s%s", purchase.getData());
         exec.respond(RESULT_LINE, "Anmerkung: §s%s", purchase.getComment());
-        exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct()));
+        exec.respond(appendProductOverview(resultLineBuilder().append("Produkt: ", ChatColor.GOLD), purchase.getProduct()));
         Optional<Position> position = client.positions().findByPurchase(purchaseId);
         if (position.isPresent()) {
             exec.respond(RESULT_LINE, "Itemdaten: '%s'", position.get().getData());
@@ -153,8 +157,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     }
 
     private XyComponentBuilder appendProductOverview(XyComponentBuilder builder, Product product) {
-        builder.append("Produkt: ", ChatColor.GOLD)
-                .append(product.getDisplayName(), ChatColor.GREEN).underlined(true)
+        builder.append(product.getDisplayName(), ChatColor.GREEN).underlined(true)
                 .hintedCommand("/laprod info " + product.getUniqueId())
                 .append("", ChatColor.GOLD).underlined(false);
         return builder;
