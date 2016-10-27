@@ -125,10 +125,8 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     }
 
     private void showPurchaseListItem(CommandExecution exec, Purchase purchase) {
-        exec.respond(resultLineBuilder()
-                .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), "(aktiv) ", ChatColor.YELLOW)
-                .append(purchase.getProduct().getDisplayName(), ChatColor.GREEN).bold(false).underlined(true)
-                .hintedCommand("/laprod info " + purchase.getProduct().getUniqueId())
+        exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct())
+                .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), " (aktiv)", ChatColor.YELLOW)
                 .append(" am ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE).underlined(false)
                 .append(readableInstant(purchase.getCreationInstant()), ChatColor.GREEN)
                 .append(" ")
@@ -156,9 +154,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
 
     private XyComponentBuilder appendProductOverview(XyComponentBuilder builder, Product product) {
         builder.append("Produkt: ", ChatColor.GOLD)
-                .append(product.getDisplayName(), ChatColor.GREEN)
-                .append(" ")
-                .append("[Details]").underlined(true)
+                .append(product.getDisplayName(), ChatColor.GREEN).underlined(true)
                 .hintedCommand("/laprod info " + product.getUniqueId())
                 .append("", ChatColor.GOLD).underlined(false);
         return builder;
