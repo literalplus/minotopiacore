@@ -25,7 +25,7 @@ public enum MessageType {
     RESULT_LINE_SUCCESS(String.format("§e§l%s §a%%s", ChatConstants.LEFT_ARROW)),
     LIST_HEADER(String.format("§e§l%s §e%%s", ChatConstants.LEFT_ARROW)),
     LIST_ITEM(String.format("§e§l-%s §6%%s", ChatConstants.LEFT_ARROW)),
-    HEADER("§x»»» §p%s §s«««"),
+    HEADER("§x§p»»» %s §p«««"),
     BROADCAST("§x%s");
 
     private final String template;
