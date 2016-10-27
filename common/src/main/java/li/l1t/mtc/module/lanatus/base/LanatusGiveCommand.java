@@ -57,7 +57,7 @@ public class LanatusGiveCommand extends BukkitExecutionExecutor {
         LanatusAccount account = client.accounts().find(profile.getUniqueId());
         checkTransactionPossible(amount, account);
         tryModifyMelonsCount(exec, account, amount);
-        respondSuccess(exec, profile, account);
+        respondSuccess(exec, profile);
     }
 
     private void respondOperationStart(CommandExecution exec, XLoginHook.Profile profile, int amount) {
@@ -82,17 +82,10 @@ public class LanatusGiveCommand extends BukkitExecutionExecutor {
                 .build();
     }
 
-    private void respondSuccess(CommandExecution exec, XLoginHook.Profile profile, LanatusAccount account) {
+    private void respondSuccess(CommandExecution exec, XLoginHook.Profile profile) {
         AccountSnapshot remoteAccount = client.accounts().find(profile.getUniqueId());
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Aktion erfolgreich! %s hat jetzt %d Melonen.",
                 profile.getName(), remoteAccount.getMelonsCount());
-        checkChangedConcurrently(exec, account, remoteAccount);
-    }
-
-    private void checkChangedConcurrently(CommandExecution exec, LanatusAccount account, AccountSnapshot remoteAccount) {
-        if (account.getMelonsCount() != remoteAccount.getMelonsCount()) {
-            exec.respond(MessageType.WARNING, "Der Account wurde währenddessen woanders geändert.");
-        }
     }
 
     private void showUsage(CommandExecution exec) {
