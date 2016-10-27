@@ -69,7 +69,7 @@ public class SimpleCommandExecution implements CommandExecution {
 
     @Override
     public String arg(int index) {
-        if (hasArg(index)) {
+        if (!hasArg(index)) {
             throw MissingArgumentException.forIndex(index);
         }
         return args[index];
@@ -82,7 +82,7 @@ public class SimpleCommandExecution implements CommandExecution {
 
     @Override
     public boolean hasArg(int index) {
-        return args.length <= index;
+        return args.length > index;
     }
 
     @Override
