@@ -91,6 +91,23 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(RESULT_LINE, "UUID: §s%s", account.getPlayerId());
         exec.respond(RESULT_LINE, "Melonen: §s%s  §pRang: §s%s", account.getMelonsCount(), account.getLastRank());
         exec.respond(RESULT_LINE, "§pStand: §s%s", account.getSnapshotInstant());
+        respondAccountActions(exec, profile);
+    }
+
+    private void respondAccountActions(CommandExecution exec, XLoginHook.Profile profile) {
+        exec.respond(resultLineBuilder()
+                .append("[Käufe anzeigen]", ChatColor.DARK_GREEN)
+                .hintedCommand("/lainfo plist " + profile.getUniqueId())
+                .append("  ")
+                .append("[Items anzeigen]", ChatColor.DARK_PURPLE)
+                .hintedCommand("/lainfo ilist " + profile.getUniqueId())
+                .append("  ")
+                .appendIf(exec.sender().hasPermission(LanatusBaseModule.GIVE_PERMISSION), "[Melonen geben]")
+                .suggest("/lagive " + profile.getUniqueId() + " ")
+                .append("  ")
+                .appendIf(exec.sender().hasPermission(LanatusBaseModule.RANK_PERMISSION), "[Rang setzen]")
+                .suggest("/larank " + profile.getUniqueId() + " ")
+        );
     }
 
     private void showPurchaseList(CommandExecution exec, XLoginHook.Profile profile) {
