@@ -15,6 +15,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Material;
 
 import java.util.Collection;
@@ -68,8 +69,8 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
         exec.respond(resultLineBuilder()
                 .append(product.getModule(), ChatColor.GREEN)
                 .command("/laprod list " + product.getModule())
-                .tooltip("Klicken, um alle Produkte\n aus diesemModule anzuzeigen")
-                .append(": ", ChatColor.GOLD)
+                .tooltip("Klicken, um alle Produkte\n aus diesem Modul anzuzeigen")
+                .append(": ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE)
                 .append(product.getDisplayName(), ChatColor.GREEN)
                 .append(" für ", ChatColor.GOLD)
                 .append(product.getMelonsCost(), ChatColor.GREEN)

@@ -142,7 +142,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         String playerName = xLogin.getDisplayString(purchase.getPlayerId());
         exec.respond(HEADER, "Kauf %s", purchaseId);
         exec.respond(RESULT_LINE, "Kaufdatum: §s%s", readableInstant(purchase.getCreationInstant()));
-        exec.respond(RESULT_LINE, "§pKaufpreis: §s%s  §pKäufer: §s%s", purchase.getMelonsCost(), playerName);
+        exec.respond(RESULT_LINE, "§pKaufpreis: §s%s§p Melonen (Käufer: §s%s§p)", purchase.getMelonsCost(), playerName);
         exec.respond(RESULT_LINE, "Daten: §s%s", purchase.getData());
         exec.respond(RESULT_LINE, "Anmerkung: §s%s", purchase.getComment());
         exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct()));
