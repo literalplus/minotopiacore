@@ -156,7 +156,7 @@ public class SimpleCommandExecution implements CommandExecution {
 
     @Override
     public void requireIsPlayer() throws PlayerOnlyException {
-        PlayerOnlyException.checkIsPlayer(sender(), "/%s %s", label, args);
+        PlayerOnlyException.checkIsPlayer(sender(), "/%s %s", label, joinedArgs(0));
     }
 
     @Override
