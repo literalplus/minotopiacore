@@ -39,9 +39,10 @@ public class LanatusGiveCommand extends BukkitExecutionExecutor {
             XLoginHook.Profile profile = argumentProfile(exec.arg(0), exec);
             int melonAmount = exec.intArg(1);
             handleGiveMelons(exec, profile, melonAmount);
+        } else {
+            showUsage(exec);
         }
-        showUsage(exec);
-        return false;
+        return true;
     }
 
     private XLoginHook.Profile argumentProfile(String input, CommandExecution exec) {
@@ -61,8 +62,8 @@ public class LanatusGiveCommand extends BukkitExecutionExecutor {
     }
 
     private void respondOperationStart(CommandExecution exec, XLoginHook.Profile profile, int amount) {
-        exec.respond(MessageType.RESULT_LINE, "Versuche, %s (§s%s§p) %d Melonen zu geben...",
-                profile.getName(), profile.getUniqueId(), amount);
+        exec.respond(MessageType.RESULT_LINE, "Versuche, %s %d Melonen zu geben...",
+                profile.getName(), amount);
     }
 
     private void checkTransactionPossible(int amount, MutableAccount account) {
