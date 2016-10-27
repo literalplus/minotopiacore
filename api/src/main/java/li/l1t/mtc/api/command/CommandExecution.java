@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.api.command;
 
+import li.l1t.common.exception.UserException;
 import li.l1t.common.util.StringHelper;
 import li.l1t.mtc.api.chat.MessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -62,6 +63,22 @@ public interface CommandExecution {
      * @throws MissingArgumentException if there is no argument at that index
      */
     String arg(int index);
+
+    /**
+     * @param index the zero-based index of the {@link #args() argument} to access
+     * @return the integer argument at given index
+     * @throws MissingArgumentException if there is no argument at that index
+     * @throws UserException            if the argument at given index is not an integer
+     */
+    int intArg(int index);
+
+    /**
+     * @param index the zero-based index of the {@link #args() argument} to access
+     * @return the UUID argument at given index
+     * @throws MissingArgumentException if there is no argument at that index
+     * @throws UserException            if the argument at given index is not a UUID
+     */
+    UUID uuidArg(int index);
 
     /**
      * @param index the zero-based index of the {@link #args() argument} to find

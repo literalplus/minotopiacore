@@ -41,7 +41,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
                     showProductListWithFilter(exec, exec.findArg(1).orElse(""));
                     return true;
                 case "info":
-                    showProductDetails(exec, uuid(exec.arg(1)));
+                    showProductDetails(exec, exec.uuidArg(1));
                     return true;
                 default:
                     break;

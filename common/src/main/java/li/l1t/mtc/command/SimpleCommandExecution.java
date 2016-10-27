@@ -10,6 +10,7 @@ package li.l1t.mtc.command;
 import com.google.common.base.Preconditions;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
+import li.l1t.common.exception.UserException;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.StringHelper;
 import li.l1t.mtc.api.chat.ChatConstants;
@@ -73,6 +74,27 @@ public class SimpleCommandExecution implements CommandExecution {
             throw MissingArgumentException.forIndex(index);
         }
         return args[index];
+    }
+
+    @Override
+    public int intArg(int index) {
+        try {
+            return Integer.parseInt(arg(index));
+        } catch (NumberFormatException e) {
+            throw new UserException("Argument %d: Das ist keine Zahl: '%s'", index + 1, arg(index));
+        }
+    }
+
+    @Override
+    public UUID uuidArg(int index) {
+        try {
+            return UUID.fromString(arg(index));
+        } catch (IllegalArgumentException e) {
+            throw new UserException(
+                    "Argument %d: Das ist keine UUID: '%s'. Eine valide UUID ist zum Beispiel '%s'.",
+                    index + 1, arg(index), UUID.randomUUID()
+            );
+        }
     }
 
     @Override

@@ -62,7 +62,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
                 showPositionList(exec, argumentProfile(exec.arg(1), exec.sender()));
                 return true;
             case "purchase":
-                showPurchaseDetails(exec, uuid(exec.arg(1)));
+                showPurchaseDetails(exec, exec.uuidArg(1));
                 return true;
             case "help":
                 break;
