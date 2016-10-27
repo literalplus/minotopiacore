@@ -29,7 +29,7 @@ public class LanatusBaseModule extends MTCModuleAdapter {
 
     @InjectMe
     public LanatusBaseModule(MTCLanatusClient client, XLoginHook xLoginHook) {
-        super("LanatusApiModule", true);
+        super("LanatusBaseModule", true);
         this.client = client;
         this.xLoginHook = xLoginHook;
     }
