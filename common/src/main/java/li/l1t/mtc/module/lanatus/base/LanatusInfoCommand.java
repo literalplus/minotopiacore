@@ -9,7 +9,6 @@ package li.l1t.mtc.module.lanatus.base;
 
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.exception.UserException;
-import li.l1t.common.util.UUIDHelper;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.position.Position;
@@ -36,7 +35,7 @@ import static li.l1t.mtc.api.chat.MessageType.RESULT_LINE;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-25
  */
-public class LanatusInfoCommand extends BukkitExecutionExecutor {
+class LanatusInfoCommand extends BukkitExecutionExecutor {
     private final LanatusClient client;
     private final XLoginHook xLogin;
 
@@ -86,17 +85,6 @@ public class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private UUID uuid(String input) {
-        if (!UUIDHelper.isValidUUID(input)) {
-            throw new UserException(
-                    "Das ist keine UUID: %s (valide wäre zum Beispiel: %s)",
-                    input, UUID.randomUUID()
-            );
-        } else {
-            return UUIDHelper.getFromString(input);
-        }
-    }
-
     private void showAccountInfo(CommandExecution exec, XLoginHook.Profile profile) {
         AccountSnapshot account = client.accounts().find(profile.getUniqueId());
         exec.respond(HEADER, "Lanatus-Info: §a%s", profile.getName());
@@ -122,11 +110,6 @@ public class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private XyComponentBuilder resultLineBuilder() {
-        return new XyComponentBuilder("-➩", ChatColor.YELLOW).bold(true)
-                .append(" ", ChatColor.GOLD).bold(false);
-    }
-
     private void showPurchaseDetails(CommandExecution exec, UUID purchaseId) {
         Purchase purchase = client.purchases().findById(purchaseId);
         String playerName = xLogin.getDisplayString(purchase.getPlayerId());
@@ -148,7 +131,7 @@ public class LanatusInfoCommand extends BukkitExecutionExecutor {
                 .append(product.getDisplayName(), ChatColor.GREEN)
                 .append(" ")
                 .append("[Details]").underlined(true)
-                .hintedCommand("/laprod " + product.getUniqueId())
+                .hintedCommand("/laprod info " + product.getUniqueId())
                 .append("", ChatColor.GOLD).underlined(false);
         return builder;
     }
