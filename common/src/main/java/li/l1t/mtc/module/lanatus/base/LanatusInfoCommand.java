@@ -88,8 +88,9 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     private void showAccountInfo(CommandExecution exec, XLoginHook.Profile profile) {
         AccountSnapshot account = client.accounts().find(profile.getUniqueId());
         exec.respond(HEADER, "Lanatus-Info: §a%s", profile.getName());
+        exec.respond(RESULT_LINE, "UUID: §s%s", account.getPlayerId());
         exec.respond(RESULT_LINE, "Melonen: §s%s  §pRang: §s%s", account.getMelonsCount(), account.getLastRank());
-        exec.respond(RESULT_LINE, "UUID: §s%s  §pStand: §s%s", account.getPlayerId(), account.getSnapshotInstant());
+        exec.respond(RESULT_LINE, "§pStand: §s%s", account.getSnapshotInstant());
     }
 
     private void showPurchaseList(CommandExecution exec, XLoginHook.Profile profile) {
