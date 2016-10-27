@@ -14,6 +14,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -61,6 +62,13 @@ public interface CommandExecution {
      * @throws MissingArgumentException if there is no argument at that index
      */
     String arg(int index);
+
+    /**
+     * @param index the zero-based index of the {@link #args() argument} to find
+     * @return an optional containing the argument at given index, or an empty optional if there is
+     * no argument at that index
+     */
+    Optional<String> findArg(int index);
 
     /**
      * @param startIndex the index of the first argument to process

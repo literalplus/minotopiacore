@@ -24,6 +24,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -72,6 +73,11 @@ public class SimpleCommandExecution implements CommandExecution {
             throw MissingArgumentException.forIndex(index);
         }
         return args[index];
+    }
+
+    @Override
+    public Optional<String> findArg(int index) {
+        return hasArg(index) ? Optional.of(arg(index)) : Optional.empty();
     }
 
     @Override
