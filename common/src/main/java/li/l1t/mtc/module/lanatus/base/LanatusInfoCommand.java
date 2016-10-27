@@ -20,6 +20,8 @@ import li.l1t.mtc.hook.XLoginHook;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -90,23 +92,23 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(HEADER, "Lanatus-Info: §a%s", profile.getName());
         exec.respond(RESULT_LINE, "UUID: §s%s", account.getPlayerId());
         exec.respond(RESULT_LINE, "Melonen: §s%s  §pRang: §s%s", account.getMelonsCount(), account.getLastRank());
-        exec.respond(RESULT_LINE, "§pStand: §s%s", account.getSnapshotInstant());
+        exec.respond(RESULT_LINE, "§pStand: §s%s", account.getSnapshotInstant().atZone(ZoneId.systemDefault()));
         respondAccountActions(exec, profile);
     }
 
     private void respondAccountActions(CommandExecution exec, XLoginHook.Profile profile) {
         exec.respond(resultLineBuilder()
-                .append("[Käufe anzeigen]", ChatColor.DARK_GREEN)
+                .append("[Käufe]", ChatColor.DARK_GREEN)
                 .hintedCommand("/lainfo plist " + profile.getUniqueId())
                 .append("  ")
-                .append("[Items anzeigen]", ChatColor.DARK_PURPLE)
+                .append("[Items]", ChatColor.DARK_PURPLE)
                 .hintedCommand("/lainfo ilist " + profile.getUniqueId())
-                .append("  ")
-                .appendIf(exec.sender().hasPermission(LanatusBaseModule.GIVE_PERMISSION), "[Melonen geben]")
-                .suggest("/lagive " + profile.getUniqueId() + " ")
-                .append("  ")
+                .append("  ", ChatColor.YELLOW)
+                .appendIf(exec.sender().hasPermission(LanatusBaseModule.GIVE_PERMISSION), "[Melonen]")
+                .suggest("/lagive " + profile.getUniqueId() + " ").tooltip("Klicken, um \nMelonen zu geben")
+                .append("  ", ChatColor.RED)
                 .appendIf(exec.sender().hasPermission(LanatusBaseModule.RANK_PERMISSION), "[Rang setzen]")
-                .suggest("/larank " + profile.getUniqueId() + " ")
+                .suggest("/larank " + profile.getUniqueId() + " ").tooltip("Klicken, um \nRang zu setzen")
         );
     }
 
@@ -121,7 +123,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
                 .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), "(aktiv) ", ChatColor.YELLOW)
                 .append(purchase.getProduct().getDisplayName(), ChatColor.GREEN).bold(false).underlined(true)
                 .append(" am ", ChatColor.GOLD).underlined(false)
-                .append(purchase.getCreationInstant(), ChatColor.GREEN)
+                .append(purchase.getCreationInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), ChatColor.GREEN)
                 .append(" ")
                 .append("[Details]", ChatColor.DARK_GREEN).underlined(true)
                 .hintedCommand("/lainfo purchase " + purchase.getUniqueId())
@@ -132,7 +134,8 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         Purchase purchase = client.purchases().findById(purchaseId);
         String playerName = xLogin.getDisplayString(purchase.getPlayerId());
         exec.respond(HEADER, "Kauf %s von %s", purchaseId, playerName);
-        exec.respond(RESULT_LINE, "Kaufdatum: §s%s  §pKaufpreis: §s%s", purchase.getCreationInstant(), purchase.getMelonsCost());
+        exec.respond(RESULT_LINE, "Kaufdatum: §s%s", purchase.getCreationInstant().atZone(ZoneId.systemDefault()));
+        exec.respond(RESULT_LINE, "§pKaufpreis: §s%s", purchase.getMelonsCost());
         exec.respond(RESULT_LINE, "Daten: §s%s", purchase.getData());
         exec.respond(RESULT_LINE, "Anmerkung: §s%s", purchase.getComment());
         exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct()));
