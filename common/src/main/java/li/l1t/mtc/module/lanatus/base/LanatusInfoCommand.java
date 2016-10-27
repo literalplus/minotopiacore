@@ -18,6 +18,7 @@ import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;
 
 import java.time.Instant;
@@ -127,7 +128,8 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(resultLineBuilder()
                 .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), "(aktiv) ", ChatColor.YELLOW)
                 .append(purchase.getProduct().getDisplayName(), ChatColor.GREEN).bold(false).underlined(true)
-                .append(" am ", ChatColor.GOLD).underlined(false)
+                .hintedCommand("/laprod info " + purchase.getProduct().getUniqueId())
+                .append(" am ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE).underlined(false)
                 .append(readableInstant(purchase.getCreationInstant()), ChatColor.GREEN)
                 .append(" ")
                 .append("[Details]", ChatColor.DARK_GREEN).underlined(true)
@@ -138,9 +140,9 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     private void showPurchaseDetails(CommandExecution exec, UUID purchaseId) {
         Purchase purchase = client.purchases().findById(purchaseId);
         String playerName = xLogin.getDisplayString(purchase.getPlayerId());
-        exec.respond(HEADER, "Kauf %s von %s", purchaseId, playerName);
+        exec.respond(HEADER, "Kauf %s", purchaseId);
         exec.respond(RESULT_LINE, "Kaufdatum: §s%s", readableInstant(purchase.getCreationInstant()));
-        exec.respond(RESULT_LINE, "§pKaufpreis: §s%s", purchase.getMelonsCost());
+        exec.respond(RESULT_LINE, "§pKaufpreis: §s%s  §pKäufer: §s%s", purchase.getMelonsCost(), playerName);
         exec.respond(RESULT_LINE, "Daten: §s%s", purchase.getData());
         exec.respond(RESULT_LINE, "Anmerkung: §s%s", purchase.getComment());
         exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct()));
