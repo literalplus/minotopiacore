@@ -41,5 +41,7 @@ public class LanatusBaseModule extends MTCModuleAdapter {
                 .behaviour(CommandBehaviours.permissionChecking(READ_PERMISSION));
         registerCommand(new LanatusProductCommand(client), "laprod")
                 .behaviour(CommandBehaviours.permissionChecking(READ_PERMISSION));
+        registerCommand(new LanatusGiveCommand(client, xLoginHook), "lagive")
+                .behaviour(CommandBehaviours.permissionChecking(GIVE_PERMISSION));
     }
 }
