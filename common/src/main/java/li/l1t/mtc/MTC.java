@@ -42,6 +42,7 @@ import li.l1t.mtc.misc.cmd.CommandPeace;
 import li.l1t.mtc.misc.cmd.CommandPlayerHead;
 import li.l1t.mtc.misc.cmd.CommandRandom;
 import li.l1t.mtc.misc.cmd.CommandTeam;
+import li.l1t.mtc.module.framework.DefaultInjectionProvider;
 import li.l1t.mtc.module.framework.SimpleModuleManager;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -194,8 +195,16 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             //COMMANDS
             registerCommands();
 
+            //HOOKS
+            logger.debug("Hooking hooks!");
+            this.xLoginHook = new XLoginHook(this);
+            this.vaultHook = new VaultHook(this);
+            this.worldGuardHook = new WorldGuardHook(this);
+            this.pexHook = new PexHook(this);
+
             //MODULES
             logger.debug("Loading modules!");
+            new DefaultInjectionProvider(this, moduleManager.getInjector()).registerAll();
             moduleManager.load(moduleManager.findShippedModules());
 
             //HELP
@@ -205,13 +214,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             registerEventListeners(pluginManager);
 
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RunnableCronjob5Minutes(false, this), 2 * 60 * 20, 5 * 60 * 20);
-
-            //HOOKS
-            logger.debug("Hooking hooks!");
-            this.xLoginHook = new XLoginHook(this);
-            this.vaultHook = new VaultHook(this);
-            this.worldGuardHook = new WorldGuardHook(this);
-            this.pexHook = new PexHook(this);
 
             //BUNGEECORD
             if (this.getConfig().getBoolean("enable.bungeeapi", true)) {
