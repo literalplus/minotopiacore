@@ -28,11 +28,21 @@ public abstract class BukkitExecutionExecutor extends XYCCommandExecutor impleme
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
         return execute(new SimpleCommandExecution(sender, cmd, label, args));
     }
+
     /**
      * @return a new component builder adhering to the specifications of {@link
      * MessageType#RESULT_LINE}
      */
     protected XyComponentBuilder resultLineBuilder() {
+        return new XyComponentBuilder("➩", ChatColor.YELLOW).bold(true)
+                .append(" ", ChatColor.GOLD).bold(false);
+    }
+
+    /**
+     * @return a new component builder adhering to the specifications of {@link
+     * MessageType#LIST_ITEM}
+     */
+    protected XyComponentBuilder listItemBuilder() {
         return new XyComponentBuilder("-➩", ChatColor.YELLOW).bold(true)
                 .append(" ", ChatColor.GOLD).bold(false);
     }

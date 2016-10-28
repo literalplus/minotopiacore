@@ -31,6 +31,7 @@ import java.util.UUID;
 import static li.l1t.mtc.api.chat.MessageType.HEADER;
 import static li.l1t.mtc.api.chat.MessageType.LIST_HEADER;
 import static li.l1t.mtc.api.chat.MessageType.RESULT_LINE;
+import static li.l1t.mtc.api.chat.MessageType.RESULT_LINE_SUCCESS;
 
 /**
  * Executes the /lainfo command, providing information about the Lanatus accounts of a provided
@@ -65,6 +66,8 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
             case "purchase":
                 showPurchaseDetails(exec, exec.uuidArg(1));
                 return true;
+            case "refresh":
+                handleClearPlayerCache(exec, exec.uuidArg(1));
             case "help":
                 break;
             default:
@@ -94,8 +97,18 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         exec.respond(HEADER, "Lanatus-Info: §a%s", profile.getName());
         exec.respond(RESULT_LINE, "UUID: §s%s", account.getPlayerId());
         exec.respond(RESULT_LINE, "Melonen: §s%s  §pRang: §s%s", account.getMelonsCount(), account.getLastRank());
-        exec.respond(RESULT_LINE, "§pStand: §s%s", readableInstant(account.getSnapshotInstant()));
+        respondSnapshotInstantAndAction(exec, account);
         respondAccountActions(exec, profile);
+    }
+
+    private void respondSnapshotInstantAndAction(CommandExecution exec, AccountSnapshot account) {
+        exec.respond(resultLineBuilder()
+                .append("Stand: ")
+                .append(readableInstant(account.getSnapshotInstant()), ChatColor.GREEN)
+                .append("  ", ChatColor.DARK_RED)
+                .append("[Aktualisieren]")
+                .hintedCommand("/lainfo refresh " + account.getPlayerId())
+        );
     }
 
     private String readableInstant(Instant instant) {
@@ -129,7 +142,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     }
 
     private void showPurchaseListItem(CommandExecution exec, Purchase purchase) {
-        exec.respond(appendProductOverview(resultLineBuilder(), purchase.getProduct())
+        exec.respond(appendProductOverview(listItemBuilder(), purchase.getProduct())
                 .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), " (aktiv)", ChatColor.YELLOW)
                 .append(" am ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE).underlined(false)
                 .append(readableInstantDate(purchase.getCreationInstant()), ChatColor.GREEN)
@@ -170,7 +183,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     }
 
     private void showPositionListItem(CommandExecution exec, Position position) {
-        XyComponentBuilder builder = resultLineBuilder();
+        XyComponentBuilder builder = listItemBuilder();
         appendProductOverview(builder, position.getProduct());
         exec.respond(builder
                 .append(" mit Daten '", ChatColor.GOLD)
@@ -179,6 +192,11 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
                 .append("[Kauf]", ChatColor.DARK_GREEN)
                 .hintedCommand("/lainfo purchase " + position.getPurchaseId())
         );
+    }
+
+    private void handleClearPlayerCache(CommandExecution exec, UUID uuid) {
+        client.clearCachesFor(uuid);
+        exec.respond(RESULT_LINE_SUCCESS, "Cache für den Spieler mit der UUID §s%s§p geleert.", uuid);
     }
 
     private void showUsage(CommandExecution exec) {
