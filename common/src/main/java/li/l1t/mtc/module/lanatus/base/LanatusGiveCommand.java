@@ -23,7 +23,7 @@ import li.l1t.mtc.hook.XLoginHook;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-27
  */
-public class LanatusGiveCommand extends BukkitExecutionExecutor {
+class LanatusGiveCommand extends BukkitExecutionExecutor {
     private final LanatusClient client;
     private final XLoginHook xLogin;
 
