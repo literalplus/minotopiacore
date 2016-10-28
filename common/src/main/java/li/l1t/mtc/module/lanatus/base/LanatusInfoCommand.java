@@ -68,6 +68,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
                 return true;
             case "refresh":
                 handleClearPlayerCache(exec, exec.uuidArg(1));
+                return true;
             case "help":
                 break;
             default:
