@@ -8,6 +8,7 @@
 package li.l1t.mtc.api.module.inject;
 
 import li.l1t.mtc.api.module.inject.exception.InjectionException;
+import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -125,4 +126,19 @@ public interface InjectionTarget<T> {
      * @return a map of this target's dependencies
      */
     Map<InjectionTarget<?>, Injection<?>> getDependencies();
+
+    /**
+     * Examines a {@link NoClassDefFoundError} that occurred during class loading. The purpose of
+     * this method is to allow targets to check missing dependencies to determine whether given
+     * error is actually serious or just the cause of a missing external dependency. If there is
+     * just a dependency missing, it is not necessary to propagate an error up and possibly cause
+     * bigger breakage. If it is detected that the cause of the error is a missing dependency, the
+     * target may throw a {@link SilentFailException} to indicate that and prevent the error from
+     * propagating directly to the caller.
+     *
+     * @param error the encountered error
+     * @throws SilentFailException if given error is the cause of a known missing dependency and
+     *                             need not be propagated as an error
+     */
+    void handleMissingClass(NoClassDefFoundError error) throws SilentFailException;
 }

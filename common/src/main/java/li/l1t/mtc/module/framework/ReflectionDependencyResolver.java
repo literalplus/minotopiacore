@@ -13,6 +13,8 @@ import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.InjectionTarget;
 import li.l1t.mtc.api.module.inject.exception.InjectionException;
 import li.l1t.mtc.api.module.inject.exception.SilentFailException;
+import li.l1t.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ import java.util.LinkedList;
  * @since 2016-06-11
  */
 class ReflectionDependencyResolver implements DependencyManager {
+    private static final Logger LOGGER = LogManager.getLogger(ReflectionDependencyResolver.class);
     private final ModuleManager moduleManager;
     private final Deque<Class<?>> dependencyStack = new LinkedList<>();
     private final FieldDependencyResolver fieldResolver = new FieldDependencyResolver(this);
@@ -59,6 +62,9 @@ class ReflectionDependencyResolver implements DependencyManager {
             target.createInstance();
         } catch (SilentFailException e) {
             throw e;
+        } catch (NoClassDefFoundError ncdfe) {
+            LOGGER.info("Missing class for {}: {}", target.getClazz().getSimpleName(), ncdfe.getMessage());
+            target.handleMissingClass(ncdfe);
         } catch (Exception e) {
             throw new InjectionException(String.format(
                     "Unable to instantiate %s (required by %s)",

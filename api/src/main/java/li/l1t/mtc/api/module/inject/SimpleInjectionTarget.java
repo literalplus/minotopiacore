@@ -10,6 +10,7 @@ package li.l1t.mtc.api.module.inject;
 import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.module.MTCModule;
 import li.l1t.mtc.api.module.inject.exception.InjectionException;
+import li.l1t.mtc.api.module.inject.exception.SilentFailException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -146,6 +147,28 @@ public class SimpleInjectionTarget<T> implements InjectionTarget<T> {
                         "Unknown constructor dependency: %s in %s, required by %s",
                         dependency, getDependencies(), constructor
                 )));
+    }
+
+    @Override
+    public void handleMissingClass(NoClassDefFoundError error) throws SilentFailException {
+        boolean isExpectedlyMissingDependency = findMissingDependencyFiltersIfAny()
+                .anyMatch(s -> error.getMessage().contains(s));
+        if (isExpectedlyMissingDependency) {
+
+            throw new SilentFailException(String.format(
+                    "An external dependency is missing for %s: %s",
+                    clazz, error.getMessage()), error
+            );
+        } //else don't prevent the error from being propagated
+    }
+
+    private Stream<String> findMissingDependencyFiltersIfAny() {
+        ExternalDependencies annotation = clazz.getAnnotation(ExternalDependencies.class);
+        if (annotation != null) {
+            return Arrays.stream(annotation.value()).map(s -> s.replace('.', '/'));
+        } else {
+            return Stream.of();
+        }
     }
 
     @Override
