@@ -29,11 +29,16 @@ public @interface ExternalDependencies {
      * <pre>
      * import external.plugin.some.Yolo;
      * import external.plugin.something.Example;
+     * import ru.tehkode.permissions.PermissionManager;
      *
      * &#64;ExternalDependencies({"external.plugin"})
      * public class MyFaultTolerantModule {
      *     &#64;InjectMe
      *     private Yolo yolo = Yolo.getInstance();
+     *
+     *     //note that non-injected fields also work, even if they are just present
+     *     //no need to initialise them
+     *     private PermissionManager permissionManager;
      *
      *     &#64;InjectMe
      *     public MyFaultTolerantModule(Example example) {
