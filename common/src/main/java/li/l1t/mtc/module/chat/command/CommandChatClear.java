@@ -30,14 +30,14 @@ public class CommandChatClear implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Bukkit.getOnlinePlayers().forEach(this::clearPlayerChatIfNotExempt);
+        Bukkit.getOnlinePlayers().forEach(player -> clearPlayerChatIfNotExempt(player, sender));
         Bukkit.broadcastMessage(getBroadcastMessage(args));
         return true;
     }
 
-    private void clearPlayerChatIfNotExempt(Player player) {
+    private void clearPlayerChatIfNotExempt(Player player, CommandSender culprit) {
         if (player.hasPermission("mtc.chatclear.exempt")) {
-            sendPrefixed(player, "§a" + player.getName() + " §6hat den globalen Chat geleert.");
+            sendPrefixed(player, "§a" + culprit.getName() + " §6hat den globalen Chat geleert.");
             return;
         }
         for (int i = 0; i < 150; i++) {
