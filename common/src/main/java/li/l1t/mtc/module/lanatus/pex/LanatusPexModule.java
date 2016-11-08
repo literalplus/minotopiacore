@@ -13,6 +13,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
+import li.l1t.mtc.module.lanatus.pex.bulk.BulkMigrationCommand;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -49,6 +50,12 @@ public class LanatusPexModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerListener(new GroupChangeJoinListener(groupMapping, permissionManager, lanatus));
+        if (isAllowAutomaticConversion()) {
+            registerListener(new GroupMigrationJoinListener(permissionManager, lanatus));
+        }
+        if (isAllowBulkConversion()) {
+            registerCommand(new BulkMigrationCommand(permissionManager, lanatus, plugin), "labulkmigrate");
+        }
     }
 
     @Override
