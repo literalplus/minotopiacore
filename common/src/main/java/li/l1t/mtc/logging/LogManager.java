@@ -146,6 +146,7 @@ public class LogManager {
         Path filePath = file.toPath();
 
         if (!file.exists()) {
+            Files.createDirectories(filePath.getParent());
             Files.createFile(filePath);
             try (InputStream is = plugin.getResource(filename)) {
                 Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
