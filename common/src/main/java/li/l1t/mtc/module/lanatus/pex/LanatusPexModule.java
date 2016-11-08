@@ -54,7 +54,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
             registerListener(new GroupMigrationJoinListener(permissionManager, lanatus));
         }
         if (isAllowBulkConversion()) {
-            registerCommand(new BulkMigrationCommand(permissionManager, lanatus, plugin), "labulkmigrate");
+            registerCommand(new BulkMigrationCommand(this, permissionManager, lanatus), "labulkmigrate");
         }
     }
 
@@ -83,5 +83,11 @@ public class LanatusPexModule extends ConfigurableMTCModule {
 
     public boolean isAllowAutomaticConversion() {
         return allowAutomaticConversion;
+    }
+
+    public void disableBulkConversion() {
+        allowBulkConversion = false;
+        configuration.set(ALLOW_BULK_CONVERSION_PATH, false);
+        save();
     }
 }

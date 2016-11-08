@@ -9,6 +9,7 @@ package li.l1t.mtc.module.lanatus.pex.bulk;
 
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
+import li.l1t.common.util.task.ImprovedBukkitRunnable;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
@@ -16,10 +17,12 @@ import li.l1t.mtc.api.command.UserPermissionException;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.logging.LogManager;
+import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.LanatusAccountMigrator;
+import li.l1t.mtc.module.lanatus.pex.LanatusPexModule;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.PermissionUser;
 
@@ -42,13 +45,13 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     private final LanatusAccountMigrator migrator;
     private LanatusClient lanatus;
     private final PermissionManager pex;
-    private final Plugin plugin;
+    private final LanatusPexModule module;
 
-    public BulkMigrationCommand(PermissionManager pex, LanatusClient lanatus, Plugin plugin) {
-        this.pex = pex;
+    public BulkMigrationCommand(LanatusPexModule module, PermissionManager pex, MTCLanatusClient lanatus) {
+        this.module = module;
         migrator = new LanatusAccountMigrator(lanatus);
         this.lanatus = lanatus;
-        this.plugin = plugin;
+        this.pex = pex;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         if (exec.hasArg(0) && exec.arg(0).equalsIgnoreCase("start")) {
             requireNoMigrationRunning();
             invokeMigration(exec);
+            module.disableBulkConversion();
         } else {
             respondUsage(exec);
         }
@@ -84,23 +88,27 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     private FilterLanatusKnownUsersTask filterKnownUsersAsync(Collection<PexImportUser> input) {
         LOGGER.info("Found {} users in auto-migrate groups", input.size());
         FilterLanatusKnownUsersTask task = new FilterLanatusKnownUsersTask(input, 5, lanatus);
-        task.runTaskTimerAsynchronously(plugin, 2L);
+        startTaskAsync(task);
         return task;
     }
 
     private KnownIdUserMigrationTask migrateUsersWithUniqueIdAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left with no account in Lanatus", input.size());
         KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus, pex);
-        task.runTaskTimerAsynchronously(plugin, 2L);
+        startTaskAsync(task);
         return task;
     }
 
     private UsernameOnlyMigrationTask migrateNonUniqueIdUsersAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left without a unique id", input.size());
         LOGGER.info("Names: {}", input.stream().map(PexImportUser::getUserName).collect(Collectors.toList()));
-        UsernameOnlyMigrationTask task = new UsernameOnlyMigrationTask(input, 5, LocalDate.of(2014, 10, 31), new XLoginHook(plugin), lanatus);
-        task.runTaskTimerAsynchronously(plugin, 2L);
+        UsernameOnlyMigrationTask task = new UsernameOnlyMigrationTask(input, 5, LocalDate.of(2014, 10, 31), new XLoginHook(module.getPlugin()), lanatus);
+        startTaskAsync(task);
         return task;
+    }
+
+    private BukkitTask startTaskAsync(ImprovedBukkitRunnable task) {
+        return task.runTaskTimerAsynchronously(module.getPlugin(), 2L);
     }
 
     private void logLeftoverUsers(Collection<PexImportUser> leftovers, CommandExecution exec) {
