@@ -60,12 +60,13 @@ public class LanatusPexModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-        configuration.options().header("Map your Lanatus groups to their PEx equivalents here.\nNote that this will only touch PEx groups with the '" + AUTORANK_OPTION_NAME + "' option set.");
+        configuration.options().header("Map your Lanatus groups to their PEx equivalents here.\nNote that this will only touch PEx groups with the '" + AUTORANK_OPTION_NAME + "' option set.").copyDefaults(true);
         if (!configuration.isConfigurationSection(GROUP_MAPPING_PATH)) {
             ConfigurationSection section = configuration.createSection(GROUP_MAPPING_PATH);
             section.addDefault("some-lanatus-group", "corresponding-pex-group");
         }
         configuration.addDefault(ALLOW_BULK_CONVERSION_PATH, false);
+        configuration.addDefault(ALLOW_JOIN_CONVERSION_PATH, false);
         Map<String, Object> groupConfig = configuration.getConfigurationSection(GROUP_MAPPING_PATH).getValues(false);
         groupConfig.clear();
         groupConfig.entrySet().stream()
