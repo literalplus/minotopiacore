@@ -54,7 +54,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
 
     private void handleGiveMelons(CommandExecution exec, XLoginHook.Profile profile, int amount) {
         respondOperationStart(exec, profile, amount);
-        LanatusAccount account = client.accounts().find(profile.getUniqueId());
+        LanatusAccount account = client.accounts().findOrDefault(profile.getUniqueId());
         checkTransactionPossible(amount, account);
         tryModifyMelonsCount(exec, account, amount);
         respondSuccess(exec, profile);
@@ -83,7 +83,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
     }
 
     private void respondSuccess(CommandExecution exec, XLoginHook.Profile profile) {
-        AccountSnapshot remoteAccount = client.accounts().find(profile.getUniqueId());
+        AccountSnapshot remoteAccount = client.accounts().findOrDefault(profile.getUniqueId());
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Aktion erfolgreich! %s hat jetzt %d Melonen.",
                 profile.getName(), remoteAccount.getMelonsCount());
     }
