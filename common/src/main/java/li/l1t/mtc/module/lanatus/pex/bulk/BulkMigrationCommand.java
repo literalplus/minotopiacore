@@ -145,6 +145,6 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     }
 
     private void respondMigrationStatus(CommandExecution exec) {
-        exec.respond(MessageType.RESULT_LINE, "There is currently " + (migrationRunning.get() ? "a" : "no") + "migration running.");
+        exec.respond(MessageType.RESULT_LINE, "There is currently " + (migrationRunning.get() ? "a" : "no") + " migration running.");
     }
 }
