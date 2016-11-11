@@ -60,8 +60,8 @@ class UsernameOnlyMigrationTask extends AbstractPexImportTask {
             PexImportUser user = workQueue.poll();
             Optional<UUID> uuid = figureOutUniqueId(user);
             if (uuid.isPresent()) {
-                if(migrator.migrateIfNecessary(user.getHandle(), user.getUniqueId())) {
-                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), user.getUniqueId());
+                if(migrator.migrateIfNecessary(user.getHandle(), uuid.get())) {
+                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), uuid.get());
                 }
                 continue;
             }

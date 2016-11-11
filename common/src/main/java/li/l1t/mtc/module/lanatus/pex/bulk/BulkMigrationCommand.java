@@ -122,7 +122,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
             exec.respond(MessageType.LIST_HEADER, "Unable to convert these users:");
             leftovers.forEach(user -> exec.respond(MessageType.LIST_ITEM, user.toString()));
         }
-        migrationRunning.compareAndSet(true, false);
+        migrationRunning.set(false);
     }
 
     private boolean hasImportRelevantGroup(PermissionUser user) {
