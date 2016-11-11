@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.lanatus.pex;
 
 import li.l1t.lanatus.api.LanatusClient;
+import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.account.LanatusAccount;
 import li.l1t.lanatus.api.account.MutableAccount;
 import li.l1t.lanatus.api.exception.AccountConflictException;
@@ -81,13 +82,12 @@ public class LanatusAccountMigrator {
     }
 
     private boolean stillHasDefaultRank(UUID playerId) {
-        return lanatus.accounts().find(playerId)
-                .filter(this::hasNonDefaultRank)
-                .isPresent();
+        Optional<AccountSnapshot> snapshot = lanatus.accounts().find(playerId);
+        return !snapshot.isPresent() || hasDefaultRank(snapshot.get());
     }
 
-    private boolean hasNonDefaultRank(LanatusAccount account) {
-        return !LanatusAccount.DEFAULT_RANK.equals(account.getLastRank());
+    private boolean hasDefaultRank(LanatusAccount account) {
+        return LanatusAccount.DEFAULT_RANK.equals(account.getLastRank());
     }
 
     private void changeLanatusRankTo(String groupName, UUID playerId) {
