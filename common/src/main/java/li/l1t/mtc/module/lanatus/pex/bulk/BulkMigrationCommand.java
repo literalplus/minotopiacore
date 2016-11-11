@@ -68,6 +68,8 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     }
 
     private void invokeMigration(CommandExecution exec) {
+        exec.respond(MessageType.RESULT_LINE, "Starting migration...");
+        exec.respond(MessageType.RESULT_LINE, "Consult the misc log file for detailed status information.");
         LOGGER.warn(" --- Starting bulk migration...");
         if (!migrationRunning.compareAndSet(false, true)) {
             LOGGER.warn(" --- Migration FAILED: Compare-and-set failed (false, true)");
@@ -79,6 +81,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
                 .thenCompose(stage(this::migrateUsersWithUniqueIdAsync))
                 .thenCompose(stage(this::migrateNonUniqueIdUsersAsync))
                 .thenAccept((leftovers) -> logLeftoverUsers(leftovers, exec));
+        readTask.runTask(module.getPlugin());
     }
 
     private <I, R> Function<I, CompletionStage<R>> stage(Function<I, CompletableTask<R>> taskSupplier) {
@@ -94,7 +97,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
 
     private KnownIdUserMigrationTask migrateUsersWithUniqueIdAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left with no account in Lanatus", input.size());
-        KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus, pex);
+        KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus);
         startTaskAsync(task);
         return task;
     }
