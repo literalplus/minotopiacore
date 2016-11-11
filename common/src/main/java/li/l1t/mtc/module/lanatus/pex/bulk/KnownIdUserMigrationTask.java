@@ -8,7 +8,9 @@
 package li.l1t.mtc.module.lanatus.pex.bulk;
 
 import li.l1t.lanatus.api.LanatusClient;
+import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.lanatus.pex.LanatusAccountMigrator;
+import org.apache.logging.log4j.Logger;
 import ru.tehkode.permissions.PermissionManager;
 
 import java.util.Collection;
@@ -22,23 +24,25 @@ import java.util.Queue;
  * @since 2016-11-08
  */
 public class KnownIdUserMigrationTask extends AbstractPexImportTask {
+    private static final Logger LOGGER = LogManager.getLogger(KnownIdUserMigrationTask.class);
     private final int usersPerExecution;
     private final Queue<PexImportUser> workQueue;
     private final LanatusAccountMigrator migrator;
-    private final PermissionManager pex;
     private final Collection<PexImportUser> results = new LinkedList<>();
 
-    public KnownIdUserMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LanatusClient lanatus, PermissionManager pex) {
+    public KnownIdUserMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LanatusClient lanatus) {
         this.workQueue = new LinkedList<>(workQueue);
         this.usersPerExecution = usersPerExecution;
         migrator = new LanatusAccountMigrator(lanatus);
         migrator.registerMigrationProduct();
-        this.pex = pex;
     }
 
     @Override
     public void run() {
         for (int i = 0; i < usersPerExecution; i++) {
+            if((workQueue.size() % 50) == 0) {
+                LOGGER.info("Migrating users with known UUID - {} users left...", workQueue.size());
+            }
             if (workQueue.isEmpty()) {
                 tryCancel();
                 getFuture().complete(results);

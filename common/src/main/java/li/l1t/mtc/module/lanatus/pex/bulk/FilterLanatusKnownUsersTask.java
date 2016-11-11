@@ -8,6 +8,8 @@
 package li.l1t.mtc.module.lanatus.pex.bulk;
 
 import li.l1t.lanatus.api.LanatusClient;
+import li.l1t.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -23,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
  * @since 2016-11-04
  */
 class FilterLanatusKnownUsersTask extends AbstractPexImportTask {
+    private static final Logger LOGGER = LogManager.getLogger(FilterLanatusKnownUsersTask.class);
     private final Queue<PexImportUser> workQueue;
     private final int maxUsersPerIteration;
     private final CompletableFuture<Collection<PexImportUser>> future = new CompletableFuture<>();
@@ -42,6 +45,9 @@ class FilterLanatusKnownUsersTask extends AbstractPexImportTask {
     @Override
     public void run() {
         for (int i = 0; i < maxUsersPerIteration; i++) {
+            if((workQueue.size() % 50) == 0) {
+                LOGGER.info("Filtering known users: {} users left...", workQueue.size());
+            }
             if (workQueue.isEmpty()) {
                 tryCancel();
                 future.complete(results);

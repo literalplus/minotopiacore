@@ -11,7 +11,9 @@ import li.l1t.common.lib.com.mojang.api.profiles.HttpProfileRepository;
 import li.l1t.common.lib.com.mojang.api.profiles.Profile;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.mtc.hook.XLoginHook;
+import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.lanatus.pex.LanatusAccountMigrator;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -28,7 +30,8 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-11-08
  */
-public class UsernameOnlyMigrationTask extends AbstractPexImportTask {
+class UsernameOnlyMigrationTask extends AbstractPexImportTask {
+    private static final Logger LOGGER = LogManager.getLogger(UsernameOnlyMigrationTask.class);
     private final HttpProfileRepository profileRepository = new HttpProfileRepository("minecraft");
     private final Collection<PexImportUser> unmatchedUsers = new LinkedList<>();
     private final LanatusAccountMigrator migrator;
@@ -57,7 +60,9 @@ public class UsernameOnlyMigrationTask extends AbstractPexImportTask {
             PexImportUser user = workQueue.poll();
             Optional<UUID> uuid = figureOutUniqueId(user);
             if (uuid.isPresent()) {
-                migrator.migrateIfNecessary(user.getHandle(), user.getUniqueId());
+                if(migrator.migrateIfNecessary(user.getHandle(), user.getUniqueId())) {
+                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), user.getUniqueId());
+                }
                 continue;
             }
             unmatchedUsers.add(user);

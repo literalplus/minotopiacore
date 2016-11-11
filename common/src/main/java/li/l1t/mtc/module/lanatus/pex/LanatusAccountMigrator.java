@@ -46,9 +46,10 @@ public class LanatusAccountMigrator {
                 .register();
     }
 
-    public void migrateIfNecessary(PermissionUser user, UUID playerId) {
-        findAutoConvertLanatusRank(user)
-                .ifPresent(rank -> attemptMigratePlayerRankTo(rank, playerId));
+    public boolean migrateIfNecessary(PermissionUser user, UUID playerId) {
+        Optional<String> lanatusRank = findAutoConvertLanatusRank(user);
+        lanatusRank.ifPresent(rank -> attemptMigratePlayerRankTo(rank, playerId));
+        return lanatusRank.isPresent();
     }
 
     public Optional<String> findAutoConvertLanatusRank(PermissionUser user) {
