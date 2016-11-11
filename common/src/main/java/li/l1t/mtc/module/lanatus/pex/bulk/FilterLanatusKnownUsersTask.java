@@ -46,7 +46,7 @@ class FilterLanatusKnownUsersTask extends AbstractPexImportTask {
     public void run() {
         for (int i = 0; i < maxUsersPerIteration; i++) {
             if((workQueue.size() % 50) == 0) {
-                LOGGER.info("Filtering known users: {} users left...", workQueue.size());
+                LOGGER.info("Filtering known users: Found {}, {} users left...", results.size(), workQueue.size());
             }
             if (workQueue.isEmpty()) {
                 tryCancel();
@@ -54,10 +54,14 @@ class FilterLanatusKnownUsersTask extends AbstractPexImportTask {
                 return;
             }
             PexImportUser user = workQueue.poll();
-            if (user.hasUniqueId() && isKnownToLanatus(user)) {
+            if (mightNeedMigration(user)) {
                 results.add(user);
             }
         }
+    }
+
+    private boolean mightNeedMigration(PexImportUser user) {
+        return !user.hasUniqueId() || !isKnownToLanatus(user);
     }
 
     private boolean isKnownToLanatus(PexImportUser user) {

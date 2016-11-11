@@ -91,14 +91,14 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     private FilterLanatusKnownUsersTask filterKnownUsersAsync(Collection<PexImportUser> input) {
         LOGGER.info("Found {} users in auto-migrate groups", input.size());
         FilterLanatusKnownUsersTask task = new FilterLanatusKnownUsersTask(input, 5, lanatus);
-        startTaskAsync(task);
+        startTaskSync(task);
         return task;
     }
 
     private KnownIdUserMigrationTask migrateUsersWithUniqueIdAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left with no account in Lanatus", input.size());
         KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus);
-        startTaskAsync(task);
+        startTaskSync(task);
         return task;
     }
 
@@ -106,12 +106,12 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         LOGGER.info("There are {} users left without a unique id", input.size());
         LOGGER.info("Names: {}", input.stream().map(PexImportUser::getUserName).collect(Collectors.toList()));
         UsernameOnlyMigrationTask task = new UsernameOnlyMigrationTask(input, 5, LocalDate.of(2014, 10, 31), new XLoginHook(module.getPlugin()), lanatus);
-        startTaskAsync(task);
+        startTaskSync(task);
         return task;
     }
 
-    private BukkitTask startTaskAsync(ImprovedBukkitRunnable task) {
-        return task.runTaskTimerAsynchronously(module.getPlugin(), 2L);
+    private BukkitTask startTaskSync(ImprovedBukkitRunnable task) {
+        return task.runTaskTimer(module.getPlugin(), 2L);
     }
 
     private void logLeftoverUsers(Collection<PexImportUser> leftovers, CommandExecution exec) {
