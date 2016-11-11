@@ -122,6 +122,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
             exec.respond(MessageType.LIST_HEADER, "Unable to convert these users:");
             leftovers.forEach(user -> exec.respond(MessageType.LIST_ITEM, user.toString()));
         }
+        migrationRunning.compareAndSet(true, false);
     }
 
     private boolean hasImportRelevantGroup(PermissionUser user) {
@@ -144,6 +145,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         exec.respond(MessageType.RESULT_LINE, "Lanatus Manual PEx File Migration");
         respondMigrationStatus(exec);
         exec.respond(MessageType.WARNING, "Only proceed if you know exactly what you are doing!");
+        exec.respond(MessageType.WARNING, "Do not forget to specify a target rank for each group!");
         exec.respondUsage("start", "", "Immediately starts the migration");
     }
 
