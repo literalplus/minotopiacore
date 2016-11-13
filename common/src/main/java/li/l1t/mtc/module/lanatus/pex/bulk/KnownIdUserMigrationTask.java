@@ -8,14 +8,15 @@
 package li.l1t.mtc.module.lanatus.pex.bulk;
 
 import li.l1t.lanatus.api.LanatusClient;
+import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.lanatus.pex.LanatusAccountMigrator;
 import org.apache.logging.log4j.Logger;
-import ru.tehkode.permissions.PermissionManager;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 /**
  * A task that migrates all PEx users who have a unique id stored.
@@ -25,16 +26,18 @@ import java.util.Queue;
  */
 public class KnownIdUserMigrationTask extends AbstractPexImportTask {
     private static final Logger LOGGER = LogManager.getLogger(KnownIdUserMigrationTask.class);
+    private final Collection<PexImportUser> results = new LinkedList<>();
     private final int usersPerExecution;
     private final Queue<PexImportUser> workQueue;
     private final LanatusAccountMigrator migrator;
-    private final Collection<PexImportUser> results = new LinkedList<>();
+    private final XLoginProfileImporter importer;
 
-    public KnownIdUserMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LanatusClient lanatus) {
+    public KnownIdUserMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LanatusClient lanatus, XLoginProfileImporter importer) {
         this.workQueue = new LinkedList<>(workQueue);
         this.usersPerExecution = usersPerExecution;
         migrator = new LanatusAccountMigrator(lanatus);
         migrator.registerMigrationProduct();
+        this.importer = importer;
     }
 
     @Override
@@ -55,6 +58,9 @@ public class KnownIdUserMigrationTask extends AbstractPexImportTask {
 
     private void processUser(PexImportUser user) {
         if (user.hasUniqueId()) {
+            if(!importer.isKnownToXLogin(user.getUniqueId())) {
+                importer.createXLoginProfile(user.getUniqueId(), user.getUserName());
+            }
             migrator.migrateIfNecessary(user.getHandle(), user.getUniqueId());
         } else {
             results.add(user);

@@ -97,7 +97,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
 
     private KnownIdUserMigrationTask migrateUsersWithUniqueIdAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left with no account in Lanatus", input.size());
-        KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus);
+        KnownIdUserMigrationTask task = new KnownIdUserMigrationTask(input, 5, lanatus, new XLoginProfileImporter(module.getPlugin().getXLoginHook(), module.getPlugin().sql()));
         startTaskSync(task);
         return task;
     }
