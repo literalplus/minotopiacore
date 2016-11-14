@@ -105,7 +105,10 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     private UsernameOnlyMigrationTask migrateNonUniqueIdUsersAsync(Collection<PexImportUser> input) {
         LOGGER.info("There are {} users left without a unique id", input.size());
         LOGGER.info("Names: {}", input.stream().map(PexImportUser::getUserName).collect(Collectors.toList()));
-        UsernameOnlyMigrationTask task = new UsernameOnlyMigrationTask(input, 5, LocalDate.of(2014, 10, 31), new XLoginHook(module.getPlugin()), lanatus);
+        UsernameOnlyMigrationTask task = new UsernameOnlyMigrationTask(
+                input, 5, LocalDate.of(2014, 10, 31),
+                module.getPlugin().getXLoginHook(), lanatus, module.getPlugin().sql()
+        );
         startTaskSync(task);
         return task;
     }
