@@ -9,6 +9,7 @@ package li.l1t.mtc.module.lanatus.pex.bulk;
 
 import li.l1t.common.lib.com.mojang.api.profiles.HttpProfileRepository;
 import li.l1t.common.lib.com.mojang.api.profiles.Profile;
+import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.logging.LogManager;
@@ -38,15 +39,18 @@ class UsernameOnlyMigrationTask extends AbstractPexImportTask {
     private final Queue<PexImportUser> workQueue;
     private final int usersPerExecution;
     private final long referenceTimestampUnix;
+    private final XLoginProfileImporter importer;
     private final XLoginHook xLogin;
 
-    public UsernameOnlyMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LocalDate referenceTimestamp, XLoginHook xLogin, LanatusClient lanatus) {
+    public UsernameOnlyMigrationTask(Collection<PexImportUser> workQueue, int usersPerExecution, LocalDate referenceTimestamp,
+                                     XLoginHook xLogin, LanatusClient lanatus, SaneSql sql) {
         this.workQueue = new LinkedList<>(workQueue);
         this.usersPerExecution = usersPerExecution;
         this.referenceTimestampUnix = referenceTimestamp.atStartOfDay(ZoneId.systemDefault()).toInstant().getEpochSecond();
         migrator = new LanatusAccountMigrator(lanatus);
         migrator.registerMigrationProduct();
         this.xLogin = xLogin;
+        importer = new XLoginProfileImporter(xLogin, sql);
     }
 
     @Override
@@ -58,10 +62,14 @@ class UsernameOnlyMigrationTask extends AbstractPexImportTask {
                 return;
             }
             PexImportUser user = workQueue.poll();
-            Optional<UUID> uuid = figureOutUniqueId(user);
-            if (uuid.isPresent()) {
-                if(migrator.migrateIfNecessary(user.getHandle(), uuid.get())) {
-                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), uuid.get());
+            Optional<UUID> optionalId = figureOutUniqueId(user);
+            if (optionalId.isPresent()) {
+                UUID playerId = optionalId.get();
+                if(!importer.isKnownToXLogin(playerId)) {
+                    importer.createXLoginProfile(playerId, user.getUserName());
+                }
+                if(migrator.migrateIfNecessary(user.getHandle(), playerId)) {
+                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), playerId);
                 }
                 continue;
             }
