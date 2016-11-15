@@ -71,7 +71,7 @@ public final class MagicSnowballHitListener implements Listener {
         }
 
         plr.addPotionEffects(ConfigHelper.getSnowballEffects());
-        plr.playSound(hitLoc, Sound.WITHER_SPAWN, 1.0F, 2.0F);
+        plr.playSound(hitLoc, Sound.ENTITY_WITHER_SPAWN, 1.0F, 2.0F);
         hitLoc.getWorld().createExplosion(hitLoc.getX(), hitLoc.getY(), hitLoc.getZ(), 1.0F, false, false);
 
         MTCHelper.sendLocArgs("XU-snowballtarget", plr, true, plrShooter.getName());

@@ -171,8 +171,7 @@ public class ManagedConfiguration extends YamlConfiguration implements Cache {
 
     private void internalSave(Plugin plugin, String data) {
         //noinspection deprecation
-        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file),
-                UTF8_OVERRIDE && !UTF_BIG ? Charsets.UTF_8 : Charset.defaultCharset())) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8)) {
             writer.write(data);
         } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING, "Unable to save managed config to " + file.getAbsolutePath() + ":", e);
