@@ -83,11 +83,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         initialise();
     }
 
-    public MTC(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
-        super(loader, descriptionFile, dataFolder, file);
-        initialise();
-    }
-
     private void initialise() {
         //Must be here because command spy filters need the logging system before #enable()
         LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
