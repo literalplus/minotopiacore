@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.lanatus.pex.bulk;
 
+import com.google.common.base.Preconditions;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.logging.LogManager;
@@ -52,6 +53,10 @@ public class KnownIdUserMigrationTask extends AbstractPexImportTask {
                 return;
             }
             PexImportUser user = workQueue.poll();
+            if(user.getUserName().length() > 16) {
+                LOGGER.warn("Username too long: {}", user.getUserName());
+                continue;
+            }
             processUser(user);
         }
     }
