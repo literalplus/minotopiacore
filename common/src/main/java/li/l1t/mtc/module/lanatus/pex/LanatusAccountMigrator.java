@@ -91,8 +91,8 @@ public class LanatusAccountMigrator {
     }
 
     private void changeLanatusRankTo(String groupName, UUID playerId) {
-        LOGGER.info("LanatusPexModule: Attempting to set Lanatus group to {} for {}",
-                groupName, playerId);
+        LOGGER.info("New Lanatus group for {}: {}",
+                playerId, groupName);
         MutableAccount account = lanatus.accounts().findMutable(playerId);
         account.setLastRank(groupName);
         trySave(account);

@@ -68,9 +68,7 @@ class UsernameOnlyMigrationTask extends AbstractPexImportTask {
                 if(!importer.isKnownToXLogin(playerId)) {
                     importer.createXLoginProfile(playerId, user.getUserName());
                 }
-                if(migrator.migrateIfNecessary(user.getHandle(), playerId)) {
-                    LOGGER.info("Migrated user {} to Lanatus, assuming UUID {}.", user.getUserName(), playerId);
-                }
+                migrator.migrateIfNecessary(user.getHandle(), playerId);
                 continue;
             }
             unmatchedUsers.add(user);
