@@ -37,7 +37,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
     private final GroupMapping groupMapping = new GroupMapping();
     // Note: This field is required for the module loading to fail if PEx is not present
     private PermissionManager permissionManager = PermissionsEx.getPermissionManager();
-    @InjectMe
+    @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
     private boolean allowBulkConversion = false;
     private boolean allowAutomaticConversion = false;
