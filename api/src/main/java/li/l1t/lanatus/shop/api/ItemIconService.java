@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
  * @since 2016-16-11
  */
 public interface ItemIconService {
-    ItemStack createIconStack(Product product);
+    ItemStack createIconStack(Product product, boolean hasPosition);
 
     ItemStack createIconStack(Category category);
 
