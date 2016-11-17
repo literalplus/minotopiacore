@@ -48,6 +48,7 @@ class JdbcCategoryFetcher extends AbstractJdbcFetcher<Category> {
     @Override
     protected String buildSelect(String whereClause) {
         return "SELECT id, displayname, icon, description FROM " + SqlCategoryRepository.TABLE_NAME + " " +
-                whereClause;
+                whereClause + " " +
+                "ORDER BY sort DESC";
     }
 }
