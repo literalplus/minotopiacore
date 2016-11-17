@@ -24,6 +24,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -179,6 +180,12 @@ public class SimpleCommandExecution implements CommandExecution {
     @Override
     public void requireIsPlayer() throws PlayerOnlyException {
         PlayerOnlyException.checkIsPlayer(sender(), "/%s %s", label, joinedArgs(0));
+    }
+
+    @Override
+    public Player player() {
+        requireIsPlayer();
+        return (Player) sender;
     }
 
     @Override

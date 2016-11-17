@@ -14,6 +14,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +32,14 @@ public interface CommandExecution {
     CommandSender sender();
 
     /**
-     * @return a unique id representing the command sender, according to the specifications detailed
-     * in {@link li.l1t.common.util.CommandHelper#getSenderId(CommandSender)}
+     * @return the player that invoked this execution
+     * @throws PlayerOnlyException if the sender is not a player
+     */
+    Player player();
+
+    /**
+     * @return a unique id representing the command sender, according to the specifications detailed in {@link
+     * li.l1t.common.util.CommandHelper#getSenderId(CommandSender)}
      */
     UUID senderId();
 
@@ -82,8 +89,8 @@ public interface CommandExecution {
 
     /**
      * @param index the zero-based index of the {@link #args() argument} to find
-     * @return an optional containing the argument at given index, or an empty optional if there is
-     * no argument at that index
+     * @return an optional containing the argument at given index, or an empty optional if there is no argument at that
+     * index
      */
     Optional<String> findArg(int index);
 
@@ -115,8 +122,8 @@ public interface CommandExecution {
      *
      * @param message the message pattern, possibly using the format expressions specified in {@link
      *                MessageType#format(String, Object...)}
-     * @param params  the arguments for the pattern, will be inserted into the pattern like {@link
-     *                String#format(String, Object...)} does
+     * @param params  the arguments for the pattern, will be inserted into the pattern like {@link String#format(String,
+     *                Object...)} does
      */
     void respond(String message, Object... params);
 
@@ -127,8 +134,8 @@ public interface CommandExecution {
      * @param type    the message type to use for formatting
      * @param message the message pattern, possibly using the format expressions specified in {@link
      *                MessageType#format(String, Object...)}
-     * @param params  the arguments for the pattern, will be inserted into the pattern like {@link
-     *                String#format(String, Object...)} does
+     * @param params  the arguments for the pattern, will be inserted into the pattern like {@link String#format(String,
+     *                Object...)} does
      */
     void respond(MessageType type, String message, Object... params);
 
@@ -152,10 +159,8 @@ public interface CommandExecution {
      * Sends a message to the command sender, indicating the intended usage of given sub command
      * using given description and details.
      *
-     * @param subCommand  the sub command the usage refers to, or an empty string for the main
-     *                    command
-     * @param arguments   the standardised description of the arguments required for given sub
-     *                    command
+     * @param subCommand  the sub command the usage refers to, or an empty string for the main command
+     * @param arguments   the standardised description of the arguments required for given sub command
      * @param description a short ellipsis of what given sub command does
      */
     void respondUsage(String subCommand, String arguments, String description);
