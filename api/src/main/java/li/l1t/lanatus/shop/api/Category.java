@@ -26,4 +26,9 @@ public interface Category extends Identifiable {
      * @return the human-readable display name used by this category
      */
     String getDisplayName();
+
+    /***
+     * @return the human-readable description for this category
+     */
+    String getDescription();
 }
