@@ -21,13 +21,15 @@ public interface ItemIconService {
 
     ItemStack createIconStack(Category category);
 
+    ItemStack createPurchaseHelpStack();
+
     /**
      * Creates an informational stack with a provided title and description, which are translated to display name and
-     * lore. The item will be one that indicates information. Newlines in the description will be translated.
+     * lore. The item will be one that indicates information.
      *
-     * @param title       the title of the information
-     * @param description the contents of the information
+     * @param title            the title of the information
+     * @param descriptionLines the lines of the contents of the information
      * @return the info stack
      */
-    ItemStack createInfoStack(String title, String description);
+    ItemStack createInfoStack(String title, String... descriptionLines);
 }

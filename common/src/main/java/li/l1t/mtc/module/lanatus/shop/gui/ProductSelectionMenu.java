@@ -7,19 +7,22 @@
 
 package li.l1t.mtc.module.lanatus.shop.gui;
 
+import li.l1t.common.inventory.gui.ChildMenu;
 import li.l1t.common.inventory.gui.PagingListMenu;
 import li.l1t.common.inventory.gui.element.Placeholder;
+import li.l1t.common.inventory.gui.element.button.BackToParentButton;
 import li.l1t.lanatus.api.position.PositionRepository;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
-import li.l1t.mtc.module.lanatus.shop.gui.element.BackToParentButton;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.BiConsumer;
 
 /**
+ * Displays a menu for selecting a product from a category.
+ *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-17-11
  */
@@ -41,9 +44,9 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
 
     @Override
     protected void initTopRow() {
-        addToTopRow(0, new BackToParentButton());
+        addToTopRow(0, BackToParentButton.INSTANCE);
         addToTopRow(4, new Placeholder(iconService.createIconStack(category)));
-        addToTopRow(8, new BackToParentButton());
+        addToTopRow(8, BackToParentButton.INSTANCE);
     }
 
     @Override
@@ -65,5 +68,9 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
     @Override
     public CategorySelectionMenu getParent() {
         return parent;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 }

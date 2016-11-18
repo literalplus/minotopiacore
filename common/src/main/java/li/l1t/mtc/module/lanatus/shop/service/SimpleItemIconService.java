@@ -17,6 +17,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 /**
  * A service that creates item icons for various things.
  *
@@ -90,10 +92,26 @@ public class SimpleItemIconService implements ItemIconService {
     }
 
     @Override
-    public ItemStack createInfoStack(String title, String description) {
+    public ItemStack createPurchaseHelpStack() {
+        return createInfoStack(
+                "§eProdukt kaufen",
+                "§7Drücke auf den grünen",
+                "§7Lehmblock, um dieses Produkt",
+                "§7für Melonen zu kaufen.",
+                " ",
+                "§aBewege deine Maus",
+                "§aüber die Items links",
+                "§avon diesem, um",
+                "§aInformationen zu",
+                "§aerhalten."
+        );
+    }
+
+    @Override
+    public ItemStack createInfoStack(String title, String... descriptionLines) {
         return new ItemStackFactory(Material.SIGN)
                 .displayName("§e" + title)
-                .lore(description)
+                .lore(Arrays.asList(descriptionLines))
                 .produce();
     }
 }

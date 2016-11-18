@@ -11,6 +11,7 @@ import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.LanatusConnected;
 import li.l1t.lanatus.shop.api.CategoryRepository;
 import li.l1t.lanatus.shop.api.ItemIconService;
+import li.l1t.lanatus.shop.api.ProductBuyService;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.MTCModuleAdapter;
@@ -18,6 +19,7 @@ import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategoryRepository;
 import li.l1t.mtc.module.lanatus.shop.command.LanatusShopCommand;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
+import li.l1t.mtc.module.lanatus.shop.service.SimpleProductBuyService;
 
 /**
  * Module providing a GUI shop for Lanatus.
@@ -29,6 +31,7 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     public static final String NAME = "LanatusShop";
     private final CategoryRepository categoryRepository;
     private final ItemIconService iconService = new SimpleItemIconService();
+    private final ProductBuyService buyService;
     private final MTCLanatusClient lanatus;
 
     @InjectMe
@@ -36,6 +39,7 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
         super(NAME, true);
         this.lanatus = lanatus;
         this.categoryRepository = new SqlCategoryRepository(lanatus, lanatus.sql());
+        this.buyService = new SimpleProductBuyService(this.lanatus);
     }
 
     @Override
@@ -50,6 +54,10 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
 
     public ItemIconService iconService() {
         return iconService;
+    }
+
+    public ProductBuyService buyService() {
+        return buyService;
     }
 
     @Override

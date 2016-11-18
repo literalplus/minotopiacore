@@ -27,19 +27,8 @@ public interface ProductBuyService {
     void attemptPurchase(Player player, Product product);
 
     /**
-     * Aborts the purchase given player currently needs to confirm.
-     *
-     * @param player the player to operate on
-     */
-    void abortPurchase(Player player);
-
-    /**
      * @param player th player whose melons count to retrieve
      */
     int findCurrentMelonsCount(Player player);
 
-    /**
-     * @return a string detailing the purchase process, for display to players
-     */
-    String getBuyInfoText();
 }

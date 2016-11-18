@@ -15,6 +15,7 @@ import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 import li.l1t.mtc.module.lanatus.shop.gui.CategorySelectionMenu;
+import li.l1t.mtc.module.lanatus.shop.gui.ProductDetailMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductSelectionMenu;
 
 import java.util.Collection;
@@ -56,6 +57,9 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
     }
 
     private void handleProductClick(Product product, ProductSelectionMenu oldMenu) {
-        //TODO: Open product detail menu #631
+        ProductDetailMenu newMenu = new ProductDetailMenu(
+                product, oldMenu, module.iconService(), module.buyService()
+        );
+        newMenu.open();
     }
 }
