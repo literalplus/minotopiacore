@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.module.lanatus.shop;
 
+import li.l1t.lanatus.api.LanatusClient;
+import li.l1t.lanatus.api.LanatusConnected;
 import li.l1t.lanatus.shop.api.CategoryRepository;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.mtc.api.MTCPlugin;
@@ -23,7 +25,7 @@ import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-17-11
  */
-public class LanatusShopModule extends MTCModuleAdapter {
+public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnected {
     public static final String NAME = "LanatusShop";
     private final CategoryRepository categoryRepository;
     private final ItemIconService iconService = new SimpleItemIconService();
@@ -48,5 +50,10 @@ public class LanatusShopModule extends MTCModuleAdapter {
 
     public ItemIconService iconService() {
         return iconService;
+    }
+
+    @Override
+    public LanatusClient client() {
+        return lanatus;
     }
 }
