@@ -16,6 +16,7 @@ import li.l1t.lanatus.shop.api.ProductBuyService;
 import li.l1t.lanatus.shop.api.metrics.DummyPurchaseRecorder;
 import li.l1t.lanatus.shop.api.metrics.PurchaseRecorder;
 import li.l1t.mtc.api.chat.MessageType;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import org.bukkit.entity.Player;
 
 /**
@@ -28,6 +29,7 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
     private final LanatusClient lanatus;
     private PurchaseRecorder purchaseRecorder = new DummyPurchaseRecorder();
 
+    @InjectMe
     public SimpleProductBuyService(LanatusClient lanatus) {
         this.lanatus = lanatus;
     }
@@ -42,6 +44,7 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
         player.closeInventory();
         MessageType.RESULT_LINE.sendTo(player, "Versuche, %s für %s Melonen zu kaufen...", product, product.getMelonsCost());
         if (tryBuy(player, product)) {
+            purchaseRecorder.handlePurchase(player, product);
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "%s erfolgreich gekauft.", product.getDisplayName());
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Du hast noch %d Melonen.", findCurrentMelonsCount(player));
         } else {

@@ -31,18 +31,18 @@ import li.l1t.mtc.module.metrics.StatsdModule;
  */
 public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnected {
     public static final String NAME = "LanatusShop";
-    private final CategoryRepository categoryRepository;
     private final ItemIconService iconService = new SimpleItemIconService();
-    private final ProductBuyService buyService;
     @InjectMe
     private MTCLanatusClient lanatus;
     @InjectMe(required = false)
     private StatsdModule statsdModule;
+    @InjectMe
+    private SqlCategoryRepository categoryRepository;
+    @InjectMe
+    private SimpleProductBuyService buyService;
 
     protected LanatusShopModule() {
         super(NAME, true);
-        this.categoryRepository = new SqlCategoryRepository(lanatus, lanatus.sql());
-        this.buyService = new SimpleProductBuyService(this.lanatus);
     }
 
     @Override
