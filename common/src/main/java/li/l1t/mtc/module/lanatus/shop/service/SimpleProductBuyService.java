@@ -47,7 +47,7 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
         MessageType.RESULT_LINE.sendTo(player, "Versuche, %s§p für %s Melonen zu kaufen...", product.getDisplayName(), product.getMelonsCost());
         if (tryBuy(player, product)) {
             purchaseRecorder.handlePurchase(player, product);
-            MessageType.RESULT_LINE_SUCCESS.sendTo(player, "%s erfolgreich gekauft.", product.getDisplayName());
+            MessageType.RESULT_LINE_SUCCESS.sendTo(player, "%s§p erfolgreich gekauft.", product.getDisplayName());
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Du hast noch %d Melonen.", findCurrentMelonsCount(player));
         }
     }
