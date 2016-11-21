@@ -40,6 +40,7 @@ public class ProductDetailMenu extends TopRowMenu implements ChildMenu {
         this.parent = parent;
         this.iconService = iconService;
         this.buyService = buyService;
+        initTopRow();
     }
 
     @Override

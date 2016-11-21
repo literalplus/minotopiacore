@@ -40,6 +40,7 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
         this.clickHandler = clickHandler;
         this.iconService = iconService;
         this.positionRepository = positionRepository;
+        initTopRow();
     }
 
     @Override
