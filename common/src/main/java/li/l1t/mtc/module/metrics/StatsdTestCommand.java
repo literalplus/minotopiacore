@@ -43,6 +43,9 @@ public class StatsdTestCommand extends BukkitExecutionExecutor {
             case "c":
                 handleCounter(metric, value);
                 break;
+            case "i":
+                handleIncrement(metric);
+                break;
             case "g":
                 handleGauge(metric, value);
                 break;
@@ -58,12 +61,16 @@ public class StatsdTestCommand extends BukkitExecutionExecutor {
         module.statsd().count(metric, value);
     }
 
+    private void handleIncrement(String metric) {
+        module.statsd().increment(metric);
+    }
+
     private void handleGauge(String metric, int value) {
         module.statsd().gauge(metric, value);
     }
 
     private void respondUsage(CommandExecution exec) {
-        exec.respondUsage("", "<metric> <(int) value>", "Sends a test metric of tyype counter");
+        exec.respondUsage("", "<metric> <(int) value>", "Sends a test metric of type counter");
         exec.respondUsage("", "<metric> <(int) value> [type]", "Sends a test metric of a type");
         exec.respond(MessageType.RESULT_LINE, "c=counter, g=gauge");
     }
