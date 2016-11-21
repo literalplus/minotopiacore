@@ -14,6 +14,7 @@ import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.lanatus.shop.api.ProductBuyService;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.MTCModuleAdapter;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategoryRepository;
@@ -22,6 +23,7 @@ import li.l1t.mtc.module.lanatus.shop.metrics.StatsdPurchaseRecorder;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleProductBuyService;
 import li.l1t.mtc.module.metrics.StatsdModule;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Module providing a GUI shop for Lanatus.
@@ -31,6 +33,7 @@ import li.l1t.mtc.module.metrics.StatsdModule;
  */
 public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnected {
     public static final String NAME = "LanatusShop";
+    private static final Logger LOGGER = LogManager.getLogger(LanatusShopModule.class);
     private final ItemIconService iconService = new SimpleItemIconService();
     @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
@@ -50,7 +53,10 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
         super.enable(plugin);
         registerCommand(new LanatusShopCommand(this), "lashop", "pshop");
         if (statsdModule != null) {
+            LOGGER.info("Using Statsd purchase recorder.");
             buyService.setPurchaseRecorder(new StatsdPurchaseRecorder(statsdModule.statsd()));
+        } else {
+            LOGGER.info("Using dummy purchase recorder.");
         }
     }
 
