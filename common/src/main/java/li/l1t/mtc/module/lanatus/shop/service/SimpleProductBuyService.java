@@ -13,6 +13,8 @@ import li.l1t.lanatus.api.LanatusConnected;
 import li.l1t.lanatus.api.exception.NoSuchProductException;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ProductBuyService;
+import li.l1t.lanatus.shop.api.metrics.DummyPurchaseRecorder;
+import li.l1t.lanatus.shop.api.metrics.PurchaseRecorder;
 import li.l1t.mtc.api.chat.MessageType;
 import org.bukkit.entity.Player;
 
@@ -24,6 +26,7 @@ import org.bukkit.entity.Player;
  */
 public class SimpleProductBuyService implements ProductBuyService, LanatusConnected {
     private final LanatusClient lanatus;
+    private PurchaseRecorder purchaseRecorder = new DummyPurchaseRecorder();
 
     public SimpleProductBuyService(LanatusClient lanatus) {
         this.lanatus = lanatus;
@@ -67,4 +70,8 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
         return client().accounts().findOrDefault(player.getUniqueId()).getMelonsCount();
     }
 
+    @Override
+    public void setPurchaseRecorder(PurchaseRecorder purchaseRecorder) {
+        this.purchaseRecorder = purchaseRecorder;
+    }
 }

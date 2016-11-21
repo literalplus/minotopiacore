@@ -18,8 +18,10 @@ import li.l1t.mtc.module.MTCModuleAdapter;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategoryRepository;
 import li.l1t.mtc.module.lanatus.shop.command.LanatusShopCommand;
+import li.l1t.mtc.module.lanatus.shop.metrics.StatsdPurchaseRecorder;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleProductBuyService;
+import li.l1t.mtc.module.metrics.StatsdModule;
 
 /**
  * Module providing a GUI shop for Lanatus.
@@ -33,6 +35,8 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     private final ItemIconService iconService = new SimpleItemIconService();
     private final ProductBuyService buyService;
     private final MTCLanatusClient lanatus;
+    @InjectMe(required = false)
+    private StatsdModule statsdModule;
 
     @InjectMe
     protected LanatusShopModule(MTCLanatusClient lanatus) {
@@ -46,6 +50,9 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerCommand(new LanatusShopCommand(this), "lashop", "pshop");
+        if (statsdModule != null) {
+            buyService.setPurchaseRecorder(new StatsdPurchaseRecorder(statsdModule.statsd()));
+        }
     }
 
     public CategoryRepository categories() {

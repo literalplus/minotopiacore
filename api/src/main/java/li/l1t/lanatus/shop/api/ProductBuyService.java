@@ -8,6 +8,7 @@
 package li.l1t.lanatus.shop.api;
 
 import li.l1t.lanatus.api.product.Product;
+import li.l1t.lanatus.shop.api.metrics.PurchaseRecorder;
 import org.bukkit.entity.Player;
 
 /**
@@ -31,4 +32,10 @@ public interface ProductBuyService {
      */
     int findCurrentMelonsCount(Player player);
 
+    /**
+     * Sets the pruchase recorder this service notifer of purchases.
+     *
+     * @param recorder the recoorder to notify
+     */
+    void setPurchaseRecorder(PurchaseRecorder recorder);
 }
