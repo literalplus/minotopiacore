@@ -29,6 +29,10 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
+        <dependency>
+            <groupId>me.minotopia</groupId>
+            <artifactId>bukkit-statsd-client</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -122,6 +126,7 @@
                             <include>org.reflections:reflections</include>
                             <include>org.javassist:javassist</include>
                             <include>com.lmax:disruptor</include>
+                            <include>me.minotopia:bukkit-statsd-client</include>
                         </includes>
                     </artifactSet>
                     <relocations>
