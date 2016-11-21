@@ -44,7 +44,7 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
     @Override
     public void attemptPurchase(Player player, Product product) {
         player.closeInventory();
-        MessageType.RESULT_LINE.sendTo(player, "Versuche, %s für %s Melonen zu kaufen...", product, product.getMelonsCost());
+        MessageType.RESULT_LINE.sendTo(player, "Versuche, %s§p für %s Melonen zu kaufen...", product.getDisplayName(), product.getMelonsCost());
         if (tryBuy(player, product)) {
             purchaseRecorder.handlePurchase(player, product);
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "%s erfolgreich gekauft.", product.getDisplayName());
