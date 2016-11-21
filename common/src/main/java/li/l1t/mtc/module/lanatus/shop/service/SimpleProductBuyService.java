@@ -49,8 +49,6 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
             purchaseRecorder.handlePurchase(player, product);
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "%s erfolgreich gekauft.", product.getDisplayName());
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Du hast noch %d Melonen.", findCurrentMelonsCount(player));
-        } else {
-            MessageType.USER_ERROR.sendTo(player, "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.");
         }
     }
 
@@ -64,13 +62,13 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
             MessageType.INTERNAL_ERROR.sendTo(player, "Unbekanntes Produkt.");
             return false;
         } catch (DatabaseException e) {
-            MessageType.INTERNAL_ERROR.sendTo(player, "Datenbankfehler.");
+            MessageType.INTERNAL_ERROR.sendTo(player, "Datenbankfehler. Bitte versuche es später erneut.");
             return false;
         } catch (NotEnoughMelonsException e) {
             MessageType.USER_ERROR.sendTo(player, e.getMessage());
             return false;
-        }catch (Exception e) {
-            MessageType.INTERNAL_ERROR.sendTo(player, "Interner Fehler.");
+        } catch (Exception e) {
+            MessageType.INTERNAL_ERROR.sendTo(player, "Interner Fehler. Bitte versuche es später erneut.");
             e.printStackTrace();
             return false;
         }
