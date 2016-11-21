@@ -61,7 +61,7 @@ public class ConstructorInjection<T, V> extends AbstractInjection<T> {
 
     @Override
     public String toString() {
-        return "{ConstructorInjection: " + super.toString() +
+        return "{ConstructorInjection" +
                 " into constructor=" + constructor +
                 " with annotation=" + annotation +
                 '}';

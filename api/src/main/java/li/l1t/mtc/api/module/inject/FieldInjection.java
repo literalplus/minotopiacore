@@ -60,7 +60,7 @@ public class FieldInjection<T> extends AbstractInjection<T> {
 
     @Override
     public String toString() {
-        return "{FieldInjection: " + super.toString() +
+        return "{FieldInjection" +
                 " into field=" + field +
                 " with annotation=" + annotation +
                 '}';
