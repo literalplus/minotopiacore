@@ -11,6 +11,7 @@ import li.l1t.common.exception.DatabaseException;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.LanatusConnected;
 import li.l1t.lanatus.api.exception.NoSuchProductException;
+import li.l1t.lanatus.api.exception.NotEnoughMelonsException;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ProductBuyService;
 import li.l1t.lanatus.shop.api.metrics.DummyPurchaseRecorder;
@@ -64,6 +65,13 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
             return false;
         } catch (DatabaseException e) {
             MessageType.INTERNAL_ERROR.sendTo(player, "Datenbankfehler.");
+            return false;
+        } catch (NotEnoughMelonsException e) {
+            MessageType.USER_ERROR.sendTo(player, e.getMessage());
+            return false;
+        }catch (Exception e) {
+            MessageType.INTERNAL_ERROR.sendTo(player, "Interner Fehler.");
+            e.printStackTrace();
             return false;
         }
         return true;
