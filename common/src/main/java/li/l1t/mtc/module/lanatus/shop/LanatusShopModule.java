@@ -32,7 +32,7 @@ import li.l1t.mtc.module.metrics.StatsdModule;
 public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnected {
     public static final String NAME = "LanatusShop";
     private final ItemIconService iconService = new SimpleItemIconService();
-    @InjectMe
+    @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
     @InjectMe(required = false)
     private StatsdModule statsdModule;
