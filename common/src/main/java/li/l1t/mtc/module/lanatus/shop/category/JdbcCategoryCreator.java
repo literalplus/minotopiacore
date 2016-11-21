@@ -22,6 +22,9 @@ import java.sql.SQLException;
 class JdbcCategoryCreator extends AbstractJdbcEntityCreator<Category> {
     @Override
     public Category createFromCurrentRow(ResultSet rs) throws SQLException {
-        return new SqlCategory(uuid(rs, "id"), rs.getString("icon"), rs.getString("displayName"));
+        return new SqlCategory(
+                uuid(rs, "id"), rs.getString("icon"),
+                rs.getString("displayName"), rs.getString("description")
+        );
     }
 }

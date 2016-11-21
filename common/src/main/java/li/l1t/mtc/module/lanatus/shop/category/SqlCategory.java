@@ -23,10 +23,11 @@ class SqlCategory implements Category {
     private String displayName;
     private String description;
 
-    SqlCategory(UUID uniqueId, String iconName, String displayName) {
+    SqlCategory(UUID uniqueId, String iconName, String displayName, String description) {
         this.uniqueId = uniqueId;
         this.iconName = iconName;
         this.displayName = displayName;
+        this.description = description;
     }
 
     @Override
