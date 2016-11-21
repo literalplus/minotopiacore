@@ -87,7 +87,7 @@ public class SimpleItemIconService implements ItemIconService {
     public ItemStack createIconStack(Category category) {
         ItemStackFactory factory = new ItemStackFactory(baseStack(category.getIconName()));
         factory.displayName(nullableString(category.getDisplayName()));
-        factory.lore(category.getDescription());
+        factory.lore(nullableString(category.getDescription()));
         return factory.produce();
     }
 
