@@ -31,14 +31,16 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     public static final String TABLE_NAME = "mt_main.lanatus_category";
     public static final String PRODUCT_MAPPING_TABLE_NAME = "mt_main.lanatus_category_product";
     private final LanatusClient client;
-    private final JdbcCategoryFetcher categoryFetcher = new JdbcCategoryFetcher(new JdbcCategoryCreator(), sql());
-    private final JdbcCategoryProductFetcher categoryProductFetcher = new JdbcCategoryProductFetcher(sql(), client().products());
+    private final JdbcCategoryFetcher categoryFetcher;
+    private final JdbcCategoryProductFetcher categoryProductFetcher;
     private final CategoryCache categoryCache = new CategoryCache(Duration.ofMinutes(5));
 
     @InjectMe
     public SqlCategoryRepository(MTCLanatusClient client, SaneSql sql) {
         super(sql);
         this.client = client;
+        categoryProductFetcher = new JdbcCategoryProductFetcher(sql(), client().products());
+        categoryFetcher = new JdbcCategoryFetcher(new JdbcCategoryCreator(), sql());
     }
 
     @Override

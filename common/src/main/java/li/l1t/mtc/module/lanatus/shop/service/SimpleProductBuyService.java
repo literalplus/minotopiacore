@@ -17,6 +17,7 @@ import li.l1t.lanatus.shop.api.metrics.DummyPurchaseRecorder;
 import li.l1t.lanatus.shop.api.metrics.PurchaseRecorder;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import org.bukkit.entity.Player;
 
 /**
@@ -30,7 +31,7 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
     private PurchaseRecorder purchaseRecorder = new DummyPurchaseRecorder();
 
     @InjectMe
-    public SimpleProductBuyService(LanatusClient lanatus) {
+    public SimpleProductBuyService(MTCLanatusClient lanatus) {
         this.lanatus = lanatus;
     }
 
