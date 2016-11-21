@@ -34,14 +34,13 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     private final CategoryRepository categoryRepository;
     private final ItemIconService iconService = new SimpleItemIconService();
     private final ProductBuyService buyService;
-    private final MTCLanatusClient lanatus;
+    @InjectMe
+    private MTCLanatusClient lanatus;
     @InjectMe(required = false)
     private StatsdModule statsdModule;
 
-    @InjectMe
-    protected LanatusShopModule(MTCLanatusClient lanatus) {
+    protected LanatusShopModule() {
         super(NAME, true);
-        this.lanatus = lanatus;
         this.categoryRepository = new SqlCategoryRepository(lanatus, lanatus.sql());
         this.buyService = new SimpleProductBuyService(this.lanatus);
     }
