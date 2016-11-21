@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.module.metrics;
 
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
@@ -45,6 +47,13 @@ public class StatsdModule extends ConfigurableMTCModule implements StatsDClientE
         port = configuration.getInt(PORT_PATH);
         prefix = configuration.getString(PREFIX_PATH);
         configuration.asyncSave(getPlugin());
+    }
+
+    @Override
+    public void enable(MTCPlugin plugin) throws Exception {
+        super.enable(plugin);
+        registerCommand(new StatsdTestCommand(this), "sdtest")
+                .behaviour(CommandBehaviours.permissionChecking("mtc.statsdtest"));
     }
 
     public NonBlockingStatsDClient statsd() {
