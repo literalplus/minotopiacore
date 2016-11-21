@@ -13,6 +13,7 @@ import li.l1t.common.inventory.gui.TopRowMenu;
 import li.l1t.common.inventory.gui.element.LambdaMenuElement;
 import li.l1t.common.inventory.gui.element.Placeholder;
 import li.l1t.common.inventory.gui.element.button.BackToParentButton;
+import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.lanatus.shop.api.ProductBuyService;
@@ -20,6 +21,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -56,12 +58,33 @@ public class ProductDetailMenu extends TopRowMenu implements ChildMenu {
 
     @SuppressWarnings("deprecation")
     private LambdaMenuElement<ProductDetailMenu> confirmButton() {
-        return new LambdaMenuElement<>(ProductDetailMenu.class, this::handleConfirm, new ItemStack(Material.STAINED_CLAY, 1, DyeColor.GREEN.getWoolData()));
+        return new LambdaMenuElement<>(ProductDetailMenu.class, this::handleConfirm, confirmStack());
+    }
+
+    @NotNull
+    private ItemStack confirmStack() {
+        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, DyeColor.GREEN.getWoolData()))
+                .displayName("§a§lBestätigen")
+                .lore("§7Hier klicken, um dieses").lore("§7Produkt zu kaufen")
+                .lore(" ").lore("§e" + product.getMelonsCost() + " " + melonPlural(product.getMelonsCost()))
+                .produce();
+    }
+
+    private String melonPlural(int melonsCount) {
+        return "Melone" + (melonsCount == 1 ? "" : "n");
     }
 
     @SuppressWarnings("deprecation")
     private LambdaMenuElement<ProductDetailMenu> abortButton() {
-        return new LambdaMenuElement<>(ProductDetailMenu.class, this::handleAbort, new ItemStack(Material.STAINED_CLAY, 1, DyeColor.RED.getWoolData()));
+        return new LambdaMenuElement<>(ProductDetailMenu.class, this::handleAbort, abortStack());
+    }
+
+    @NotNull
+    private ItemStack abortStack() {
+        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, DyeColor.RED.getWoolData()))
+                .displayName("§c§lAbbrechen")
+                .lore("§7Hier klicken, um").lore("§7abzubrechen")
+                .produce();
     }
 
     private void handleAbort(InventoryClickEvent evt, ProductDetailMenu menu) {
