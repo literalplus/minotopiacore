@@ -14,6 +14,8 @@ import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.CategoryRepository;
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -34,7 +36,8 @@ public class SqlCategoryRepository implements CategoryRepository, SqlConnected {
     private final JdbcCategoryProductFetcher categoryProductFetcher = new JdbcCategoryProductFetcher(sql(), client().products());
     private final CategoryCache categoryCache = new CategoryCache(Duration.ofMinutes(5));
 
-    public SqlCategoryRepository(LanatusClient client, SaneSql sql) {
+    @InjectMe
+    public SqlCategoryRepository(MTCLanatusClient client, SaneSql sql) {
         this.client = client;
         this.sql = sql;
     }
