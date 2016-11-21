@@ -70,4 +70,9 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     public LanatusClient client() {
         return lanatus;
     }
+
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        categoryRepository.clearCache();
+    }
 }
