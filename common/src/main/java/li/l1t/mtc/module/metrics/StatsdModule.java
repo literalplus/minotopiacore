@@ -32,7 +32,7 @@ public class StatsdModule extends ConfigurableMTCModule implements StatsDClientE
     private int port;
 
     protected StatsdModule() {
-        super(NAME, "modules/statsd.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, true);
+        super(NAME, "modules/statsd.cfg.yml", ClearCacheBehaviour.RELOAD, true);
     }
 
     @Override
