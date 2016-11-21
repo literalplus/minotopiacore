@@ -10,6 +10,7 @@ package li.l1t.mtc.module.lanatus.shop.metrics;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.metrics.PurchaseRecorder;
 import me.minotopia.statsd_bukkit.NonBlockingStatsDClient;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -35,6 +36,6 @@ public class StatsdPurchaseRecorder implements PurchaseRecorder {
     }
 
     private String sanitise(String insaneString) {
-        return insaneString.replaceAll("\\W", "_");
+        return ChatColor.stripColor(insaneString).replaceAll("\\W", "_");
     }
 }
