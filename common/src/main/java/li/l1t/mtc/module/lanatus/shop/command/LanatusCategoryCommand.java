@@ -164,8 +164,8 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
     }
 
     private boolean handleProductRemove(CommandExecution exec, Category category) {
-        ProductSelectionMenu menu = new ProductSelectionMenu(
-                null, category, productRemoveClickHandler(exec, category), module.iconService(), module.client().positions()
+        ProductSelectionMenu menu = ProductSelectionMenu.withoutParent(
+                category, productRemoveClickHandler(exec, category), exec.player(), module
         );
         menu.addItems(module.categories().findProductsOf(category));
         menu.open();
@@ -180,8 +180,8 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
     }
 
     private boolean handleProductAdd(CommandExecution exec, Category category) {
-        ProductSelectionMenu menu = new ProductSelectionMenu(
-                null, category, productAddClickHandler(exec, category), module.iconService(), module.client().positions()
+        ProductSelectionMenu menu = ProductSelectionMenu.withoutParent(
+                category, productAddClickHandler(exec, category), exec.player(), module
         );
         menu.addItems(findProductsNotInCategory(category));
         menu.open();

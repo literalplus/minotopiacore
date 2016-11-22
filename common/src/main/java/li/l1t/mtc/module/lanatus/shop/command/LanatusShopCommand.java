@@ -49,8 +49,8 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
     }
 
     private void handleCategoryClick(Category category, CategorySelectionMenu oldMenu) {
-        ProductSelectionMenu newMenu = new ProductSelectionMenu(
-                oldMenu, category, this::handleProductClick, module.iconService(), module.client().positions()
+        ProductSelectionMenu newMenu = ProductSelectionMenu.withParent(
+                oldMenu, category, this::handleProductClick, module
         );
         newMenu.addItems(module.categories().findProductsOf(category));
         newMenu.open();

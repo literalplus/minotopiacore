@@ -15,8 +15,11 @@ import li.l1t.lanatus.api.position.PositionRepository;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
+import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.function.BiConsumer;
 
@@ -33,14 +36,32 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
     private final ItemIconService iconService;
     private final PositionRepository positionRepository;
 
-    public ProductSelectionMenu(CategorySelectionMenu parent, Category category, BiConsumer<Product, ProductSelectionMenu> clickHandler, ItemIconService iconService, PositionRepository positionRepository) {
-        super(parent.getPlugin(), parent.getPlayer());
+    ProductSelectionMenu(CategorySelectionMenu parent, Category category,
+                         BiConsumer<Product, ProductSelectionMenu> clickHandler, ItemIconService iconService,
+                         PositionRepository positionRepository, Plugin plugin, Player player) {
+        super(plugin, player);
         this.parent = parent;
         this.category = category;
         this.clickHandler = clickHandler;
         this.iconService = iconService;
         this.positionRepository = positionRepository;
         initTopRow();
+    }
+
+    public static ProductSelectionMenu withParent(CategorySelectionMenu parent, Category category,
+                                                  BiConsumer<Product, ProductSelectionMenu> clickHandler, LanatusShopModule module) {
+        return new ProductSelectionMenu(
+                parent, category, clickHandler, module.iconService(),
+                module.client().positions(), module.getPlugin(), parent.getPlayer()
+        );
+    }
+
+    public static ProductSelectionMenu withoutParent(Category category, BiConsumer<Product, ProductSelectionMenu> clickHandler,
+                                                     Player player, LanatusShopModule module) {
+        return new ProductSelectionMenu(
+                null, category, clickHandler, module.iconService(),
+                module.client().positions(), module.getPlugin(), player
+        );
     }
 
     @Override
