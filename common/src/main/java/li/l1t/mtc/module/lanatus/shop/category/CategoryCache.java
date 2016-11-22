@@ -42,7 +42,7 @@ class CategoryCache {
 
     public Collection<Product> getOrComputeProductsOf(Category category, Function<Category, Collection<Product>> function) {
         Optional<Collection<Product>> cached = findCachedProducts(category);
-        if(cached.isPresent()) {
+        if (cached.isPresent()) {
             return cached.get();
         } else {
             Collection<Product> computed = function.apply(category);
@@ -81,6 +81,17 @@ class CategoryCache {
             return Optional.empty();
         } else {
             return Optional.of(allCategoriesCache);
+        }
+    }
+
+    public Optional<Category> findCachedCategory(UUID categoryId) {
+        Optional<Collection<Category>> categories = findAllCategoriesCached();
+        if (!categories.isPresent()) {
+            return Optional.empty();
+        } else {
+            return categories.get().stream()
+                    .filter(cat -> cat.getUniqueId().equals(categoryId))
+                    .findFirst();
         }
     }
 

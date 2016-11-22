@@ -12,6 +12,8 @@ import li.l1t.lanatus.api.LanatusRepository;
 import li.l1t.lanatus.api.product.Product;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * A repository for categories. May heavily cache all calls.
@@ -24,6 +26,14 @@ public interface CategoryRepository extends LanatusRepository {
      * @return a collection of all known categories, or an empty collection if there are none
      */
     Collection<Category> findAll() throws DatabaseException;
+
+    /**
+     * Finds a single category by its unique id
+     *
+     * @param categoryId the unique id
+     * @return an optional containing the category with given id, or an empty optional if there is none
+     */
+    Optional<Category> findSingle(UUID categoryId);
 
     /**
      * @param category the category to find the products for

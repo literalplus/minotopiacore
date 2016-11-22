@@ -17,6 +17,8 @@ import li.l1t.lanatus.sql.common.JdbcEntityCreator;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Fetches categories from an underlying SQL database.
@@ -31,8 +33,8 @@ class JdbcCategoryFetcher extends AbstractJdbcFetcher<Category> {
 
     public Collection<Category> findAllCategories() {
         ImmutableList.Builder<Category> resultBuilder = ImmutableList.builder();
-        try(QueryResult result = selectAll()) {
-            while(result.rs().next()) {
+        try (QueryResult result = selectAll()) {
+            while (result.rs().next()) {
                 resultBuilder.add(creator.createFromCurrentRow(result.rs()));
             }
         } catch (SQLException e) {
@@ -43,6 +45,22 @@ class JdbcCategoryFetcher extends AbstractJdbcFetcher<Category> {
 
     private QueryResult selectAll() {
         return select("");
+    }
+
+    public Optional<Category> findSingle(UUID categoryId) {
+        try (QueryResult result = selectById(categoryId)) {
+            if (result.rs().next()) {
+                return Optional.of(creator.createFromCurrentRow(result.rs()));
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw DatabaseException.wrap(e);
+        }
+    }
+
+    private QueryResult selectById(UUID categoryId) {
+        return select("WHERE id = ?", categoryId.toString());
     }
 
     @Override

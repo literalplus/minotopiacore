@@ -19,6 +19,7 @@ import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -46,6 +47,13 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     @Override
     public Collection<Category> findAll() throws DatabaseException {
         return categoryCache.getOrComputeAllCategories(categoryFetcher::findAllCategories);
+    }
+
+    @Override
+    public Optional<Category> findSingle(UUID categoryId) {
+        return categoryCache.findCachedCategory(categoryId)
+                .map(Optional::of)
+                .orElseGet(() -> categoryFetcher.findSingle(categoryId));
     }
 
     @Override
