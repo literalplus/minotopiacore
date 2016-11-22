@@ -22,13 +22,19 @@ public interface Category extends Identifiable {
      */
     String getIconName();
 
+    void setIconName(String iconName);
+
     /**
      * @return the human-readable display name used by this category
      */
     String getDisplayName();
 
+    void setDisplayName(String displayName);
+
     /***
      * @return the human-readable description for this category
      */
     String getDescription();
+
+    void setDescription(String description);
 }

@@ -40,6 +40,7 @@ public class SqlCategory implements Category {
         return iconName;
     }
 
+    @Override
     public void setIconName(String iconName) {
         this.iconName = iconName;
     }
@@ -49,6 +50,7 @@ public class SqlCategory implements Category {
         return displayName;
     }
 
+    @Override
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
@@ -58,6 +60,7 @@ public class SqlCategory implements Category {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
