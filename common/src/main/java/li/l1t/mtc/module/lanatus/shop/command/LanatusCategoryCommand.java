@@ -191,8 +191,9 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
     private Collection<Product> findProductsNotInCategory(Category category) {
         Collection<Product> allProducts = module.client().products().query().inAnyModule().andActive().execute();
         Collection<Product> categoryProducts = module.categories().findProductsOf(category);
-        allProducts.removeAll(categoryProducts);
-        return allProducts;
+        return allProducts.stream()
+                .filter(prod -> !categoryProducts.contains(prod))
+                .collect(Collectors.toList());
     }
 
     private BiConsumer<Product, ProductSelectionMenu> productAddClickHandler(CommandExecution exec, Category category) {
