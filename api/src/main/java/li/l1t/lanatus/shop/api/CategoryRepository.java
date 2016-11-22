@@ -49,4 +49,18 @@ public interface CategoryRepository extends LanatusRepository {
      * @throws DatabaseException if a database error occurs
      */
     void save(Category category) throws DatabaseException;
+
+    /**
+     * @param category the category to operate on
+     * @param product  the product to associate with the category
+     * @throws DatabaseException if a database error occurs
+     */
+    void associate(Category category, Product product) throws DatabaseException;
+
+    /**
+     * @param category the category to operate on
+     * @param product  the product to dissociate from the category
+     * @throws DatabaseException if a database error occurs
+     */
+    void dissociate(Category category, Product product);
 }

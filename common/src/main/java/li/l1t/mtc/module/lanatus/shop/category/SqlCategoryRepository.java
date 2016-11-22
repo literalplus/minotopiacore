@@ -32,10 +32,11 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     public static final String TABLE_NAME = "mt_main.lanatus_category";
     public static final String PRODUCT_MAPPING_TABLE_NAME = "mt_main.lanatus_category_product";
     private final LanatusClient client;
+    private final JdbcCategoryWriter categoryWriter;
     private final JdbcCategoryFetcher categoryFetcher;
+    private final JdbcCategoryProductWriter categoryProductWriter;
     private final JdbcCategoryProductFetcher categoryProductFetcher;
     private final CategoryCache categoryCache = new CategoryCache(Duration.ofMinutes(5));
-    private final JdbcCategoryWriter categoryWriter;
 
     @InjectMe
     public SqlCategoryRepository(MTCLanatusClient client, SaneSql sql) {
@@ -44,6 +45,7 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
         categoryProductFetcher = new JdbcCategoryProductFetcher(sql(), client().products());
         categoryFetcher = new JdbcCategoryFetcher(new JdbcCategoryCreator(), sql());
         categoryWriter = new JdbcCategoryWriter(sql());
+        categoryProductWriter = new JdbcCategoryProductWriter(sql());
     }
 
     @Override
@@ -66,6 +68,16 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     @Override
     public void save(Category category) throws DatabaseException {
         categoryWriter.save(category);
+    }
+
+    @Override
+    public void associate(Category category, Product product) throws DatabaseException {
+        categoryProductWriter.createAssociation(category, product);
+    }
+
+    @Override
+    public void dissociate(Category category, Product product) {
+        categoryProductWriter.removeAssociation(category, product);
     }
 
     @Override
