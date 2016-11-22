@@ -9,15 +9,16 @@ package li.l1t.mtc.module.lanatus.shop;
 
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.LanatusConnected;
-import li.l1t.lanatus.shop.api.CategoryRepository;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.lanatus.shop.api.ProductBuyService;
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.MTCModuleAdapter;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategoryRepository;
+import li.l1t.mtc.module.lanatus.shop.command.LanatusCategoryCommand;
 import li.l1t.mtc.module.lanatus.shop.command.LanatusShopCommand;
 import li.l1t.mtc.module.lanatus.shop.metrics.StatsdPurchaseRecorder;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
@@ -52,6 +53,8 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerCommand(new LanatusShopCommand(this), "lashop", "pshop");
+        registerCommand(new LanatusCategoryCommand(this), "lacat")
+                .behaviour(CommandBehaviours.permissionChecking("mtc.lanatus.admin"));
         if (statsdModule != null) {
             LOGGER.info("Using Statsd purchase recorder.");
             buyService.setPurchaseRecorder(new StatsdPurchaseRecorder(statsdModule.statsd()));
@@ -60,7 +63,7 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
         }
     }
 
-    public CategoryRepository categories() {
+    public SqlCategoryRepository categories() {
         return categoryRepository;
     }
 

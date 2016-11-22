@@ -45,9 +45,11 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
 
     @Override
     protected void initTopRow() {
-        addToTopRow(0, BackToParentButton.INSTANCE);
+        if (parent != null) {
+            addToTopRow(0, BackToParentButton.INSTANCE);
+            addToTopRow(8, BackToParentButton.INSTANCE);
+        }
         addToTopRow(4, new Placeholder(iconService.createIconStack(category)));
-        addToTopRow(8, BackToParentButton.INSTANCE);
     }
 
     @Override
