@@ -35,6 +35,7 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     private final JdbcCategoryFetcher categoryFetcher;
     private final JdbcCategoryProductFetcher categoryProductFetcher;
     private final CategoryCache categoryCache = new CategoryCache(Duration.ofMinutes(5));
+    private final JdbcCategoryWriter categoryWriter;
 
     @InjectMe
     public SqlCategoryRepository(MTCLanatusClient client, SaneSql sql) {
@@ -42,6 +43,7 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
         this.client = client;
         categoryProductFetcher = new JdbcCategoryProductFetcher(sql(), client().products());
         categoryFetcher = new JdbcCategoryFetcher(new JdbcCategoryCreator(), sql());
+        categoryWriter = new JdbcCategoryWriter(sql());
     }
 
     @Override
@@ -59,6 +61,11 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     @Override
     public Collection<Product> findProductsOf(Category category) throws DatabaseException {
         return categoryCache.getOrComputeProductsOf(category, categoryProductFetcher::findAssociatedProducts);
+    }
+
+    @Override
+    public void save(Category category) throws DatabaseException {
+        categoryWriter.save(category);
     }
 
     @Override

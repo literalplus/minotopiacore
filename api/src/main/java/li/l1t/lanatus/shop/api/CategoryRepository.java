@@ -40,4 +40,13 @@ public interface CategoryRepository extends LanatusRepository {
      * @return the collection of products associated with given category, or an empty collection if none
      */
     Collection<Product> findProductsOf(Category category) throws DatabaseException;
+
+    /**
+     * Saves given entity's status to the database. Note that this does not respect remote changes and blindly
+     * overwrites everything.
+     *
+     * @param category the category to save
+     * @throws DatabaseException if a database error occurs
+     */
+    void save(Category category) throws DatabaseException;
 }

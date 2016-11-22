@@ -17,7 +17,7 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-17-11
  */
-class SqlCategory implements Category {
+public class SqlCategory implements Category {
     private final UUID uniqueId;
     private String iconName;
     private String displayName;
