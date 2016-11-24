@@ -103,4 +103,9 @@ class CategoryCache {
         this.allCategoriesCache = null;
         this.categoryProductCache.clear();
     }
+
+    public void clearProductCacheFor(Category category) {
+        Preconditions.checkNotNull("category", category);
+        categoryProductCache.invalidateKey(category.getUniqueId());
+    }
 }

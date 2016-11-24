@@ -73,11 +73,13 @@ public class SqlCategoryRepository extends AbstractSqlConnected implements Categ
     @Override
     public void associate(Category category, Product product) throws DatabaseException {
         categoryProductWriter.createAssociation(category, product);
+        categoryCache.clearProductCacheFor(category);
     }
 
     @Override
     public void dissociate(Category category, Product product) {
         categoryProductWriter.removeAssociation(category, product);
+        categoryCache.clearProductCacheFor(category);
     }
 
     @Override
