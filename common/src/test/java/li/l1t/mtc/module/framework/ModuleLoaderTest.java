@@ -66,19 +66,17 @@ public class ModuleLoaderTest {
         assertTrue(loaded2.stream().anyMatch(m -> m instanceof TestModules.IndependentModule)); //check that it actually returns enabled modules
         assertTrue(loaded2.stream().anyMatch(m -> m instanceof Module2));
 
-        assertEnabledStates(true, true, false, false);
+        assertEnabledStates(true, true, true, true);
         assertThat(module(Module2.class).independentModule, is(module(TestModules.IndependentModule.class)));
-        assertThat(module(Module2.class).module3, is(nullValue()));
 
         loader.setEnabled(instance(Module3.class), true);
-        assertEnabledStates(true, true, true, false);
+        assertEnabledStates(true, true, true, true);
         assertThat(module(Module3.class).independentModule, is(module(TestModules.IndependentModule.class)));
         assertThat(module(Module3.class).module2, is(module(Module2.class)));
-        assertThat(module(Module3.class).module4, is(nullValue()));
         assertThat(module(Module2.class).module3, is(module(Module3.class)));
 
         loader.setEnabled(instance(TestModules.IndependentModule.class), false);
-        assertEnabledStates(false, false, true, false);
+        assertEnabledStates(false, false, true, true);
         assertThat(module(Module3.class).independentModule, is(nullValue()));
         assertThat(module(Module3.class).module2, is(nullValue()));
         assertThat(module(TestModules.IndependentModule.class), is(nullValue()));
@@ -86,7 +84,7 @@ public class ModuleLoaderTest {
         assertThat(module(Module3.class).module4, is(module(Module4.class)));
 
         loader.setEnabled(instance(TestModules.IndependentModule.class), true);
-        assertEnabledStates(true, false, true, false);
+        assertEnabledStates(true, false, true, true);
         assertThat(module(Module3.class).independentModule, is(module(TestModules.IndependentModule.class)));
     }
 

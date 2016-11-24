@@ -132,7 +132,7 @@ class ModuleLoader {
 
             changedModules = target.getDependencies().values().stream()
                     .filter(inj -> !dependencyStack.contains(inj.getDependency())) //prevents infinite recursion
-                    .filter(this::isModuleAndShouldBeEnabled)
+                    .filter(this::needsEnabling)
                     .flatMap(inj -> setEnabled(inj.getDependency(), true, dependencyStack).stream())
                     .collect(Collectors.toList());
 
@@ -157,9 +157,12 @@ class ModuleLoader {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean isModuleAndShouldBeEnabled(Injection<?> inj) {
-        return MTCModule.class.isAssignableFrom(inj.getDependency().getClazz()) &&
-                isNotEnabledAndCanBeEnabled((Injection<? extends MTCModule>) inj);
+    private boolean needsEnabling(Injection<?> inj) {
+        return isNotAModule(inj) || isNotEnabledAndCanBeEnabled((Injection<? extends MTCModule>) inj);
+    }
+
+    private boolean isNotAModule(Injection<?> inj) {
+        return !MTCModule.class.isAssignableFrom(inj.getDependency().getClazz());
     }
 
     private boolean isNotEnabledAndCanBeEnabled(Injection<? extends MTCModule> inj) {
