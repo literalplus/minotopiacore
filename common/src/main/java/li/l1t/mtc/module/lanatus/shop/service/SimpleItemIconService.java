@@ -13,8 +13,6 @@ import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -34,8 +32,7 @@ public class SimpleItemIconService implements ItemIconService {
         }
         if (hasPosition && product.isPermanent()) {
             factory.lore("§a§o(im Besitz)");
-            factory.enchantUnsafe(Enchantment.PROTECTION_PROJECTILE, 1);
-            factory.withFlags(ItemFlag.HIDE_ATTRIBUTES);
+            factory.glow();
         }
         return factory.produce();
     }
