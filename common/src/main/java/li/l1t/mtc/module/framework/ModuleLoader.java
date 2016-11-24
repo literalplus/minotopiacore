@@ -170,20 +170,21 @@ class ModuleLoader {
      */
     void loadAll(List<Class<? extends MTCModule>> moduleClasses,
                  BiConsumer<InjectionTarget<?>, Throwable> errorConsumer) {
-        moduleClasses.stream()
+        List<InjectionTarget> initializedTargets = moduleClasses.stream()
                 .map(manager.getInjector()::getTarget)
-                .forEach(meta -> {
-                    try {
-                        manager.getDependencyManager().initialise(meta);
-                    } catch (SilentFailException ignore) {
-                        //silent failure: This module doesn't make sense without the dependency, so
-                        // we don't need to send an error message
-                    } catch (Throwable t) {
+                .collect(Collectors.toList()); //pre-register all modules for optional dependencies
+        initializedTargets.forEach(meta -> {
+            try {
+                manager.getDependencyManager().initialise(meta);
+            } catch (SilentFailException ignore) {
+                //silent failure: This module doesn't make sense without the dependency, so
+                // we don't need to send an error message
+            } catch (Throwable t) {
                         /* this is kind of a sandbox, so that a single broken module can't break the
                            whole plugin. Not using Exception because of more nasty stuff like NoClassDefFoundError,
                            which might be raised when a module is missing external dependencies. */
-                        errorConsumer.accept(meta, t); //The main reason for using a consumer is proper unit testing
-                    }
-                });
+                errorConsumer.accept(meta, t); //The main reason for using a consumer is proper unit testing
+            }
+        });
     }
 }
