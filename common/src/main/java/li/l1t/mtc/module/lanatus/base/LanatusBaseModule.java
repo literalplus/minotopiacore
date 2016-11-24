@@ -46,4 +46,11 @@ public class LanatusBaseModule extends MTCModuleAdapter {
         registerCommand(new LanatusRankCommand(client, xLoginHook), "larank")
                 .behaviour(CommandBehaviours.permissionChecking(RANK_PERMISSION));
     }
+
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        if(forced) {
+            client.clearCache();
+        }
+    }
 }
