@@ -134,9 +134,11 @@ public class SimpleModuleManager implements ModuleManager {
      * Plugin#getLogger()}.
      */
     public void enableLoaded() {
-        loader.getLoadedModules().stream()
+        loader.enableAll(
+                loader.getLoadedModules().stream()
                 .filter(m -> m.getInstance().canBeEnabled(plugin))
-                .forEach(m -> loader.setEnabled(m, true));
+                .collect(Collectors.toList())
+        );
         enabledModulesConfig.trySave();
     }
 

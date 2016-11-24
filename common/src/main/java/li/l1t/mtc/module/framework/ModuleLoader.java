@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Handles loading, enabling, injecting and disabling of MTC nodules.
@@ -67,6 +66,10 @@ class ModuleLoader {
         }
 
         return targets.build();
+    }
+
+    void enableAll(Collection<InjectionTarget<? extends MTCModule>> targets) {
+        targets.forEach(target -> setEnabled(target, true));
     }
 
     /**
@@ -129,13 +132,8 @@ class ModuleLoader {
 
             changedModules = target.getDependencies().values().stream()
                     .filter(inj -> !dependencyStack.contains(inj.getDependency())) //prevents infinite recursion
-                    .flatMap(inj -> {
-                        if (inj.isRequired() || !inj.getDependency().isModule()) {
-                            return setEnabled(inj.getDependency(), true, dependencyStack).stream();
-                        } else {
-                            return Stream.of();
-                        }
-                    })
+                    .filter(this::isModuleAndShouldBeEnabled)
+                    .flatMap(inj -> setEnabled(inj.getDependency(), true, dependencyStack).stream())
                     .collect(Collectors.toList());
 
             manager.getInjector().injectAll(target, target.getInstance());
@@ -156,6 +154,17 @@ class ModuleLoader {
         }
         dependencyStack.pop();
         return changedModules;
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isModuleAndShouldBeEnabled(Injection<?> inj) {
+        return MTCModule.class.isAssignableFrom(inj.getDependency().getClazz()) &&
+                isNotEnabledAndCanBeEnabled((Injection<? extends MTCModule>) inj);
+    }
+
+    private boolean isNotEnabledAndCanBeEnabled(Injection<? extends MTCModule> inj) {
+        MTCModule instance = inj.getDependency().getInstance();
+        return !manager.isEnabled(instance) && instance.canBeEnabled(manager.getPlugin());
     }
 
     /**
