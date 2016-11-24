@@ -11,12 +11,14 @@ import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 import li.l1t.mtc.module.lanatus.shop.gui.CategorySelectionMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductDetailMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductSelectionMenu;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
@@ -57,9 +59,21 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
     }
 
     private void handleProductClick(Product product, ProductSelectionMenu oldMenu) {
+        if(isPermanentAndHasAlreadyBeenBought(product, oldMenu.getPlayer())) {
+            MessageType.USER_ERROR.sendTo(oldMenu.getPlayer(), "Das besitzt du bereits!");
+            return;
+        }
         ProductDetailMenu newMenu = new ProductDetailMenu(
                 product, oldMenu, module.iconService(), module.buyService()
         );
         newMenu.open();
+    }
+
+    private boolean isPermanentAndHasAlreadyBeenBought(Product product, Player player) {
+        return product.isPermanent() && playerOwns(product, player);
+    }
+
+    private boolean playerOwns(Product product, Player player) {
+        return module.client().positions().playerHasProduct(player.getUniqueId(), product.getUniqueId());
     }
 }
