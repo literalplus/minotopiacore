@@ -32,7 +32,8 @@ public class SimpleItemIconService implements ItemIconService {
         if (product.isPermanent()) {
             factory.lore("§e§o(permanent)");
         }
-        if (hasPosition) {
+        if (hasPosition && product.isPermanent()) {
+            factory.lore("§a§o(im Besitz)");
             factory.enchantUnsafe(Enchantment.WATER_WORKER, 1);
             factory.withFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         }
