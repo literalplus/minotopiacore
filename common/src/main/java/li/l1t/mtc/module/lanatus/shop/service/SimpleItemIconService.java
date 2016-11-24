@@ -53,9 +53,9 @@ public class SimpleItemIconService implements ItemIconService {
                 return new ItemStack(Material.matchMaterial(spec));
             }
             String[] parts = spec.split(":", 2);
-            Material material = Material.matchMaterial(spec);
+            Material material = Material.matchMaterial(parts[0]);
             if (material != null && StringUtils.isNumeric(parts[1])) {
-                return new ItemStack(material, Integer.parseInt(parts[0]));
+                return new ItemStack(material, Integer.parseInt(parts[1]));
             }
         }
         return new ItemStack(Material.DEAD_BUSH);
