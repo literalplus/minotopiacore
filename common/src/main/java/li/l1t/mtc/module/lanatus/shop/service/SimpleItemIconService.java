@@ -53,7 +53,7 @@ public class SimpleItemIconService implements ItemIconService {
             String[] parts = spec.split(":", 2);
             Material material = Material.matchMaterial(parts[0]);
             if (material != null && StringUtils.isNumeric(parts[1])) {
-                return new ItemStack(material, Integer.parseInt(parts[1]));
+                return new ItemStack(material, 1, Short.parseShort(parts[1]));
             }
         }
         return new ItemStack(Material.DEAD_BUSH);
