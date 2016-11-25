@@ -14,6 +14,8 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.bulk.BulkMigrationCommand;
+import li.l1t.mtc.module.lanatus.pex.listener.PostPurchaseRankApplier;
+import li.l1t.mtc.module.lanatus.pex.listener.PrePurchaseRankSanityCheckListener;
 import li.l1t.mtc.module.lanatus.pex.product.PexProductRepository;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.tehkode.permissions.PermissionManager;
@@ -54,6 +56,8 @@ public class LanatusPexModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerListener(new GroupChangeJoinListener(groupMapping, permissionManager, lanatus));
+        registerListener(new PrePurchaseRankSanityCheckListener(pexProductRepository));
+        registerListener(new PostPurchaseRankApplier(pexProductRepository));
         if (isAllowAutomaticConversion()) {
             registerListener(new GroupMigrationJoinListener(permissionManager, lanatus));
         }
@@ -93,9 +97,5 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         allowBulkConversion = false;
         configuration.set(ALLOW_BULK_CONVERSION_PATH, false);
         save();
-    }
-
-    public PexProductRepository pexProducts() {
-        return pexProductRepository;
     }
 }
