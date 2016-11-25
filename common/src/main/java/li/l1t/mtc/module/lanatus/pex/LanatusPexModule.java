@@ -14,6 +14,7 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.bulk.BulkMigrationCommand;
+import li.l1t.mtc.module.lanatus.pex.product.PexProductRepository;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -29,6 +30,7 @@ import java.util.Map;
  */
 @ExternalDependencies("ru.tehkode")
 public class LanatusPexModule extends ConfigurableMTCModule {
+    public static final String LANATUS_MODULE_NAME = "mtc-lapex";
     private static final String GROUP_MAPPING_PATH = "lanatus-to-pex-group-mapping";
     private static final String ALLOW_BULK_CONVERSION_PATH = "allow-permissions-yml-conversion-do-not-touch";
     private static final String ALLOW_JOIN_CONVERSION_PATH = "allow-join-pex-to-lanatus-conversion";
@@ -39,6 +41,8 @@ public class LanatusPexModule extends ConfigurableMTCModule {
     private PermissionManager permissionManager = PermissionsEx.getPermissionManager();
     @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
+    @InjectMe
+    private PexProductRepository pexProductRepository;
     private boolean allowBulkConversion = false;
     private boolean allowAutomaticConversion = false;
 
@@ -89,5 +93,9 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         allowBulkConversion = false;
         configuration.set(ALLOW_BULK_CONVERSION_PATH, false);
         save();
+    }
+
+    public PexProductRepository pexProducts() {
+        return pexProductRepository;
     }
 }
