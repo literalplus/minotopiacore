@@ -10,7 +10,6 @@ package li.l1t.lanatus.shop.api.event;
 import li.l1t.lanatus.api.purchase.Purchase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 
 /**
  * Called every time a purchase is attempted through Lanatus Shop.
@@ -18,13 +17,12 @@ import org.bukkit.event.player.PlayerEvent;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11
  */
-public class PostPurchaseEvent extends PlayerEvent {
+public class PostPurchaseEvent extends PurchaseEvent {
     private static final HandlerList handlers = new HandlerList();
     private final Purchase purchase;
-    private boolean cancelled;
 
     public PostPurchaseEvent(Player who, Purchase purchase) {
-        super(who);
+        super(who, purchase.getProduct());
         this.purchase = purchase;
     }
 
