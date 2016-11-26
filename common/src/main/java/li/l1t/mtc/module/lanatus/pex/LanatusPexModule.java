@@ -16,7 +16,7 @@ import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.bulk.BulkMigrationCommand;
 import li.l1t.mtc.module.lanatus.pex.listener.PostPurchaseRankApplier;
 import li.l1t.mtc.module.lanatus.pex.listener.PrePurchaseRankSanityCheckListener;
-import li.l1t.mtc.module.lanatus.pex.product.PexProductRepository;
+import li.l1t.mtc.module.lanatus.pex.product.SqlPexProductRepository;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -44,7 +44,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
     @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
     @InjectMe
-    private PexProductRepository pexProductRepository;
+    private SqlPexProductRepository pexProductRepository;
     private boolean allowBulkConversion = false;
     private boolean allowAutomaticConversion = false;
 

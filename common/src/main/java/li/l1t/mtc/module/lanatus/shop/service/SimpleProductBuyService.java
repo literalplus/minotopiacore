@@ -24,6 +24,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 /**
@@ -38,8 +39,8 @@ public class SimpleProductBuyService implements ProductBuyService, LanatusConnec
     private PurchaseRecorder purchaseRecorder = new DummyPurchaseRecorder();
 
     @InjectMe
-    public SimpleProductBuyService(PluginManager pluginManager, MTCLanatusClient lanatus) {
-        this.pluginManager = pluginManager;
+    public SimpleProductBuyService(Plugin plugin, MTCLanatusClient lanatus) {
+        this.pluginManager = plugin.getServer().getPluginManager();
         this.lanatus = lanatus;
     }
 
