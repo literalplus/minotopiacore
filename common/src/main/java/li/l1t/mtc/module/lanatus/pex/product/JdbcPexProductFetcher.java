@@ -46,6 +46,6 @@ class JdbcPexProductFetcher extends AbstractJdbcFetcher<PexProduct> {
 
     @Override
     protected String buildSelect(String whereClause) {
-        return "SELECT product_id, sourcename, targetname FROM " + SqlPexProductRepository.TABLE_NAME + " " + whereClause;
+        return "SELECT product_id, sourcerank, targetrank FROM " + SqlPexProductRepository.TABLE_NAME + " " + whereClause;
     }
 }
