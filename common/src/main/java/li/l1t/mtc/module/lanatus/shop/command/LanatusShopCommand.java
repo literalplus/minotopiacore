@@ -11,6 +11,7 @@ import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
+import li.l1t.lanatus.shop.api.event.CategoryDisplayEvent;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
@@ -54,12 +55,15 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
         ProductSelectionMenu newMenu = ProductSelectionMenu.withParent(
                 oldMenu, category, this::handleProductClick, module
         );
-        newMenu.addItems(module.categories().findProductsOf(category));
+        Collection<Product> products = module.categories().findProductsOf(category);
+        CategoryDisplayEvent event = new CategoryDisplayEvent(oldMenu.getPlayer(), category, products);
+        module.getPlugin().getServer().getPluginManager().callEvent(event);
+        newMenu.addItems(event.getProducts());
         newMenu.open();
     }
 
     private void handleProductClick(Product product, ProductSelectionMenu oldMenu) {
-        if(isPermanentAndHasAlreadyBeenBought(product, oldMenu.getPlayer())) {
+        if (isPermanentAndHasAlreadyBeenBought(product, oldMenu.getPlayer())) {
             MessageType.USER_ERROR.sendTo(oldMenu.getPlayer(), "Das besitzt du bereits!");
             return;
         }
