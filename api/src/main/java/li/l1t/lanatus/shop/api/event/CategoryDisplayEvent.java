@@ -7,6 +7,7 @@
 
 package li.l1t.lanatus.shop.api.event;
 
+import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import org.bukkit.entity.Player;
@@ -29,11 +30,13 @@ public class CategoryDisplayEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final Category category;
     private final List<Product> products;
+    private final AccountSnapshot account;
 
-    public CategoryDisplayEvent(Player who, Category category, Collection<Product> products) {
+    public CategoryDisplayEvent(Player who, Category category, Collection<Product> products, AccountSnapshot account) {
         super(who);
         this.category = category;
         this.products = new ArrayList<>(products);
+        this.account = account;
     }
 
     public Category getCategory() {
@@ -60,5 +63,9 @@ public class CategoryDisplayEvent extends PlayerEvent {
 
     public static HandlerList getHandlerList(){
         return HANDLER_LIST;
+    }
+
+    public AccountSnapshot getAccount() {
+        return account;
     }
 }

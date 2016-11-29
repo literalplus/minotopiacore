@@ -14,6 +14,7 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.bulk.BulkMigrationCommand;
+import li.l1t.mtc.module.lanatus.pex.listener.ApplicableRanksFilterListener;
 import li.l1t.mtc.module.lanatus.pex.listener.PostPurchaseRankApplier;
 import li.l1t.mtc.module.lanatus.pex.listener.PrePurchaseRankSanityCheckListener;
 import li.l1t.mtc.module.lanatus.pex.product.SqlPexProductRepository;
@@ -58,6 +59,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         registerListener(new GroupChangeJoinListener(groupMapping, permissionManager, lanatus));
         registerListener(new PrePurchaseRankSanityCheckListener(pexProductRepository));
         registerListener(new PostPurchaseRankApplier(pexProductRepository));
+        registerListener(new ApplicableRanksFilterListener(pexProductRepository));
         if (isAllowAutomaticConversion()) {
             registerListener(new GroupMigrationJoinListener(permissionManager, lanatus));
         }
