@@ -10,7 +10,6 @@ package li.l1t.mtc.module.lanatus.shop.category;
 import li.l1t.common.sql.sane.AbstractSqlConnected;
 import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.lanatus.shop.api.Category;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Writes categories to a JDBC data source.
@@ -24,21 +23,22 @@ class JdbcCategoryWriter extends AbstractSqlConnected {
     }
 
     public void save(Category category) {
-        updateCategory(category);
+        insertOfUpdateCategory(category);
     }
 
-    private void updateCategory(Category category) {
+    private void insertOfUpdateCategory(Category category) {
         sql().updateRaw(
                 buildUpdate(),
+                category.getUniqueId().toString(),
                 category.getDisplayName(), category.getIconName(),
-                category.getDescription(), category.getUniqueId().toString()
+                category.getDescription(), category.getDisplayName(),
+                category.getIconName(), category.getDescription()
         );
     }
 
-    @NotNull
     private String buildUpdate() {
-        return "UPDATE " + SqlCategoryRepository.TABLE_NAME + " SET " +
-                "displayName=?, icon=?, description=? " +
-                "WHERE id=?";
+        return "INSERT INTO " + SqlCategoryRepository.TABLE_NAME + " SET " +
+                "id=?, displayName=?, icon=?, description=? " +
+                "ON DUPLICATE KEY UPDATE displayName=?, icon=?, description=?";
     }
 }

@@ -43,7 +43,7 @@ public interface CategoryRepository extends LanatusRepository {
 
     /**
      * Saves given entity's status to the database. Note that this does not respect remote changes and blindly
-     * overwrites everything.
+     * overwrites everything. If the category does not yet exist in the database, it is created.
      *
      * @param category the category to save
      * @throws DatabaseException if a database error occurs
