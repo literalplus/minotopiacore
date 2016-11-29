@@ -59,7 +59,7 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
         MutableAccount account = accountRepository.findMutable(player.getUniqueId());
         account.setLastRank(targetRank);
         trySave(account, false);
-        MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Dein Rang ist jetzt §s%s§p.", targetRank);
+        MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Dein Rang ist jetzt §p%s§s.", targetRank);
     }
 
     private void trySave(MutableAccount account, boolean isRetry) {
