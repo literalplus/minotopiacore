@@ -16,6 +16,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
+import li.l1t.mtc.module.lanatus.shop.category.SqlCategory;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductSelectionMenu;
 import net.md_5.bungee.api.ChatColor;
 
@@ -61,6 +62,9 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
                 return handleProductAdd(exec, category(exec.uuidArg(1)));
             case "prodrem":
                 return handleProductRemove(exec, category(exec.uuidArg(1)));
+            case "new":
+                Category newCategory = handleNew(exec, exec.joinedArgsColored(1));
+                return handleInfo(exec, newCategory);
             default:
                 exec.respond(MessageType.WARNING, "Unbekannte Aktion.");
                 respondUsage(exec);
@@ -203,6 +207,13 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         };
     }
 
+    private Category handleNew(CommandExecution exec, String displayName) {
+        SqlCategory category = new SqlCategory(UUID.randomUUID(), "dirt", displayName, "");
+        module.categories().save(category);
+        exec.respond(MessageType.RESULT_LINE_SUCCESS, "Kategorie erstellt!");
+        return category;
+    }
+
     private void respondUsage(CommandExecution exec) {
         exec.respondUsage("display", "<UUID> <Anzeigename>", "Setzt Anzeigenamen");
         exec.respondUsage("icon", "<UUID> <Iconname>", "Setzt Icon ('stained_clay:15')");
@@ -212,5 +223,6 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         exec.respondUsage("list", "[Suchbegriff]", "Listet alle Kategorien auf");
         exec.respondUsage("prodrem", "<UUID>", "Wählt Produkte zum Entfernen aus einer Kategorie");
         exec.respondUsage("prodadd", "<UUID>", "Fügt einer Kategorie Produkte hinzu");
+        exec.respondUsage("new", "<Anzeigename>", "Fügt eine Kategorie hinzu");
     }
 }
