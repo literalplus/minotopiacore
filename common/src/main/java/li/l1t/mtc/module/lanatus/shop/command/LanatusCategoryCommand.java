@@ -118,7 +118,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
     private XyComponentBuilder infoRefresh(Category category) {
         return resultLineBuilder().append("Aktualisieren: ")
                 .append("[lokal] ", ChatColor.DARK_GREEN).command("/lacat info " + category.getUniqueId())
-                .append("[aus Datenbank]", ChatColor.DARK_PURPLE).command("lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
+                .append("[aus Datenbank]", ChatColor.DARK_PURPLE).command("/lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
     }
 
     private boolean handleIcon(CommandExecution exec, Category category, String newIcon) {
