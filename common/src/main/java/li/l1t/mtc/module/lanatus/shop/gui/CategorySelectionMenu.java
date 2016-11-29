@@ -38,12 +38,12 @@ public class CategorySelectionMenu extends PaginationListMenu<Category> {
         this.iconService = iconService;
         this.clickHandler = clickHandler;
         this.accountRepository = accountRepository;
+        addToTopRow(4, new Placeholder(currentMelonsCountIcon())); //called here because we need the account repo
     }
 
     @Override
     protected void initTopRow() {
         super.initTopRow();
-        addToTopRow(4, new Placeholder(currentMelonsCountIcon()));
         //TODO: button to show my positions #628
         //TODO: button to show my purchases #629
     }
