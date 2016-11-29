@@ -90,12 +90,6 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private XyComponentBuilder infoRefresh(Category category) {
-        return resultLineBuilder().append("Aktualisieren: ")
-                .append("[lokal]", ChatColor.DARK_GREEN).command("/lacat info " + category.getUniqueId())
-                .append("[aus Datenbank / Cache leeren]", ChatColor.DARK_RED).command("lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
-    }
-
     private XyComponentBuilder infoDescription(Category category) {
         String[] descriptionLines = category.getDescription().split("\r?\n");
         XyComponentBuilder builder = resultLineBuilder().append("Beschreibung: ")
@@ -119,6 +113,12 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return resultLineBuilder().append("Produkte:")
                 .append(" [Hinzufügen]", ChatColor.DARK_GREEN).command("/lacat prodadd " + category.getUniqueId())
                 .append(" [Entfernen]", ChatColor.DARK_RED).command("/lacat prodrem " + category.getUniqueId());
+    }
+
+    private XyComponentBuilder infoRefresh(Category category) {
+        return resultLineBuilder().append("Aktualisieren: ")
+                .append("[lokal] ", ChatColor.DARK_GREEN).command("/lacat info " + category.getUniqueId())
+                .append("[aus Datenbank]", ChatColor.DARK_PURPLE).command("lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
     }
 
     private boolean handleIcon(CommandExecution exec, Category category, String newIcon) {
