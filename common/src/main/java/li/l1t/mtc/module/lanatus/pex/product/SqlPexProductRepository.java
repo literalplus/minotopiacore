@@ -19,11 +19,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * Repository for PEx product mettadata.
+ *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11
  */
 public class SqlPexProductRepository implements PexProductRepository {
-    public static final String TABLE_NAME = "lanatus_pex_product";
+    public static final String TABLE_NAME = "mt_main.lanatus_pex_product";
     private final OptionalCache<UUID, PexProduct> productToPexProductCache = new OptionalGuavaCache<>();
     private final LanatusClient lanatus;
     private final JdbcPexProductFetcher fetcher;
