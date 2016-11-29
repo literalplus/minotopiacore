@@ -65,6 +65,8 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
             case "new":
                 Category newCategory = handleNew(exec, exec.joinedArgsColored(1));
                 return handleInfo(exec, newCategory);
+            case "refresh":
+                return handleRefresh(exec);
             default:
                 exec.respond(MessageType.WARNING, "Unbekannte Aktion.");
                 respondUsage(exec);
@@ -84,7 +86,14 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         exec.respond(infoDescription(category));
         exec.respond(infoEditActions(category));
         exec.respond(infoProductActions(category));
+        exec.respond(infoRefresh(category));
         return true;
+    }
+
+    private XyComponentBuilder infoRefresh(Category category) {
+        return resultLineBuilder().append("Aktualisieren: ")
+                .append("[lokal]", ChatColor.DARK_GREEN).command("/lacat info " + category.getUniqueId())
+                .append("[aus Datenbank / Cache leeren]", ChatColor.DARK_RED).command("lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
     }
 
     private XyComponentBuilder infoDescription(Category category) {
@@ -212,6 +221,12 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Kategorie erstellt!");
         return category;
+    }
+
+    private boolean handleRefresh(CommandExecution exec) {
+        module.categories().clearCache();
+        exec.respond(MessageType.RESULT_LINE_SUCCESS, "Globaler Kategoriencache geleert!");
+        return true;
     }
 
     private void respondUsage(CommandExecution exec) {
