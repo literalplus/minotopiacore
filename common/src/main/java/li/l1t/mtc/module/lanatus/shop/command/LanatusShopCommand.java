@@ -43,8 +43,8 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
         } else {
             Collection<Category> categories = module.categories().findAll();
             CategorySelectionMenu menu = new CategorySelectionMenu(
-                    module.getPlugin(), exec.player(), module.iconService(), this::handleCategoryClick
-            );
+                    module.getPlugin(), exec.player(), module.iconService(), this::handleCategoryClick,
+                    module.client().accounts());
             menu.addItems(categories);
             menu.open();
         }

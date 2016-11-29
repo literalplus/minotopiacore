@@ -8,8 +8,13 @@
 package li.l1t.mtc.module.lanatus.shop.gui;
 
 import li.l1t.common.inventory.gui.PaginationListMenu;
+import li.l1t.common.inventory.gui.element.Placeholder;
+import li.l1t.common.util.inventory.ItemStackFactory;
+import li.l1t.lanatus.api.account.AccountRepository;
+import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,18 +31,29 @@ import java.util.function.BiConsumer;
 public class CategorySelectionMenu extends PaginationListMenu<Category> {
     private final ItemIconService iconService;
     private final BiConsumer<Category, CategorySelectionMenu> clickHandler;
+    private final AccountRepository accountRepository;
 
-    public CategorySelectionMenu(Plugin plugin, Player player, ItemIconService iconService, BiConsumer<Category, CategorySelectionMenu> clickHandler) {
+    public CategorySelectionMenu(Plugin plugin, Player player, ItemIconService iconService, BiConsumer<Category, CategorySelectionMenu> clickHandler, AccountRepository accountRepository) {
         super(plugin, player);
         this.iconService = iconService;
         this.clickHandler = clickHandler;
+        this.accountRepository = accountRepository;
     }
 
     @Override
     protected void initTopRow() {
         super.initTopRow();
+        addToTopRow(4, new Placeholder(currentMelonsCountIcon()));
         //TODO: button to show my positions #628
         //TODO: button to show my purchases #629
+    }
+
+    private ItemStack currentMelonsCountIcon() {
+        AccountSnapshot snapshot = accountRepository.findOrDefault(getPlayer().getUniqueId());
+        return new ItemStackFactory(Material.MELON)
+                .displayName("§e§lDein Guthaben:")
+                .lore("§a" + snapshot.getMelonsCount() + "§a Melonen")
+                .produce();
     }
 
     @Override
