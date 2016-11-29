@@ -60,6 +60,7 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
         account.setLastRank(targetRank);
         trySave(account, false);
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Dein Rang ist jetzt §p%s§s.", targetRank);
+        MessageType.WARNING.sendTo(player, "Du musst dich neu einloggen, bevor der  Rang verfügbar ist.");
     }
 
     private void trySave(MutableAccount account, boolean isRetry) {
