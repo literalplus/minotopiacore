@@ -220,6 +220,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         SqlCategory category = new SqlCategory(UUID.randomUUID(), "dirt", displayName, "");
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Kategorie erstellt!");
+        module.categories().clearCache();
         return category;
     }
 
