@@ -91,16 +91,16 @@ public class SimpleItemIconService implements ItemIconService {
     }
 
     private String formatMelonsCost(Product product) {
-        return String.format("§efür nur §a%d §e%s!", product.getMelonsCost(), melonPlural(product.getMelonsCost()));
+        return String.format("§efür nur §a%s§e!", melonPlural(product.getMelonsCost()));
     }
 
     private String melonPlural(int melonsCount) {
-        return "Melone" + (melonsCount == 1 ? "" : "n");
+        return melonsCount + " Melone" + (melonsCount == 1 ? "" : "n");
     }
 
     @Override
     public ItemStack createNotAffordableStack(Product product, LanatusAccount account) {
-        return new ItemStackFactory(baseStack(product.getIconName()))
+        return new ItemStackFactory(Material.BARRIER)
                 .displayName("§4" + nullableString(product.getDisplayName()))
                 .lore("§4Das kannst du dir").lore("§4nicht leisten!")
                 .lore(" ").lore("§ebenötigt: " + melonPlural(product.getMelonsCost()))
