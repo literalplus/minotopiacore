@@ -11,7 +11,6 @@ import li.l1t.common.inventory.gui.ChildMenu;
 import li.l1t.common.inventory.gui.PagingListMenu;
 import li.l1t.common.inventory.gui.element.Placeholder;
 import li.l1t.common.inventory.gui.element.button.BackToParentButton;
-import li.l1t.lanatus.api.position.PositionRepository;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
@@ -21,6 +20,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
@@ -34,33 +35,40 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
     private final Category category;
     private final BiConsumer<Product, ProductSelectionMenu> clickHandler;
     private final ItemIconService iconService;
-    private final PositionRepository positionRepository;
+    private Map<Product, ItemStack> productIconMap = new HashMap<>();
 
-    ProductSelectionMenu(CategorySelectionMenu parent, Category category,
-                         BiConsumer<Product, ProductSelectionMenu> clickHandler, ItemIconService iconService,
-                         PositionRepository positionRepository, Plugin plugin, Player player) {
+    ProductSelectionMenu(CategorySelectionMenu parent, Category category, BiConsumer<Product, ProductSelectionMenu> clickHandler,
+                         Plugin plugin, Player player, ItemIconService iconService) {
         super(plugin, player);
         this.parent = parent;
         this.category = category;
         this.clickHandler = clickHandler;
         this.iconService = iconService;
-        this.positionRepository = positionRepository;
         initTopRow();
+    }
+
+    /**
+     * Sets the items of this menu with their icons.
+     *
+     * @param productIconMap the mapping of products to their corresponding icons
+     */
+    public void setItems(Map<Product, ItemStack> productIconMap) {
+        this.productIconMap = productIconMap;
+        super.setItems(productIconMap.keySet());
     }
 
     public static ProductSelectionMenu withParent(CategorySelectionMenu parent, Category category,
                                                   BiConsumer<Product, ProductSelectionMenu> clickHandler, LanatusShopModule module) {
         return new ProductSelectionMenu(
-                parent, category, clickHandler, module.iconService(),
-                module.client().positions(), module.getPlugin(), parent.getPlayer()
+                parent, category, clickHandler, module.getPlugin(), parent.getPlayer(),
+                module.iconService()
         );
     }
 
     public static ProductSelectionMenu withoutParent(Category category, BiConsumer<Product, ProductSelectionMenu> clickHandler,
                                                      Player player, LanatusShopModule module) {
         return new ProductSelectionMenu(
-                null, category, clickHandler, module.iconService(),
-                module.client().positions(), module.getPlugin(), player
+                null, category, clickHandler, module.getPlugin(), player, module.iconService()
         );
     }
 
@@ -80,8 +88,7 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
 
     @Override
     protected ItemStack drawItem(Product product) {
-        boolean hasProduct = positionRepository.playerHasProduct(getPlayer().getUniqueId(), product.getUniqueId());
-        return iconService.createIconStack(product, hasProduct);
+        return productIconMap.computeIfAbsent(product, prod -> iconService.createIconStack(product, getPlayer().getUniqueId()));
     }
 
     @Override

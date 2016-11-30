@@ -49,7 +49,7 @@ public class ProductDetailMenu extends TopRowMenu implements ChildMenu {
     protected void initTopRow() {
         addToTopRow(0, BackToParentButton.INSTANCE);
         addToTopRow(1, new Placeholder(iconService.createIconStack(parent.getCategory())));
-        addToTopRow(2, new Placeholder(iconService.createIconStack(product, false)));
+        addToTopRow(2, new Placeholder(iconService.createIconStack(product, getPlayer().getUniqueId())));
         addToTopRow(3, new Placeholder(iconService.createPurchaseHelpStack()));
         addToTopRow(8, BackToParentButton.INSTANCE);
         addElement(SlotPosition.ofXY(1, 3), confirmButton());
@@ -63,25 +63,29 @@ public class ProductDetailMenu extends TopRowMenu implements ChildMenu {
 
     @NotNull
     private ItemStack confirmStack() {
-        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, DyeColor.GREEN.getWoolData()))
+        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, woolData(DyeColor.GREEN)))
                 .displayName("§a§lBestätigen")
                 .lore("§7Hier klicken, um dieses").lore("§7Produkt zu kaufen")
                 .lore(" ").lore("§e" + product.getMelonsCost() + " " + melonPlural(product.getMelonsCost()))
                 .produce();
     }
 
+    @SuppressWarnings("deprecation")
+    private byte woolData(DyeColor color) {
+        return color.getWoolData();
+    }
+
     private String melonPlural(int melonsCount) {
         return "Melone" + (melonsCount == 1 ? "" : "n");
     }
 
-    @SuppressWarnings("deprecation")
     private LambdaMenuElement<ProductDetailMenu> abortButton() {
         return new LambdaMenuElement<>(ProductDetailMenu.class, this::handleAbort, abortStack());
     }
 
     @NotNull
     private ItemStack abortStack() {
-        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, DyeColor.RED.getWoolData()))
+        return new ItemStackFactory(new ItemStack(Material.STAINED_CLAY, 1, woolData(DyeColor.RED)))
                 .displayName("§c§lAbbrechen")
                 .lore("§7Hier klicken, um").lore("§7abzubrechen")
                 .produce();

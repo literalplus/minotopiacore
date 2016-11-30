@@ -10,6 +10,8 @@ package li.l1t.lanatus.shop.api;
 import li.l1t.lanatus.api.product.Product;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 /**
  * A service that creates item stack icons from string specifications.
  *
@@ -17,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
  * @since 2016-16-11
  */
 public interface ItemIconService {
-    ItemStack createIconStack(Product product, boolean hasPosition);
+    ItemStack createIconStack(Product product, UUID playerId);
 
     ItemStack createIconStack(Category category);
 

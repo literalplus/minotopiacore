@@ -7,16 +7,18 @@
 
 package li.l1t.lanatus.shop.api.event;
 
+import li.l1t.common.util.PredicateHelper;
 import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -29,13 +31,13 @@ import java.util.stream.Collectors;
 public class CategoryDisplayEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final Category category;
-    private final List<Product> products;
+    private final Map<Product, ItemStack> productIconMap;
     private final AccountSnapshot account;
 
-    public CategoryDisplayEvent(Player who, Category category, Collection<Product> products, AccountSnapshot account) {
+    public CategoryDisplayEvent(Player who, Category category, Collection<Product> products, AccountSnapshot account, Function<Product, ItemStack> iconFunction) {
         super(who);
         this.category = category;
-        this.products = new ArrayList<>(products);
+        this.productIconMap = products.stream().collect(Collectors.toMap(Function.identity(), iconFunction));
         this.account = account;
     }
 
@@ -43,17 +45,22 @@ public class CategoryDisplayEvent extends PlayerEvent {
         return category;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products.clear();
-        this.products.addAll(products);
+    public Map<Product, ItemStack> getProductIconMap() {
+        return productIconMap;
     }
 
     public void filterProducts(Predicate<Product> filter) {
-        setProducts(products.stream().filter(filter).collect(Collectors.toList()));
+        removeIf(PredicateHelper.not(filter));
+    }
+
+    public boolean removeIf(Predicate<Product> predicate) {
+        return productIconMap.keySet().removeIf(predicate);
+    }
+
+    public void remapIf(Predicate<Product> filter, Function<Product, ItemStack> iconFunction) {
+        productIconMap.keySet().stream()
+                .filter(filter)
+                .forEach(product -> productIconMap.replace(product, iconFunction.apply(product)));
     }
 
     @Override

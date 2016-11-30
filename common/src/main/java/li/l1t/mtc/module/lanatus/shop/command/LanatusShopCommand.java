@@ -21,8 +21,10 @@ import li.l1t.mtc.module.lanatus.shop.gui.CategorySelectionMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductDetailMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductSelectionMenu;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * Executes the /lashop command, which allows to open the category selection menu.
@@ -58,10 +60,16 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
         );
         AccountSnapshot account = module.client().accounts().findOrDefault(oldMenu.getPlayer().getUniqueId());
         Collection<Product> products = module.categories().findProductsOf(category);
-        CategoryDisplayEvent event = new CategoryDisplayEvent(oldMenu.getPlayer(), category, products, account);
+        CategoryDisplayEvent event = new CategoryDisplayEvent(
+                oldMenu.getPlayer(), category, products, account, productIconFunction(oldMenu.getPlayer())
+        );
         module.getPlugin().getServer().getPluginManager().callEvent(event);
-        newMenu.addItems(event.getProducts());
+        newMenu.setItems(event.getProductIconMap());
         newMenu.open();
+    }
+
+    private Function<Product, ItemStack> productIconFunction(Player player) {
+        return product -> module.iconService().createIconStack(product, player.getUniqueId());
     }
 
     private void handleProductClick(Product product, ProductSelectionMenu oldMenu) {

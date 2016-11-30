@@ -8,14 +8,18 @@
 package li.l1t.mtc.module.lanatus.shop.service;
 
 import li.l1t.common.util.inventory.ItemStackFactory;
+import li.l1t.lanatus.api.position.PositionRepository;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.ItemIconService;
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * A service that creates item icons for various things.
@@ -24,7 +28,19 @@ import java.util.Arrays;
  * @since 2016-17-11
  */
 public class SimpleItemIconService implements ItemIconService {
+    private final PositionRepository positionRepository;
+
+    @InjectMe
+    public SimpleItemIconService(MTCLanatusClient lanatus) {
+        this.positionRepository = lanatus.positions();
+    }
+
     @Override
+    public ItemStack createIconStack(Product product, UUID playerId) {
+        boolean hasProduct = positionRepository.playerHasProduct(playerId, product.getUniqueId());
+        return createIconStack(product, hasProduct);
+    }
+
     public ItemStack createIconStack(Product product, boolean hasPosition) {
         ItemStackFactory factory = createBaseProductStack(product, hasPosition);
         if (product.isPermanent()) {

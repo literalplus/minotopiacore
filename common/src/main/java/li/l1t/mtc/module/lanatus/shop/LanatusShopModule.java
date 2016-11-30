@@ -35,7 +35,6 @@ import org.apache.logging.log4j.Logger;
 public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnected {
     public static final String NAME = "LanatusShop";
     private static final Logger LOGGER = LogManager.getLogger(LanatusShopModule.class);
-    private final ItemIconService iconService = new SimpleItemIconService();
     @InjectMe(failSilently = true)
     private MTCLanatusClient lanatus;
     @InjectMe(required = false)
@@ -44,6 +43,8 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
     private SqlCategoryRepository categoryRepository;
     @InjectMe
     private SimpleProductBuyService buyService;
+    @InjectMe
+    private SimpleItemIconService iconService;
 
     protected LanatusShopModule() {
         super(NAME, true);
