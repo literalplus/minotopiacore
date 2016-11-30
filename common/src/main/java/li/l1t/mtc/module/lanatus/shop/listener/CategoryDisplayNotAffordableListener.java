@@ -30,7 +30,7 @@ public class CategoryDisplayNotAffordableListener implements Listener {
         int melonsCount = event.getAccount().getMelonsCount();
         event.remapIf(
                 product -> product.getMelonsCost() > melonsCount,
-                product -> itemIconService.createIconStack(product, event.getPlayer().getUniqueId())
+                product -> itemIconService.createNotAffordableStack(product, event.getAccount())
         );
     }
 }
