@@ -54,7 +54,7 @@ public class ProductSelectionMenu extends PagingListMenu<Product> implements Chi
      */
     public void setItems(Map<Product, ItemStack> productIconMap) {
         this.productIconMap = productIconMap;
-        super.setItems(productIconMap.keySet());
+        super.addItems(productIconMap.keySet());
     }
 
     public static ProductSelectionMenu withParent(CategorySelectionMenu parent, Category category,
