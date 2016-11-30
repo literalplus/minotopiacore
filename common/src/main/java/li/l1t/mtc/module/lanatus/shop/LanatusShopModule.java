@@ -20,6 +20,7 @@ import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategoryRepository;
 import li.l1t.mtc.module.lanatus.shop.command.LanatusCategoryCommand;
 import li.l1t.mtc.module.lanatus.shop.command.LanatusShopCommand;
+import li.l1t.mtc.module.lanatus.shop.listener.CategoryDisplayNotAffordableListener;
 import li.l1t.mtc.module.lanatus.shop.metrics.StatsdPurchaseRecorder;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleItemIconService;
 import li.l1t.mtc.module.lanatus.shop.service.SimpleProductBuyService;
@@ -62,6 +63,7 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
         } else {
             LOGGER.info("Using dummy purchase recorder.");
         }
+        registerListener(new CategoryDisplayNotAffordableListener(iconService));
     }
 
     public SqlCategoryRepository categories() {
