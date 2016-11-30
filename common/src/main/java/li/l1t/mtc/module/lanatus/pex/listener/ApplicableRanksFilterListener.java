@@ -39,7 +39,7 @@ public class ApplicableRanksFilterListener implements Listener {
 
     @NotNull
     private Predicate<Product> showOnlyApplicableProducts(String currentRank) {
-        return product -> product.getModule().equals(LanatusPexModule.LANATUS_MODULE_NAME) &&
+        return product -> !product.getModule().equals(LanatusPexModule.LANATUS_MODULE_NAME) ||
                 pexProductRepository.getByProduct(product)
                 .map(PexProduct::getInitialRank)
                 .map(currentRank::equals)
