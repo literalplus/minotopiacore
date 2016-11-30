@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.lanatus.shop.service;
 
 import li.l1t.common.util.inventory.ItemStackFactory;
+import li.l1t.lanatus.api.account.LanatusAccount;
 import li.l1t.lanatus.api.position.PositionRepository;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
@@ -75,18 +76,6 @@ public class SimpleItemIconService implements ItemIconService {
         return new ItemStack(Material.DEAD_BUSH);
     }
 
-    private String formatMelonsCost(Product product) {
-        return String.format("§efür nur §a%d §e%s!", product.getMelonsCost(), melonPlural(product.getMelonsCost()));
-    }
-
-    private String melonPlural(int melonsCount) {
-        return "Melone" + (melonsCount == 1 ? "" : "n");
-    }
-
-    private String nullableString(String str) {
-        return (str == null || str.isEmpty()) ? "(???)" : str;
-    }
-
     private String productColor(Product product, boolean hasPosition) {
         if (product.isPermanent()) {
             return "§e";
@@ -95,6 +84,28 @@ public class SimpleItemIconService implements ItemIconService {
         } else {
             return "§c";
         }
+    }
+
+    private String nullableString(String str) {
+        return (str == null || str.isEmpty()) ? "(???)" : str;
+    }
+
+    private String formatMelonsCost(Product product) {
+        return String.format("§efür nur §a%d §e%s!", product.getMelonsCost(), melonPlural(product.getMelonsCost()));
+    }
+
+    private String melonPlural(int melonsCount) {
+        return "Melone" + (melonsCount == 1 ? "" : "n");
+    }
+
+    @Override
+    public ItemStack createNotAffordableStack(Product product, LanatusAccount account) {
+        return new ItemStackFactory(baseStack(product.getIconName()))
+                .displayName("§4" + nullableString(product.getDisplayName()))
+                .lore("§4Das kannst du dir").lore("§4nicht leisten!")
+                .lore(" ").lore("§ebenötigt: " + melonPlural(product.getMelonsCost()))
+                .lore("§cDir fehlen: " + melonPlural(product.getMelonsCost() - account.getMelonsCount()))
+                .lore(product.getDescription()).produce();
     }
 
     @Override
