@@ -51,7 +51,7 @@ public class SimpleItemIconService implements ItemIconService {
             factory.lore("§a§o(im Besitz)");
             factory.glow();
         }
-        return factory.produce();
+        return factory.hideAll().produce();
     }
 
     private ItemStackFactory createBaseProductStack(Product product, boolean hasPosition) {
@@ -105,7 +105,7 @@ public class SimpleItemIconService implements ItemIconService {
                 .lore("§4Das kannst du dir").lore("§4nicht leisten!")
                 .lore(" ").lore("§ebenötigt: " + melonPlural(product.getMelonsCost()))
                 .lore("§cDir fehlen: " + melonPlural(product.getMelonsCost() - account.getMelonsCount()))
-                .lore(product.getDescription()).produce();
+                .lore(product.getDescription()).hideAll().produce();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class SimpleItemIconService implements ItemIconService {
         ItemStackFactory factory = new ItemStackFactory(baseStack(category.getIconName()));
         factory.displayName(nullableString(category.getDisplayName()));
         factory.lore(nullableString(category.getDescription()));
-        return factory.produce();
+        return factory.hideAll().produce();
     }
 
     @Override
