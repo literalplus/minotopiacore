@@ -10,8 +10,10 @@ package li.l1t.mtc.module.lanatus.pex;
 import com.google.common.base.Verify;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.account.AccountSnapshot;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.logging.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,7 +51,7 @@ public class GroupChangeJoinListener implements Listener {
             Optional<AccountSnapshot> account = lanatus.accounts().find(evt.getPlayer().getUniqueId());
             if (account.isPresent()) {
                 mapping.findPexGroupFor(account.get().getLastRank())
-                        .ifPresent(newGroup -> setPexGroupTo(newGroup, user));
+                        .ifPresent(newGroup -> setPexGroupTo(newGroup, user, evt.getPlayer()));
             }
         }
     }
@@ -62,11 +64,12 @@ public class GroupChangeJoinListener implements Listener {
         return group.getOwnOptionBoolean(LanatusPexModule.AUTORANK_OPTION_NAME, null, false);
     }
 
-    private void setPexGroupTo(String groupName, PermissionUser user) {
+    private void setPexGroupTo(String groupName, PermissionUser user, Player player) {
         PermissionGroup group = pex.getGroup(groupName);
         Verify.verifyNotNull(group, "PEx shouldn't return null group", groupName, user);
         LOGGER.info("LanatusPexModule: Changing group for {} {} from {} to {}",
                 user.getName(), user.getIdentifier(), user.getOwnParentIdentifiers(), groupName);
         user.setParents(Collections.singletonList(group));
+        MessageType.RESULT_LINE.sendTo(player, "Deine Gruppe ist jetzt §s%s§p.", groupName);
     }
 }

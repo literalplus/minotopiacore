@@ -78,7 +78,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         configuration.addDefault(ALLOW_BULK_CONVERSION_PATH, false);
         configuration.addDefault(ALLOW_JOIN_CONVERSION_PATH, false);
         Map<String, Object> groupConfig = configuration.getConfigurationSection(GROUP_MAPPING_PATH).getValues(false);
-        groupConfig.clear();
+        groupMapping.clear();
         groupConfig.entrySet().stream()
                 .filter(e -> e.getValue() instanceof String)
                 .forEach(e -> groupMapping.mapLanatusToPexGroup(e.getKey(), String.valueOf(e.getValue())));
