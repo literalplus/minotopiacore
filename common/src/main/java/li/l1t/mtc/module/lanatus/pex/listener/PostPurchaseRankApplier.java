@@ -81,7 +81,7 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
     }
 
     private void executePostPurchaseCommands(PexProduct product, Player player) {
-        for(String command : product.getCommands()) {
+        for (String command : product.getCommands()) {
             executePostPurchaseCommand(command, product, player);
         }
     }
@@ -95,7 +95,8 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
         return rawCommand
                 .replaceAll("%p", player.getName())
                 .replaceAll("%u", player.getUniqueId().toString())
-                .replaceAll("%r", product.getTargetRank());
+                .replaceAll("%r", product.getTargetRank())
+                .replaceAll("%c", product.getInitialRank());
     }
 
     private String stripCommandSlashIfPresent(String command) {
