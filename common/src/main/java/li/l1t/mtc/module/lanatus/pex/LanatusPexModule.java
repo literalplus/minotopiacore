@@ -58,7 +58,7 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         super.enable(plugin);
         registerListener(new GroupChangeJoinListener(groupMapping, permissionManager, lanatus));
         registerListener(new PrePurchaseRankSanityCheckListener(pexProductRepository));
-        registerListener(new PostPurchaseRankApplier(pexProductRepository));
+        registerListener(new PostPurchaseRankApplier(pexProductRepository, getPlugin().getServer()));
         registerListener(new ApplicableRanksFilterListener(pexProductRepository));
         if (isAllowAutomaticConversion()) {
             registerListener(new GroupMigrationJoinListener(permissionManager, lanatus));

@@ -16,6 +16,7 @@ import li.l1t.lanatus.shop.api.event.PostPurchaseEvent;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.module.lanatus.pex.product.PexProduct;
 import li.l1t.mtc.module.lanatus.pex.product.PexProductRepository;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -26,8 +27,11 @@ import org.bukkit.event.EventHandler;
  * @since 2016-25-11
  */
 public class PostPurchaseRankApplier extends AbstractPurchaseListener {
-    public PostPurchaseRankApplier(PexProductRepository pexProductRepository) {
+    private final Server server;
+
+    public PostPurchaseRankApplier(PexProductRepository pexProductRepository, Server server) {
         super(pexProductRepository);
+        this.server = server;
     }
 
     @EventHandler
@@ -53,6 +57,7 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
 
     private void applyProduct(Player player, PexProduct product) {
         setRankFor(player, product.getTargetRank());
+        executePostPurchaseCommands(product);
     }
 
     private void setRankFor(Player player, String targetRank) {
@@ -73,6 +78,20 @@ public class PostPurchaseRankApplier extends AbstractPurchaseListener {
                 trySave(account, true);
             }
         }
+    }
 
+    private void executePostPurchaseCommands(PexProduct product) {
+        for(String command : product.getCommands()) {
+            executePostPurchaseCommand(command);
+        }
+    }
+
+    private void executePostPurchaseCommand(String command) {
+        String rawCommand = stripCommandSlashIfPresent(command);
+        server.dispatchCommand(server.getConsoleSender(), rawCommand);
+    }
+
+    private String stripCommandSlashIfPresent(String command) {
+        return command.replaceFirst("^/", "");
     }
 }
