@@ -7,19 +7,24 @@
 
 package li.l1t.mtc.module.lanatus.pex.product;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
+ * Represents a product's Lanatus-PEx specific metadata.
+ *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11
  */
 public class SqlPexProduct implements PexProduct {
     private final UUID productId;
+    private final List<String> commands;
     private String initialRank;
     private String targetRank;
 
-    public SqlPexProduct(UUID productId, String initialRank, String targetRank) {
+    public SqlPexProduct(UUID productId, List<String> commands, String initialRank, String targetRank) {
         this.productId = productId;
+        this.commands = commands;
         this.initialRank = initialRank;
         this.targetRank = targetRank;
     }
@@ -45,5 +50,10 @@ public class SqlPexProduct implements PexProduct {
 
     public void setTargetRank(String targetRank) {
         this.targetRank = targetRank;
+    }
+
+    @Override
+    public List<String> getCommands() {
+        return commands;
     }
 }

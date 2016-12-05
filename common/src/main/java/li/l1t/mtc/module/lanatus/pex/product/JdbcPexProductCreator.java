@@ -11,6 +11,8 @@ import li.l1t.lanatus.sql.common.AbstractJdbcEntityCreator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Creates instances of pex product metadata from JDBC ResultSet objects.
@@ -23,7 +25,12 @@ class JdbcPexProductCreator extends AbstractJdbcEntityCreator<PexProduct> {
     public PexProduct createFromCurrentRow(ResultSet rs) throws SQLException {
         return new SqlPexProduct(
                 uuid(rs, "product_id"),
-                rs.getString("sourcerank"), rs.getString("targetrank")
+                commaSeparated(rs, "commands"), rs.getString("sourcerank"), rs.getString("targetrank")
         );
+    }
+
+    private List<String> commaSeparated(ResultSet rs, String column) throws SQLException {
+        String source = rs.getString(column);
+        return Arrays.asList(source.split(", ?"));
     }
 }

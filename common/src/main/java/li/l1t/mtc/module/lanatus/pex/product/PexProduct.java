@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.lanatus.pex.product;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,4 +20,5 @@ public interface PexProduct {
     UUID getProductId();
     String getInitialRank();
     String getTargetRank();
+    List<String> getCommands();
 }
