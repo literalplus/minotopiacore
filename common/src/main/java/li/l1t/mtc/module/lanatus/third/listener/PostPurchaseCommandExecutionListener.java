@@ -33,6 +33,9 @@ public class PostPurchaseCommandExecutionListener implements Listener {
 
     @EventHandler
     public void onPostPurchase(PostPurchaseEvent event) {
+        if(!event.getProduct().getModule().equals(LanatusThirdModule.MODULE_NAME)) {
+            return;
+        }
         thirdProductRepository.getByProduct(event.getProduct())
                 .ifPresent(thirdProduct -> handlePurchase(event, thirdProduct));
     }

@@ -22,6 +22,7 @@ import li.l1t.mtc.module.lanatus.third.product.ThirdProductRepository;
  */
 public class LanatusThirdModule extends MTCModuleAdapter {
     public static final String NAME = "LanatusThird";
+    public static final String MODULE_NAME = "mtc-la3";
     @InjectMe
     private SqlThirdProductRepository thirdProductRepository;
 
