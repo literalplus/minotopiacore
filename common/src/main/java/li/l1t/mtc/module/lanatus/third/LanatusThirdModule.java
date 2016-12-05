@@ -7,7 +7,12 @@
 
 package li.l1t.mtc.module.lanatus.third;
 
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.MTCModuleAdapter;
+import li.l1t.mtc.module.lanatus.third.listener.PostPurchaseCommandExecutionListener;
+import li.l1t.mtc.module.lanatus.third.product.SqlThirdProductRepository;
+import li.l1t.mtc.module.lanatus.third.product.ThirdProductRepository;
 
 /**
  * A module that allows third-party products to be bought via Lanatus by executing commands.
@@ -17,8 +22,20 @@ import li.l1t.mtc.module.MTCModuleAdapter;
  */
 public class LanatusThirdModule extends MTCModuleAdapter {
     public static final String NAME = "LanatusThird";
+    @InjectMe
+    private SqlThirdProductRepository thirdProductRepository;
 
     public LanatusThirdModule() {
         super(NAME, false);
+    }
+
+    @Override
+    public void enable(MTCPlugin plugin) throws Exception {
+        super.enable(plugin);
+        registerListener(new PostPurchaseCommandExecutionListener(this));
+    }
+
+    public ThirdProductRepository thirdProducts() {
+        return thirdProductRepository;
     }
 }

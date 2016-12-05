@@ -24,6 +24,6 @@ class JdbcThirdProductFetcher extends JdbcProductMetadataFetcher<ThirdProduct> {
 
     @Override
     protected String buildSelect(String whereClause) {
-        return "SELECT product_id, sourcerank, targetrank, commands FROM " + SqlThirdProductRepository.TABLE_NAME + " " + whereClause;
+        return "SELECT product_id, commands FROM " + SqlThirdProductRepository.TABLE_NAME + " " + whereClause;
     }
 }
