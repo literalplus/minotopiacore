@@ -144,6 +144,7 @@ public class FullDistributionManager implements Cache {
                 .lore(String.format("§6UUID: %s", receiver.getUniqueId().toString().substring(0, 9)));
 
         Arrays.stream(Enchantment.values())
+                .filter(e -> !e.isCursed())
                 .filter(e -> e.canEnchantItem(factory.getBase()))
                 .filter(e -> data.isThorns() || !e.equals(Enchantment.THORNS))
                 .forEach(e -> factory.enchant(e, e.getMaxLevel()));
