@@ -7,8 +7,9 @@
 
 package li.l1t.mtc.module.lanatus.pex.product;
 
+import li.l1t.mtc.module.lanatus.base.product.ProductMetadata;
+
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Stores additional metadata for Lanatus rank products.
@@ -16,9 +17,10 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11
  */
-public interface PexProduct {
-    UUID getProductId();
+public interface PexProduct extends ProductMetadata {
     String getInitialRank();
+
     String getTargetRank();
+
     List<String> getCommands();
 }

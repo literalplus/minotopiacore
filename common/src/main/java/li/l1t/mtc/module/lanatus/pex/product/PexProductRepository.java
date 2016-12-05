@@ -13,7 +13,7 @@ import li.l1t.lanatus.api.product.Product;
 import java.util.Optional;
 
 /**
- * A repository for additional metadata atttached to PEx products.
+ * A repository for additional metadata attached to PEx products.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11

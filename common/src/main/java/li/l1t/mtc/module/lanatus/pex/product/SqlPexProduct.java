@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.module.lanatus.pex.product;
 
+import li.l1t.mtc.module.lanatus.base.product.AbstractProductMetadata;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -16,22 +18,16 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-25-11
  */
-public class SqlPexProduct implements PexProduct {
-    private final UUID productId;
+public class SqlPexProduct extends AbstractProductMetadata implements PexProduct {
     private final List<String> commands;
     private String initialRank;
     private String targetRank;
 
     public SqlPexProduct(UUID productId, List<String> commands, String initialRank, String targetRank) {
-        this.productId = productId;
+        super(productId);
         this.commands = commands;
         this.initialRank = initialRank;
         this.targetRank = targetRank;
-    }
-
-    @Override
-    public UUID getProductId() {
-        return productId;
     }
 
     @Override
