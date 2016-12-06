@@ -37,6 +37,7 @@ public class CommandShopAdmin extends MTCPlayerOnlyCommandExecutor {
         actionList.add(new ForceDiscountAdminAction(module));
         actionList.add(new DiscountAdminAction(module));
         actionList.add(new InfoAdminAction(module));
+        actionList.add(new ReloadAdminAction(module));
     }
 
     @Override
