@@ -10,6 +10,7 @@ package li.l1t.mtc.module.lanatus.perk.repository;
 import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.lanatus.sql.common.JdbcEntityCreator;
 import li.l1t.mtc.module.lanatus.base.product.JdbcProductMetadataFetcher;
+import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 
 /**
  * Fetches perk metadata from a JDBC data source.
@@ -24,6 +25,6 @@ class JdbcPerkMetaFetcher extends JdbcProductMetadataFetcher<PerkMeta> {
 
     @Override
     protected String buildSelect(String whereClause) {
-        return "SELECT product_id, type, data FROM " + PerkRepository.TABLE_NAME + " " + whereClause;
+        return "SELECT product_id, type, data FROM " + SqlPerkRepository.TABLE_NAME + " " + whereClause;
     }
 }

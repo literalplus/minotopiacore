@@ -13,6 +13,7 @@ import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.common.sql.sane.result.QueryResult;
 import li.l1t.lanatus.sql.common.AbstractJdbcFetcher;
 import li.l1t.lanatus.sql.common.JdbcEntityCreator;
+import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 
 import java.sql.SQLException;
 import java.util.Set;
@@ -63,7 +64,7 @@ class JdbcAvailablePerksFetcher extends AbstractJdbcFetcher<AvailablePerk> {
 
     @Override
     protected String buildSelect(String whereClause) {
-        return "SELECT product_id, player_id, validuntil FROM " + PerkRepository.AVAILABLE_TABLE_NAME + " WHERE " + whereClause;
+        return "SELECT product_id, player_id, validuntil FROM " + SqlPerkRepository.AVAILABLE_TABLE_NAME + " WHERE " + whereClause;
     }
 
     private void evictExpiredPerks() {
@@ -75,6 +76,6 @@ class JdbcAvailablePerksFetcher extends AbstractJdbcFetcher<AvailablePerk> {
     }
 
     private String buildDelete(String whereClause) {
-        return "DELETE FROM " + PerkRepository.AVAILABLE_TABLE_NAME + " WHERE " + whereClause;
+        return "DELETE FROM " + SqlPerkRepository.AVAILABLE_TABLE_NAME + " WHERE " + whereClause;
     }
 }

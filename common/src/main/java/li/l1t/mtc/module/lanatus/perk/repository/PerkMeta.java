@@ -34,4 +34,13 @@ public class PerkMeta extends AbstractProductMetadata {
     public String getData() {
         return data;
     }
+
+
+    @Override
+    public String toString() {
+        return "PerkMeta{" +
+                "type='" + type + '\'' +
+                ", data='" + data + '\'' +
+                '}';
+    }
 }

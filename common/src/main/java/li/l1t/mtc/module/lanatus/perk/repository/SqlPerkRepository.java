@@ -13,9 +13,9 @@ import li.l1t.common.collections.cache.OptionalCache;
 import li.l1t.common.collections.cache.OptionalGuavaCache;
 import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.lanatus.api.LanatusClient;
-import li.l1t.lanatus.api.LanatusRepository;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
+import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-06
  */
-public class PerkRepository implements LanatusRepository {
+public class SqlPerkRepository implements PerkRepository {
     public static final String TABLE_NAME = "mt_main.lanatus_perk_product";
     public static final String AVAILABLE_TABLE_NAME = "mt_main.lanatus_perk_available";
     public static final String ENABLED_TABLE_NAME = "mt_main.lanatus_perk_enabled";
@@ -41,30 +41,30 @@ public class PerkRepository implements LanatusRepository {
     private final LanatusClient client;
 
     @InjectMe
-    public PerkRepository(MTCLanatusClient client, SaneSql sql) {
+    public SqlPerkRepository(MTCLanatusClient client, SaneSql sql) {
         this.client = client;
         this.perkMetaFetcher = new JdbcPerkMetaFetcher(new JdbcPerkMetaCreator(), sql);
         this.availablePerksFetcher = new JdbcAvailablePerksFetcher(new JdbcAvailablePerkCreator(), sql);
         this.enabledPerksFetcher = new JdbcEnabledPerksFetcher(sql);
     }
 
-    public Optional<PerkMeta> findByProductId(UUID productId) {
+    @Override public Optional<PerkMeta> findByProductId(UUID productId) {
         return idMetaCache.getOrCompute(productId, perkMetaFetcher::findByProduct);
     }
 
-    public AvailablePerksSet findAvailableByPlayerId(UUID playerId) {
+    @Override public AvailablePerksSet findAvailableByPlayerId(UUID playerId) {
         return playerAvailablePerksCache.getOrCompute(playerId, availablePerksFetcher::findByPlayerId);
     }
 
-    public Collection<PerkMeta> findEnabledByPlayerId(UUID playerId) {
+    @Override public Collection<PerkMeta> findEnabledByPlayerId(UUID playerId) {
         return playerEnabledPerksCache.getOrCompute(playerId, this::fetchEnabledPerks);
     }
 
-    public boolean isPerkEnabled(UUID playerId, PerkMeta perk) {
+    @Override public boolean isPerkEnabled(UUID playerId, PerkMeta perk) {
         return findEnabledByPlayerId(playerId).contains(perk);
     }
 
-    public boolean isPerkEnabled(UUID playerId, UUID perkId) {
+    @Override public boolean isPerkEnabled(UUID playerId, UUID perkId) {
         if(playerEnabledPerksCache.containsKey(playerId)) {
             return playerEnabledPerksCache.get(playerId)
                     .orElseThrow(IllegalStateException::new)

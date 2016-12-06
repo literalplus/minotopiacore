@@ -11,7 +11,9 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
-import li.l1t.mtc.module.lanatus.perk.repository.PerkRepository;
+import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
+import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
 
 /**
  * Provides selectable perks that may be purchased through Lanatus.
@@ -24,6 +26,8 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private int concurrentPerkLimit = 3;
     @InjectMe
     private PerkRepository perkRepository;
+    @InjectMe
+    private StringPerkFactory perkFactory;
 
     public LanatusPerkModule() {
         super("LanatusPerk", "modules/lanatus-perk.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -44,5 +48,9 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
 
     public int getConcurrentPerkLimit() {
         return concurrentPerkLimit;
+    }
+
+    public CompoundPerkFactory perkFactory() {
+        return perkFactory;
     }
 }
