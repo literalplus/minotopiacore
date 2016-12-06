@@ -28,8 +28,8 @@ class ReloadAdminAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) {
-        module.reloadConfig();
         module.getItemConfig().tryLoad();
+        module.reloadConfig();
         MessageType.RESULT_LINE_SUCCESS.sendTo(plr, "Konfigurierts relodiert. Herzlichen Glückwunsch!");
     }
 
