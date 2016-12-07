@@ -16,6 +16,7 @@ import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ItemIconService;
+import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
@@ -52,7 +53,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
     private final LocalPerkManager manager;
 
     @InjectMe
-    public CommandPerks(Plugin plugin, MTCLanatusClient lanatus, SqlPerkRepository perkRepository,
+    public CommandPerks(MTCPlugin plugin, MTCLanatusClient lanatus, SqlPerkRepository perkRepository,
                         SimpleItemIconService iconService, PerkEnableService enableService, LocalPerkManager manager) {
         this.plugin = plugin;
         this.lanatus = lanatus;
