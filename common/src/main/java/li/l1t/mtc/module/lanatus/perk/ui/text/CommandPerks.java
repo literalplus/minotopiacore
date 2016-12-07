@@ -17,6 +17,7 @@ import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
@@ -70,6 +71,19 @@ public class CommandPerks extends BukkitExecutionExecutor {
     @Override
     public boolean execute(CommandExecution exec) throws UserException, InternalException {
         Player player = exec.player();
+        if(hasAnyPerksAvailable(player)) {
+            openMenu(player);
+        } else {
+            exec.respond(MessageType.USER_ERROR, "Du besitzt keine Perks.");
+        }
+        return true;
+    }
+
+    private boolean hasAnyPerksAvailable(Player player) {
+        return !perkRepository.findAvailableByPlayerId(player.getUniqueId()).getValidPerks().isEmpty();
+    }
+
+    private void openMenu(Player player) {
         MyPerksMenu menu = new MyPerksMenu(
                 player, plugin, this::handlePerkClick,
                 perk -> createPerkIcon(perk, player)
@@ -79,7 +93,6 @@ public class CommandPerks extends BukkitExecutionExecutor {
             menu.addToTopRow(5, shopButton());
         }
         menu.open();
-        return true;
     }
 
     private Set<Perk> findEnabledPerks(Player player) {
