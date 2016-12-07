@@ -37,6 +37,6 @@ public class AvailablePerk extends AbstractProductMetadata {
     }
 
     public boolean isExpired() {
-        return expiryInstant.isAfter(Instant.now());
+        return expiryInstant != null && expiryInstant.isAfter(Instant.now());
     }
 }
