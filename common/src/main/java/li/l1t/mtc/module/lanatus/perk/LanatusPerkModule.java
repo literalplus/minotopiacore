@@ -12,6 +12,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.listener.PostPurchasePerkListener;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import li.l1t.mtc.module.lanatus.perk.ui.text.CommandPerks;
@@ -24,6 +25,7 @@ import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
  * @since 2016-12-06
  */
 public class LanatusPerkModule extends ConfigurableMTCModule {
+    public static final String MODULE_NAME ="mtc-laperk";
     private static final String MAX_CONCURRENT_PERKS_PATH = "concurrent-perk-limit";
     private int concurrentPerkLimit = 3;
     @InjectMe
@@ -45,6 +47,7 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerCommand(commandPerks, "laperks", "perks");
+        registerListener(new PostPurchasePerkListener(perkRepository));
     }
 
     @Override
