@@ -12,8 +12,8 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
-import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import li.l1t.mtc.module.lanatus.perk.ui.text.CommandPerks;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 
@@ -27,7 +27,7 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private static final String MAX_CONCURRENT_PERKS_PATH = "concurrent-perk-limit";
     private int concurrentPerkLimit = 3;
     @InjectMe
-    private PerkRepository perkRepository;
+    private SqlPerkRepository perkRepository;
     @InjectMe
     private StringPerkFactory perkFactory;
     @InjectMe
