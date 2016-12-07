@@ -14,6 +14,7 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
+import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 
 /**
  * Provides selectable perks that may be purchased through Lanatus.
@@ -30,6 +31,8 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private StringPerkFactory perkFactory;
     @InjectMe
     private LocalPerkManager manager;
+    @InjectMe(required = false)
+    private LanatusShopModule shopModule;
 
     public LanatusPerkModule() {
         super("LanatusPerk", "modules/lanatus-perk.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -58,5 +61,9 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
 
     public LocalPerkManager getManager() {
         return manager;
+    }
+
+    public boolean isLanatusShopAvailable() {
+        return shopModule != null;
     }
 }
