@@ -14,6 +14,7 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.ui.text.CommandPerks;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 
 /**
@@ -33,6 +34,8 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private LocalPerkManager manager;
     @InjectMe(required = false)
     private LanatusShopModule shopModule;
+    @InjectMe
+    private CommandPerks commandPerks;
 
     public LanatusPerkModule() {
         super("LanatusPerk", "modules/lanatus-perk.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -41,6 +44,7 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
+        registerCommand(commandPerks, "laperks", "perks");
     }
 
     @Override

@@ -7,6 +7,7 @@
 
 package li.l1t.lanatus.shop.api;
 
+import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.lanatus.api.account.LanatusAccount;
 import li.l1t.lanatus.api.product.Product;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +22,8 @@ import java.util.UUID;
  */
 public interface ItemIconService {
     ItemStack createIconStack(Product product, UUID playerId);
+
+    ItemStackFactory createRawIconStack(Product product, boolean hasPosition);
 
     ItemStack createNotAffordableStack(Product product, LanatusAccount account);
 

@@ -9,11 +9,14 @@ package li.l1t.mtc.module.lanatus.perk;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import li.l1t.common.collections.cache.IdCache;
+import li.l1t.common.collections.cache.MapIdCache;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.lanatus.perk.api.Perk;
 import li.l1t.mtc.module.lanatus.perk.api.PerkFactory;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.repository.PerkMeta;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import org.bukkit.entity.Player;
 
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
  * @since 2016-12-06
  */
 public class LocalPerkManager {
+    private final IdCache<UUID, Perk> perkCache = new MapIdCache<>(Perk::getProductId);
     private final Multimap<UUID, Perk> playerPerks = MultimapBuilder.hashKeys().arrayListValues().build();
     private final PerkRepository repository;
     private final PerkFactory factory;
@@ -36,6 +40,11 @@ public class LocalPerkManager {
     public LocalPerkManager(SqlPerkRepository repository, StringPerkFactory factory) {
         this.repository = repository;
         this.factory = factory;
+    }
+
+    public void reapplyAll(Player player) {
+        removeAll(player);
+        applyEnabled(player);
     }
 
     public void removeAll(Player player) {
@@ -49,7 +58,7 @@ public class LocalPerkManager {
 
     public Collection<Perk> applyEnabled(Player player) {
         return repository.findEnabledByPlayerId(player.getUniqueId()).stream()
-                .map(factory::createPerk)
+                .map(this::getPerk)
                 .peek(perk -> apply(player, perk))
                 .collect(Collectors.toSet());
     }
@@ -57,5 +66,9 @@ public class LocalPerkManager {
     public void apply(Player player, Perk perk) {
         perk.applyTo(player);
         playerPerks.put(player.getUniqueId(), perk);
+    }
+
+    public Perk getPerk(PerkMeta meta) {
+        return perkCache.getOrCompute(meta.getProductId(), ignore -> factory.createPerk(meta));
     }
 }

@@ -42,16 +42,22 @@ public class SimpleItemIconService implements ItemIconService {
         return createIconStack(product, hasProduct);
     }
 
-    public ItemStack createIconStack(Product product, boolean hasPosition) {
-        ItemStackFactory factory = createBaseProductStack(product, hasPosition);
+    private ItemStack createIconStack(Product product, boolean hasProduct) {
+        ItemStackFactory factory = createRawIconStack(product, hasProduct);
         if (product.isPermanent()) {
             factory.lore("§e§o(permanent)");
         }
-        if (hasPosition && product.isPermanent()) {
+        if (hasProduct && product.isPermanent()) {
             factory.lore("§a§o(im Besitz)");
             factory.glow();
         }
         return factory.hideAll().produce();
+    }
+
+    @Override
+    public ItemStackFactory createRawIconStack(Product product, boolean hasPosition) {
+        ItemStackFactory factory = createBaseProductStack(product, hasPosition);
+        return factory.hideAll();
     }
 
     private ItemStackFactory createBaseProductStack(Product product, boolean hasPosition) {
