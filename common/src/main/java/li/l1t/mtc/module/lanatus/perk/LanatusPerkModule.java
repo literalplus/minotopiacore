@@ -28,6 +28,8 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private PerkRepository perkRepository;
     @InjectMe
     private StringPerkFactory perkFactory;
+    @InjectMe
+    private LocalPerkManager manager;
 
     public LanatusPerkModule() {
         super("LanatusPerk", "modules/lanatus-perk.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -52,5 +54,9 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
 
     public CompoundPerkFactory perkFactory() {
         return perkFactory;
+    }
+
+    public LocalPerkManager getManager() {
+        return manager;
     }
 }

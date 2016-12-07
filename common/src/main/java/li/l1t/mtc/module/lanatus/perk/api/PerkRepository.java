@@ -11,6 +11,7 @@ import li.l1t.lanatus.api.LanatusRepository;
 import li.l1t.mtc.module.lanatus.perk.repository.AvailablePerksSet;
 import li.l1t.mtc.module.lanatus.perk.repository.PerkMeta;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,9 +27,19 @@ public interface PerkRepository extends LanatusRepository {
 
     AvailablePerksSet findAvailableByPlayerId(UUID playerId);
 
+    boolean isPerkAvailable(UUID playerId, UUID perkId);
+
     Collection<PerkMeta> findEnabledByPlayerId(UUID playerId);
 
     boolean isPerkEnabled(UUID playerId, PerkMeta perk);
 
     boolean isPerkEnabled(UUID playerId, UUID perkId);
+
+    void enablePlayerPerk(UUID playerId, UUID perkId);
+
+    void disablePlayerPerk(UUID playerId, UUID perkId);
+
+    void makeAvailablePermanently(UUID playerId, UUID perkId);
+
+    void makeAvailableUntil(UUID playerId, UUID perkId, Instant expiryTime);
 }

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Stores the set of perks available to a player.
@@ -46,5 +47,9 @@ public class AvailablePerksSet {
                 .filter(AvailablePerk::isExpired)
                 .peek(availablePerks::remove)
                 .collect(Collectors.toSet());
+    }
+
+    public Stream<AvailablePerk> stream() {
+        return availablePerks.stream();
     }
 }
