@@ -51,6 +51,6 @@ public class PostPurchasePerkListener implements Listener {
     }
 
     private void enablePerk(PostPurchaseEvent event, PerkMeta meta) {
-        perkRepository.enablePlayerPerk(event.getPlayer().getUniqueId(), meta.getProductId());
+        perkRepository.makeAvailablePermanently(event.getPlayer().getUniqueId(), meta.getProductId());
     }
 }

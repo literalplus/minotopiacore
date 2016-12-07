@@ -71,7 +71,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
     @Override
     public boolean execute(CommandExecution exec) throws UserException, InternalException {
         Player player = exec.player();
-        if(hasAnyPerksAvailable(player)) {
+        if (hasAnyPerksAvailable(player)) {
             openMenu(player);
         } else {
             exec.respond(MessageType.USER_ERROR, "Du besitzt keine Perks.");
@@ -124,7 +124,9 @@ public class CommandPerks extends BukkitExecutionExecutor {
         boolean perkEnabled = perkRepository.isPerkEnabled(player.getUniqueId(), perk.getProductId());
         ItemStackFactory factory = iconService.createRawIconStack(product, perkEnabled);
         if (perkEnabled) {
-            factory.lore(" ").lore("§a§o(aktiv)").glow();
+            factory.lore(" ").lore("§7Klicken zum §cDeaktivieren").glow();
+        } else {
+            factory.lore(" ").lore("§7Klicken zum §aAktivieren");
         }
         return factory.produce();
     }
