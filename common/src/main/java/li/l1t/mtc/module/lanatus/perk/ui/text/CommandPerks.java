@@ -20,7 +20,6 @@ import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
-import li.l1t.mtc.module.lanatus.perk.LanatusPerkModule;
 import li.l1t.mtc.module.lanatus.perk.LocalPerkManager;
 import li.l1t.mtc.module.lanatus.perk.api.Perk;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
@@ -33,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @since 2016-12-07
  */
 public class CommandPerks extends BukkitExecutionExecutor {
-    private final LanatusPerkModule module;
+    private final Plugin plugin;
     private final LanatusClient lanatus;
     private final PerkRepository perkRepository;
     private final ItemIconService iconService;
@@ -52,9 +52,9 @@ public class CommandPerks extends BukkitExecutionExecutor {
     private final LocalPerkManager manager;
 
     @InjectMe
-    public CommandPerks(LanatusPerkModule module, MTCLanatusClient lanatus, SqlPerkRepository perkRepository,
+    public CommandPerks(Plugin plugin, MTCLanatusClient lanatus, SqlPerkRepository perkRepository,
                         SimpleItemIconService iconService, PerkEnableService enableService, LocalPerkManager manager) {
-        this.module = module;
+        this.plugin = plugin;
         this.lanatus = lanatus;
         this.perkRepository = perkRepository;
         this.iconService = iconService;
@@ -66,14 +66,12 @@ public class CommandPerks extends BukkitExecutionExecutor {
     public boolean execute(CommandExecution exec) throws UserException, InternalException {
         Player player = exec.player();
         MyPerksMenu menu = new MyPerksMenu(
-                player, module.getPlugin(),
-                this::handlePerkClick,
+                player, plugin, this::handlePerkClick,
                 perk -> createPerkIcon(perk, player)
         );
         menu.addItems(findEnabledPerks(player));
-        if (module.isLanatusShopAvailable()) {
-            menu.addToTopRow(5, shopButton());
-        }
+        menu.addToTopRow(5, shopButton());
+
         menu.open();
         return true;
     }
