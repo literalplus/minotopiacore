@@ -22,6 +22,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.perk.LocalPerkManager;
+import li.l1t.mtc.module.lanatus.perk.PerksConfig;
 import li.l1t.mtc.module.lanatus.perk.api.Perk;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
@@ -51,16 +52,19 @@ public class CommandPerks extends BukkitExecutionExecutor {
     private final ItemIconService iconService;
     private final PerkEnableService enableService;
     private final LocalPerkManager manager;
+    private final PerksConfig config;
 
     @InjectMe
     public CommandPerks(MTCPlugin plugin, MTCLanatusClient lanatus, SqlPerkRepository perkRepository,
-                        SimpleItemIconService iconService, PerkEnableService enableService, LocalPerkManager manager) {
+                        SimpleItemIconService iconService, PerkEnableService enableService, LocalPerkManager manager,
+                        PerksConfig config) {
         this.plugin = plugin;
         this.lanatus = lanatus;
         this.perkRepository = perkRepository;
         this.iconService = iconService;
         this.enableService = enableService;
         this.manager = manager;
+        this.config = config;
     }
 
     @Override
@@ -71,8 +75,9 @@ public class CommandPerks extends BukkitExecutionExecutor {
                 perk -> createPerkIcon(perk, player)
         );
         menu.addItems(findEnabledPerks(player));
-        menu.addToTopRow(5, shopButton());
-
+        if (config.isLanatusShopAvailable()) {
+            menu.addToTopRow(5, shopButton());
+        }
         menu.open();
         return true;
     }

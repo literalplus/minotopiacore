@@ -17,6 +17,7 @@ import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import li.l1t.mtc.module.lanatus.perk.ui.text.CommandPerks;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
+import li.l1t.mtc.yaml.ManagedConfiguration;
 
 /**
  * Provides selectable perks that may be purchased through Lanatus.
@@ -26,8 +27,6 @@ import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
  */
 public class LanatusPerkModule extends ConfigurableMTCModule {
     public static final String MODULE_NAME ="mtc-laperk";
-    private static final String MAX_CONCURRENT_PERKS_PATH = "concurrent-perk-limit";
-    private int concurrentPerkLimit = 3;
     @InjectMe
     private SqlPerkRepository perkRepository;
     @InjectMe
@@ -38,6 +37,8 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
     private LanatusShopModule shopModule;
     @InjectMe
     private CommandPerks commandPerks;
+    @InjectMe
+    private PerksConfig config;
 
     public LanatusPerkModule() {
         super("LanatusPerk", "modules/lanatus-perk.cfg.yml", ClearCacheBehaviour.RELOAD);
@@ -52,14 +53,7 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-        configuration.options().copyDefaults(true);
-        configuration.addDefault(MAX_CONCURRENT_PERKS_PATH, concurrentPerkLimit);
-        concurrentPerkLimit = configuration.getInt(MAX_CONCURRENT_PERKS_PATH);
-        save();
-    }
-
-    public int getConcurrentPerkLimit() {
-        return concurrentPerkLimit;
+        config.reloadFrom(this);
     }
 
     public CompoundPerkFactory perkFactory() {
@@ -70,7 +64,11 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
         return manager;
     }
 
-    public boolean isLanatusShopAvailable() {
+    boolean isLanatusShopAvailable() {
         return shopModule != null;
+    }
+
+    ManagedConfiguration getConfig() {
+        return configuration;
     }
 }

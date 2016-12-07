@@ -11,8 +11,8 @@ import li.l1t.lanatus.api.product.Product;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
-import li.l1t.mtc.module.lanatus.perk.LanatusPerkModule;
 import li.l1t.mtc.module.lanatus.perk.LocalPerkManager;
+import li.l1t.mtc.module.lanatus.perk.PerksConfig;
 import li.l1t.mtc.module.lanatus.perk.api.Perk;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
 import li.l1t.mtc.module.lanatus.perk.repository.PerkMeta;
@@ -28,14 +28,14 @@ import java.util.Collection;
  * @since 2016-12-06
  */
 public class PerkEnableService {
-    private final LanatusPerkModule module;
+    private final PerksConfig config;
     private final PerkRepository repository;
     private final LocalPerkManager manager;
     private final MTCLanatusClient lanatus;
 
     @InjectMe
-    public PerkEnableService(LanatusPerkModule module, SqlPerkRepository repository, LocalPerkManager manager, MTCLanatusClient lanatus) {
-        this.module = module;
+    public PerkEnableService(PerksConfig config, SqlPerkRepository repository, LocalPerkManager manager, MTCLanatusClient lanatus) {
+        this.config = config;
         this.repository = repository;
         this.manager = manager;
         this.lanatus = lanatus;
@@ -52,8 +52,8 @@ public class PerkEnableService {
             return false;
         }
         Collection<PerkMeta> enabled = repository.findEnabledByPlayerId(player.getUniqueId());
-        if (enabled.size() > module.getConcurrentPerkLimit()) {
-            MessageType.USER_ERROR.sendTo(player, "Du kannst nicht mehr als %d Perks gleichzeitig aktiviert haben.", module.getConcurrentPerkLimit());
+        if (enabled.size() > config.getConcurrentPerkLimit()) {
+            MessageType.USER_ERROR.sendTo(player, "Du kannst nicht mehr als %d Perks gleichzeitig aktiviert haben.", config.getConcurrentPerkLimit());
         }
         repository.enablePlayerPerk(player.getUniqueId(), perk.getProductId());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Perk §p%s§a aktiviert.", product.getDisplayName());
