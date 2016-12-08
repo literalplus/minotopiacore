@@ -20,6 +20,7 @@ import li.l1t.mtc.module.lanatus.perk.repository.PerkMeta;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,8 +49,8 @@ public class LocalPerkManager {
     }
 
     public void removeAll(Player player) {
-        //stream call for copy -> avoids ConcurrentModificationException
-        playerPerks.get(player.getUniqueId()).stream().forEach(perk -> remove(player, perk));
+        new ArrayList<>(playerPerks.get(player.getUniqueId()))
+                .forEach(perk -> remove(player, perk));
     }
 
     public void remove(Player player, Perk perk) {
