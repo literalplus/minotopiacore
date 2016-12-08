@@ -122,7 +122,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
     }
 
     private void handleShopButtonClick(InventoryClickEvent event, MyPerksMenu menu) {
-        ( (Player) event.getWhoClicked() ).performCommand("lashop");
+        ((Player) event.getWhoClicked()).performCommand("lashop");
     }
 
     private ItemStack shopIcon() {

@@ -52,7 +52,7 @@ public class PerkEnableService {
             return false;
         }
         Collection<PerkMeta> enabled = repository.findEnabledByPlayerId(player.getUniqueId());
-        if (enabled.size() > config.getConcurrentPerkLimit()) {
+        if (enabled.size() >= config.getConcurrentPerkLimit()) {
             MessageType.USER_ERROR.sendTo(player, "Du kannst nicht mehr als %d Perks gleichzeitig aktiviert haben.", config.getConcurrentPerkLimit());
         }
         repository.enablePlayerPerk(player.getUniqueId(), perk.getProductId());
