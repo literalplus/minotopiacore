@@ -9,6 +9,7 @@ package li.l1t.mtc.module.lanatus.perk.listener;
 
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.event.PostPurchaseEvent;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.lanatus.perk.LanatusPerkModule;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
@@ -40,6 +41,7 @@ public class PostPurchasePerkListener implements Listener {
             Optional<PerkMeta> perkMeta = perkRepository.findByProductId(product.getUniqueId());
             if (perkMeta.isPresent()) {
                 enablePerk(event, perkMeta.get());
+                MessageType.RESULT_LINE_SUCCESS.sendTo(event.getPlayer(), "Tippe §p/perks§a, um deine Perks zu verwalten.");
             } else {
                 LOGGER.warn(
                         "Unknown perk: {} at player {} (purchase {})",
