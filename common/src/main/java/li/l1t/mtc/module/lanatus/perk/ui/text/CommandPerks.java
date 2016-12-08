@@ -26,6 +26,7 @@ import li.l1t.mtc.module.lanatus.perk.LocalPerkManager;
 import li.l1t.mtc.module.lanatus.perk.PerksConfig;
 import li.l1t.mtc.module.lanatus.perk.api.Perk;
 import li.l1t.mtc.module.lanatus.perk.api.PerkRepository;
+import li.l1t.mtc.module.lanatus.perk.repository.AvailablePerk;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
 import li.l1t.mtc.module.lanatus.perk.service.PerkEnableService;
 import li.l1t.mtc.module.lanatus.perk.ui.inventory.MyPerksMenu;
@@ -88,16 +89,17 @@ public class CommandPerks extends BukkitExecutionExecutor {
                 player, plugin, this::handlePerkClick,
                 perk -> createPerkIcon(perk, player)
         );
-        menu.addItems(findEnabledPerks(player));
+        menu.addItems(findAvailablePerks(player));
         if (config.isLanatusShopAvailable()) {
             menu.addToTopRow(4, shopButton());
         }
         menu.open();
     }
 
-    private Set<Perk> findEnabledPerks(Player player) {
-        return perkRepository.findEnabledByPlayerId(player.getUniqueId()).stream()
-                .map(manager::getPerk)
+    private Set<Perk> findAvailablePerks(Player player) {
+        return perkRepository.findAvailableByPlayerId(player.getUniqueId()).stream()
+                .map(AvailablePerk::getProductId)
+                .map(manager::getPerkById)
                 .collect(Collectors.toSet());
     }
 

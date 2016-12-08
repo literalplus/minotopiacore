@@ -71,4 +71,14 @@ public class LocalPerkManager {
     public Perk getPerk(PerkMeta meta) {
         return perkCache.getOrCompute(meta.getProductId(), ignore -> factory.createPerk(meta));
     }
+
+    public Perk getPerkById(UUID perkId) {
+        return perkCache.getOrCompute(perkId, this::createPerkById);
+    }
+
+    private Perk createPerkById(UUID perkId) {
+        PerkMeta meta = repository.findByProductId(perkId)
+                .orElseThrow(() -> new IllegalArgumentException("no perk by that id!"));
+        return factory.createPerk(meta);
+    }
 }
