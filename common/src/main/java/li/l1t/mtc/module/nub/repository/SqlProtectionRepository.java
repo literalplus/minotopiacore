@@ -52,14 +52,22 @@ public class SqlProtectionRepository implements ProtectionRepository {
         if (!findProtectionFor(protection.getPlayerId()).isPresent()) {
             throw new NoSuchProtectionException(protection.getPlayerId());
         } else {
-            writer.createOrUpdate(protection);
+            saveIfValidOrDeleteIfExpired(protection);
         }
     }
 
     @Override
     public NubProtection createProtection(UUID playerId, int durationMinutes) {
         SqlProtection protection = new SqlProtection(playerId, durationMinutes);
-        writer.createOrUpdate(protection);
+        saveIfValidOrDeleteIfExpired(protection);
         return protection;
+    }
+
+    private void saveIfValidOrDeleteIfExpired(NubProtection protection) {
+        if (protection.isExpired()) {
+            deleteProtection(protection);
+        } else {
+            writer.createOrUpdate(protection);
+        }
     }
 }

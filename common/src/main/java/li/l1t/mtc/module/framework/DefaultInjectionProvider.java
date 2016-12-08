@@ -15,6 +15,7 @@ import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.Injector;
 import li.l1t.mtc.hook.XLoginHook;
 import org.bukkit.Server;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Provides some default injections relevant to MTC modules.
@@ -48,6 +49,7 @@ public class DefaultInjectionProvider {
 
     private void registerPlugin() {
         injector.registerInstance(plugin, MTC.class);
+        injector.registerInstance(plugin, JavaPlugin.class);
         injector.registerInstance(plugin, MTCPlugin.class);
         injector.registerInstance(plugin.getModuleManager(), ModuleManager.class);
         injector.registerInstance(plugin.getXLoginHook(), XLoginHook.class);

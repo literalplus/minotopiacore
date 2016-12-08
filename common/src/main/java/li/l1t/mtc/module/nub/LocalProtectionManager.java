@@ -32,4 +32,14 @@ public class LocalProtectionManager {
         Preconditions.checkNotNull(playerId, "playerId");
         return protections.remove(playerId);
     }
+
+    public NubProtection getProtection(UUID playerId) {
+        Preconditions.checkNotNull(playerId, "playerId");
+        return protections.get(playerId);
+    }
+
+    public boolean hasProtection(UUID playerId) {
+        Preconditions.checkNotNull(playerId, "playerId");
+        return protections.containsKey(playerId);
+    }
 }

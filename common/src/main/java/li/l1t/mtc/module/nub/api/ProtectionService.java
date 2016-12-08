@@ -45,14 +45,14 @@ public interface ProtectionService {
     /**
      * Resumes the paused protection of given player. Also notifies them of the change.
      *
-     * @param player the player whose protection to pause
+     * @param player the player whose protection to resume
      *
-     * @throws IllegalArgumentException if given player does not have a paused protection
+     * @throws NoSuchProtectionException if given player does not have a paused protection
      */
-    void resumeProtection(Player player);
+    void resumeProtection(Player player) throws NoSuchProtectionException;
 
     /**
-     * Resumes given player's portection if they have a paused protection, or otherwise starts a protection on them.
+     * Resumes given player's protection if they have a paused protection, or otherwise starts a protection on them.
      *
      * @param player the player to operate on
      *

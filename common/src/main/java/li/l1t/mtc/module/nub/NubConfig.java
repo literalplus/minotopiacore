@@ -26,4 +26,8 @@ public class NubConfig {
         protectionDurationMinutes = config.getInt(PROTECTION_LENGTH_PATH);
         module.save();
     }
+
+    public int getProtectionDurationMinutes() {
+        return protectionDurationMinutes;
+    }
 }

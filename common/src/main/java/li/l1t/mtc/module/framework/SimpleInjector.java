@@ -9,13 +9,7 @@ package li.l1t.mtc.module.framework;
 
 import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.module.ModuleManager;
-import li.l1t.mtc.api.module.inject.ConstructorInjection;
-import li.l1t.mtc.api.module.inject.FieldInjection;
-import li.l1t.mtc.api.module.inject.Injection;
-import li.l1t.mtc.api.module.inject.InjectionTarget;
-import li.l1t.mtc.api.module.inject.Injector;
-import li.l1t.mtc.api.module.inject.PluginDependency;
-import li.l1t.mtc.api.module.inject.SimpleInjectionTarget;
+import li.l1t.mtc.api.module.inject.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
@@ -97,7 +91,7 @@ class SimpleInjector implements Injector {
     @SuppressWarnings("unchecked")
     private <T> InjectionTarget<T> createTargetFor(@Nonnull Class<T> clazz) {
         InjectionTarget<T> target;
-        if (JavaPlugin.class.isAssignableFrom(clazz)) {
+        if (JavaPlugin.class.isAssignableFrom(clazz) && !clazz.equals(JavaPlugin.class)) {
             target = (InjectionTarget<T>) //<-- unchecked
                     new PluginDependency<>(clazz.<JavaPlugin>asSubclass(JavaPlugin.class));
         } else {
