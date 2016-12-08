@@ -44,6 +44,7 @@ public class SimpleProtectionService implements ProtectionService {
     public void startProtection(Player player) {
         Preconditions.checkNotNull(player, "player");
         NubProtection protection = repository.createProtection(player.getUniqueId(), config.getProtectionDurationMinutes());
+        config.getIntro().sendTo(player, protection.getMinutesLeft());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Du bist jetzt für §p%d§a Minuten geschützt.",
                 protection.getMinutesLeft());
@@ -102,5 +103,22 @@ public class SimpleProtectionService implements ProtectionService {
     @Override
     public boolean hasProtection(Player player) {
         return manager.hasProtection(player.getUniqueId());
+    }
+
+    @Override
+    public void expireProtection(Player player, NubProtection protection) {
+        Preconditions.checkNotNull(player, "player");
+        Preconditions.checkNotNull(protection, "protection");
+        Preconditions.checkArgument(player.getUniqueId().equals(protection.getPlayerId()), "non-matching ids: ", protection.getPlayerId(), player.getUniqueId());
+        Preconditions.checkArgument(protection.isExpired(), "protection must be expired: ", protection.getPlayerId());
+        manager.removeProtection(player.getUniqueId());
+        repository.deleteProtection(protection);
+        config.getOutro().sendTo(player, 0);
+        MessageType.WARNING.sendTo(player, "Du bist jetzt nicht mehr durch N.u.b. geschützt.");
+    }
+
+    @Override
+    public boolean isEligibleForProtection(Player player) {
+        return !player.hasPlayedBefore() || repository.findProtectionFor(player.getUniqueId()).isPresent();
     }
 }

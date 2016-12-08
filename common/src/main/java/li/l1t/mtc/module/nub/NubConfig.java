@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.module.nub;
 
+import li.l1t.mtc.module.nub.ui.text.NubIntro;
+import li.l1t.mtc.module.nub.ui.text.NubOutro;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 
 /**
@@ -18,6 +20,13 @@ import li.l1t.mtc.yaml.ManagedConfiguration;
 public class NubConfig {
     private static final String PROTECTION_LENGTH_PATH = "protection-duration-minutes";
     private int protectionDurationMinutes = 30;
+    private final NubIntro intro;
+    private final NubOutro outro;
+
+    public NubConfig(NubIntro intro, NubOutro outro) {
+        this.intro = intro;
+        this.outro = outro;
+    }
 
     void loadFrom(NubModule module) {
         ManagedConfiguration config = module.getConfiguration();
@@ -25,9 +34,19 @@ public class NubConfig {
         config.addDefault(PROTECTION_LENGTH_PATH, protectionDurationMinutes);
         protectionDurationMinutes = config.getInt(PROTECTION_LENGTH_PATH);
         module.save();
+        intro.tryLoadFromDefaultLocation(module.getPlugin());
+        outro.tryLoadFromDefaultLocation(module.getPlugin());
     }
 
     public int getProtectionDurationMinutes() {
         return protectionDurationMinutes;
+    }
+
+    public NubIntro getIntro() {
+        return intro;
+    }
+
+    public NubOutro getOutro() {
+        return outro;
     }
 }

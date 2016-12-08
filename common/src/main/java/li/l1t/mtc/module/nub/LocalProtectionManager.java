@@ -10,9 +10,7 @@ package li.l1t.mtc.module.nub;
 import com.google.common.base.Preconditions;
 import li.l1t.mtc.module.nub.api.NubProtection;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Manages local protections.
@@ -41,5 +39,9 @@ public class LocalProtectionManager {
     public boolean hasProtection(UUID playerId) {
         Preconditions.checkNotNull(playerId, "playerId");
         return protections.containsKey(playerId);
+    }
+
+    public Collection<NubProtection> getAllProtections() {
+        return Collections.unmodifiableCollection(protections.values());
     }
 }

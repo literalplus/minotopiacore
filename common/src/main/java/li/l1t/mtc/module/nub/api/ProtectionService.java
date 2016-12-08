@@ -67,4 +67,23 @@ public interface ProtectionService {
      * @return whether given player is currently protected locally, not querying the database
      */
     boolean hasProtection(Player player);
+
+    /**
+     * @param player the player to examine
+     *
+     * @return whether given player is eligible for protection either through a paused protection or through not having
+     * played on the server before
+     */
+    boolean isEligibleForProtection(Player player);
+
+    /**
+     * Expires given protection, notifying given player of the event.
+     *
+     * @param player     the player to notify
+     * @param protection the protection to expire
+     *
+     * @throws IllegalArgumentException if given protection does not belong to given player or given protection has not
+     *                                  expired yet
+     */
+    void expireProtection(Player player, NubProtection protection);
 }

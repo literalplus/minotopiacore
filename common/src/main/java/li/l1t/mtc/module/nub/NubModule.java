@@ -11,7 +11,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
-import li.l1t.mtc.module.nub.ui.text.NubIntro;
+import li.l1t.mtc.module.nub.task.ProtectionCheckTask;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 
 /**
@@ -24,10 +24,11 @@ import li.l1t.mtc.yaml.ManagedConfiguration;
  */
 public class NubModule extends ConfigurableMTCModule {
     private static final String BASE_FOLDER_PATH = "modules/nub";
+
     @InjectMe
     private NubConfig config;
     @InjectMe
-    private NubIntro intro;
+    private ProtectionCheckTask checkTask;
 
     public NubModule() {
         super("Nub", BASE_FOLDER_PATH + "/nub.cfg.yml", ClearCacheBehaviour.RELOAD, false);
@@ -36,12 +37,12 @@ public class NubModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
+        checkTask.start();
     }
 
     @Override
     protected void reloadImpl() {
         config.loadFrom(this);
-        intro.tryLoadFromDefaultLocation(plugin);
     }
 
     ManagedConfiguration getConfiguration() {
