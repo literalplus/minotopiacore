@@ -12,6 +12,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
+import li.l1t.mtc.module.lanatus.perk.listener.NoHungerPerkListener;
 import li.l1t.mtc.module.lanatus.perk.listener.PostPurchasePerkListener;
 import li.l1t.mtc.module.lanatus.perk.perk.StringPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.repository.SqlPerkRepository;
@@ -49,6 +50,7 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
         super.enable(plugin);
         registerCommand(commandPerks, "laperks", "perks");
         registerListener(new PostPurchasePerkListener(perkRepository));
+        registerListener(new NoHungerPerkListener());
     }
 
     @Override

@@ -8,12 +8,13 @@
 package li.l1t.mtc.module.lanatus.perk.perk;
 
 import com.google.common.base.Preconditions;
-import li.l1t.mtc.module.lanatus.perk.api.CompoundPerkFactory;
-import li.l1t.mtc.module.lanatus.perk.api.Perk;
-import li.l1t.mtc.module.lanatus.perk.api.PerkFactory;
-import li.l1t.mtc.module.lanatus.perk.api.PotionPerk;
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.lanatus.perk.api.*;
+import li.l1t.mtc.module.lanatus.perk.perk.nohunger.potion.NoHungerPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.perk.potion.PotionPerkFactory;
 import li.l1t.mtc.module.lanatus.perk.repository.PerkMeta;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +28,14 @@ import java.util.Map;
 public class StringPerkFactory implements CompoundPerkFactory {
     private final Map<String, PerkFactory> factories = new HashMap<>();
 
-    private void registerDefaultFactories() {
+    @InjectMe
+    public StringPerkFactory(MTCPlugin plugin) {
+        registerDefaultFactories(plugin);
+    }
+
+    private void registerDefaultFactories(Plugin plugin) {
         registerFactory(PotionPerk.TYPE_NAME, new PotionPerkFactory());
+        registerFactory(NoHungerPerk.TYPE_NAME, new NoHungerPerkFactory(plugin));
     }
 
     @Override
