@@ -90,7 +90,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
         );
         menu.addItems(findEnabledPerks(player));
         if (config.isLanatusShopAvailable()) {
-            menu.addToTopRow(5, shopButton());
+            menu.addToTopRow(4, shopButton());
         }
         menu.open();
     }
@@ -108,7 +108,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
     }
 
     private void handleShopButtonClick(InventoryClickEvent event, MyPerksMenu menu) {
-        ((Player) event.getWhoClicked()).performCommand("/lashop");
+        ( (Player) event.getWhoClicked() ).performCommand("lashop");
     }
 
     private ItemStack shopIcon() {
