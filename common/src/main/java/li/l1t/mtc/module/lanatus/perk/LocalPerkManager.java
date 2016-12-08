@@ -48,7 +48,8 @@ public class LocalPerkManager {
     }
 
     public void removeAll(Player player) {
-        playerPerks.get(player.getUniqueId()).forEach(perk -> remove(player, perk));
+        //stream call for copy -> avoids ConcurrentModificationException
+        playerPerks.get(player.getUniqueId()).stream().forEach(perk -> remove(player, perk));
     }
 
     public void remove(Player player, Perk perk) {
