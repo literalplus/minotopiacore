@@ -54,8 +54,16 @@ public class PotionPerkFactory implements PerkFactory {
     }
 
     private Optional<Integer> findIntIgnoringFirstCharacter(String input) {
+        if (input.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return findInt(input.substring(1));
+        }
+    }
+
+    private Optional<Integer> findInt(String input) {
         try {
-            return Optional.of(Integer.parseInt(input.substring(1)));
+            return Optional.of(Integer.parseInt(input));
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
