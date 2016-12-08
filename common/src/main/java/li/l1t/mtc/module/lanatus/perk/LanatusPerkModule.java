@@ -58,6 +58,13 @@ public class LanatusPerkModule extends ConfigurableMTCModule {
         config.reloadFrom(this);
     }
 
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        if (forced) {
+            perkRepository.clearCache();
+        }
+    }
+
     public CompoundPerkFactory perkFactory() {
         return perkFactory;
     }
