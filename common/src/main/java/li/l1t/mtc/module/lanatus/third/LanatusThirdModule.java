@@ -36,6 +36,13 @@ public class LanatusThirdModule extends MTCModuleAdapter {
         registerListener(new PostPurchaseCommandExecutionListener(this));
     }
 
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        if (forced) {
+            thirdProductRepository.clearCache();
+        }
+    }
+
     public ThirdProductRepository thirdProducts() {
         return thirdProductRepository;
     }

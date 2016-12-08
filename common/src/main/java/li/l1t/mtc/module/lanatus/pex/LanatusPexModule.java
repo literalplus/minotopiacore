@@ -25,8 +25,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 import java.util.Map;
 
 /**
- * Handles integration of Lanatus with PermissionsEx, a permissions system for Bukkit. Also offers a
- * limited way to convert existing PermissionsEx data into Lanatus data.
+ * Handles integration of Lanatus with PermissionsEx, a permissions system for Bukkit. Also offers a limited way to
+ * convert existing PermissionsEx data into Lanatus data.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-30
@@ -83,6 +83,13 @@ public class LanatusPexModule extends ConfigurableMTCModule {
         allowBulkConversion = configuration.getBoolean(ALLOW_BULK_CONVERSION_PATH);
         allowAutomaticConversion = configuration.getBoolean(ALLOW_JOIN_CONVERSION_PATH);
         save();
+    }
+
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        if (forced) {
+            pexProductRepository.clearCache();
+        }
     }
 
     public boolean isAllowBulkConversion() {

@@ -85,6 +85,8 @@ public class LanatusShopModule extends MTCModuleAdapter implements LanatusConnec
 
     @Override
     public void clearCache(boolean forced, MTCPlugin plugin) {
-        categoryRepository.clearCache();
+        if (forced) {
+            categoryRepository.clearCache();
+        }
     }
 }
