@@ -38,7 +38,9 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -99,8 +101,18 @@ public class CommandPerks extends BukkitExecutionExecutor {
     private Set<Perk> findAvailablePerks(Player player) {
         return perkRepository.findAvailableByPlayerId(player.getUniqueId()).stream()
                 .map(AvailablePerk::getProductId)
-                .map(manager::getPerkById)
+                .map(this::getPerkOrLog)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    private Perk getPerkOrLog(UUID perkId) {
+        try {
+            return manager.getPerkById(perkId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private LambdaMenuElement<MyPerksMenu> shopButton() {
