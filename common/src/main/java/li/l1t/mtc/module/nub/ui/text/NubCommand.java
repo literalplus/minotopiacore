@@ -155,7 +155,7 @@ public class NubCommand extends BukkitExecutionExecutor {
 
     private boolean handleCancelInternal(CommandExecution exec, Player player) {
         if (!pendingConfirmations.containsKey(player.getUniqueId())) {
-            exec.respond(MessageType.WARNING, "Wenn du fortfährst, wird dein N.u.b.-Schutz permanent");
+            exec.respond(MessageType.WARNING, "Wenn du fortfährst, wird dein N.u.b.-Schutz");
             exec.respond(MessageType.WARNING, "beendet! Das kann nicht rückgängig gemacht werden.");
             exec.respond(MessageType.RESULT_LINE, "Damit kannst du zwar andere Spieler sofort schlagen,");
             exec.respond(MessageType.RESULT_LINE, "aber kannst auch sofort selbst geschlagen werden.");
