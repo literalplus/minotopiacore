@@ -54,6 +54,7 @@ public class ProtectionCheckTask extends ImprovedBukkitRunnable {
             if (protection.isExpired()) {
                 service.expireProtection(player, protection);
             } else {
+                service.showOwnProtectionStatusTo(player);
             }
         }
     }
