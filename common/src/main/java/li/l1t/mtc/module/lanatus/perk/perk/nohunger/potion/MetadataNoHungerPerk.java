@@ -31,6 +31,8 @@ public class MetadataNoHungerPerk extends AbstractPerk implements li.l1t.mtc.mod
     @Override
     public void applyTo(Player player) {
         player.setMetadata(TYPE_NAME, new FixedMetadataValue(plugin, ""));
+        player.setFoodLevel(20);
+        player.setSaturation(20.0F);
     }
 
     @Override
