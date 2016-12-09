@@ -175,4 +175,10 @@ public interface CommandExecution {
      * @throws UserPermissionException if the sender does not have given permission
      */
     void requirePermission(String permission) throws UserPermissionException;
+
+    /**
+     * @param permission the permission to check for
+     * @return whether the sender of this execution has given permission
+     */
+    boolean hasPermission(String permission);
 }

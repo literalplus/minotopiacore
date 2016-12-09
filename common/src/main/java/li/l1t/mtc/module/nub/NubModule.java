@@ -16,6 +16,7 @@ import li.l1t.mtc.module.nub.listener.NubPreventListener;
 import li.l1t.mtc.module.nub.listener.NubProtectListener;
 import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import li.l1t.mtc.module.nub.task.ProtectionCheckTask;
+import li.l1t.mtc.module.nub.ui.text.NubCommand;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 
 /**
@@ -27,6 +28,7 @@ import li.l1t.mtc.yaml.ManagedConfiguration;
  * @since 2016-12-08
  */
 public class NubModule extends ConfigurableMTCModule {
+    public static final String ADMIN_PERMISSION = "mtc.nub.admin";
     private static final String BASE_FOLDER_PATH = "modules/nub";
 
     @InjectMe
@@ -35,6 +37,8 @@ public class NubModule extends ConfigurableMTCModule {
     private ProtectionCheckTask checkTask;
     @InjectMe
     private SimpleProtectionService protectionService;
+    @InjectMe
+    private NubCommand command;
 
     public NubModule() {
         super("Nub", BASE_FOLDER_PATH + "/nub.cfg.yml", ClearCacheBehaviour.RELOAD, false);
@@ -47,6 +51,7 @@ public class NubModule extends ConfigurableMTCModule {
         registerListener(new NubJoinLeaveListener(protectionService, getPlugin()));
         registerListener(new NubProtectListener(protectionService));
         registerListener(new NubPreventListener(protectionService));
+        registerCommand(command, "nub", "godlogin");
     }
 
     @Override

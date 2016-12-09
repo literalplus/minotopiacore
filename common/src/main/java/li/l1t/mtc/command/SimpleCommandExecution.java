@@ -192,4 +192,10 @@ public class SimpleCommandExecution implements CommandExecution {
     public void requirePermission(String permission) throws UserPermissionException {
         UserPermissionException.checkPermission(sender(), permission);
     }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        Preconditions.checkNotNull(permission, "permission");
+        return sender.hasPermission(permission);
+    }
 }

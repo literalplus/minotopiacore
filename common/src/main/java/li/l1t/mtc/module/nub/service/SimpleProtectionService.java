@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.nub.service;
 
 import com.google.common.base.Preconditions;
+import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.nub.LocalProtectionManager;
@@ -17,6 +18,7 @@ import li.l1t.mtc.module.nub.api.NubProtection;
 import li.l1t.mtc.module.nub.api.ProtectionRepository;
 import li.l1t.mtc.module.nub.api.ProtectionService;
 import li.l1t.mtc.module.nub.repository.SqlProtectionRepository;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -123,13 +125,13 @@ public class SimpleProtectionService implements ProtectionService {
     }
 
     @Override
-    public void showProtectionStatusTo(Player player, NubProtection protection) {
-        Preconditions.checkNotNull(player, "player");
+    public void showProtectionStatusTo(CommandSender sender, NubProtection protection) {
+        Preconditions.checkNotNull(sender, "sender");
         Preconditions.checkNotNull(protection, "protection");
-        if (player.getUniqueId().equals(protection.getPlayerId())) {
-            showOwnProtectionStatusTo(player);
+        if (sender instanceof Player && CommandHelper.getSenderId(sender).equals(protection.getPlayerId())) {
+            showOwnProtectionStatusTo((Player) sender);
         } else {
-            MessageType.RESULT_LINE.sendTo(player,
+            MessageType.RESULT_LINE.sendTo(sender,
                     "Dieser Spieler ist noch für %d Minuten durch N.u.b. geschützt.",
                     protection.getMinutesLeft());
         }
@@ -137,11 +139,11 @@ public class SimpleProtectionService implements ProtectionService {
 
     @Override
     public void showOwnProtectionStatusTo(Player player) {
-        NubProtection protection = manager.getProtection(player.getUniqueId());
-        if (protection != null) {
+        Optional<NubProtection> protection = manager.getProtection(player.getUniqueId());
+        if (protection.isPresent()) {
             MessageType.RESULT_LINE.sendTo(player,
                     " §e§lDu bist noch für %d Minuten durch N.u.b. geschützt. §6/nub",
-                    protection.getMinutesLeft());
+                    protection.get().getMinutesLeft());
         } else {
             MessageType.RESULT_LINE.sendTo(player,
                     "§e§lDu bist nicht durch N.u.b. geschützt. §6/nub"

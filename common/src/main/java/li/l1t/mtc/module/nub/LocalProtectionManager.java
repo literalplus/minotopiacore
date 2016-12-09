@@ -31,9 +31,9 @@ public class LocalProtectionManager {
         return protections.remove(playerId);
     }
 
-    public NubProtection getProtection(UUID playerId) {
+    public Optional<NubProtection> getProtection(UUID playerId) {
         Preconditions.checkNotNull(playerId, "playerId");
-        return protections.get(playerId);
+        return Optional.ofNullable(protections.get(playerId));
     }
 
     public boolean hasProtection(UUID playerId) {

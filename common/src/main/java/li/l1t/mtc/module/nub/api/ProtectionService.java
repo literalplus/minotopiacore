@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.nub.api;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -87,7 +88,7 @@ public interface ProtectionService {
      */
     void expireProtection(Player player, NubProtection protection);
 
-    void showProtectionStatusTo(Player player, NubProtection protection);
+    void showProtectionStatusTo(CommandSender sender, NubProtection protection);
 
     void showOwnProtectionStatusTo(Player player);
 }
