@@ -212,7 +212,7 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
         boolean fullsAvailable = !legacyData.isEmpty() || !notInRegistry.isEmpty();
         plr.spigot().sendMessage(new XyComponentBuilder(
                 "Auf dich warten ", GREEN)
-                .append(fullsAvailable ? String.valueOf(fullsAvailable) : "keine", DARK_GREEN)
+                .append(fullsAvailable ? String.valueOf(legacyData.size() + notInRegistry.size()) : "keine", DARK_GREEN)
                 .append(" Fullitems.", GREEN)
                 .create());
         if (fullsAvailable) {
