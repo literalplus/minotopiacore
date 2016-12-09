@@ -1,12 +1,10 @@
-Hallo §s$player §pund willkommen auf MinoTopia!
+Hallo §s$name§p, willkommen auf MinoTopia!
 Damit du dich erst einmal zurechtfinden kannst, bekommst
 du für §s$duration§p Minuten unseren speziellen N.u.b.-Schutz.
 Damit bist du vor Schaden (auch durch andere Spieler)
-erstmal geschützt. Am besten schaust du dich erstmal um und
-findest einen Ort für deine Basis. Am besten baust du so
-weit weg vom Spawn wie möglich. Nach der zweiten Bedrock-
-Linie um den §s/spawn§p kannst du bauen.
+erstmal geschützt. Am besten schaust du dich erstmal um
+und findest einen Ort für deine Basis. Je weiter weg sie
+vom §s/spawn§p ist, desto sicherer ist sie. Nach der
+2. Bedrock-Linie um den §s/spawn§p kannst du bauen.
 Falls du Hilfe benötigst, stell deine Frage einfach direkt
-im Chat. Ansonsten kannst du auch in unserem Forum fragen:
-§shttps://forum.minotopia.me/ §pWeitere Kontaktmöglichkeiten
-findest du unter §s/info§p.
+im Chat. Weitere Kontaktmöglichkeiten: §s/info§p.
