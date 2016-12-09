@@ -66,13 +66,13 @@ public class NubCommand extends BukkitExecutionExecutor {
                 case "outro":
                     return handleOutro(exec);
                 case "ostatus":
-                    return handleStatus(exec, argumentProfile(exec.arg(0), exec.sender(), "nub ostatus").getUniqueId());
+                    return handleStatus(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ostatus").getUniqueId());
                 case "ocancel":
-                    return handleCancel(exec, argumentProfile(exec.arg(0), exec.sender(), "nub ocancel").getUniqueId());
+                    return handleCancel(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ocancel").getUniqueId());
                 case "opause":
-                    return handlePause(exec, argumentProfile(exec.arg(0), exec.sender(), "nub opause").getUniqueId());
+                    return handlePause(exec, argumentProfile(exec.arg(1), exec.sender(), "nub opause").getUniqueId());
                 case "ostart":
-                    return handleStart(exec, argumentProfile(exec.arg(0), exec.sender(), "nub ostart").getUniqueId());
+                    return handleStart(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ostart").getUniqueId());
                 default:
                     return sendUsageTo(exec);
             }
