@@ -58,6 +58,7 @@ public class SimpleProtectionService implements ProtectionService {
     public boolean cancelProtection(Player player) {
         Preconditions.checkNotNull(player, "player");
         if (manager.hasProtection(player.getUniqueId())) {
+            repository.deleteProtection(manager.removeProtection(player.getUniqueId()));
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Dein Schutz wurde aufgehoben.");
             MessageType.WARNING.sendTo(player, "Du kannst ab jetzt Schaden erhalten!");
             return true;
