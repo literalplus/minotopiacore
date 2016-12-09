@@ -11,6 +11,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.nub.api.NubProtection;
 import li.l1t.mtc.module.nub.listener.NubJoinLeaveListener;
 import li.l1t.mtc.module.nub.listener.NubPreventListener;
 import li.l1t.mtc.module.nub.listener.NubProtectListener;
@@ -18,6 +19,8 @@ import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import li.l1t.mtc.module.nub.task.ProtectionCheckTask;
 import li.l1t.mtc.module.nub.ui.text.NubCommand;
 import li.l1t.mtc.yaml.ManagedConfiguration;
+
+import java.util.Objects;
 
 /**
  * MTC N.u.b. (German "neu und beschützt", which means "new and protected") provides temporary protection in form of
@@ -39,6 +42,8 @@ public class NubModule extends ConfigurableMTCModule {
     private SimpleProtectionService protectionService;
     @InjectMe
     private NubCommand command;
+    @InjectMe
+    private LocalProtectionManager manager;
 
     public NubModule() {
         super("Nub", BASE_FOLDER_PATH + "/nub.cfg.yml", ClearCacheBehaviour.RELOAD, false);
@@ -52,6 +57,19 @@ public class NubModule extends ConfigurableMTCModule {
         registerListener(new NubProtectListener(protectionService));
         registerListener(new NubPreventListener(protectionService));
         registerCommand(command, "nub", "godlogin");
+
+        getPlugin().getServer().getOnlinePlayers().stream()
+                .filter(protectionService::hasPausedProtection)
+                .forEach(protectionService::resumeProtection);
+    }
+
+    @Override
+    public void disable(MTCPlugin plugin) {
+        manager.getAllProtections().stream()
+                .map(NubProtection::getPlayerId)
+                .map(getPlugin().getServer()::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(protectionService::pauseProtection);
     }
 
     @Override

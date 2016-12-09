@@ -123,7 +123,11 @@ public class SimpleProtectionService implements ProtectionService {
 
     @Override
     public boolean isEligibleForProtection(Player player) {
-        return !player.hasPlayedBefore() || repository.findProtectionFor(player.getUniqueId()).isPresent();
+        return !player.hasPlayedBefore() || hasPausedProtection(player);
+    }
+
+    public boolean hasPausedProtection(Player player) {
+        return repository.findProtectionFor(player.getUniqueId()).isPresent();
     }
 
     @Override
