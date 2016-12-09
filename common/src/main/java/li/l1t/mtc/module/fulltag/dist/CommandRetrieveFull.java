@@ -28,14 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
-import static net.md_5.bungee.api.ChatColor.DARK_RED;
-import static net.md_5.bungee.api.ChatColor.GOLD;
-import static net.md_5.bungee.api.ChatColor.GRAY;
-import static net.md_5.bungee.api.ChatColor.GREEN;
-import static net.md_5.bungee.api.ChatColor.RED;
-import static net.md_5.bungee.api.ChatColor.UNDERLINE;
-import static net.md_5.bungee.api.ChatColor.YELLOW;
+import static net.md_5.bungee.api.ChatColor.*;
 
 /**
  * Command executor for a command that allows players to retrieve full items created for them if
@@ -152,14 +145,7 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
                 migratedInfos.forEach(info -> module.getDistributionManager().requestStore(info, plr));
 
                 module.getDistributionManager().notifyWaiting(plr);
-                plr.sendMessage(String.format("§a%d Fullitems erstellt.", legacyData.size()));
-                if (legacyData.size() != initialSize) {
-                    plr.spigot().sendMessage(new XyComponentBuilder("Konnte ", RED)
-                            .append(String.valueOf(initialSize - legacyData.size()), DARK_RED)
-                            .append(" Fullitems nicht zurückgeben, interner Fehler. Bitte versuche es erneut. " +
-                                    "Sollte das Problem bestehen bleiben, wende dich an den Support.", RED)
-                            .create());
-                }
+                plr.sendMessage(String.format("§a%d Fullitems erstellt.", initialSize));
                 LOGGER.info("Returned legacy ids {} to {}.",
                         legacyData.stream()
                                 .map(LegacyFullData::getId)
@@ -226,7 +212,7 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
         boolean fullsAvailable = !legacyData.isEmpty() || !notInRegistry.isEmpty();
         plr.spigot().sendMessage(new XyComponentBuilder(
                 "Auf dich warten ", GREEN)
-                .append(fullsAvailable ? String.valueOf(legacyData.size()) : "keine", DARK_GREEN)
+                .append(fullsAvailable ? String.valueOf(fullsAvailable) : "keine", DARK_GREEN)
                 .append(" Fullitems.", GREEN)
                 .create());
         if (fullsAvailable) {
