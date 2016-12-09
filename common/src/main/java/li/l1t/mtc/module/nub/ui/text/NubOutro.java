@@ -18,6 +18,6 @@ public class NubOutro extends ChatTextFile {
 
     @Override
     protected String defaultFileName() {
-        return "/modules/nub/" + OUTRO_FILE_NAME;
+        return "modules/nub/" + OUTRO_FILE_NAME;
     }
 }

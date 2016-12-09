@@ -32,7 +32,7 @@ public abstract class ChatTextFile {
     private List<String> lines = Collections.emptyList();
 
     public File defaultFile(Plugin plugin) {
-        return new File(plugin.getDataFolder() + defaultFileName());
+        return new File(plugin.getDataFolder() + "/" + defaultFileName());
     }
 
     protected abstract String defaultFileName();

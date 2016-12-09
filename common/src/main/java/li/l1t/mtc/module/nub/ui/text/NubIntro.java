@@ -18,6 +18,6 @@ public class NubIntro extends ChatTextFile {
 
     @Override
     protected String defaultFileName() {
-        return "/modules/nub/" + INTRO_FILE_NAME;
+        return "modules/nub/" + INTRO_FILE_NAME;
     }
 }
