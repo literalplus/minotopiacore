@@ -12,13 +12,8 @@ import li.l1t.mtc.MTC;
 import li.l1t.mtc.clan.ClanHelper;
 import li.l1t.mtc.clan.ClanMemberInfo;
 import li.l1t.mtc.helper.MTCHelper;
-import li.l1t.mtc.misc.PeaceInfo;
 import org.bukkit.DyeColor;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -97,16 +92,6 @@ public final class MainDamageListener implements Listener {
         }
         // INVISIBILITY
         plrDamager.removePotionEffect(PotionEffectType.INVISIBILITY);
-
-        // PEACE
-        if (PeaceInfo.isInPeaceWith(plrDamager.getName(), plr.getName())) {// this happens if the players are in peace
-            if (message) {
-                MTCHelper.sendLocArgs("XU-peacehit2", plrDamager, true,
-                        plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
-            }
-            MainDamageListener.cancelAndStopWolves(e); // e.setCancelled(true);
-            return;
-        }
 
         // CLAN
         String clanPrefix = "";
