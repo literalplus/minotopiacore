@@ -21,6 +21,7 @@ import li.l1t.mtc.module.nub.NubConfig;
 import li.l1t.mtc.module.nub.NubModule;
 import li.l1t.mtc.module.nub.api.NubProtection;
 import li.l1t.mtc.module.nub.api.ProtectionService;
+import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -44,7 +45,7 @@ public class NubCommand extends BukkitExecutionExecutor {
     private final XLoginHook xLogin;
 
     @InjectMe
-    public NubCommand(ProtectionService service, LocalProtectionManager manager, MTCPlugin plugin, NubConfig config, XLoginHook xLogin) {
+    public NubCommand(SimpleProtectionService service, LocalProtectionManager manager, MTCPlugin plugin, NubConfig config, XLoginHook xLogin) {
         this.service = service;
         this.manager = manager;
         this.plugin = plugin;
