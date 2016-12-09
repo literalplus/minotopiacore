@@ -169,6 +169,7 @@ public class NubCommand extends BukkitExecutionExecutor {
             throw new UserException("Bitte gib den Bestätigungscode an oder tippe /nub cancel abort für einen neuen Code");
         } else if (exec.arg(1).equalsIgnoreCase("abort")) {
             pendingConfirmations.remove(player.getUniqueId());
+            exec.respond(MessageType.RESULT_LINE_SUCCESS, "Beendigung abgebrochen.");
         } else {
             String inputCode = exec.arg(1);
             if (pendingConfirmations.remove(player.getUniqueId(), inputCode.toUpperCase())) {
