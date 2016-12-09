@@ -37,6 +37,6 @@ class JdbcProtectionWriter extends AbstractSqlConnected {
                         SqlProtectionRepository.TABLE_NAME + " " +
                         "SET player_id = ?, minutesleft = ? " +
                         "ON DUPLICATE KEY UPDATE minutesleft = ?",
-                playerId, minutesLeft, minutesLeft);
+                playerId.toString(), minutesLeft, minutesLeft);
     }
 }
