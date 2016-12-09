@@ -146,7 +146,7 @@ public class SimpleProtectionService implements ProtectionService {
                         protection.get().getMinutesLeft());
             } else {
                 MessageType.RESULT_LINE.sendTo(sender,
-                        "§e§lDieser Spieler ist nicht durch N.u.b. geschützt. §6/nub"
+                        "§e§lDieser Spieler ist nicht geschützt. §6/nub"
                 );
             }
         }
