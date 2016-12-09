@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Abstract base class for text files storing long formatted chat messages.
@@ -56,16 +55,12 @@ public abstract class ChatTextFile {
     }
 
     public void load(File file) throws IOException {
-        this.lines = readLines(file)
-                .map(ChatConstants::convertCustomColorCodes)
-                .map(StringHelper::translateAlternateColorCodes)
-                .map(MessageType.RESULT_LINE::format)
-                .collect(Collectors.toList());
-    }
-
-    private Stream<String> readLines(File file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            return reader.lines();
+            this.lines = reader.lines()
+                    .map(ChatConstants::convertCustomColorCodes)
+                    .map(StringHelper::translateAlternateColorCodes)
+                    .map(MessageType.RESULT_LINE::format)
+                    .collect(Collectors.toList());
         }
     }
 
