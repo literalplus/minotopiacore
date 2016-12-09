@@ -35,11 +35,15 @@ public class InventoryCompactor {
         return maxOversizedStackSize > 64 ? 64 : maxOversizedStackSize;
     }
 
-    public void compact(Inventory inventory) {
-        items = inventory.getContents();
+    public ItemStack[] compact(ItemStack[] items) {
+        this.items = items;
         compactAll();
-        inventory.setContents(items);
-        items = null;
+        this.items = null;
+        return items;
+    }
+
+    public void compact(Inventory inventory) {
+        inventory.setContents(compact(inventory.getContents()));
     }
 
     private void compactAll() {
