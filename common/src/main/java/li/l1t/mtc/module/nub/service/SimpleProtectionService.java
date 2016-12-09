@@ -47,6 +47,7 @@ public class SimpleProtectionService implements ProtectionService {
     public void startProtection(Player player) {
         Preconditions.checkNotNull(player, "player");
         NubProtection protection = repository.createProtection(player.getUniqueId(), config.getProtectionDurationMinutes());
+        manager.addProtection(protection);
         config.getIntro().sendTo(player, protection.getMinutesLeft());
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Du bist jetzt für §p%d§a Minuten geschützt.",
