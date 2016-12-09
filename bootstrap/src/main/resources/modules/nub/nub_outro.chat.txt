@@ -1,4 +1,4 @@
-§e§lAchtung: §eDein N.u.b.-Schutz ist aufgelaufen!
+§e§lAchtung: §eDein N.u.b.-Schutz ist ausgelaufen!
 Ab jetzt kannst du Schaden erhalten. Im §s/spawn
 bist du sicher. Sobald du die erste Bedrock-Linie
 überschreitest, können dich andere Spieler angreifen.
