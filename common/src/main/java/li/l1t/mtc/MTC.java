@@ -33,15 +33,7 @@ import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.misc.AntiLogoutHandler;
 import li.l1t.mtc.misc.DummyLogoutHandler;
 import li.l1t.mtc.misc.PlayerGameManagerImpl;
-import li.l1t.mtc.misc.cmd.CommandBReload;
-import li.l1t.mtc.misc.cmd.CommandGiveAll;
-import li.l1t.mtc.misc.cmd.CommandList;
-import li.l1t.mtc.misc.cmd.CommandLore;
-import li.l1t.mtc.misc.cmd.CommandMTC;
-import li.l1t.mtc.misc.cmd.CommandPeace;
-import li.l1t.mtc.misc.cmd.CommandPlayerHead;
-import li.l1t.mtc.misc.cmd.CommandRandom;
-import li.l1t.mtc.misc.cmd.CommandTeam;
+import li.l1t.mtc.misc.cmd.*;
 import li.l1t.mtc.module.framework.DefaultInjectionProvider;
 import li.l1t.mtc.module.framework.SimpleModuleManager;
 import org.apache.logging.log4j.Level;
@@ -52,11 +44,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPluginLoader;
-
-import java.io.File;
 
 public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
@@ -197,6 +185,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             this.worldGuardHook = new WorldGuardHook(this);
             this.pexHook = new PexHook(this);
 
+            //API
+            gameManager = new PlayerGameManagerImpl(this);
+
             //MODULES
             logger.debug("Loading modules!");
             new DefaultInjectionProvider(this, moduleManager.getInjector()).registerAll();
@@ -227,8 +218,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             //SQL LOGGER
             this.getSql().errLogger = LogHelper.getMainLogger();
 
-            //API
-            gameManager = new PlayerGameManagerImpl(this);
 
             logger.debug("Enabling modules!");
             moduleManager.enableLoaded();
