@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.nub;
 
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.nub.ui.text.NubIntro;
 import li.l1t.mtc.module.nub.ui.text.NubOutro;
 import li.l1t.mtc.yaml.ManagedConfiguration;
@@ -23,6 +24,7 @@ public class NubConfig {
     private final NubIntro intro;
     private final NubOutro outro;
 
+    @InjectMe
     public NubConfig(NubIntro intro, NubOutro outro) {
         this.intro = intro;
         this.outro = outro;
