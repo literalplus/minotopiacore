@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Implementation of a protection service that uses a {@link ProtectionRepository} for communicating with a data
@@ -125,15 +126,22 @@ public class SimpleProtectionService implements ProtectionService {
     }
 
     @Override
-    public void showProtectionStatusTo(CommandSender sender, NubProtection protection) {
+    public void showProtectionStatusTo(CommandSender sender, UUID playerId) {
         Preconditions.checkNotNull(sender, "sender");
-        Preconditions.checkNotNull(protection, "protection");
-        if (sender instanceof Player && CommandHelper.getSenderId(sender).equals(protection.getPlayerId())) {
+        Preconditions.checkNotNull(playerId, "playerId");
+        if (sender instanceof Player && CommandHelper.getSenderId(sender).equals(playerId)) {
             showOwnProtectionStatusTo((Player) sender);
         } else {
-            MessageType.RESULT_LINE.sendTo(sender,
-                    "Dieser Spieler ist noch für %d Minuten durch N.u.b. geschützt.",
-                    protection.getMinutesLeft());
+            Optional<NubProtection> protection = manager.getProtection(playerId);
+            if (protection.isPresent()) {
+                MessageType.RESULT_LINE.sendTo(sender,
+                        "Dieser Spieler ist noch für %d Minuten durch N.u.b. geschützt.",
+                        protection.get().getMinutesLeft());
+            } else {
+                MessageType.RESULT_LINE.sendTo(sender,
+                        "§e§lDieser Spieler ist nicht durch N.u.b. geschützt. §6/nub"
+                );
+            }
         }
     }
 

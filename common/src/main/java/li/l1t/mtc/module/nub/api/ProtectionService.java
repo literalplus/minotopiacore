@@ -10,6 +10,8 @@ package li.l1t.mtc.module.nub.api;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 /**
  * A service that allows to manage N.u.b. protections, emitting messages to notify players of modifications.
  *
@@ -88,7 +90,7 @@ public interface ProtectionService {
      */
     void expireProtection(Player player, NubProtection protection);
 
-    void showProtectionStatusTo(CommandSender sender, NubProtection protection);
+    void showProtectionStatusTo(CommandSender sender, UUID playerId);
 
     void showOwnProtectionStatusTo(Player player);
 }

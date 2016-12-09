@@ -106,7 +106,7 @@ public class NubCommand extends BukkitExecutionExecutor {
     }
 
     private boolean handleStatus(CommandExecution exec, UUID playerId) {
-        service.showProtectionStatusTo(exec.player(), manager.getProtection(playerId).orElseThrow(IllegalArgumentException::new));
+        service.showProtectionStatusTo(exec.player(), playerId);
         if (exec.hasPermission(NubModule.ADMIN_PERMISSION)) {
             respondStatusActions(exec, playerId);
         }
