@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.nub;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
@@ -44,6 +45,8 @@ public class NubModule extends ConfigurableMTCModule {
     private NubCommand command;
     @InjectMe
     private LocalProtectionManager manager;
+    @InjectMe
+    private PlayerGameManager gameManager;
 
     public NubModule() {
         super("Nub", BASE_FOLDER_PATH + "/nub.cfg.yml", ClearCacheBehaviour.RELOAD, false);
@@ -54,8 +57,8 @@ public class NubModule extends ConfigurableMTCModule {
         super.enable(plugin);
         checkTask.start();
         registerListener(new NubJoinLeaveListener(protectionService, getPlugin()));
-        registerListener(new NubProtectListener(protectionService));
-        registerListener(new NubPreventListener(protectionService));
+        registerListener(new NubProtectListener(protectionService, gameManager));
+        registerListener(new NubPreventListener(protectionService, gameManager));
         registerCommand(command, "nub", "godlogin");
 
         getPlugin().getServer().getOnlinePlayers().stream()

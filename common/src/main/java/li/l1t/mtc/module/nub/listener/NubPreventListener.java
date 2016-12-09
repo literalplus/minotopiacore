@@ -7,8 +7,11 @@
 
 package li.l1t.mtc.module.nub.listener;
 
+import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.chat.MessageType;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.nub.api.ProtectionService;
+import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -25,9 +28,12 @@ import org.bukkit.projectiles.ProjectileSource;
  */
 public class NubPreventListener implements Listener {
     private final ProtectionService protectionService;
+    private final PlayerGameManager gameManager;
 
-    public NubPreventListener(ProtectionService protectionService) {
+    @InjectMe
+    public NubPreventListener(SimpleProtectionService protectionService, PlayerGameManager gameManager) {
         this.protectionService = protectionService;
+        this.gameManager = gameManager;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -38,7 +44,7 @@ public class NubPreventListener implements Listener {
     private void notifyAndCancelIfProtectedPlayer(Object entity, Cancellable event) {
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (protectionService.hasProtection(player)) {
+            if (protectionService.hasProtection(player) && !gameManager.isInGame(player.getUniqueId())) {
                 event.setCancelled(true);
                 MessageType.WARNING.sendTo(player, "Du kannst keine Spieler schlagen. §6/nub");
             }

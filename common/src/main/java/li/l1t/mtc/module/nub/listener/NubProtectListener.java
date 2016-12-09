@@ -9,8 +9,11 @@ package li.l1t.mtc.module.nub.listener;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.chat.MessageType;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.nub.api.ProtectionService;
+import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,16 +34,19 @@ public class NubProtectListener implements Listener {
     private static final Object DUMMY = new Object();
     private final Cache<UUID, Object> ownStatusCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.SECONDS).build();
     private final ProtectionService service;
+    private final PlayerGameManager gameManager;
 
-    public NubProtectListener(ProtectionService service) {
+    @InjectMe
+    public NubProtectListener(SimpleProtectionService service, PlayerGameManager gameManager) {
         this.service = service;
+        this.gameManager = gameManager;
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onGeneralDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (service.hasProtection(player)) {
+            if (service.hasProtection(player) && !gameManager.isInGame(player.getUniqueId())) {
                 event.setCancelled(true);
                 showOwnProtectionStatus(player);
                 attemptShowForeignProtectionStatus(event, player);

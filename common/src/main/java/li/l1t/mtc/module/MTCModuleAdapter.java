@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module;
 
+import com.google.common.base.Preconditions;
 import li.l1t.mtc.MTC;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.MTCModule;
@@ -127,5 +128,11 @@ public abstract class MTCModuleAdapter implements MTCModule {
     protected void registerListener(Listener listener) {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         registeredListeners.add(listener);
+    }
+
+    public <T> T inject(Class<? extends T> clazz) {
+        T instance = plugin.getModuleManager().getInjector().getTarget(clazz).getInstance();
+        Preconditions.checkNotNull(instance, "instance of %s", clazz);
+        return instance;
     }
 }
