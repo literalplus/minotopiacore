@@ -68,7 +68,7 @@ public class NubCommand extends BukkitExecutionExecutor {
                 case "ostatus":
                     return handleStatus(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ostatus").getUniqueId());
                 case "ocancel":
-                    return handleCancel(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ocancel").getUniqueId());
+                    return handleCancelOther(exec, argumentProfile(exec.arg(1), exec.sender(), "nub ocancel").getUniqueId());
                 case "opause":
                     return handlePause(exec, argumentProfile(exec.arg(1), exec.sender(), "nub opause").getUniqueId());
                 case "ostart":
@@ -140,10 +140,12 @@ public class NubCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private boolean handleCancel(CommandExecution exec, UUID playerId) {
+    private boolean handleCancelOther(CommandExecution exec, UUID playerId) {
         Player player = getPlayerOrFail(playerId);
         requireIsProtected(player, "Dieser Spieler ist nicht geschützt.");
-        return handleCancelInternal(exec, player);
+        service.cancelProtection(player);
+        exec.respond(MessageType.RESULT_LINE_SUCCESS, "Der Schutz von §p%s§s wurde aufgehoben.", player.getName());
+        return true;
     }
 
     private boolean handleCancelOwn(CommandExecution exec) {
