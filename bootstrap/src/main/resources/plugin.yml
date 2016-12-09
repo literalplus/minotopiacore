@@ -50,10 +50,6 @@ commands:
   breload:
     description: "Reload mit Countdown!"
     usage: "/<command> nicht geladen. Ausgeschaltet?"
-  frieden:
-    description: "Schliesse Frieden mit deinen allerbesten Freunden! <3"
-    usage: "/<command> nicht geladen. Ausgeschaltet?"
-    aliases: [nichtangriffspakt, peace, fr, friede]
   random:
     description: "Sucht einen zufälligen Spieler aus."
     usage: "/<command> nicht geladen. Ausgeschaltet?"

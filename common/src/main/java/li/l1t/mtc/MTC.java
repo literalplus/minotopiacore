@@ -259,7 +259,6 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
             this.getCommand("team").setExecutor(new CommandTeam(this));
         }
         this.getCommand("list").setExecutor(new CommandList());
-        this.setExecAndCompleter(new CommandPeace(), "frieden");
         this.setExec(new CommandRandom(this), "random");
     }
 
