@@ -140,7 +140,7 @@ public class SimpleProtectionService implements ProtectionService {
             Optional<NubProtection> protection = manager.getProtection(playerId);
             if (protection.isPresent()) {
                 MessageType.RESULT_LINE.sendTo(sender,
-                        "Dieser Spieler ist noch für %d Minuten durch N.u.b. geschützt.",
+                        "Dieser Spieler ist noch für %d Minuten geschützt.",
                         protection.get().getMinutesLeft());
             } else {
                 MessageType.RESULT_LINE.sendTo(sender,
@@ -155,7 +155,7 @@ public class SimpleProtectionService implements ProtectionService {
         Optional<NubProtection> protection = manager.getProtection(player.getUniqueId());
         if (protection.isPresent()) {
             MessageType.RESULT_LINE.sendTo(player,
-                    " §e§lDu bist noch für %d Minuten durch N.u.b. geschützt. §6/nub",
+                    " §e§lDu bist noch für %d Minuten geschützt. §6/nub",
                     protection.get().getMinutesLeft());
         } else {
             MessageType.RESULT_LINE.sendTo(player,
