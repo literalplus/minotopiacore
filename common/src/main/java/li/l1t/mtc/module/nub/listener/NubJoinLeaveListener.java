@@ -45,7 +45,7 @@ public class NubJoinLeaveListener implements Listener {
 
     private void startProtectionSync(Player player) {
         plugin.getServer().getScheduler().runTask(plugin,
-                () -> service.startProtection(player)
+                () -> service.startOrResumeProtection(player)
         );
     }
 }
