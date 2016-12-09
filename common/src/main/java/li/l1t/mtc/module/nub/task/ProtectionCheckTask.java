@@ -41,7 +41,7 @@ public class ProtectionCheckTask extends ImprovedBukkitRunnable {
 
     @Override
     public void run() {
-        manager.getAllProtections().stream()
+        manager.getAllProtections()
                 .forEach(this::notifyProtectionStatus);
     }
 

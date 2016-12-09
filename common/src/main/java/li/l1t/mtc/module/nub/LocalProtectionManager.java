@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.nub;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import li.l1t.mtc.module.nub.api.NubProtection;
 
 import java.util.*;
@@ -42,6 +43,6 @@ public class LocalProtectionManager {
     }
 
     public Collection<NubProtection> getAllProtections() {
-        return Collections.unmodifiableCollection(protections.values());
+        return ImmutableList.copyOf(protections.values());
     }
 }
