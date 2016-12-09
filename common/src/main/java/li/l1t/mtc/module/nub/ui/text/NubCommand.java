@@ -94,7 +94,7 @@ public class NubCommand extends BukkitExecutionExecutor {
                 .map(NubProtection::getMinutesLeft)
                 .orElse(0);
         config.getIntro().sendTo(exec.sender(), minutesLeft);
-        return false;
+        return true;
     }
 
     private boolean handleOutro(CommandExecution exec) {
@@ -102,7 +102,7 @@ public class NubCommand extends BukkitExecutionExecutor {
             throw new UserException("Du bist noch geschützt. Du wirst das Outro sehen, sobald dein Schutz ausläuft.");
         }
         config.getOutro().sendTo(exec.sender(), 0);
-        return false;
+        return true;
     }
 
     private boolean handleStatus(CommandExecution exec, UUID playerId) {
