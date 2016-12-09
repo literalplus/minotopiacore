@@ -90,7 +90,7 @@ public class SimpleProtectionService implements ProtectionService {
     private void resumeInternal(Player player, NubProtection protection) {
         manager.addProtection(protection);
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
-                "Du bist noch für §s%d§p Minuten von N.u.b. geschützt.",
+                "Du bist noch für §p%d§s Minuten von N.u.b. geschützt.",
                 protection.getMinutesLeft());
     }
 
