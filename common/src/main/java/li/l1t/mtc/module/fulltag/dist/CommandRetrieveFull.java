@@ -114,12 +114,14 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
         module.getPlugin().getServer().getScheduler().runTaskAsynchronously(module.getPlugin(), () -> {
             List<LegacyFullData> legacyData = module.getLegacyRepository()
                     .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
-            int initialSize = legacyData.size();
+            List<FullData> eligibleFullData = findReturnEligibleFullData(plr);
+            int initialSize = legacyData.size() + eligibleFullData.size();
 
             legacyData.forEach(ld -> LOGGER.info("Attempting to return {} to {}.", ld, plr.getName()));
+            eligibleFullData.forEach(fd -> LOGGER.info("Attempting to return {} to {}.", fd, plr.getName()));
 
             ComponentSender.sendToSync(new XyComponentBuilder("Du bekommst ", YELLOW)
-                    .append(String.valueOf(legacyData.size()), GOLD)
+                    .append(String.valueOf(initialSize), GOLD)
                     .append(" Fullitems... (Bitte warten)", YELLOW)
                     .create(), plr, module.getPlugin());
 
@@ -138,6 +140,11 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
+            migratedInfos.addAll(
+                    eligibleFullData.stream()
+                            .map(data -> module.getRegistry().create(data, plr.getLocation()))
+                            .collect(Collectors.toList())
+            );
 
             legacyData.forEach(module.getLegacyRepository()::delete);
 
@@ -213,23 +220,16 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
             return true;
         }
 
-        List<LegacyFullData> legacyData = module.getLegacyRepository()
-                .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
+        List<LegacyFullData> legacyData = findLegacyData(plr);
+        List<FullData> notInRegistry = findReturnEligibleFullData(plr);
 
-        legacyData.forEach(ld -> plr.spigot().sendMessage(new XyComponentBuilder(
-                " -> ", YELLOW)
-                .append("#" + ld.getId() + ": ", GRAY)
-                .append(ld.getPartName())
-                .append(" (" + ld.getSenderName() + "->" + ld.getReceiverName() + ") ")
-                .append(ld.getComment(), YELLOW)
-                .create())
-        );
+        boolean fullsAvailable = !legacyData.isEmpty() || !notInRegistry.isEmpty();
         plr.spigot().sendMessage(new XyComponentBuilder(
                 "Auf dich warten ", GREEN)
-                .append(legacyData.isEmpty() ? "keine" : String.valueOf(legacyData.size()), DARK_GREEN)
+                .append(fullsAvailable ? String.valueOf(legacyData.size()) : "keine", DARK_GREEN)
                 .append(" Fullitems.", GREEN)
                 .create());
-        if (!legacyData.isEmpty()) {
+        if (fullsAvailable) {
             plr.spigot().sendMessage(new XyComponentBuilder(
                     "Tippe ", GOLD)
                     .append("/fullreturn accept", YELLOW)
@@ -242,6 +242,30 @@ public class CommandRetrieveFull extends MTCCommandExecutor {
             );
         }
         return true;
+    }
+
+    private List<FullData> findReturnEligibleFullData(Player plr) {
+        List<FullData> notInRegistry = module.getRepository().findNotInRegistry(plr.getUniqueId());
+        if (module.isFullReturnStrict()) {
+            notInRegistry = notInRegistry.stream()
+                    .filter(data -> data.getHolderId() == null || data.getHolderId().equals(plr.getUniqueId()))
+                    .collect(Collectors.toList());
+        }
+        return notInRegistry;
+    }
+
+    private List<LegacyFullData> findLegacyData(Player plr) {
+        List<LegacyFullData> legacyData = module.getLegacyRepository()
+                .findByCurrentUniqueId(plr.getName(), plr.getUniqueId());
+        legacyData.forEach(ld -> plr.spigot().sendMessage(new XyComponentBuilder(
+                " -> ", YELLOW)
+                .append("#" + ld.getId() + ": ", GRAY)
+                .append(ld.getPartName())
+                .append(" (" + ld.getSenderName() + "->" + ld.getReceiverName() + ") ")
+                .append(ld.getComment(), YELLOW)
+                .create())
+        );
+        return legacyData;
     }
 
     private boolean checkReturnAllowed(CommandSender sender) {

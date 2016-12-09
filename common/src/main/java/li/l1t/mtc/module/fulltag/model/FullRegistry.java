@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 import li.l1t.common.misc.XyLocation;
 import li.l1t.common.sql.QueryResult;
 import li.l1t.common.sql.SpigotSql;
-import li.l1t.mtc.MTC;
+import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.misc.CacheHelper;
 import li.l1t.mtc.module.fulltag.FullTagModule;
@@ -125,14 +125,15 @@ public class FullRegistry implements li.l1t.mtc.api.misc.Cache {
      * Flushes this registry's cache, writing all pending changes to database and removing expired
      * entries.
      */
-    public void clearCache(boolean forced, MTC plugin) {
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
         fullInfoCache.cleanUp();
-        fullInfoCache.asMap().values().stream().forEach(this::save);
+        fullInfoCache.asMap().values().forEach(this::save);
         LOGGER.debug("saving registry!");
     }
 
     /**
-     * Write the state of given {@link FullInfo} to the underlying database, if modifed.
+     * Write the state of given {@link FullInfo} to the underlying database, if modified.
      *
      * @param info the info to save
      */
@@ -140,17 +141,25 @@ public class FullRegistry implements li.l1t.mtc.api.misc.Cache {
         if (info.isModified()) {
             LOGGER.debug("saving {}", info);
             info.setModified(false);
-            String query = "UPDATE " + TABLE_NAME + " SET lastcode=?,lastplayer_id=?,in_ender=?,x=?,y=?,z=?,world=?,valid=? " +
-                    "WHERE full_id=?";
+            String query = "UPDATE " + TABLE_NAME + " r " +
+                    "INNER JOIN " + FullDataRepository.TABLE_NAME + " d " +
+                    "ON (r.full_id = d.id) " +
+                    "SET r.lastcode=?, r.lastplayer_id=?, r.in_ender=?, r.x=?, r.y=?, r.z=?, r.world=?, r.valid=?, " +
+                    "d.lastplayer_id=?" +
+                    "WHERE r.full_id=?";
             Object[] args = {
                     info.getLocationCode(), info.getHolderId().toString(), info.isInContainer(), info.getLocation().getBlockX(),
                     info.getLocation().getBlockY(), info.getLocation().getBlockZ(), info.getLocation().getWorld().getName(),
-                    info.isValid() ? 1 : 0, info.getId()
+                    info.isValid() ? 1 : 0, info.getHolderId().toString(), info.getId()
             };
+            String lastPlayerQuery = "UPDATE " + FullDataRepository.TABLE_NAME + " SET lastplayer_id=? WHERE full_id=?";
+            Object[] lastPlayerArgs = {info.getHolderId().toString(), info.getId()};
             if (module.getPlugin().isEnabled()) {
                 sql.executeSimpleUpdateAsync(query, args);
+//                sql.executeSimpleUpdateAsync(lastPlayerQuery, lastPlayerArgs);
             } else { //While being disabled, we can't register new tasks
                 sql.safelyExecuteUpdate(query, args);
+//                sql.safelyExecuteUpdate(lastPlayerQuery, lastPlayerArgs);
             }
             info.updateTimestamp();
         }
@@ -178,6 +187,9 @@ public class FullRegistry implements li.l1t.mtc.api.misc.Cache {
             throw new IllegalStateException("illegal rows affected: " + rowsAffected);
         }
 
+        sql.safelyExecuteUpdate("UPDATE " + FullDataRepository.TABLE_NAME + " SET lastplayer_id=? WHERE id=?",
+                data.getReceiverId().toString(), data.getId());
+
         return new FullInfo(module, data, location);
     }
 
@@ -187,8 +199,7 @@ public class FullRegistry implements li.l1t.mtc.api.misc.Cache {
      *
      * @param data     the data template to use
      * @param location the location the item is currently at
-     * @return a future that can be hooked into to execute code when the database operation is
-     * completed
+     * @return a future that can be hooked into to execute code when the database operation is completed
      */
     public CompletableFuture<FullInfo> createAsync(@Nonnull FullData data, @Nonnull Location location) {
         Preconditions.checkNotNull(data, "data");

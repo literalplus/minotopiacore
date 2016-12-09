@@ -88,7 +88,7 @@ public class FullDataRepository implements li.l1t.mtc.api.misc.Cache {
      *                               retrieved
      */
     private FullData findById(int id) throws IllegalStateException {
-        return findByWhere("id=?", "by id " + id, id).stream()
+        return findByWhere("WHERE id=?", "by id " + id, id).stream()
                 .findFirst().orElse(null);
     }
 
@@ -100,11 +100,18 @@ public class FullDataRepository implements li.l1t.mtc.api.misc.Cache {
      * @throws IllegalStateException if a database error occurs
      */
     public List<FullData> findByReceiver(@Nonnull UUID receiverId) throws IllegalStateException {
-        return findByWhere("receiver_id=?", "by receiver " + receiverId, receiverId.toString());
+        return findByWhere("WHERE receiver_id=?", "by receiver " + receiverId, receiverId.toString());
+    }
+
+    public List<FullData> findNotInRegistry(UUID receiverId) {
+        return findByWhere("d LEFT JOIN "+FullRegistry.TABLE_NAME+" r " +
+                "ON d.id = r.full_id " +
+                "WHERE d.receiver_id = ? AND r.full_id IS NULL",
+                "not in registry", receiverId.toString());
     }
 
     private List<FullData> findByWhere(String whereClause, String desc, Object... args) throws IllegalStateException {
-        try (QueryResult qr = sql.executeQueryWithResult("SELECT * FROM " + TABLE_NAME + " WHERE " + whereClause, args)) {
+        try (QueryResult qr = sql.executeQueryWithResult("SELECT * FROM " + TABLE_NAME + " " + whereClause, args)) {
             ResultSet rs = qr.rs();
             if (!rs.next()) {
                 return ImmutableList.of();
@@ -114,7 +121,8 @@ public class FullDataRepository implements li.l1t.mtc.api.misc.Cache {
             do {
                 result.add(new FullData(rs.getInt(1), rs.getTimestamp(2).toLocalDateTime(),
                         rs.getString(3), UUID.fromString(rs.getString(4)), UUID.fromString(rs.getString(5)),
-                        FullPart.values()[rs.getInt(6)], rs.getBoolean(7)));
+                        FullPart.values()[rs.getInt(6)], rs.getBoolean(7),
+                        UUID.fromString(rs.getString(8))));
             } while (rs.next());
 
             return Collections.unmodifiableList(result);
@@ -154,8 +162,8 @@ public class FullDataRepository implements li.l1t.mtc.api.misc.Cache {
             ur.gk().next();
             return new FullData(
                     ur.gk().getInt(1), LocalDateTime.now(),
-                    comment, senderId, receiverId, part, thorns
-            );
+                    comment, senderId, receiverId, part, thorns,
+                    null);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }

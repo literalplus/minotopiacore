@@ -30,12 +30,13 @@ public class FullData {
     private final UUID receiverId;
     private final FullPart part;
     private final boolean thorns;
-    private String comment;
+    private UUID holderId;
     private boolean modified = false;
+    private String comment;
     private boolean valid = true;
 
     protected FullData(int id, LocalDateTime creationTime, String comment, UUID senderId, UUID receiverId, FullPart part,
-                       boolean thorns) {
+                       boolean thorns, UUID holderId) {
         this.id = id;
         this.creationTime = creationTime;
         this.comment = comment;
@@ -43,6 +44,7 @@ public class FullData {
         this.receiverId = receiverId;
         this.part = part;
         this.thorns = thorns;
+        this.holderId = holderId;
     }
 
     /**
@@ -78,6 +80,10 @@ public class FullData {
         }
         this.comment = comment;
         modified = true;
+    }
+
+    public UUID getHolderId() {
+        return holderId;
     }
 
     /**
@@ -163,6 +169,7 @@ public class FullData {
                 ", comment='" + comment + '\'' +
                 ", modified=" + modified +
                 ", valid=" + valid +
+                ", holderId=" + holderId +
                 '}';
     }
 

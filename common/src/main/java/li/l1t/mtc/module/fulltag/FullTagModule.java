@@ -46,12 +46,15 @@ public class FullTagModule extends ConfigurableMTCModule {
     public static final String FULL_LORE_PREFIX = "§3§9full2: ";
     public static final Logger LOGGER = LogManager.getLogger(FullTagModule.class);
     private static final String ALLOWED_PLAYERS_PATH = "allowed-players";
+    private static final String STRICT_FULLRETURN_PATH = "fullreturn-strict-require-lastowner-is-receiver";
+    public static final String ENABLE_FULLRETURN_PATH = "enable.fullreturn";
     private FullDistributionManager distributionManager;
     private FullDataRepository repository;
     private LegacyFullDataRepository legacyRepository;
     private FullRegistry registry;
     private Set<UUID> allowedPlayerIds = new HashSet<>();
     private boolean fullReturnEnabled;
+    private boolean fullReturnStrict;
 
     public FullTagModule() {
         super(NAME, "modules/fulltag/fulltag.conf.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
@@ -98,8 +101,10 @@ public class FullTagModule extends ConfigurableMTCModule {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        configuration.addDefault("enable.fullreturn", false);
-        fullReturnEnabled = configuration.getBoolean("enable.fullreturn");
+        configuration.addDefault(ENABLE_FULLRETURN_PATH, false);
+        configuration.addDefault(STRICT_FULLRETURN_PATH, false);
+        fullReturnEnabled = configuration.getBoolean(ENABLE_FULLRETURN_PATH);
+        fullReturnStrict = configuration.getBoolean(STRICT_FULLRETURN_PATH);
         save();
     }
 
@@ -128,8 +133,7 @@ public class FullTagModule extends ConfigurableMTCModule {
      * Attempts to extract a full id tag from a given item stack's lore lines.
      *
      * @param stack the stack to examine
-     * @return the positive integer full id if an id could be extracted, or a negative integer
-     * otherwise
+     * @return the positive integer full id if an id could be extracted, or a negative integer otherwise
      */
     public int getFullId(@Nullable ItemStack stack) {
         if (stack == null || !stack.hasItemMeta()) {
@@ -214,5 +218,9 @@ public class FullTagModule extends ConfigurableMTCModule {
 
     public boolean isFullReturnEnabled() {
         return fullReturnEnabled;
+    }
+
+    public boolean isFullReturnStrict() {
+        return fullReturnStrict;
     }
 }
