@@ -12,6 +12,8 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.nub.listener.NubJoinLeaveListener;
+import li.l1t.mtc.module.nub.listener.NubPreventListener;
+import li.l1t.mtc.module.nub.listener.NubProtectListener;
 import li.l1t.mtc.module.nub.service.SimpleProtectionService;
 import li.l1t.mtc.module.nub.task.ProtectionCheckTask;
 import li.l1t.mtc.yaml.ManagedConfiguration;
@@ -43,6 +45,8 @@ public class NubModule extends ConfigurableMTCModule {
         super.enable(plugin);
         checkTask.start();
         registerListener(new NubJoinLeaveListener(protectionService, getPlugin()));
+        registerListener(new NubProtectListener(protectionService));
+        registerListener(new NubPreventListener(protectionService));
     }
 
     @Override

@@ -9,7 +9,6 @@ package li.l1t.mtc.module.nub.task;
 
 import li.l1t.common.util.task.ImprovedBukkitRunnable;
 import li.l1t.mtc.api.MTCPlugin;
-import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.nub.LocalProtectionManager;
 import li.l1t.mtc.module.nub.api.NubProtection;
@@ -55,8 +54,6 @@ public class ProtectionCheckTask extends ImprovedBukkitRunnable {
             if (protection.isExpired()) {
                 service.expireProtection(player, protection);
             } else {
-                MessageType.BROADCAST.sendTo(player, " §e§lDu bist noch für %d Minuten durch N.u.b. geschützt.");
-                MessageType.BROADCAST.sendTo(player, " §eTippe /nub für mehr Informationen.");
             }
         }
     }

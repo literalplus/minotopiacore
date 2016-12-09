@@ -121,4 +121,31 @@ public class SimpleProtectionService implements ProtectionService {
     public boolean isEligibleForProtection(Player player) {
         return !player.hasPlayedBefore() || repository.findProtectionFor(player.getUniqueId()).isPresent();
     }
+
+    @Override
+    public void showProtectionStatusTo(Player player, NubProtection protection) {
+        Preconditions.checkNotNull(player, "player");
+        Preconditions.checkNotNull(protection, "protection");
+        if (player.getUniqueId().equals(protection.getPlayerId())) {
+            showOwnProtectionStatusTo(player);
+        } else {
+            MessageType.RESULT_LINE.sendTo(player,
+                    "Dieser Spieler ist noch für %d Minuten durch N.u.b. geschützt.",
+                    protection.getMinutesLeft());
+        }
+    }
+
+    @Override
+    public void showOwnProtectionStatusTo(Player player) {
+        NubProtection protection = manager.getProtection(player.getUniqueId());
+        if (protection != null) {
+            MessageType.RESULT_LINE.sendTo(player,
+                    " §e§lDu bist noch für %d Minuten durch N.u.b. geschützt. §6/nub",
+                    protection.getMinutesLeft());
+        } else {
+            MessageType.RESULT_LINE.sendTo(player,
+                    "§e§lDu bist nicht durch N.u.b. geschützt. §6/nub"
+            );
+        }
+    }
 }

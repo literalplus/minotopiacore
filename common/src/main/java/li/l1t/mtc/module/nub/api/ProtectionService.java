@@ -86,4 +86,8 @@ public interface ProtectionService {
      *                                  expired yet
      */
     void expireProtection(Player player, NubProtection protection);
+
+    void showProtectionStatusTo(Player player, NubProtection protection);
+
+    void showOwnProtectionStatusTo(Player player);
 }
