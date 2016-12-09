@@ -202,7 +202,7 @@ public class NubCommand extends BukkitExecutionExecutor {
             exec.respondUsage("ostatus", "<Spieler|UUID>", "Zeigt den Status eines Schutzes");
             exec.respondUsage("ocancel", "<Spieler|UUID>", "Bricht den Schutz ab");
             exec.respondUsage("opause", "<Spieler|UUID>", "Pausiert den Schutz");
-            exec.respondUsage("ostart", "<Spieler|UUID> <Minuten>", "Startet neuen Schutz");
+            exec.respondUsage("ostart", "<Spieler|UUID>", "Startet neuen Schutz");
         }
         return true;
     }

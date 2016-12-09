@@ -46,7 +46,7 @@ class SqlProtection implements NubProtection {
 
     @Override
     public int getMinutesLeft() {
-        int minutesSinceCreation = Math.toIntExact(creationInstant.until(Instant.now(), ChronoUnit.MINUTES));
+        int minutesSinceCreation = Math.toIntExact(ChronoUnit.MINUTES.between(creationInstant, Instant.now()));
         if (minutesSinceCreation > minutesLeftAtStart) {
             return 0;
         } else {
@@ -56,6 +56,6 @@ class SqlProtection implements NubProtection {
 
     @Override
     public boolean isExpired() {
-        return getMinutesLeft() > 0;
+        return getMinutesLeft() <= 0;
     }
 }
