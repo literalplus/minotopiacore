@@ -32,7 +32,7 @@ public class NubPreventListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        notifyAndCancelIfProtectedPlayer(event.getEntity(), event);
+        notifyAndCancelIfProtectedPlayer(event.getDamager(), event);
     }
 
     private void notifyAndCancelIfProtectedPlayer(Object entity, Cancellable event) {
