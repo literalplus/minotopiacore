@@ -149,7 +149,7 @@ public class NubCommand extends BukkitExecutionExecutor {
     }
 
     private boolean handleCancelOwn(CommandExecution exec) {
-        requireIsProtected(exec.player(), "Du bist nicht durch N.u.b. gechützt.");
+        requireIsProtected(exec.player(), "Du bist nicht durch N.u.b. geschützt.");
         return handleCancelInternal(exec, exec.player());
     }
 
