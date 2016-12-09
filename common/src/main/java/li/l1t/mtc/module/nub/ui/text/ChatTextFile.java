@@ -76,7 +76,7 @@ public abstract class ChatTextFile {
 
     private String replaceMacros(CommandSender sender, String line, int duration) {
         return line
-                .replaceAll("%name%", sender.getName())
-                .replaceAll("%duration%", String.valueOf(duration));
+                .replaceAll("\\$name", sender.getName())
+                .replaceAll("\\$duration", String.valueOf(duration));
     }
 }

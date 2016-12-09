@@ -1,6 +1,6 @@
-Hallo §s%player% §pund willkommen auf MinoTopia!
+Hallo §s$player §pund willkommen auf MinoTopia!
 Damit du dich erst einmal zurechtfinden kannst, bekommst
-du für §s%duration%§p Minuten unseren speziellen N.u.b.-Schutz.
+du für §s$duration§p Minuten unseren speziellen N.u.b.-Schutz.
 Damit bist du vor Schaden (auch durch andere Spieler)
 erstmal geschützt. Am besten schaust du dich erstmal um und
 findest einen Ort für deine Basis. Am besten baust du so
