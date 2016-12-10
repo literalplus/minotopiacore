@@ -10,6 +10,7 @@ package li.l1t.mtc.module.simple;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.misc.XyLocation;
+import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.api.module.inject.InjectMe;
@@ -131,12 +132,12 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteDispenserOrDropper(BlockDispenseEvent evt) {
         BlockState state = evt.getBlock().getState();
-        doIfInfinite(state, val -> addItem(((InventoryHolder) state).getInventory(), evt.getItem().clone()));
+        doIfInfinite(state, val -> addItem(((InventoryHolder) state).getInventory(), evt.getItem()));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteHopper(InventoryMoveItemEvent evt) {
-        doIfInfinite(evt.getInitiator().getHolder(), val -> addItem(evt.getInitiator(), evt.getItem().clone())); //Clone item if initiator is infinite
+        doIfInfinite(evt.getInitiator().getHolder(), val -> addItem(evt.getInitiator(), evt.getItem())); //Clone item if initiator is infinite
         doIfInfinite(evt.getDestination().getHolder(), val -> evt.setCancelled(true)); //Cancel if destination is infinite - bugusing
     }
 
@@ -173,7 +174,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         if (fullTagModule != null && fullTagModule.isFullItem(stack)) {
             return; //Don't duplicate full items hrhrhr
         }
-        inv.addItem(stack.clone());
+        inv.addItem(new ItemStackFactory(stack).amount(64).produce());
     }
 
     private byte getUndamagedDataValueOfAnvil(byte dataValue) { //see http://minecraft.gamepedia.com/Anvil#Data_values section 'Block'
