@@ -174,7 +174,13 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         if (fullTagModule != null && fullTagModule.isFullItem(stack)) {
             return; //Don't duplicate full items hrhrhr
         }
-        inv.addItem(new ItemStackFactory(stack).amount(64).produce());
+        int stackPositionHopefully = inv.first(stack);
+        ItemStack clonedItem = new ItemStackFactory(stack).amount(64).produce();
+        if (stackPositionHopefully > 0) {
+            inv.setItem(stackPositionHopefully, clonedItem);
+        } else {
+            inv.addItem(clonedItem);
+        }
     }
 
     private byte getUndamagedDataValueOfAnvil(byte dataValue) { //see http://minecraft.gamepedia.com/Anvil#Data_values section 'Block'
