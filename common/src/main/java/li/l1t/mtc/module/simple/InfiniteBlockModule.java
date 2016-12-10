@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.infbl;
+package li.l1t.mtc.module.simple;
 
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
@@ -170,7 +170,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     private void addItem(Inventory inv, ItemStack stack) {
-        if (fullTagModule != null && fullTagModule.getFullId(stack) > 0) {
+        if (fullTagModule != null && fullTagModule.isFullItem(stack)) {
             return; //Don't duplicate full items hrhrhr
         }
         inv.addItem(stack.clone());
