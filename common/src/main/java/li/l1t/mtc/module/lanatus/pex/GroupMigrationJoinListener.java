@@ -33,7 +33,7 @@ public class GroupMigrationJoinListener implements Listener {
         this.pex = pex;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void handleJoinForGroupMigration(PlayerJoinEvent evt) {
         Player player = evt.getPlayer();
         PermissionUser user = pex.getUser(player);
