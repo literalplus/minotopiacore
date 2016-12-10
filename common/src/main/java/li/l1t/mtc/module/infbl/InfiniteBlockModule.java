@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.simple;
+package li.l1t.mtc.module.infbl;
 
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
@@ -78,8 +78,10 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     @Override
     protected void reloadImpl() {
         infiniteBlockLocations = (List<XyLocation>) configuration.getList(DATA_PATH, new ArrayList<XyLocation>());
+
         Iterator<XyLocation> it = infiniteBlockLocations.iterator();
-        while (it.hasNext()) {
+
+        while (it.hasNext()) { //using iterator instead of Stream API for Iterator#remove() method
             XyLocation location = it.next();
             Block blk = location.getBlock();
             if (canBeMadeInfinite(blk.getType())) {
@@ -89,6 +91,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                 it.remove();
             }
         }
+
         save();
     }
 
@@ -105,7 +108,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     private void addInfiniteMetadata(Block blk) {
-        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, blk.getState()));
+        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, INFINITY_TAG));
     }
 
     private void doIfInfinite(InventoryHolder possibleState, Consumer<MetadataValue> consumer) {
@@ -123,24 +126,17 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         }
     }
 
-    private void resetInventoryContentsFromMetadataIfInfinite(Block block) {
-        doIfInfinite(block, val -> {
-            if (val.value() != null && val.value() instanceof BlockState) {
-                ((BlockState) val.value()).update(true, false);
-            }
-        });
-    }
-
     ////////////// EVENT HANDLERS //////////////////////////////////////////////////////////////////////////////////////
 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteDispenserOrDropper(BlockDispenseEvent evt) {
-        resetInventoryContentsFromMetadataIfInfinite(evt.getBlock());
+        BlockState state = evt.getBlock().getState();
+        doIfInfinite(state, val -> addItem(((InventoryHolder) state).getInventory(), evt.getItem().clone()));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInfiniteHopper(InventoryMoveItemEvent evt) {
-        doIfInfinite(evt.getInitiator().getHolder(), val -> addItem(evt.getInitiator(), evt.getItem()));
+        doIfInfinite(evt.getInitiator().getHolder(), val -> addItem(evt.getInitiator(), evt.getItem().clone())); //Clone item if initiator is infinite
         doIfInfinite(evt.getDestination().getHolder(), val -> evt.setCancelled(true)); //Cancel if destination is infinite - bugusing
     }
 
@@ -149,7 +145,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         if (evt.getInventory().getType() != InventoryType.ANVIL) {
             doIfInfinite(evt.getInventory().getHolder(), val -> {
                 evt.setCancelled(true);
-                MTCHelper.sendLoc("XU-infdispclk", evt.getPlayer(), true);
+                MTCHelper.sendLoc("XU-infdispclk", evt.getPlayer(), true); //keeping legacy constant for backwards compatibility
             });
         }
     }
@@ -174,7 +170,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     private void addItem(Inventory inv, ItemStack stack) {
-        if (fullTagModule != null && fullTagModule.isFullItem(stack)) {
+        if (fullTagModule != null && fullTagModule.getFullId(stack) > 0) {
             return; //Don't duplicate full items hrhrhr
         }
         inv.addItem(stack.clone());
@@ -231,7 +227,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                         }
                         addInfiniteToCfg(blk.getLocation());
                         addInfiniteMetadata(blk);
-                        return MTCHelper.sendLoc("XU-infdispon", sender, true);
+                        return MTCHelper.sendLoc("XU-infdispon", sender, true); //legacy constant #backwards-compatibility
                     case "off":
                         Block blk2 = getAndCheckTargetBlock((Player) sender);
                         if (blk2 == null) {
@@ -239,7 +235,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
                         }
                         blk2.removeMetadata(INFINITY_TAG, plugin);
                         removeInfiniteFromCfg(blk2.getLocation());
-                        return MTCHelper.sendLoc("XU-infdispoff", sender, true);
+                        return MTCHelper.sendLoc("XU-infdispoff", sender, true); //legacy constant #backwards-compatibility
                     case "list":
                         AtomicInteger i = new AtomicInteger(0);
                         if (sender instanceof ConsoleCommandSender) {
