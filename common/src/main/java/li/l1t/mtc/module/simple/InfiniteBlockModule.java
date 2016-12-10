@@ -176,11 +176,14 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
         }
         int stackPositionHopefully = inv.first(stack);
         ItemStack clonedItem = new ItemStackFactory(stack).amount(64).produce();
-        if (stackPositionHopefully > 0) {
-            inv.setItem(stackPositionHopefully, clonedItem);
-        } else {
-            inv.addItem(clonedItem);
-        }
+        plugin.getServer().getScheduler().runTask(plugin,
+                () -> {
+                    if (stackPositionHopefully > 0) {
+                        inv.setItem(stackPositionHopefully, clonedItem);
+                    } else {
+                        inv.addItem(clonedItem);
+                    }
+                });
     }
 
     private byte getUndamagedDataValueOfAnvil(byte dataValue) { //see http://minecraft.gamepedia.com/Anvil#Data_values section 'Block'
