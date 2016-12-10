@@ -45,7 +45,10 @@ import org.bukkit.metadata.Metadatable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -102,12 +105,7 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
     }
 
     private void addInfiniteMetadata(Block blk) {
-        Object value = null;
-        if (blk instanceof InventoryHolder) {
-            ItemStack[] contents = ((InventoryHolder) blk).getInventory().getContents();
-            value = Arrays.copyOf(contents, contents.length);
-        }
-        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, value));
+        blk.setMetadata(INFINITY_TAG, new FixedMetadataValue(plugin, blk.getState()));
     }
 
     private void doIfInfinite(InventoryHolder possibleState, Consumer<MetadataValue> consumer) {
@@ -127,10 +125,8 @@ public final class InfiniteBlockModule extends ConfigurableMTCModule implements 
 
     private void resetInventoryContentsFromMetadataIfInfinite(Block block) {
         doIfInfinite(block, val -> {
-            if (val.value() != null && val.value() instanceof ItemStack[] &&
-                    block instanceof InventoryHolder) {
-                ItemStack[] contents = (ItemStack[]) val.value();
-                ((InventoryHolder) block).getInventory().setContents(Arrays.copyOf(contents, contents.length));
+            if (val.value() != null && val.value() instanceof BlockState) {
+                ((BlockState) val.value()).update(true, false);
             }
         });
     }
