@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.List;
@@ -29,15 +28,6 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
 
     public EnderPearlProjectileLaunchListener(MTCPlugin plugin) {
         this.plugin = plugin;
-    }
-
-    private static void returnPearl(Player plr) { //no longer necessary in 1.11 ?
-        if (plr.getItemInHand().getType() != Material.ENDER_PEARL) {
-            return;
-        }
-        ItemStack is = plr.getItemInHand();
-        is.setAmount(plr.getItemInHand().getAmount() + 1);
-        plr.setItemInHand(is);
     }
 
     @EventHandler
@@ -55,7 +45,6 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
         if (!shooter.hasPermission("mtc.enderpearl.use")) {
             e.setCancelled(true);
             shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", shooter.getName(), plugin.getName()));
-            //EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
         List<Block> lineOfSight = shooter.getLineOfSight((Set<Material>) null, 100);
@@ -63,7 +52,6 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
             if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);
                 shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", shooter.getName(), plugin.getName()));
-                //EnderPearlProjectileLaunchListener.returnPearl(shooter);
                 return;
             }
         }
