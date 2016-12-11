@@ -31,7 +31,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
         this.plugin = plugin;
     }
 
-    private static void returnPearl(Player plr) {
+    private static void returnPearl(Player plr) { //no longer necessary in 1.11 ?
         if (plr.getItemInHand().getType() != Material.ENDER_PEARL) {
             return;
         }
@@ -55,7 +55,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
         if (!shooter.hasPermission("mtc.enderpearl.use")) {
             e.setCancelled(true);
             shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epcancelled", shooter.getName(), plugin.getName()));
-            EnderPearlProjectileLaunchListener.returnPearl(shooter);
+            //EnderPearlProjectileLaunchListener.returnPearl(shooter);
             return;
         }
         List<Block> lineOfSight = shooter.getLineOfSight((Set<Material>) null, 100);
@@ -63,7 +63,7 @@ public final class EnderPearlProjectileLaunchListener implements Listener {
             if (lineOfSightItem.getType() == Material.BEDROCK) {
                 e.setCancelled(true);
                 shooter.sendMessage(MTC.chatPrefix + LangHelper.localiseString("XU-epbedrock", shooter.getName(), plugin.getName()));
-                EnderPearlProjectileLaunchListener.returnPearl(shooter);
+                //EnderPearlProjectileLaunchListener.returnPearl(shooter);
                 return;
             }
         }
