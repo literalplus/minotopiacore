@@ -14,6 +14,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.PlayerGameManager;
 import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.Injector;
+import li.l1t.mtc.hook.VaultHook;
 import li.l1t.mtc.hook.XLoginHook;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +55,7 @@ public class DefaultInjectionProvider {
         injector.registerInstance(plugin, MTCPlugin.class);
         injector.registerInstance(plugin.getModuleManager(), ModuleManager.class);
         injector.registerInstance(plugin.getXLoginHook(), XLoginHook.class);
+        injector.registerInstance(plugin.getVaultHook(), VaultHook.class);
         injector.registerInstance(plugin.getGameManager(), PlayerGameManager.class);
     }
 }
