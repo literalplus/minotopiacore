@@ -95,7 +95,6 @@ public class AnvilNBrewingStandStackListener implements Listener {
             return; //lol
         }
         Player player = (Player) humanEntity;
-        System.out.println(event.getAction() + " with " + event.getCursor() + " slot=" + event.getRawSlot() + " previtem=" + event.getCurrentItem());
         if (isClickInPotionSlotOfBrewingStandWithItemOnCursor(event)) {
             handlePotionSlotClick(event, player);
         }
