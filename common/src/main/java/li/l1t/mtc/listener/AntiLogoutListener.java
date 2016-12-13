@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ import java.util.UUID;
 public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     public static final SimpleDateFormat SIMPLE_TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
     private final MTC plugin;
-    private final Map<UUID, Date> playersInAFight = new HashMap<>();
+    private final Map<UUID, Instant> playersInAFight = new HashMap<>();
 
     public AntiLogoutListener(MTC plugin) {
         this.plugin = plugin;
@@ -65,11 +65,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
 
     @Override
     public boolean isFighting(UUID uuid) {
-        Date fightStart = playersInAFight.get(uuid);
-        if (fightStart == null) {
+        Instant fightExpiry = playersInAFight.get(uuid);
+        if (fightExpiry == null) {
             return false;
         }
-        if (fightStart.before(Calendar.getInstance().getTime())) {
+        if (fightExpiry.isBefore(Instant.now())) {
             playersInAFight.remove(uuid);
             return false;
         }
@@ -110,11 +110,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     @Override
-    public void setFighting(final Player damaged, final Player damager, final Calendar cal) {
-        cal.add(Calendar.SECOND, ConfigHelper.getSecsInFight());
-        if (!damaged.hasPermission("mtc.ignore") && !damager.hasPermission("mtc.ignore")) {
-            setFightingInternal(damaged, damager, cal.getTime());
-            setFightingInternal(damager, damaged, cal.getTime());
+    public void setFighting(Player victim, Player culprit) {
+        Instant fightExpiry = Instant.now().plusSeconds(ConfigHelper.getSecsInFight());
+        if (!victim.hasPermission("mtc.ignore") && !culprit.hasPermission("mtc.ignore")) {
+            setFightingUntil(victim, culprit, fightExpiry);
+            setFightingUntil(culprit, victim, fightExpiry);
         }
     }
 
@@ -123,11 +123,10 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
         this.playersInAFight.clear();
     }
 
-    private void setFightingInternal(final Player plr, final Player other, final Date dt) {
-        if (!playersInAFight.containsKey(other.getUniqueId())) {
-//            PluginAPIInterfacer.cancelAllEssTeleports(plr); //teleports already handled by #onTp(PlayerTeleportEvent)
-            MTCHelper.sendLocArgs("XU-fightstart", plr, true, other.getName());
+    private void setFightingUntil(Player target, Player enemy, Instant fightExpiry) {
+        if (!playersInAFight.containsKey(target.getUniqueId())) {
+            MTCHelper.sendLocArgs("XU-fightstart", target, true, enemy.getName());
         }
-        playersInAFight.put(plr.getUniqueId(), dt);
+        playersInAFight.put(target.getUniqueId(), fightExpiry);
     }
 }

@@ -110,7 +110,7 @@ public final class MainDamageListener implements Listener {
         }
 
         //this happens if the players can hit each other
-        plugin.getLogoutHandler().setFighting(plr, plrDamager, Calendar.getInstance()); //ANTILOGOUT
+        plugin.getLogoutHandler().setFighting(plr, plrDamager); //ANTILOGOUT
         MTCHelper.sendLocArgs("XU-hit", plrDamager, true, clanPrefix,
                 plr.getName(), MainDamageListener.DECIMAL_FORMAT.format(plr.getHealth() / 2.0F), "❤");
     }

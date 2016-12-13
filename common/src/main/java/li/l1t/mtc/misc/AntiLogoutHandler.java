@@ -9,7 +9,6 @@ package li.l1t.mtc.misc;
 
 import org.bukkit.entity.Player;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 /**
@@ -21,7 +20,7 @@ import java.util.UUID;
 public interface AntiLogoutHandler {
     boolean isFighting(UUID uuid);
 
-    void setFighting(Player damaged, Player damager, Calendar cal);
+    void setFighting(Player damaged, Player damager);
 
     void clearFighters();
 }

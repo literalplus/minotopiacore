@@ -9,7 +9,6 @@ package li.l1t.mtc.misc;
 
 import org.bukkit.entity.Player;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 /**
@@ -25,7 +24,7 @@ public class DummyLogoutHandler implements AntiLogoutHandler {
     }
 
     @Override
-    public void setFighting(Player damaged, Player damager, Calendar cal) {
+    public void setFighting(Player damaged, Player damager) {
     }
 
     @Override
