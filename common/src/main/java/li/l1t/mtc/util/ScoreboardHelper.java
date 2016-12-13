@@ -188,4 +188,8 @@ public class ScoreboardHelper {
             plr.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
         }
     }
+
+    public Plugin getPlugin() {
+        return plugin;
+    }
 }
