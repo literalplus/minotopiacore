@@ -124,7 +124,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
     }
 
     private void setFightingUntil(Player target, Player enemy, Instant fightExpiry) {
-        if (!playersInAFight.containsKey(target.getUniqueId())) {
+        if (!playersInAFight.containsKey(enemy.getUniqueId())) {
             MTCHelper.sendLocArgs("XU-fightstart", target, true, enemy.getName());
         }
         playersInAFight.put(target.getUniqueId(), fightExpiry);

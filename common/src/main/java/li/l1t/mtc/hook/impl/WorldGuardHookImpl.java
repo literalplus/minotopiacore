@@ -58,6 +58,6 @@ public final class WorldGuardHookImpl implements Hook {
             }
         }
         StateFlag.State pvpState = applicableRegions.queryState(null, DefaultFlag.PVP);
-        return pvpState == StateFlag.State.ALLOW;
+        return pvpState != StateFlag.State.DENY;
     }
 }
