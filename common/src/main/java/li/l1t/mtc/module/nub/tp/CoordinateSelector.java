@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.nub.tp;
 
+import li.l1t.mtc.api.module.inject.InjectMe;
 import org.apache.commons.lang3.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -20,6 +21,7 @@ import org.bukkit.World;
 public class CoordinateSelector {
     private final NubTpConfig config;
 
+    @InjectMe
     public CoordinateSelector(NubTpConfig config) {
         this.config = config;
     }
