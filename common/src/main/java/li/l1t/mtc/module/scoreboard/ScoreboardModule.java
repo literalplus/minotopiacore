@@ -9,10 +9,13 @@ package li.l1t.mtc.module.scoreboard;
 
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.module.MTCModuleAdapter;
+import li.l1t.mtc.misc.ClearCacheBehaviour;
+import li.l1t.mtc.module.ConfigurableMTCModule;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Registers listeners for the scorebaord provider API.
@@ -20,21 +23,31 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-14
  */
-public class ScoreboardModule extends MTCModuleAdapter {
+public class ScoreboardModule extends ConfigurableMTCModule {
+    private static final String UPDATE_PERIOD_PATH = "board-auto-refresh-interval-seconds";
+    private long boardUpdatePeriodSeconds = TimeUnit.MINUTES.toSeconds(5);
     @InjectMe
     private CommonScoreboardProvider scoreboardProvider;
+    @InjectMe
+    private BoardUpdateTask updateTask;
 
     public ScoreboardModule() {
-        super("ScoreboardAPI", true);
+        super("ScoreboardAPI", "modules/scoreboard.prov.yml", ClearCacheBehaviour.RELOAD, true);
     }
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
-        getPlugin().getServer().getScheduler().runTaskAsynchronously(getPlugin(),
-                () -> getPlugin().getServer().getOnlinePlayers()
-                        .forEach(scoreboardProvider::updateScoreboardFor)
-        );
+    }
+
+    @Override
+    protected void reloadImpl() {
+        configuration.addDefault(UPDATE_PERIOD_PATH, boardUpdatePeriodSeconds);
+        long newPeriod = configuration.getLong(UPDATE_PERIOD_PATH);
+        if(newPeriod != boardUpdatePeriodSeconds || updateTask.getTaskId() == -1) {
+            boardUpdatePeriodSeconds = newPeriod;
+            updateTask.restart(boardUpdatePeriodSeconds * 20L);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
