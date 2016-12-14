@@ -39,6 +39,9 @@ public class BoardUpdateTask extends ImprovedBukkitRunnable {
 
     @Override
     public void run() {
+        if(scoreboardProvider.getItems().isEmpty()) {
+            return;
+        }
         plugin.getServer().getOnlinePlayers()
                 .forEach(scoreboardProvider::updateScoreboardFor);
     }

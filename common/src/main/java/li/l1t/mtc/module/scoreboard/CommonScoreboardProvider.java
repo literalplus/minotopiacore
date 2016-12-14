@@ -9,6 +9,7 @@ package li.l1t.mtc.module.scoreboard;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.ExternalDependencies;
 import li.l1t.mtc.api.module.inject.InjectMe;
@@ -66,7 +67,7 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
     }
 
     public void updateScoreboardFor(Player player) {
-        if (boardHiddenPlayers.contains(player.getUniqueId())) {
+        if (boardHiddenPlayers.contains(player.getUniqueId()) || globalItems.isEmpty()) {
             return;
         }
         prepareObjectiveFor(player);
@@ -96,5 +97,9 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
             name = duplicateItemPrefixes.get(RandomUtils.nextInt(duplicateItemPrefixes.size())) + name;
         }
         return name;
+    }
+
+    public Collection<BoardItem> getItems() {
+        return ImmutableList.copyOf(globalItems.values());
     }
 }
