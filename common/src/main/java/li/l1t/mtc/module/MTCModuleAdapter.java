@@ -13,6 +13,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.MTCModule;
 import li.l1t.mtc.api.module.ModuleCommand;
 import li.l1t.mtc.api.module.ModuleManager;
+import li.l1t.mtc.api.module.inject.InjectionTarget;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -131,7 +132,11 @@ public abstract class MTCModuleAdapter implements MTCModule {
     }
 
     public <T> T inject(Class<? extends T> clazz) {
-        T instance = plugin.getModuleManager().getInjector().getTarget(clazz).getInstance();
+        InjectionTarget<? extends T> target = plugin.getModuleManager().getInjector().getTarget(clazz);
+        if (!target.hasInstance()) {
+            plugin.getModuleManager().getDependencyManager().initialise(target);
+        }
+        T instance = target.getInstance();
         Preconditions.checkNotNull(instance, "instance of %s", clazz);
         return instance;
     }
