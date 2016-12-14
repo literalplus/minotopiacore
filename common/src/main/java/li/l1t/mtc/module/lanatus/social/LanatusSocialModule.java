@@ -53,7 +53,7 @@ public class LanatusSocialModule extends ConfigurableMTCModule {
     @Override
     protected void reloadImpl() {
         configuration.options().copyDefaults(true);
-        configuration.addDefault(SHARE_MESSAGE_PATH, "§x$player hat $product im /lashop gekauft!");
+        configuration.addDefault(SHARE_MESSAGE_PATH, "§x$player hat $product§p im /lashop gekauft!");
         shareMessage = ChatConstants.convertCustomColorCodes(configuration.getString(SHARE_MESSAGE_PATH));
     }
 
