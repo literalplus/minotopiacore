@@ -40,9 +40,9 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "preview":
-                    return handlePreview(exec, exec.uuidArg(0));
+                    return handlePreview(exec, exec.uuidArg(1));
                 case "share":
-                    return handleSend(exec, exec.uuidArg(0));
+                    return handleSend(exec, exec.uuidArg(1));
             }
         }
         return respondUsage(exec);
