@@ -42,21 +42,13 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
                 case "preview":
                     return handlePreview(exec, exec.uuidArg(1));
                 case "share":
-                    return handleSend(exec, exec.uuidArg(1));
+                    return handleShare(exec, exec.uuidArg(1));
             }
         }
         return respondUsage(exec);
     }
 
-    private boolean handleSend(CommandExecution exec, UUID purchaseId) {
-        checkIsShareable(purchaseId);
-        Purchase purchase = lanatus.purchases().findById(purchaseId);
-        exec.respond(MessageType.RESULT_LINE, "So würde die Nachricht aussehen:");
-        exec.respond(formatShareMessage(exec, purchase));
-        return true;
-    }
-
-    private boolean handlePreview(CommandExecution exec, UUID purchaseId) {
+    private boolean handleShare(CommandExecution exec, UUID purchaseId) {
         checkIsShareable(purchaseId);
         Purchase purchase = lanatus.purchases().findById(purchaseId);
         module.getPlugin().getServer().broadcastMessage(formatShareMessage(exec, purchase));
@@ -64,10 +56,18 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         return true;
     }
 
+    private boolean handlePreview(CommandExecution exec, UUID purchaseId) {
+        checkIsShareable(purchaseId);
+        Purchase purchase = lanatus.purchases().findById(purchaseId);
+        exec.respond(MessageType.RESULT_LINE, "So würde die Nachricht aussehen:");
+        exec.respond(formatShareMessage(exec, purchase));
+        return true;
+    }
+
     private String formatShareMessage(CommandExecution exec, Purchase purchase) {
         return module.getShareMessage()
-                .replaceAll("$player", exec.senderName())
-                .replaceAll("$product", purchase.getProduct().getDisplayName());
+                .replaceAll("\\$player", exec.senderName())
+                .replaceAll("\\$product", purchase.getProduct().getDisplayName());
     }
 
     private void checkIsShareable(UUID purchaseId) {
