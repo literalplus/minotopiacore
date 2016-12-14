@@ -26,13 +26,14 @@ import java.util.concurrent.TimeUnit;
 public class ScoreboardModule extends ConfigurableMTCModule {
     private static final String UPDATE_PERIOD_PATH = "board-auto-refresh-interval-seconds";
     private long boardUpdatePeriodSeconds = TimeUnit.MINUTES.toSeconds(5);
-    @InjectMe
-    private CommonScoreboardProvider scoreboardProvider;
+    private final CommonScoreboardProvider scoreboardProvider;
     @InjectMe
     private BoardUpdateTask updateTask;
 
-    public ScoreboardModule() {
+    @InjectMe(failSilently = true)
+    public ScoreboardModule(CommonScoreboardProvider scoreboardProvider) {
         super("ScoreboardAPI", "modules/scoreboard.prov.yml", ClearCacheBehaviour.RELOAD, true);
+        this.scoreboardProvider = scoreboardProvider;
     }
 
     @Override

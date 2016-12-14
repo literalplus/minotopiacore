@@ -7,7 +7,6 @@
 
 package li.l1t.mtc.util;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.base.Preconditions;
@@ -40,10 +39,11 @@ public class ScoreboardHelper {
      * Constructs a new Scoreboard helper.
      *
      * @param plugin the plugin associated with this helper
+     * @param protocolManager
      */
-    public ScoreboardHelper(Plugin plugin) {
+    public ScoreboardHelper(Plugin plugin, ProtocolManager protocolManager) {
         this.plugin = plugin;
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
+        this.protocolManager = protocolManager;
     }
 
     /**

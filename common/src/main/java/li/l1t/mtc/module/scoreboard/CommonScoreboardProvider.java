@@ -7,12 +7,14 @@
 
 package li.l1t.mtc.module.scoreboard;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Preconditions;
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.ExternalDependencies;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.util.ScoreboardHelper;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.*;
@@ -24,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-04
  */
+@ExternalDependencies("com.comphenix")
 public class CommonScoreboardProvider extends ScoreboardHelper {
     public static final String OBJECTIVE_NAME = "mtc-side";
     private final List<String> duplicateItemPrefixes = Arrays.asList("§0§f", "§1§f", "§2§f", "§3§f", "§4§f",
@@ -33,8 +36,8 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
     private final Set<UUID> boardHiddenPlayers = new HashSet<>();
 
     @InjectMe
-    public CommonScoreboardProvider(Plugin plugin) {
-        super(plugin);
+    public CommonScoreboardProvider(MTCPlugin plugin) {
+        super(plugin, ProtocolLibrary.getProtocolManager());
     }
 
     public void hideBoardFor(Player player) {
@@ -51,10 +54,10 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
         updateScoreboardFor(player);
     }
 
-    public void registerBoardItem(String key, BoardItem item) {
-        Preconditions.checkNotNull(key, "key");
+    public void registerBoardItem(BoardItem item) {
         Preconditions.checkNotNull(item, "item");
-        globalItems.put(key, item);
+        Preconditions.checkNotNull(item.getIdentifier(), "item.getIdentifier()");
+        globalItems.put(item.getIdentifier(), item);
     }
 
     public void cleanUp(Player player) {

@@ -7,19 +7,15 @@
 
 package li.l1t.mtc.module.pvpstats.scoreboard;
 
-import li.l1t.mtc.module.pvpstats.PvPStatsModule;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.pvpstats.model.PlayerStats;
-import li.l1t.mtc.util.ScoreboardHelper;
+import li.l1t.mtc.module.pvpstats.model.PlayerStatsRepository;
+import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
+import li.l1t.mtc.module.scoreboard.MapBoardItem;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages Scoreboards shown by the PvP Stats module, handling displaying and updating.
@@ -27,68 +23,34 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-04
  */
-public class PvPStatsBoardManager extends ScoreboardHelper {
+public class PvPStatsBoardManager {
     private static final NumberFormat KD_FORMAT = new DecimalFormat("#,##");
-    private final Set<UUID> objectiveExistingPlayers = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    public static final String OBJECTIVE_NAME = "pvpstats-side";
-    private final PvPStatsModule module;
+    private final CommonScoreboardProvider scoreboardProvider;
+    private final PlayerStatsRepository statsRepository;
+    private final MapBoardItem killsItem = new MapBoardItem("pstats-kills", "§6Kills:");
+    private final MapBoardItem deathsItem = new MapBoardItem("pstats-kills", "§6Deaths:");
+    private final MapBoardItem kdRatioItem = new MapBoardItem("pstats-kills", "§6K/D:");
 
-    public PvPStatsBoardManager(PvPStatsModule module) {
-        super(module.getPlugin());
-        this.module = module;
+    @InjectMe
+    public PvPStatsBoardManager(CommonScoreboardProvider scoreboardProvider, PlayerStatsRepository statsRepository) {
+        this.scoreboardProvider = scoreboardProvider;
+        this.statsRepository = statsRepository;
     }
 
     public void enable() {
-        module.getPlugin().getServer().getPluginManager()
-                .registerEvents(new PvPStatsBoardListener(this), module.getPlugin());
-        module.getPlugin().getServer().getScheduler().runTaskAsynchronously(
-                module.getPlugin(),
-                () -> {
-                    new ArrayList<>(module.getPlugin().getServer().getOnlinePlayers())
-                            .forEach(plr -> removeObjective(plr, OBJECTIVE_NAME));
-                    new ArrayList<>(module.getPlugin().getServer().getOnlinePlayers())
-                            .forEach(this::updateScoreboard);
-                }
-        );
+        scoreboardProvider.registerBoardItem(killsItem);
+        scoreboardProvider.registerBoardItem(deathsItem);
+        scoreboardProvider.registerBoardItem(kdRatioItem);
     }
 
-    public void cleanUp(Player plr) {
-        objectiveExistingPlayers.remove(plr.getUniqueId());
+    public void updateAll(Player plr) {
+        updateAll(plr, statsRepository.find(plr)); //no worries, it's cached
     }
 
-    public void updateScoreboard(Player plr) {
-        updateScoreboard(plr, module.getRepository().find(plr)); //no worries, it's cached
-    }
-
-    public void updateScoreboard(Player plr, PlayerStats data) {
-        prepareData(plr);
-        updateScore(plr, data);
-    }
-
-    private void updateScore(Player plr, PlayerStats data) {
-        updateScore(plr, OBJECTIVE_NAME, "§6Kills:", 6);
-        updateScore(plr, OBJECTIVE_NAME, "§0§f" + data.getKills(), 5); //color codes so that equal values don't get overridden
-        updateScore(plr, OBJECTIVE_NAME, "§6Deaths:", 4);
-        updateScore(plr, OBJECTIVE_NAME, "§1§f" + data.getDeaths(), 3);
-        updateScore(plr, OBJECTIVE_NAME, "§6K/D:", 2);
-        updateScore(plr, OBJECTIVE_NAME, "§2§f" + KD_FORMAT.format(data.getKDRatio()), 1);
-    }
-
-    private void prepareData(Player plr) {
-        if (!objectiveExistingPlayers.add(plr.getUniqueId())) { //may produce a client NPE on reload - Mojang logs & discards that
-            removeObjective(plr, OBJECTIVE_NAME);
-        }
-
-        if (plr.getScoreboard() == null) {
-            plr.setScoreboard(module.getPlugin().getServer().getScoreboardManager().getMainScoreboard());
-        }
-
-        createIntObjective(plr, OBJECTIVE_NAME,
-                "§e§l " + plr.getName(),
-                DisplaySlot.SIDEBAR);
-    }
-
-    public PvPStatsModule getModule() {
-        return module;
+    public void updateAll(Player player, PlayerStats data) {
+        killsItem.setValue(player, data.getKills());
+        deathsItem.setValue(player, data.getDeaths());
+        kdRatioItem.setValue(player, KD_FORMAT.format(data.getKDRatio()));
+        scoreboardProvider.updateScoreboardFor(player);
     }
 }

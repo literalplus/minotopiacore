@@ -7,14 +7,15 @@
 
 package li.l1t.mtc.module.pvpstats.scoreboard;
 
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Listens to events related to the PvP Stats Scoreboard.
@@ -23,36 +24,28 @@ import org.bukkit.event.player.PlayerQuitEvent;
  * @since 2016-01-05
  */
 public class PvPStatsBoardListener implements Listener {
-    private final PvPStatsBoardManager manager;
+    private final PvPStatsBoardManager scoreboard;
+    private final Plugin plugin;
 
-    public PvPStatsBoardListener(PvPStatsBoardManager manager) {
-        this.manager = manager;
+    @InjectMe
+    public PvPStatsBoardListener(PvPStatsBoardManager scoreboard, MTCPlugin plugin) {
+        this.scoreboard = scoreboard;
+        this.plugin = plugin;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent evt) {
         Player victim = evt.getEntity();
-        manager.updateScoreboard(evt.getEntity());
+        scoreboard.updateAll(evt.getEntity());
         if (victim.getKiller() != null) {
-            manager.updateScoreboard(evt.getEntity().getKiller());
+            scoreboard.updateAll(evt.getEntity().getKiller());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent evt) {
-        manager.getModule().getPlugin().getServer().getScheduler().runTaskAsynchronously(
-                manager.getModule().getPlugin(),
-                () -> manager.updateScoreboard(evt.getPlayer())
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
+                () -> scoreboard.updateAll(evt.getPlayer())
         ); //May make a database call + ProtocolLib is async save
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerKick(PlayerKickEvent evt) {
-        manager.cleanUp(evt.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuit(PlayerQuitEvent evt) {
-        manager.cleanUp(evt.getPlayer());
     }
 }

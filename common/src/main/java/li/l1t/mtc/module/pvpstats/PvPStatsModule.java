@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.pvpstats;
 
 import li.l1t.mtc.api.MTCPlugin;
-import li.l1t.mtc.hook.ProtocolLibHook;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.hook.TitleManagerHook;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
@@ -17,6 +17,7 @@ import li.l1t.mtc.module.pvpstats.model.PlayerStatsRepository;
 import li.l1t.mtc.module.pvpstats.model.PlayerStatsRepositoryImpl;
 import li.l1t.mtc.module.pvpstats.model.QueuedPlayerStatsRepository;
 import li.l1t.mtc.module.pvpstats.scoreboard.PvPStatsBoardManager;
+import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
 
 /**
  * Manages PvP stats and stores them in a MySQL database.
@@ -29,6 +30,8 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     public static final String ADMIN_PERMISSION = "mtc.stats.admin";
     private PlayerStatsRepository repository;
     private TitleManagerHook titleManagerHook;
+    @InjectMe(required = false)
+    private CommonScoreboardProvider scoreboardProvider;
 
     public PvPStatsModule() {
         super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
@@ -48,12 +51,8 @@ public class PvPStatsModule extends ConfigurableMTCModule {
 
         titleManagerHook = new TitleManagerHook(getPlugin());
 
-        if (isFeatureEnabled("scoreboard")) {
-            if (!new ProtocolLibHook(getPlugin()).isActive()) {
-                getPlugin().getLogger().severe("If you wish to use PvP Stats with Scoreboards, please install ProtocolLib!");
-            } else {
-                new PvPStatsBoardManager(this).enable();
-            }
+        if (isFeatureEnabled("scoreboard") && scoreboardProvider != null) {
+            new PvPStatsBoardManager(scoreboardProvider, repository).enable();
         }
     }
 
