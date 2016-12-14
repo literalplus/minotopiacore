@@ -40,7 +40,7 @@ public class LanatusSocialModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerListener(new PostPurchaseShareListener(this));
-        registerCommand(inject(LanatusSocialCommand.class), "lasocial");
+        registerCommand(inject(LanatusSocialCommand.class), "lashare");
     }
 
     @Override

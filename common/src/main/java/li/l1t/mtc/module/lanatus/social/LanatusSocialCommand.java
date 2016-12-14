@@ -13,13 +13,14 @@ import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.purchase.Purchase;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 
 import java.util.UUID;
 
 /**
- * Executes the /lasocial command, which allows players to share purchases.
+ * Executes the /lashare command, which allows players to share purchases.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-13
@@ -28,6 +29,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
     private final LanatusSocialModule module;
     private final LanatusClient lanatus;
 
+    @InjectMe
     public LanatusSocialCommand(LanatusSocialModule module, MTCLanatusClient lanatus) {
         this.module = module;
         this.lanatus = lanatus;
