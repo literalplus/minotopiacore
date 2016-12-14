@@ -10,6 +10,7 @@ package li.l1t.mtc.module.lanatus.social;
 import li.l1t.lanatus.api.purchase.Purchase;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.ChatConstants;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.lanatus.base.LanatusBaseModule;
@@ -30,6 +31,7 @@ public class LanatusSocialModule extends ConfigurableMTCModule {
     private final Map<UUID, Instant> shareablePurchases = new HashMap<>();
     private String shareMessage = "";
 
+    @InjectMe
     public LanatusSocialModule(LanatusBaseModule baseModule) {
         super("LanatusSocial", "modules/lanatus-social.cfg.yml", ClearCacheBehaviour.RELOAD);
     }
