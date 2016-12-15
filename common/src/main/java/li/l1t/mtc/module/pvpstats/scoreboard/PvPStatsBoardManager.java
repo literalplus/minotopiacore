@@ -31,8 +31,8 @@ public class PvPStatsBoardManager {
     private final PlayerStatsRepository statsRepository;
     private final Plugin plugin;
     private final MapBoardItem killsItem = new MapBoardItem("pstats-kills", "§6Kills:");
-    private final MapBoardItem deathsItem = new MapBoardItem("pstats-kills", "§6Deaths:");
-    private final MapBoardItem kdRatioItem = new MapBoardItem("pstats-kills", "§6K/D:");
+    private final MapBoardItem deathsItem = new MapBoardItem("pstats-deaths", "§6Deaths:");
+    private final MapBoardItem kdRatioItem = new MapBoardItem("pstats-kd", "§6K/D:");
 
     @InjectMe
     public PvPStatsBoardManager(CommonScoreboardProvider scoreboardProvider, PlayerStatsRepository statsRepository, MTCPlugin plugin) {
