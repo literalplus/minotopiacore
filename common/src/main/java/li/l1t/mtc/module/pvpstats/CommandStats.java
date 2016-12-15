@@ -112,6 +112,7 @@ public class CommandStats implements CommandExecutor {
         playerStats.setDeaths(0);
         playerStats.setKills(0);
         module.getRepository().save(playerStats);
+        updateTargetScoreboardIfPossible(playerStats);
 
         return CommandHelper.msg(String.format(
                 "§aDie Stats von %s wurden zurückgesetzt.",
@@ -177,11 +178,15 @@ public class CommandStats implements CommandExecutor {
                     .suggest("/stats admin reset " + stats.getUniqueId())
                     .create(), receiver);
         }
+        updateTargetScoreboardIfPossible(stats);
+        return true;
+    }
+
+    private void updateTargetScoreboardIfPossible(PlayerStats stats) {
         Player subjectPlayer = Bukkit.getPlayer(stats.getUniqueId()); //update scoreboard so that command output is never inconsistent
         if(scoreboard != null && subjectPlayer != null) {
             scoreboard.updateAll(subjectPlayer, stats);
         }
-        return true;
     }
 
     private void sendTopListTo(CommandSender receiver, List<PlayerStats> stats, String description) {
