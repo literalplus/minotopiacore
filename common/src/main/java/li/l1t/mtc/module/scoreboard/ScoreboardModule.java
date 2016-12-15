@@ -44,6 +44,7 @@ public class ScoreboardModule extends ConfigurableMTCModule {
     @Override
     protected void reloadImpl() {
         configuration.addDefault(UPDATE_PERIOD_PATH, boardUpdatePeriodSeconds);
+        configuration.trySave();
         long newPeriod = configuration.getLong(UPDATE_PERIOD_PATH);
         if(newPeriod != boardUpdatePeriodSeconds || updateTask.getTaskId() == -1) {
             boardUpdatePeriodSeconds = newPeriod;
