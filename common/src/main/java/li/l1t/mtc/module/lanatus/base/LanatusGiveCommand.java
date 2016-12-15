@@ -12,10 +12,15 @@ import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.account.LanatusAccount;
+import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.command.CommandExecution;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.command.BukkitExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
+import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Handles the /lagive command, which credits melons to players.
@@ -26,10 +31,15 @@ import li.l1t.mtc.hook.XLoginHook;
 class LanatusGiveCommand extends BukkitExecutionExecutor {
     private final LanatusClient client;
     private final XLoginHook xLogin;
+    private final Plugin plugin;
+    @InjectMe(required = false)
+    private CommonScoreboardProvider scoreboard;
 
-    public LanatusGiveCommand(LanatusClient client, XLoginHook xLogin) {
+    @InjectMe
+    public LanatusGiveCommand(MTCLanatusClient client, XLoginHook xLogin, MTCPlugin plugin) {
         this.client = client;
         this.xLogin = xLogin;
+        this.plugin = plugin;
     }
 
     @Override
@@ -58,6 +68,17 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
         checkTransactionPossible(amount, account);
         tryModifyMelonsCount(exec, account, amount);
         respondSuccess(exec, profile);
+        updateTargetPlayerScoreboard(profile);
+    }
+
+    private void updateTargetPlayerScoreboard(XLoginHook.Profile profile) {
+        if(scoreboard == null) {
+            return;
+        }
+        Player targetPlayer = plugin.getServer().getPlayer(profile.getUniqueId());
+        if(targetPlayer != null) {
+            scoreboard.updateScoreboardFor(targetPlayer);
+        }
     }
 
     private void respondOperationStart(CommandExecution exec, XLoginHook.Profile profile, int amount) {

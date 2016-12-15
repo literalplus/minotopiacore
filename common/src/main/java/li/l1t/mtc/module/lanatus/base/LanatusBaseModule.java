@@ -12,6 +12,8 @@ import li.l1t.mtc.api.command.CommandBehaviours;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.MTCModuleAdapter;
+import li.l1t.mtc.module.lanatus.base.scoreboard.LanatusScoreboardHandler;
+import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
 
 /**
  * Provides access to the Lanatus API through XYC.
@@ -26,6 +28,8 @@ public class LanatusBaseModule extends MTCModuleAdapter {
     public static final String RANK_PERMISSION = "lanatus.admin.rank";
     private final MTCLanatusClient client;
     private final XLoginHook xLoginHook;
+    @InjectMe(required = false)
+    private CommonScoreboardProvider scoreboard;
 
     @InjectMe
     public LanatusBaseModule(MTCLanatusClient client, XLoginHook xLoginHook) {
@@ -41,10 +45,14 @@ public class LanatusBaseModule extends MTCModuleAdapter {
                 .behaviour(CommandBehaviours.permissionChecking(READ_PERMISSION));
         registerCommand(new LanatusProductCommand(client), "laprod")
                 .behaviour(CommandBehaviours.permissionChecking(READ_PERMISSION));
-        registerCommand(new LanatusGiveCommand(client, xLoginHook), "lagive")
+        registerCommand(inject(LanatusGiveCommand.class), "lagive")
                 .behaviour(CommandBehaviours.permissionChecking(GIVE_PERMISSION));
         registerCommand(new LanatusRankCommand(client, xLoginHook), "larank")
                 .behaviour(CommandBehaviours.permissionChecking(RANK_PERMISSION));
+        if(scoreboard != null) {
+            LanatusScoreboardHandler scoreboardHandler = new LanatusScoreboardHandler(client, scoreboard);
+            registerListener(scoreboardHandler);
+        }
     }
 
     @Override
