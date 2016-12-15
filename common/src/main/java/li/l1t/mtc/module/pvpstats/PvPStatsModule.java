@@ -41,19 +41,18 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
 
-        registerCommand(new CommandStats(this), "stats");
         getPlugin().getServer().getPluginManager().registerEvents(new StatsDeathListener(this), getPlugin());
 
         repository = new CachedPlayerStatsRepository(
                 new QueuedPlayerStatsRepository(new PlayerStatsRepositoryImpl(this), this), this
         );
         repository.setDatabaseTable(configuration.getString("sql.database"), configuration.getString("sql.table"));
-
+        getPlugin().getModuleManager().getInjector().registerInstance(repository, PlayerStatsRepository.class);
         titleManagerHook = new TitleManagerHook(getPlugin());
-
         if (isFeatureEnabled("scoreboard") && scoreboardProvider != null) {
-            new PvPStatsBoardManager(scoreboardProvider, repository, plugin).enable();
+            inject(PvPStatsBoardManager.class).enable();
         }
+        registerCommand(inject(CommandStats.class), "stats");
     }
 
     @Override

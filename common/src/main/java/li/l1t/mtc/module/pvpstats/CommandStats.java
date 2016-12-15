@@ -10,10 +10,13 @@ package li.l1t.mtc.module.pvpstats;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.util.CommandHelper;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.pvpstats.model.PlayerStats;
+import li.l1t.mtc.module.pvpstats.scoreboard.PvPStatsBoardManager;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +39,10 @@ import static net.md_5.bungee.api.ChatColor.YELLOW;
  */
 public class CommandStats implements CommandExecutor {
     private final PvPStatsModule module;
+    @InjectMe(required = false)
+    private PvPStatsBoardManager scoreboard;
 
+    @InjectMe
     public CommandStats(PvPStatsModule module) {
         this.module = module;
     }
@@ -164,13 +170,16 @@ public class CommandStats implements CommandExecutor {
             receiver.sendMessage(String.format("§6Kills: §e%d §6(%d.Platz) §6/ Deaths: §e%d §6(%d.Platz)",
                     stats.getKills(), killsRank, stats.getDeaths(), deathsRank));
         }
-
         if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
                     .append("[zurücksetzen]", DARK_RED, UNDERLINE)
                     .tooltip("/stats admin reset " + stats.getUniqueId())
                     .suggest("/stats admin reset " + stats.getUniqueId())
                     .create(), receiver);
+        }
+        Player subjectPlayer = Bukkit.getPlayer(stats.getUniqueId()); //update scoreboard so that command output is never inconsistent
+        if(scoreboard != null && subjectPlayer != null) {
+            scoreboard.updateAll(subjectPlayer, stats);
         }
         return true;
     }
