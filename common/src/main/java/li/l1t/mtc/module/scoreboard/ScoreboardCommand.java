@@ -30,7 +30,7 @@ public class ScoreboardCommand extends BukkitExecutionExecutor {
 
     @Override
     public boolean execute(CommandExecution exec) throws UserException, InternalException {
-        if (exec.hasNoArgs()) {
+        if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "toggle":
                     handleToggle(exec);
@@ -47,7 +47,7 @@ public class ScoreboardCommand extends BukkitExecutionExecutor {
     private void handleToggle(CommandExecution exec) {
         if (scoreboard.isBoardHiddenFor(exec.player())) {
             scoreboard.unhideBoardFor(exec.player());
-            exec.respond(MessageType.RESULT_LINE_SUCCESS, "Das Scoreboard wied dir jetzt wieder angezeigt.");
+            exec.respond(MessageType.RESULT_LINE_SUCCESS, "Das Scoreboard wird dir jetzt wieder angezeigt.");
         } else {
             scoreboard.hideBoardFor(exec.player());
             exec.respond(MessageType.RESULT_LINE_SUCCESS, "Das Scoreboard ist jetzt versteckt.");
