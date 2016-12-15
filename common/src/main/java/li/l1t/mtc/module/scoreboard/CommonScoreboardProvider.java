@@ -57,6 +57,11 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
         updateScoreboardFor(player);
     }
 
+    public boolean isBoardHiddenFor(Player player) {
+        Preconditions.checkNotNull(player, "player");
+        return boardHiddenPlayers.contains(player);
+    }
+
     public void registerBoardItem(BoardItem item) {
         Preconditions.checkNotNull(item, "item");
         Preconditions.checkNotNull(item.getIdentifier(), "item.getIdentifier()");
@@ -84,6 +89,9 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
 
     private void renderScoreboardWithItems(Player player, Map<String, String> personalItems) {
         if (personalItems.isEmpty()) {
+            if(objectiveExistingPlayers.remove(player.getUniqueId())) {
+                removeObjective(player, OBJECTIVE_NAME);
+            }
             return;
         }
         prepareObjectiveFor(player);

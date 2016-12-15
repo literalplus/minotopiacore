@@ -39,6 +39,7 @@ public class ScoreboardModule extends ConfigurableMTCModule {
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
+        registerCommand(inject(ScoreboardCommand.class), "scb");
     }
 
     @Override
