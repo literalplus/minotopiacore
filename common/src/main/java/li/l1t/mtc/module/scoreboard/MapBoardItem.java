@@ -47,12 +47,12 @@ public class MapBoardItem implements BoardItem {
 
     @Override
     public String getValue(Player player) {
-        return playerValueMap.getOrDefault(player.getUniqueId(), "???");
+        return playerValueMap.getOrDefault(player.getUniqueId(), null);
     }
 
     @Override
     public boolean isVisibleTo(Player player) {
-        return true;
+        return playerValueMap.containsKey(player.getUniqueId());
     }
 
     @Override

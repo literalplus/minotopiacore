@@ -10,6 +10,7 @@ package li.l1t.mtc.module.scoreboard;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import li.l1t.common.collections.Pair;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.ExternalDependencies;
 import li.l1t.mtc.api.module.inject.InjectMe;
@@ -20,6 +21,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Manages Scoreboards shown by the PvP Stats module, handling displaying and updating.
@@ -44,7 +46,7 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
     public void hideBoardFor(Player player) {
         Preconditions.checkNotNull(player, "player");
         boardHiddenPlayers.add(player.getUniqueId());
-        if(objectiveExistingPlayers.remove(player.getUniqueId())) {
+        if (objectiveExistingPlayers.remove(player.getUniqueId())) {
             removeObjective(player, OBJECTIVE_NAME);
         }
     }
@@ -67,18 +69,29 @@ public class CommonScoreboardProvider extends ScoreboardHelper {
     }
 
     public void updateScoreboardFor(Player player) {
-        if (boardHiddenPlayers.contains(player.getUniqueId()) || globalItems.isEmpty()) {
+        if (!boardHiddenPlayers.contains(player.getUniqueId())) {
+            renderScoreboardWithItems(player, computePersonalItems(player));
+        }
+    }
+
+    private Map<String, String> computePersonalItems(Player player) {
+        return globalItems.values().stream()
+                .filter(item -> item.isVisibleTo(player))
+                .map(item -> Pair.pairOf(item.getDisplayName(player), item.getValue(player)))
+                .filter(pair -> pair.getRight() != null)
+                .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
+    }
+
+    private void renderScoreboardWithItems(Player player, Map<String, String> personalItems) {
+        if (personalItems.isEmpty()) {
             return;
         }
         prepareObjectiveFor(player);
         int i = 0;
         Set<String> usedItemNames = new HashSet<>(globalItems.size());
-        for (BoardItem item : globalItems.values()) {
-            if (item.isVisibleTo(player)) {
-                String uniqueValue = makeItemNameUnique(item.getValue(player), usedItemNames);
-                updateScore(player, OBJECTIVE_NAME, uniqueValue, ++i);
-                updateScore(player, OBJECTIVE_NAME, item.getDisplayName(player), ++i);
-            }
+        for (Map.Entry<String, String> item : personalItems.entrySet()) {
+            updateScore(player, OBJECTIVE_NAME, makeItemNameUnique(item.getValue(), usedItemNames), ++i);
+            updateScore(player, OBJECTIVE_NAME, makeItemNameUnique(item.getKey(), usedItemNames), ++i);
         }
     }
 
