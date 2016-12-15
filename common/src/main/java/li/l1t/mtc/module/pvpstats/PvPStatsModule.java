@@ -52,7 +52,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         titleManagerHook = new TitleManagerHook(getPlugin());
 
         if (isFeatureEnabled("scoreboard") && scoreboardProvider != null) {
-            new PvPStatsBoardManager(scoreboardProvider, repository).enable();
+            new PvPStatsBoardManager(scoreboardProvider, repository, plugin).enable();
         }
     }
 
