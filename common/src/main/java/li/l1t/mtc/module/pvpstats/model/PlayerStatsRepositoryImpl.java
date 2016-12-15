@@ -13,7 +13,7 @@ import li.l1t.common.sql.QueryResult;
 import li.l1t.common.sql.SpigotSql;
 import li.l1t.common.util.UUIDHelper;
 import li.l1t.mtc.hook.XLoginHook;
-import li.l1t.mtc.module.pvpstats.PvPStatsModule;
+import li.l1t.mtc.module.pvpstats.PlayerStatsModule;
 import org.bukkit.OfflinePlayer;
 
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ public class PlayerStatsRepositoryImpl implements PlayerStatsRepository {
     private final XLoginHook xLoginHook;
     private String databaseTable = "`mt_pvp`.`pvpstats`";
 
-    public PlayerStatsRepositoryImpl(PvPStatsModule module) {
+    public PlayerStatsRepositoryImpl(PlayerStatsModule module) {
         this(module.getPlugin().getSql(), module.getPlugin().getXLoginHook());
     }
 

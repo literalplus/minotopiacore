@@ -24,9 +24,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
  * @since 2016-01-03
  */
 class StatsDeathListener implements Listener {
-    private final PvPStatsModule module;
+    private final PlayerStatsModule module;
 
-    StatsDeathListener(PvPStatsModule module) {
+    StatsDeathListener(PlayerStatsModule module) {
         this.module = module;
     }
 

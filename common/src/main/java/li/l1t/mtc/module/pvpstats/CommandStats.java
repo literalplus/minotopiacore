@@ -13,7 +13,7 @@ import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.pvpstats.model.PlayerStats;
-import li.l1t.mtc.module.pvpstats.scoreboard.PvPStatsBoardManager;
+import li.l1t.mtc.module.pvpstats.scoreboard.PlayerStatsBoardManager;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -38,12 +38,12 @@ import static net.md_5.bungee.api.ChatColor.YELLOW;
  * @since 2016-01-03
  */
 public class CommandStats implements CommandExecutor {
-    private final PvPStatsModule module;
+    private final PlayerStatsModule module;
     @InjectMe(required = false)
-    private PvPStatsBoardManager scoreboard;
+    private PlayerStatsBoardManager scoreboard;
 
     @InjectMe
-    public CommandStats(PvPStatsModule module) {
+    public CommandStats(PlayerStatsModule module) {
         this.module = module;
     }
 
@@ -87,7 +87,7 @@ public class CommandStats implements CommandExecutor {
     }
 
     private boolean handleAdmin(CommandSender sender, String label, String[] args) {
-        if (!CommandHelper.checkPermAndMsg(sender, PvPStatsModule.ADMIN_PERMISSION, label)) {
+        if (!CommandHelper.checkPermAndMsg(sender, PlayerStatsModule.ADMIN_PERMISSION, label)) {
             return true;
         }
 
@@ -171,7 +171,7 @@ public class CommandStats implements CommandExecutor {
             receiver.sendMessage(String.format("§6Kills: §e%d §6(%d.Platz) §6/ Deaths: §e%d §6(%d.Platz)",
                     stats.getKills(), killsRank, stats.getDeaths(), deathsRank));
         }
-        if (receiver.hasPermission(PvPStatsModule.ADMIN_PERMISSION)) {
+        if (receiver.hasPermission(PlayerStatsModule.ADMIN_PERMISSION)) {
             ComponentSender.sendTo(new XyComponentBuilder("Stats zurücksetzen: ", GOLD)
                     .append("[zurücksetzen]", DARK_RED, UNDERLINE)
                     .tooltip("/stats admin reset " + stats.getUniqueId())

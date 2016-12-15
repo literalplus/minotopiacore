@@ -9,7 +9,7 @@ package li.l1t.mtc.module.pvpstats.model;
 
 import li.l1t.common.shared.uuid.UUIDRepository;
 import li.l1t.common.sql.SpigotSql;
-import li.l1t.mtc.module.pvpstats.PvPStatsModule;
+import li.l1t.mtc.module.pvpstats.PlayerStatsModule;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 
@@ -30,7 +30,7 @@ public class QueuedPlayerStatsRepository implements PlayerStatsRepository {
     private final PlayerStatsRepository proxied;
     private final PlayerStatsSaveQueueExecutor queueExecutor;
 
-    public QueuedPlayerStatsRepository(PlayerStatsRepository proxied, PvPStatsModule module) {
+    public QueuedPlayerStatsRepository(PlayerStatsRepository proxied, PlayerStatsModule module) {
         this(proxied, module.getPlugin());
     }
 

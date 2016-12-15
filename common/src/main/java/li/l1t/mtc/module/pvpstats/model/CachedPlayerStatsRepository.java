@@ -13,7 +13,7 @@ import com.google.common.cache.RemovalNotification;
 import li.l1t.common.shared.uuid.UUIDRepository;
 import li.l1t.common.sql.SpigotSql;
 import li.l1t.mtc.hook.XLoginHook;
-import li.l1t.mtc.module.pvpstats.PvPStatsModule;
+import li.l1t.mtc.module.pvpstats.PlayerStatsModule;
 import org.bukkit.OfflinePlayer;
 
 import javax.annotation.Nullable;
@@ -38,7 +38,7 @@ public class CachedPlayerStatsRepository implements PlayerStatsRepository {
             .removalListener(this::onRemove)
             .build();
 
-    public CachedPlayerStatsRepository(PlayerStatsRepository proxied, PvPStatsModule module) {
+    public CachedPlayerStatsRepository(PlayerStatsRepository proxied, PlayerStatsModule module) {
         this(proxied, module.getPlugin().getXLoginHook());
     }
 

@@ -25,7 +25,7 @@ import java.text.NumberFormat;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-04
  */
-public class PvPStatsBoardManager {
+public class PlayerStatsBoardManager {
     private static final NumberFormat KD_FORMAT = new DecimalFormat("#,##");
     private final CommonScoreboardProvider scoreboardProvider;
     private final PlayerStatsRepository statsRepository;
@@ -35,7 +35,7 @@ public class PvPStatsBoardManager {
     private final MapBoardItem kdRatioItem = new MapBoardItem("pstats-kd", "§6K/D:");
 
     @InjectMe
-    public PvPStatsBoardManager(CommonScoreboardProvider scoreboardProvider, PlayerStatsRepository statsRepository, MTCPlugin plugin) {
+    public PlayerStatsBoardManager(CommonScoreboardProvider scoreboardProvider, PlayerStatsRepository statsRepository, MTCPlugin plugin) {
         this.scoreboardProvider = scoreboardProvider;
         this.statsRepository = statsRepository;
         this.plugin = plugin;

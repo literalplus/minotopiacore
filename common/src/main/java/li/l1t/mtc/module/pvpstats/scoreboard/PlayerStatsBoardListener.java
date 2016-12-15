@@ -23,12 +23,12 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-05
  */
-public class PvPStatsBoardListener implements Listener {
-    private final PvPStatsBoardManager scoreboard;
+public class PlayerStatsBoardListener implements Listener {
+    private final PlayerStatsBoardManager scoreboard;
     private final Plugin plugin;
 
     @InjectMe
-    public PvPStatsBoardListener(PvPStatsBoardManager scoreboard, MTCPlugin plugin) {
+    public PlayerStatsBoardListener(PlayerStatsBoardManager scoreboard, MTCPlugin plugin) {
         this.scoreboard = scoreboard;
         this.plugin = plugin;
     }

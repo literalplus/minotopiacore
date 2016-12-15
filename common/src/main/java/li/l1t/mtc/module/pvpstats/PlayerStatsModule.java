@@ -16,7 +16,7 @@ import li.l1t.mtc.module.pvpstats.model.CachedPlayerStatsRepository;
 import li.l1t.mtc.module.pvpstats.model.PlayerStatsRepository;
 import li.l1t.mtc.module.pvpstats.model.PlayerStatsRepositoryImpl;
 import li.l1t.mtc.module.pvpstats.model.QueuedPlayerStatsRepository;
-import li.l1t.mtc.module.pvpstats.scoreboard.PvPStatsBoardManager;
+import li.l1t.mtc.module.pvpstats.scoreboard.PlayerStatsBoardManager;
 import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
 
 /**
@@ -25,7 +25,7 @@ import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2016-01-03
  */
-public class PvPStatsModule extends ConfigurableMTCModule {
+public class PlayerStatsModule extends ConfigurableMTCModule {
     public static final String NAME = "PvPStats";
     public static final String ADMIN_PERMISSION = "mtc.stats.admin";
     private PlayerStatsRepository repository;
@@ -33,7 +33,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
     @InjectMe(required = false)
     private CommonScoreboardProvider scoreboardProvider;
 
-    public PvPStatsModule() {
+    public PlayerStatsModule() {
         super(NAME, "modules/pvpstats.cfg.yml", ClearCacheBehaviour.RELOAD_ON_FORCED, false);
     }
 
@@ -50,7 +50,7 @@ public class PvPStatsModule extends ConfigurableMTCModule {
         getPlugin().getModuleManager().getInjector().registerInstance(repository, PlayerStatsRepository.class);
         titleManagerHook = new TitleManagerHook(getPlugin());
         if (isFeatureEnabled("scoreboard") && scoreboardProvider != null) {
-            inject(PvPStatsBoardManager.class).enable();
+            inject(PlayerStatsBoardManager.class).enable();
         }
         registerCommand(inject(CommandStats.class), "stats");
     }
