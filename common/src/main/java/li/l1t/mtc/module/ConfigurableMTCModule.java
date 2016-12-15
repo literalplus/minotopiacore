@@ -60,6 +60,7 @@ public abstract class ConfigurableMTCModule extends MTCModuleAdapter {
         super.enable(plugin);
         configuration = ManagedConfiguration.fromDataFolderPath(filePath, clearCacheBehaviour, plugin);
         configuration.setLoadHandler(cfg -> reloadImpl());
+        configuration.options().copyDefaults(true);
         reloadImpl();
         if (!configuration.getFile().exists()) {
             configuration.trySave();
