@@ -13,6 +13,7 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-14
  */
-public class ScoreboardModule extends ConfigurableMTCModule {
+public class ScoreboardModule extends ConfigurableMTCModule implements Listener {
     private static final String UPDATE_PERIOD_PATH = "board-auto-refresh-interval-seconds";
     private long boardUpdatePeriodSeconds = TimeUnit.MINUTES.toSeconds(5);
     private final CommonScoreboardProvider scoreboardProvider;
@@ -41,6 +42,7 @@ public class ScoreboardModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerCommand(inject(ScoreboardCommand.class), "scb");
+        registerListener(this);
     }
 
     @Override
