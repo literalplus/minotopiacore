@@ -9,12 +9,12 @@ package li.l1t.mtc.module.pvpstats.scoreboard;
 
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -35,11 +35,16 @@ public class PlayerStatsBoardListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent evt) {
-        Player victim = evt.getEntity();
-        scoreboard.updateAll(evt.getEntity());
-        if (victim.getKiller() != null) {
+        if (evt.getEntity().getKiller() != null) {
             scoreboard.updateAll(evt.getEntity().getKiller());
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onRespawn(PlayerRespawnEvent event) {
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
+                () -> scoreboard.updateAll(event.getPlayer())
+        ); //May make a database call + ProtocolLib is async save
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
