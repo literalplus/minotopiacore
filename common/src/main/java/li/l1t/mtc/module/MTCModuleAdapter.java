@@ -135,6 +135,8 @@ public abstract class MTCModuleAdapter implements MTCModule {
         InjectionTarget<? extends T> target = plugin.getModuleManager().getInjector().getTarget(clazz);
         if (!target.hasInstance()) {
             plugin.getModuleManager().getDependencyManager().initialise(target);
+            plugin.getModuleManager().getInjector().injectAvailableDependencies(target);
+            plugin.getModuleManager().getInjector().injectAll(target, target.getInstance());
         }
         T instance = target.getInstance();
         Preconditions.checkNotNull(instance, "instance of %s", clazz);

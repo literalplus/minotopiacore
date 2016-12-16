@@ -30,7 +30,7 @@ public class PlayerStatsModule extends ConfigurableMTCModule {
     public static final String ADMIN_PERMISSION = "mtc.stats.admin";
     private PlayerStatsRepository repository;
     private TitleManagerHook titleManagerHook;
-    @InjectMe(required = false)
+    @InjectMe(required = true)
     private CommonScoreboardProvider scoreboardProvider;
 
     public PlayerStatsModule() {

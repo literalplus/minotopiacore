@@ -10,6 +10,7 @@ package li.l1t.mtc.module.framework;
 import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.*;
+import li.l1t.mtc.api.module.inject.exception.InjectionException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
@@ -28,6 +29,23 @@ class SimpleInjector implements Injector {
 
     SimpleInjector(ModuleManager manager) {
         this.manager = manager;
+    }
+
+    @Override
+    public void injectAvailableDependencies(InjectionTarget<?> target) {
+        target.getDependencies().values().stream()
+                .peek(this::failIfRequiredButNoInstance)
+                .filter(inj -> inj.getDependency().hasInstance())
+                .forEach(inj -> injectInto(inj, inj.getDependency().getInstance()));
+    }
+
+    private void failIfRequiredButNoInstance(Injection<?> injection) {
+        if(!injection.getDependency().hasInstance() && injection.isRequired()) {
+            throw new InjectionException(String.format(
+                    "Unable to inject %s into %s - missing instance. (did you resolve the dependencies?)",
+                    injection.getDependency().getClazz(), injection
+            ));
+        }
     }
 
     @Override

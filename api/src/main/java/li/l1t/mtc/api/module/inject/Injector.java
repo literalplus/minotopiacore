@@ -8,6 +8,8 @@
 package li.l1t.mtc.api.module.inject;
 
 
+import li.l1t.mtc.api.module.inject.exception.InjectionException;
+
 import javax.annotation.Nonnull;
 import java.util.Set;
 
@@ -18,6 +20,14 @@ import java.util.Set;
  * @since 11.6.16
  */
 public interface Injector {
+    /**
+     * Perform all injections given target depends on, if they have an instance available.
+     *
+     * @param target the target to inject into
+     * @throws InjectionException if given target has a required dependency that does not have an instance
+     */
+    void injectAvailableDependencies(InjectionTarget<?> target);
+
     /**
      * Perform all injections dependant on a target.
      *
