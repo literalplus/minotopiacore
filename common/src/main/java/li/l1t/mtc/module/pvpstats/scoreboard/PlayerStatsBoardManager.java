@@ -16,9 +16,6 @@ import li.l1t.mtc.module.scoreboard.MapBoardItem;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 /**
  * Manages Scoreboards shown by the PvP Stats module, handling displaying and updating.
  *
@@ -26,7 +23,6 @@ import java.text.NumberFormat;
  * @since 2016-01-04
  */
 public class PlayerStatsBoardManager {
-    private static final NumberFormat KD_FORMAT = new DecimalFormat("#,##");
     private final CommonScoreboardProvider scoreboardProvider;
     private final PlayerStatsRepository statsRepository;
     private final Plugin plugin;
@@ -66,6 +62,6 @@ public class PlayerStatsBoardManager {
     private void justSetAll(Player player, PlayerStats data) {
         killsItem.setValue(player, data.getKills());
         deathsItem.setValue(player, data.getDeaths());
-        kdRatioItem.setValue(player, KD_FORMAT.format(data.getKDRatio()));
+        kdRatioItem.setValue(player, String.format("%.2f", data.getKDRatio()));
     }
 }
