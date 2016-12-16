@@ -56,6 +56,12 @@ public class ScoreboardModule extends ConfigurableMTCModule implements Listener 
         }
     }
 
+    @Override
+    public void disable(MTCPlugin plugin) {
+        super.disable(plugin);
+        plugin.getServer().getOnlinePlayers().forEach(scoreboardProvider::hideBoardFor);
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onPlayerQuit(PlayerQuitEvent event) {
         scoreboardProvider.cleanUp(event.getPlayer());
