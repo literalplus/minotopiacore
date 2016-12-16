@@ -45,7 +45,7 @@ public class PlayerStatsBoardListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent evt) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
-                () -> scoreboard.updateAll(evt.getPlayer())
+                () -> scoreboard.justSetAll(evt.getPlayer())
         ); //May make a database call + ProtocolLib is async save
     }
 }

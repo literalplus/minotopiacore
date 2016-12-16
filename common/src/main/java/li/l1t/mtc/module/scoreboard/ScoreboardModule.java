@@ -12,6 +12,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -47,7 +48,7 @@ public class ScoreboardModule extends ConfigurableMTCModule {
         configuration.addDefault(UPDATE_PERIOD_PATH, boardUpdatePeriodSeconds);
         configuration.trySave();
         long newPeriod = configuration.getLong(UPDATE_PERIOD_PATH);
-        if(newPeriod != boardUpdatePeriodSeconds || updateTask.getTaskId() == -1) {
+        if (newPeriod != boardUpdatePeriodSeconds || updateTask.getTaskId() == -1) {
             boardUpdatePeriodSeconds = newPeriod;
             updateTask.restart(boardUpdatePeriodSeconds * 20L);
         }
@@ -58,8 +59,10 @@ public class ScoreboardModule extends ConfigurableMTCModule {
         scoreboardProvider.cleanUp(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        scoreboardProvider.updateScoreboardFor(event.getPlayer());
+        plugin.getServer().getScheduler().runTaskLater(plugin,
+                () -> scoreboardProvider.updateScoreboardFor(event.getPlayer()),
+                10L);
     }
 }
