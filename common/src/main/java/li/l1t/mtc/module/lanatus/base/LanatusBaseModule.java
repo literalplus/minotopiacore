@@ -52,6 +52,7 @@ public class LanatusBaseModule extends MTCModuleAdapter {
         if(scoreboard != null) {
             LanatusScoreboardHandler scoreboardHandler = new LanatusScoreboardHandler(client, scoreboard);
             registerListener(scoreboardHandler);
+            scoreboardHandler.enable();
         }
     }
 
