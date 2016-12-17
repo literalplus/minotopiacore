@@ -87,14 +87,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
                 }
                 plr.getWorld().dropItemNaturally(plr.getLocation(), stk);
             }
-            for (ItemStack stk : plr.getInventory().getArmorContents()) {
-                if (stk == null || stk.getType() == Material.AIR) {
-                    continue;
-                }
-                plr.getWorld().dropItemNaturally(plr.getLocation(), stk);
-            }
             plr.getInventory().clear();
-            plr.getInventory().setArmorContents(new ItemStack[4]);
             Bukkit.broadcastMessage(MTCHelper.locArgs("XU-fightlogout", plr.getName(), true, plr.getName()));
             if (MTC.isUseHologram()) {
                 Hologram h = HologramsAPI.createHologram(plugin, plr.getLocation().add(0d, 1.5d, 0d));
