@@ -16,6 +16,8 @@ import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
+import li.l1t.mtc.module.shop.item.DataValueShopItem;
+import li.l1t.mtc.module.shop.item.PotionShopItem;
 import li.l1t.mtc.module.shop.manager.CachingShopItemManager;
 import li.l1t.mtc.module.shop.task.UpdateDiscountTask;
 import li.l1t.mtc.module.shop.transaction.ShopTransactionExecutor;
@@ -26,6 +28,7 @@ import li.l1t.mtc.module.shop.ui.text.admin.CommandShopAdmin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,6 +69,8 @@ public class ShopModule extends ConfigurableMTCModule {
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
+        ConfigurationSerialization.registerClass(DataValueShopItem.class);
+        ConfigurationSerialization.registerClass(PotionShopItem.class);
         super.enable(plugin);
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
         backupAndConvertLegacyItemsIfPresent();
