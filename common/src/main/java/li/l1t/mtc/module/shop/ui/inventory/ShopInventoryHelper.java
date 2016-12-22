@@ -8,8 +8,8 @@
 package li.l1t.mtc.module.shop.ui.inventory;
 
 import li.l1t.common.util.inventory.ItemStackFactory;
-import li.l1t.mtc.module.shop.ShopItem;
-import org.bukkit.Material;
+import li.l1t.mtc.module.shop.api.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -23,31 +23,31 @@ public class ShopInventoryHelper {
 
     }
 
-    public static ItemStack createInfoStack(ShopItem item, boolean realItem) {
-        ItemStackFactory factory;
-        if (realItem) {
-            factory = new ItemStackFactory(item.toItemStack(1));
-        } else {
-            factory = new ItemStackFactory(Material.BOOK)
-                    .displayName("§lInfo: §f" + item.getDisplayName());
-        }
+    public static ItemStack createInfoStack(ShopItem item, ShopItemManager itemManager) {
+        ItemStackFactory factory = new ItemStackFactory(item.toItemStack(1))
+                .displayName("§lInfo: §f" + item.getDisplayName());
+        appendBuyCostToLore(item, itemManager, factory);
+        appendSellWorthToLore(item, factory);
+        return factory.produce();
+    }
 
+    private static void appendBuyCostToLore(ShopItem item, ShopItemManager itemManager, ItemStackFactory factory) {
         if (item.canBeBought()) {
             String lore = "§eStückpreis: §7";
-            if (item.getManager().getDiscountManager().isDiscounted(item)) {
+            if (itemManager.getDiscountManager().isDiscounted(item)) {
                 lore += "§m" + item.getBuyCost() + "§6 ";
             }
-            factory.lore(lore + item.getManager().getBuyCost(item));
+            factory.lore(lore + itemManager.getBuyCost(item));
         } else {
             factory.lore("§cKann nicht gekauft werden");
         }
+    }
 
+    private static void appendSellWorthToLore(ShopItem item, ItemStackFactory factory) {
         if (item.canBeSold()) {
             factory.lore("§eVerkaufspreis: §7" + item.getSellWorth());
         } else {
             factory.lore("§cKann nicht verkauft werden");
         }
-
-        return factory.produce();
     }
 }

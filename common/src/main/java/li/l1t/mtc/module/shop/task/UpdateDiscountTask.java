@@ -9,7 +9,7 @@ package li.l1t.mtc.module.shop.task;
 
 import li.l1t.common.util.task.NonAsyncBukkitRunnable;
 import li.l1t.mtc.logging.LogManager;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import org.apache.logging.log4j.Logger;
 

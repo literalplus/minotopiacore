@@ -12,9 +12,8 @@ import li.l1t.common.checklist.Checklist;
 import li.l1t.common.checklist.ChecklistEvaluator;
 import li.l1t.common.checklist.renderer.CheckmarkBasedRenderer;
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
-import li.l1t.mtc.module.shop.ShopPriceCalculator;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ui.text.AbstractShopAction;
 import li.l1t.mtc.module.shop.ui.text.ShopTextOutput;
 import li.l1t.mtc.util.checklist.ClickableChecklistItem;
@@ -35,13 +34,11 @@ import org.bukkit.inventory.ItemStack;
 class InfoAdminAction extends AbstractShopAction {
     private final ShopModule module;
     private final ShopTextOutput output;
-    private final ShopPriceCalculator calculator;
 
     InfoAdminAction(ShopModule module) {
         super("shopadmin", "info", 1, null);
         this.module = module;
         output = module.getTextOutput();
-        calculator = new ShopPriceCalculator(module.getItemManager());
     }
 
     @Override
@@ -58,18 +55,18 @@ class InfoAdminAction extends AbstractShopAction {
 
     private void priceNamedItem(String[] args, Player plr) {
         String name = StringHelper.varArgsString(args, 0, false);
-        ShopItem item = module.getItemManager().getItem(name);
+        ShopItem item = module.getItemManager().getItem(name).orElse(null);
         sendInfo(plr, item, name);
     }
 
     private void infoHand(Player plr) {
-        ItemStack itemInHand = plr.getItemInHand();
+        ItemStack itemInHand = plr.getInventory().getItemInMainHand();
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
             output.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
             return;
         }
 
-        ShopItem item = module.getItemManager().getItem(itemInHand);
+        ShopItem item = module.getItemManager().getItem(itemInHand).orElse(null);
         sendInfo(plr, item, itemInHand.getType() + ":" + itemInHand.getDurability());
     }
 

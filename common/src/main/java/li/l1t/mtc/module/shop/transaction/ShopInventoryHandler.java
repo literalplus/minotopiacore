@@ -7,7 +7,7 @@
 
 package li.l1t.mtc.module.shop.transaction;
 
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.TransactionType;
 import li.l1t.mtc.module.shop.api.TransactionInfo;
 import li.l1t.mtc.module.shop.impl.FailedTransactionInfo;

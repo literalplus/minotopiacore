@@ -7,14 +7,16 @@
 
 package li.l1t.mtc.module.shop;
 
+import com.google.common.io.Files;
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.mtc.MTC;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
-import li.l1t.mtc.module.fulltag.FullTagModule;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
+import li.l1t.mtc.module.shop.manager.CachingShopItemManager;
 import li.l1t.mtc.module.shop.task.UpdateDiscountTask;
 import li.l1t.mtc.module.shop.transaction.ShopTransactionExecutor;
 import li.l1t.mtc.module.shop.ui.inventory.ShopMenuListener;
@@ -23,16 +25,21 @@ import li.l1t.mtc.module.shop.ui.text.ShopTextOutput;
 import li.l1t.mtc.module.shop.ui.text.admin.CommandShopAdmin;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Manages the shop module. That module provides a more-or-less simple admin shop that allows
  * players to buy and sell items for Vault money.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
- * @since 30/11/14
+ * @author <a href="https://l1t.li/">xxyy</a>
+ * @since 2014-11-30
  */
 public class ShopModule extends ConfigurableMTCModule {
     public static final String NAME = "Shop";
+    private static final Logger LOGGER = LogManager.getLogger(ShopModule.class);
     private static final String DISCOUNT_UPDATE_MINUTES_PATH = "sale_change_minutes";
     private final XyComponentBuilder prefixBuilder = new XyComponentBuilder("[").color(ChatColor.AQUA)
             .append("Shop", ChatColor.GOLD).append("]", ChatColor.AQUA).append(" ", ChatColor.GOLD);
@@ -40,9 +47,9 @@ public class ShopModule extends ConfigurableMTCModule {
     private ShopItemConfiguration itemConfig;
     private ShopTextOutput textOutput;
     private ShopTransactionExecutor transactionExecutor;
-    @InjectMe(required = false)
-    private FullTagModule fullTagModule;
-    private UpdateDiscountTask updateDiscountTask = new UpdateDiscountTask(this); //needs to be a field so that update interval can be reloaded on-the-fly
+    private UpdateDiscountTask updateDiscountTask = new UpdateDiscountTask(this);
+    @InjectMe
+    private CachingShopItemManager itemManager;
 
     public ShopModule() {
         super(NAME, "modules/shop/config.yml", ClearCacheBehaviour.RELOAD, false);
@@ -61,12 +68,25 @@ public class ShopModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         itemConfig = ShopItemConfiguration.fromDataFolderPath("modules/shop/items.yml", ClearCacheBehaviour.RELOAD, this);
+        backupAndConvertLegacyItemsIfPresent();
         textOutput = new ShopTextOutput(this);
         transactionExecutor = new ShopTransactionExecutor(this);
         registerListener(new ShopMenuListener());
 
         registerCommand(new CommandShop(this), "shop", "xshop");
         registerCommand(new CommandShopAdmin(this), "shopadmin", "sa");
+    }
+
+    private void backupAndConvertLegacyItemsIfPresent() throws IOException {
+        if(itemConfig.seemsToBeInLegacyFormat()) {
+            LOGGER.info("Attempting to convert legacy configuration...");
+            File backupFile = new File(itemConfig.getFile().getParentFile(), "legacy-items-do-not-use.yml");
+            LOGGER.info("Saving backup to {}...", backupFile.getAbsolutePath());
+            Files.copy(itemConfig.getFile(), backupFile);
+            new LegacyConfigurationLoader(itemConfig, itemManager).readAndDeleteLegacyItems()
+                    .forEach(itemManager::registerItem);
+            itemConfig.trySave();
+        }
     }
 
     @Override
@@ -110,7 +130,7 @@ public class ShopModule extends ConfigurableMTCModule {
      * @return the shop item manager managing items for this module
      */
     public ShopItemManager getItemManager() {
-        return getItemConfig();
+        return itemManager;
     }
 
     /**
@@ -140,12 +160,5 @@ public class ShopModule extends ConfigurableMTCModule {
      */
     public ShopTransactionExecutor getTransactionExecutor() {
         return transactionExecutor;
-    }
-
-    /**
-     * @return the full tag module this module interfaces with, or null if none
-     */
-    public FullTagModule getFullTagModule() {
-        return fullTagModule;
     }
 }

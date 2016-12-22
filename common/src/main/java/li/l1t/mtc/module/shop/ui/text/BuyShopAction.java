@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.shop.ui.text;
 
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.TransactionType;
 import li.l1t.mtc.module.shop.ui.inventory.ShopDetailMenu;
@@ -40,7 +40,7 @@ class BuyShopAction extends AbstractShopAction {
         }
 
         String itemName = StringHelper.varArgsString(args, 0, ignoreArgsEnd, false);
-        ShopItem item = module.getItemManager().getItem(itemName);
+        ShopItem item = module.getItemManager().getItem(itemName).orElse(null);
 
         if (!module.getTextOutput().checkTradable(plr, item, itemName, TransactionType.BUY)) {
             return;

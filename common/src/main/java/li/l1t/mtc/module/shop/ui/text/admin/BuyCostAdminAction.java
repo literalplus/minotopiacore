@@ -10,7 +10,7 @@ package li.l1t.mtc.module.shop.ui.text.admin;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ui.text.AbstractShopAction;
 import li.l1t.mtc.module.shop.ui.util.ShopStringAdaptor;
@@ -41,7 +41,7 @@ class BuyCostAdminAction extends AbstractShopAction {
         }
 
         String itemName = StringHelper.varArgsString(args, 1, false);
-        ShopItem item = module.getItemManager().getItem(plr, itemName);
+        ShopItem item = module.getItemManager().getItem(plr, itemName).orElse(null);
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
         }
@@ -57,7 +57,7 @@ class BuyCostAdminAction extends AbstractShopAction {
         if (item.canBeBought()) {
             ComponentSender.sendTo(module.getPrefixBuilder().append(item.getDisplayName(), ChatColor.YELLOW)
                             .append(" kann für ", ChatColor.GOLD)
-                            .append(ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)), ChatColor.YELLOW)
+                            .append(ShopStringAdaptor.getCurrencyString(module.getItemManager().getBuyCost(item)), ChatColor.YELLOW)
                             .append(" erworben werden.", ChatColor.GOLD).create(),
                     sender);
         } else {

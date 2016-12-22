@@ -7,11 +7,12 @@
 
 package li.l1t.mtc.module.shop.ui.text;
 
+import li.l1t.common.exception.UserException;
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ui.inventory.ShopSellMenu;
 import li.l1t.mtc.module.shop.ui.util.ShopStringAdaptor;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Handles the sell action for the shop command.
@@ -64,8 +67,9 @@ class SellShopAction extends AbstractShopAction {
 
     private void sellHand(String[] args, Player plr) {
         int amount;
-        ItemStack itemInHand = plr.getItemInHand();
-        ShopItem item = module.getItemManager().getItem(itemInHand); //returns null for FullTag items
+        ItemStack itemInHand = plr.getInventory().getItemInMainHand();
+        ShopItem item = module.getItemManager().getItem(itemInHand)
+                .orElseThrow(() -> new UserException("Dieses Item gibt es nicht."));
 
         if (!output.checkTradable(plr, item, "in deiner Hand", TransactionType.SELL)) {
             return;
@@ -90,36 +94,30 @@ class SellShopAction extends AbstractShopAction {
 
     private void sellInventory(Player plr) {
         Map<ShopItem, Integer> itemAmounts = new HashMap<>();
-        for (ItemStack stack : plr.getInventory().getContents()) {
-            if (module.getItemManager().isTradeProhibited(stack)) {
-                continue;
-            }
-
-            ShopItem item = module.getItemManager().getItem(stack);
-            if (item != null && item.canBeSold()) { //add up current amount with this amount
-                itemAmounts.compute(item, (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount));
-            }
+        for (ItemStack stack : plr.getInventory().getStorageContents()) {
+            Optional.ofNullable(stack)
+                    .flatMap(module.getItemManager()::getItem)
+                    .filter(ShopItem::canBeSold)
+                    .ifPresent(item -> itemAmounts.compute(item, mergeAmount(stack)));
         }
-
         double totalProfit = itemAmounts.entrySet().stream()
-                .mapToDouble(e -> {
-                    boolean transactionSucceeded = module.getTransactionExecutor()
-                            .attemptTransactionSilent(plr, e.getKey(), e.getValue(), TransactionType.SELL);
-                    if (transactionSucceeded) {
-                        return calculator.calculatePrice(e.getKey(), e.getValue(), TransactionType.SELL);
-                    } else {
-                        return 0D;
-                    }
-                }).sum();
-
+                .filter(e -> module.getTransactionExecutor()
+                        .attemptTransactionSilent(plr, e.getKey(), e.getValue(), TransactionType.SELL))
+                .mapToDouble(e -> calculator.calculatePrice(e.getKey(), e.getValue(), TransactionType.SELL))
+                .sum();
         output.sendPrefixed(plr, "Du hast alles in deinem Inventar verkauft, was nicht niet- und nagelfest (unverkäuflich) war.");
         output.sendPrefixed(plr, "Du hast dadurch §e" + ShopStringAdaptor.getCurrencyString(totalProfit) + "§6 eingenommen.");
     }
 
+    private BiFunction<ShopItem, Integer, Integer> mergeAmount(ItemStack stack) {
+        return (existing, amount) -> stack.getAmount() + (amount == null ? 0 : amount);
+    }
+
     private void sellNamedItem(String[] args, Player plr) {
         String itemName = StringHelper.varArgsString(args, 0, 1, false); //last arg is amount, ignore that
-        ShopItem item = module.getItemManager().getItem(itemName);
-        if (!output.checkTradable(plr, item, itemName, TransactionType.SELL)) { //handles null
+        ShopItem item = module.getItemManager().getItem(itemName)
+                .orElseThrow(() -> new UserException("So ein Item gibt es nicht: '%s'", itemName));
+        if (!output.checkTradable(plr, item, itemName, TransactionType.SELL)) {
             return;
         }
 

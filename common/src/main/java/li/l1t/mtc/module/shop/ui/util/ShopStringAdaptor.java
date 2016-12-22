@@ -7,7 +7,7 @@
 
 package li.l1t.mtc.module.shop.ui.util;
 
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.TransactionType;
 
 import java.math.RoundingMode;

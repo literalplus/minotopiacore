@@ -9,21 +9,25 @@ package li.l1t.mtc.module.shop.ui.text.admin;
 
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.common.exception.UserException;
 import li.l1t.mtc.module.shop.ShopModule;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ui.text.AbstractShopAction;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An admin action that adds an item to the shop.
  *
- * @author Janmm14, xxyy
+ * @author Janmm14, Literallie
  */
 class AddAdminAction extends AbstractShopAction {
+    private final Pattern UNESCAPED_COLON_PATTERN = Pattern.compile("(?!\\\\):");
     private final ShopModule module;
 
     AddAdminAction(ShopModule module) {
@@ -33,58 +37,17 @@ class AddAdminAction extends AbstractShopAction {
 
     @Override
     public void execute(String[] args, Player plr, String label) { //REFACTOR
-        // /sa add material_name:data
-        String[] itemSpec = args[0].split(":");
-
-        String materialDefinition = itemSpec[0];
-        String dataValueInput = itemSpec.length == 1 ? "0" : itemSpec[1];
-        Material material = Material.matchMaterial(materialDefinition);
-        if (material == null) {
-            plr.sendMessage("§cUnbekanntes Material: §6" + materialDefinition);
-            return;
+        // /sa add <options>
+        handleLegacyEscapes(args);
+        ItemStack itemInHand = plr.getInventory().getItemInMainHand();
+        if (itemInHand == null || itemInHand.getType() == Material.AIR) {
+            throw new UserException("Du hast nichts in der Hand.");
         }
-
-        short dataValue;
-        try {
-            dataValue = Short.parseShort(dataValueInput);
-        } catch (NumberFormatException ignore) {
-            dataValue = -2;
-        }
-
-        if (dataValue < -1) {
-            plr.sendMessage(String.format("§c§lFehler: §cDer Datenwert muss eine Zahl zwischen -1 und 127 sein. (%s)",
-                    dataValueInput));
-            return;
-        }
-
-        ShopItem specificItem = module.getItemManager().getItem(material, dataValue);
-        if (specificItem != null) {
-            plr.sendMessage(String.format("§c§lFehler: §cDieses Item (%s, %s) existiert bereits mit dem Namen %s.",
-                    material, dataValueInput, specificItem.getDisplayName()));
-            return;
-        }
-
-        ShopItem wildcardItem = module.getItemManager().getWildcardItem(material);
-        if (wildcardItem != null) {
-            plr.sendMessage(String.format("§e§lAchtung: §eEs existiert bereits ein Wildcard-Item für dieses Material. " +
-                    "Dein Item mit dem Datenwert %s wird trotzdem funktionieren.", dataValueInput));
-        }
-
-        ShopItem createdItem = new ShopItem(
-                module.getItemManager(),
-                ShopItem.NOT_BUYABLE, ShopItem.NOT_SELLABLE,
-                material, dataValue,
-                new ArrayList<>(),
-                ShopItem.NOT_DISCOUNTABLE
-        );
-
-        module.getItemConfig().storeItem(createdItem);
+        ShopItem item = module.getItemManager().createItem(itemInHand, args);
+        module.getItemManager().registerItem(item);
         module.getItemConfig().asyncSave(module.getPlugin());
-
-        plr.sendMessage("§aDas Item " + createdItem.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
-
-        String infoCmd = "/sa info " + createdItem.getMaterial() + ':' + createdItem.getDataValue();
-
+        plr.sendMessage("§aDas Item " + item.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
+        String infoCmd = "/sa info " + item.getSerializationName();
         ComponentSender.sendTo(
                 new XyComponentBuilder("Nächste Schritte mit deinem Item: ", ChatColor.GOLD)
                         .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
@@ -92,11 +55,26 @@ class AddAdminAction extends AbstractShopAction {
         );
     }
 
+    private void handleLegacyEscapes(String[] args) {
+        Matcher matcher = UNESCAPED_COLON_PATTERN.matcher(args[0]);
+        if (matcher.find()) {
+            throw new UserException("Die Verwendung dieses Befehls hat sich geändert. Jetzt wird das Item in deiner " +
+                    "Hand herangezogen und die Argumente geben Spezialoptionen an. Falls du tatsächlich einen Doppelpunkt " +
+                    "verwenden musst, gib stattdessen \\: an.");
+        }
+        parseEscapes(args);
+    }
+
+    private void parseEscapes(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            args[i] = args[i].replaceAll("\\\\:", ":");
+        }
+    }
+
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Material[:Datenwert]>", "Fügt ein Item zum Shop hinzu.");
-        plr.sendMessage("§7Datenwert -1 ('Wildcard') gilt für alle, Datenwert egal.");
-        plr.sendMessage("§7Eine Wildcard überschreibt nicht existierende Datenwerte.");
-        plr.sendMessage("§7Wenn nicht angegeben, wird 0 verwendet.");
+        sendHelpLine(plr, "<Parameter>", "Fügt Item in deiner Hand dem Shop hinzu");
+        sendHelpLine(plr, "", "Verwendet spezifischen Datenwert");
+        sendHelpLine(plr, "wildcard", "Verwendet Item mit Wildcard-Datenwert");
     }
 }

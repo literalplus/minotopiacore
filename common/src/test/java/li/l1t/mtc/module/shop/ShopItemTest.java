@@ -8,8 +8,9 @@
 package li.l1t.mtc.module.shop;
 
 import li.l1t.common.test.util.MockHelper;
+import li.l1t.mtc.module.shop.api.ShopItem;
+import li.l1t.mtc.module.shop.item.DataValueShopItem;
 import org.bukkit.Material;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -17,11 +18,10 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -56,7 +56,7 @@ public class ShopItemTest {
     @Test
     public void testToItemStack__wildcard() throws Exception {
         ItemStack sourceStack = new ItemStack(Material.COAL_BLOCK, 12);
-        ShopItem item = createItemFromMaterialAndData(Material.COAL_BLOCK, ShopItem.WILDCARD_DATA_VALUE);
+        ShopItem item = createItemFromMaterialAndData(Material.COAL_BLOCK, DataValueShopItem.WILDCARD_DATA_VALUE);
         ItemStack generatedStack = item.toItemStack(12);
         assertThat("toItemStack() generates items with data -1", generatedStack.getDurability(), is(not((short) -1)));
         assertThat("toItemStack() item stack does not match source stack", generatedStack, is(sourceStack));
@@ -217,7 +217,7 @@ public class ShopItemTest {
 
     @Test
     public void testGetSerializationName__wildcard() throws Exception {
-        ShopItem item = createItemFromMaterialAndData(Material.MINECART, ShopItem.WILDCARD_DATA_VALUE);
+        ShopItem item = createItemFromMaterialAndData(Material.MINECART, DataValueShopItem.WILDCARD_DATA_VALUE);
         assertThat(item.getSerializationName(), is("MINECART"));
     }
 
@@ -229,7 +229,7 @@ public class ShopItemTest {
 
     @Test
     public void serializeToSection__basic() throws Exception {
-        ShopItem item = createItemFromMaterialAndData(Material.CAKE, ShopItem.WILDCARD_DATA_VALUE);
+        ShopItem item = createItemFromMaterialAndData(Material.CAKE, DataValueShopItem.WILDCARD_DATA_VALUE);
         item.setBuyCost(15D);
         item.setSellWorth(10D);
         testSerialization(item);
@@ -237,7 +237,7 @@ public class ShopItemTest {
 
     @Test
     public void serializeToSection__discounted() throws Exception {
-        ShopItem item = createItemFromMaterialAndData(Material.CAKE, ShopItem.WILDCARD_DATA_VALUE);
+        ShopItem item = createItemFromMaterialAndData(Material.CAKE, DataValueShopItem.WILDCARD_DATA_VALUE);
         item.setBuyCost(15D);
         item.setSellWorth(10D);
         item.setDiscountedPrice(12D);
@@ -245,10 +245,9 @@ public class ShopItemTest {
     }
 
     private void testSerialization(ShopItem item) {
-        MemoryConfiguration configuration = new MemoryConfiguration();
-        item.serializeToSection(configuration);
-        assertThat("configuration did not contain item", configuration.contains(item.getSerializationName()), is(true));
-        ShopItem deserializedItem = ShopItem.deserialize(configuration.getConfigurationSection(item.getSerializationName()), null);
+        Map<String, Object> serialized = item.serialize();
+        assertNotNull("serialized", serialized);
+        ShopItem deserializedItem = new DataValueShopItem(serialized);
         assertThat("deserialized item not equal to initial", deserializedItem, is(equalTo(item)));
     }
 
@@ -265,7 +264,7 @@ public class ShopItemTest {
 
     @Nonnull
     private ShopItem createItemFromMaterialAndData(Material type, short dataValue) {
-        return new ShopItem(null, ShopItem.NOT_BUYABLE, ShopItem.NOT_SELLABLE,
+        return new DataValueShopItem(ShopItem.NOT_BUYABLE, ShopItem.NOT_SELLABLE,
                 type, dataValue,
                 new ArrayList<>(), ShopItem.NOT_DISCOUNTABLE);
     }
@@ -277,8 +276,8 @@ public class ShopItemTest {
 
     @Nonnull
     private ShopItem createItemWithPricesAndDiscount(double buyCost, double sellWorth, double discountedPrice) {
-        return new ShopItem(null, buyCost, sellWorth,
-                Material.AIR, ShopItem.WILDCARD_DATA_VALUE,
+        return new DataValueShopItem(buyCost, sellWorth,
+                Material.AIR, DataValueShopItem.WILDCARD_DATA_VALUE,
                 new ArrayList<>(), discountedPrice);
     }
 }

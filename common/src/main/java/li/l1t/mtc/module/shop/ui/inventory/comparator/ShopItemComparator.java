@@ -7,7 +7,7 @@
 
 package li.l1t.mtc.module.shop.ui.inventory.comparator;
 
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 
 import java.util.Comparator;
 

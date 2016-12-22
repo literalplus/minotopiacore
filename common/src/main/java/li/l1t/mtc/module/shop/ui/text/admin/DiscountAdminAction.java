@@ -11,7 +11,7 @@ import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ui.text.AbstractShopAction;
 import li.l1t.mtc.module.shop.ui.util.ShopStringAdaptor;
@@ -37,7 +37,7 @@ class DiscountAdminAction extends AbstractShopAction {
     public void execute(String[] args, Player plr, String label) {
         int ignoreArgsEnd = args.length == 1 ? 0 : 1; //only strip args if we have anything left then
         String itemName = StringHelper.varArgsString(args, 0, ignoreArgsEnd, false);
-        ShopItem item = module.getItemManager().getItem(plr, itemName);
+        ShopItem item = module.getItemManager().getItem(plr, itemName).orElse(null);
         if (module.getTextOutput().checkNonExistant(plr, item, itemName)) {
             return;
         }

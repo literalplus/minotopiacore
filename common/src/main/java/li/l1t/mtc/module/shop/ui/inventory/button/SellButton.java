@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.hook.VaultHook;
 import li.l1t.mtc.logging.LogManager;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
 import li.l1t.mtc.module.shop.ui.inventory.ShopMenu;
@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 /**
  * Button which sells all the items currently present in a {@link ShopSellMenu}.
@@ -68,16 +69,19 @@ public class SellButton implements MenuButton<ShopSellMenu> {
         ItemStack[] contents = menu.getInventory().getContents();
         for (int slotId = ShopMenu.ROW_SIZE; slotId < contents.length; slotId++) {
             ItemStack stack = contents[slotId];
-            ShopItem item = menu.getModule().getItemManager().getItem(stack);
-            if (item != null && item.canBeSold()) {
-                menu.getInventory().setItem(slotId, null);
-                LOGGER.info(
-                        "Inventory Transaction {}: SELL {} x{} ({})",
-                        menu.getPlayer().getName(), item.getSerializationName(),
-                        stack.getAmount(), menu.getPlayer().getUniqueId()
-                );
-            }
+            menu.getModule().getItemManager().getItem(stack)
+                    .filter(ShopItem::canBeSold)
+                    .ifPresent(clearSoldItem(menu, slotId, stack));
         }
+    }
+
+    private Consumer<ShopItem> clearSoldItem(ShopMenu menu, int slotId, ItemStack stack) {
+        return item -> {
+            menu.getInventory().setItem(slotId, null);
+            LOGGER.info("Inventory Transaction {}: SELL {} x{} ({})",
+                    menu.getPlayer().getName(), item.getSerializationName(),
+                    stack.getAmount(), menu.getPlayer().getUniqueId());
+        };
     }
 
     private double calculateMenuWorth(ShopMenu menu) {

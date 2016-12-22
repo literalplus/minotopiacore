@@ -10,17 +10,14 @@ package li.l1t.mtc.module.shop.ui.text;
 import com.google.common.collect.ImmutableMap;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class SearchShopAction extends AbstractShopAction {
     private ShopItemManager itemManager;
@@ -36,9 +33,9 @@ class SearchShopAction extends AbstractShopAction {
     public void execute(String[] args, Player plr, String label) {
         String query = StringUtils.join(args, ' ');
 
-        ShopItem exactMatchItem = itemManager.getItem(query);
-        if (exactMatchItem != null) {
-            output.sendPriceInfo(plr, exactMatchItem, 1, "§e\"" + query + "\"§6");
+        Optional<? extends ShopItem> exactMatchItem = itemManager.getItem(query);
+        if (exactMatchItem.isPresent()) {
+            output.sendPriceInfo(plr, exactMatchItem.get(), 1, "§e\"" + query + "\"§6");
             return;
         }
 

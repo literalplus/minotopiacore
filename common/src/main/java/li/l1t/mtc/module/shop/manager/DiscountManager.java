@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.shop.manager;
 
 import com.google.common.base.Preconditions;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Manages discounts on shop items.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
+ * @author <a href="https://l1t.li/">xxyy</a>
  * @since 2016-01-28
  */
 public class DiscountManager {

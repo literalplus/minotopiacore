@@ -11,7 +11,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
@@ -155,8 +155,8 @@ public class ShopTextOutput {
         if (item.canBeBought()) {
             XyComponentBuilder builder = module.getPrefixBuilder()
                     .append("Kaufpreis: ", ChatColor.GOLD);
-            double actualCost = item.getManager().getBuyCost(item);
-            if (item.getManager().getDiscountManager().isDiscounted(item)) {
+            double actualCost = module.getItemManager().getBuyCost(item);
+            if (module.getItemManager().getDiscountManager().isDiscounted(item)) {
                 builder.append(ShopStringAdaptor.format(actualCost), ChatColor.YELLOW)
                         .append(" statt ", ChatColor.GOLD)
                         .append(ShopStringAdaptor.getCurrencyString(item.getBuyCost()),
@@ -172,7 +172,7 @@ public class ShopTextOutput {
         if (item.canBeSold()) {
             XyComponentBuilder builder = module.getPrefixBuilder()
                     .append("Verkaufspreis: ", ChatColor.GOLD)
-                    .append(ShopStringAdaptor.getCurrencyString(item.getManager().getSellWorth(item)), ChatColor.YELLOW)
+                    .append(ShopStringAdaptor.getCurrencyString(module.getItemManager().getSellWorth(item)), ChatColor.YELLOW)
                     .append(" ", ComponentBuilder.FormatRetention.NONE)
                     .append("[verkaufen...]", ChatColor.GREEN, ChatColor.UNDERLINE)
                     .hintedCommand("/shop sell");
