@@ -30,7 +30,5 @@ public interface ItemProvider<T extends ShopItem> {
 
     void clear();
 
-    T cast(ShopItem item);
-
     T createInstance(ItemStack stack, String... parameters);
 }

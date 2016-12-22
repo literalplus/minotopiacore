@@ -10,7 +10,6 @@ package li.l1t.mtc.module.shop.manager;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.item.DataValueShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -79,11 +78,5 @@ public class DataValueItemProvider implements ItemProvider<DataValueShopItem> {
     public void clear() {
         wildcardCache.clear();
         itemCache.clear();
-    }
-
-    @Override
-    public DataValueShopItem cast(ShopItem item) {
-        Preconditions.checkArgument(item instanceof DataValueShopItem, "expected DataValueShopItem, got", item.getClass(), item);
-        return (DataValueShopItem) item;
     }
 }

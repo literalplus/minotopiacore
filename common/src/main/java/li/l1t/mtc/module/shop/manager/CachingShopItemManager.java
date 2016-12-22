@@ -14,6 +14,7 @@ import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
 import li.l1t.mtc.module.shop.item.DataValueShopItem;
+import li.l1t.mtc.module.shop.item.PotionShopItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +34,7 @@ public class CachingShopItemManager implements ShopItemManager {
     private final Map<String, ShopItem> aliasesMap = new HashMap<>();
     private final Set<ShopItem> registeredItems = new HashSet<>();
     private final DataValueItemProvider dataValueProvider = new DataValueItemProvider();
+    private final PotionItemProvider potionItemProvider = new PotionItemProvider();
     private final DiscountManager discountManager;
 
     @InjectMe
@@ -45,7 +47,7 @@ public class CachingShopItemManager implements ShopItemManager {
             case POTION:
             case LINGERING_POTION:
             case SPLASH_POTION:
-                throw new UnsupportedOperationException(material.name()); //TODO: potion items
+                return potionItemProvider;
             default:
                 return dataValueProvider;
         }
@@ -55,6 +57,8 @@ public class CachingShopItemManager implements ShopItemManager {
     private <T extends ShopItem> ItemProvider<T> getProvider(T item) {
         if (item instanceof DataValueShopItem) {
             return (ItemProvider<T>) dataValueProvider;
+        } else if(item instanceof PotionShopItem) {
+            return (ItemProvider<T>) potionItemProvider;
         } else {
             throw new UnsupportedOperationException(item.getClass().toString());
         }
