@@ -10,8 +10,8 @@ package li.l1t.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.hook.VaultHook;
-import li.l1t.mtc.module.shop.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
 import li.l1t.mtc.module.shop.ui.inventory.button.PaginationButton;
 import li.l1t.mtc.module.shop.ui.inventory.button.SortOrderButton;
@@ -24,7 +24,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -79,11 +78,11 @@ public class ShopListMenu extends ShopMenu {
                             .displayName(item.getDisplayName())
                             .lore("§cDas kannst du dir nicht leisten!")
                             .lore("§4Stückpreis: §c" +
-                                    ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
+                                    ShopStringAdaptor.getCurrencyString(module.getItemManager().getBuyCost(item)))
                             .lore("§4Du hast: §c" + ShopStringAdaptor.getCurrencyString(currentBalance))
                             .produce();
                 } else {
-                    stack = ShopInventoryHelper.createInfoStack(item, true);
+                    stack = ShopInventoryHelper.createInfoStack(item, module.getItemManager());
                 }
                 setItem(canvasId, item, stack);
             }
@@ -135,7 +134,7 @@ public class ShopListMenu extends ShopMenu {
      * Sorts this menu's items according to the {@link #getItemComparator() item comparator}.
      */
     public void sortItems() {
-        Collections.sort(this.rawItems, getItemComparator());
+        this.rawItems.sort(getItemComparator());
         filterItems();
     }
 

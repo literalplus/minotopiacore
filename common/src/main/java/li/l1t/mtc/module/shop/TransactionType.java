@@ -8,7 +8,8 @@
 package li.l1t.mtc.module.shop;
 
 
-import javax.annotation.Nonnull;
+import li.l1t.mtc.module.shop.api.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItemManager;
 
 /**
  * Represents a type of transaction a user can commence with the shop.
@@ -19,8 +20,8 @@ import javax.annotation.Nonnull;
 public enum TransactionType {
     SELL {
         @Override
-        public double getValue(@Nonnull ShopItem item) {
-            return item.getManager().getSellWorth(item);
+        public double getValue(ShopItem item, ShopItemManager itemManager) {
+            return itemManager.getSellWorth(item);
         }
 
         @Override
@@ -30,8 +31,8 @@ public enum TransactionType {
     },
     BUY {
         @Override
-        public double getValue(@Nonnull ShopItem item) {
-            return item.getManager().getBuyCost(item);
+        public double getValue(ShopItem item, ShopItemManager itemManager) {
+            return itemManager.getBuyCost(item);
         }
 
         @Override
@@ -43,10 +44,11 @@ public enum TransactionType {
     /**
      * Calculates the current value of given item in respect to this transaction type.
      *
-     * @param item the item, may not be null
+     * @param item        the item, may not be null
+     * @param itemManager the manager to get the price from
      * @return the value of given item for this transaction type
      */
-    public abstract double getValue(@Nonnull ShopItem item);
+    public abstract double getValue(ShopItem item, ShopItemManager itemManager);
 
     /**
      * Checks whether given item is currently tradable for this transaction type. Null items are not

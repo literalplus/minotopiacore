@@ -10,7 +10,7 @@ package li.l1t.mtc.module.shop.ui.text.admin;
 import li.l1t.common.chat.ComponentSender;
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ui.text.AbstractShopAction;
 import net.md_5.bungee.api.ChatColor;
@@ -37,7 +37,7 @@ class AliasAdminAction extends AbstractShopAction {
     public void execute(String[] args, Player plr, String label) {
         String itemSpec = args[1];
         String aliasSpec = StringHelper.varArgsString(args, 2, false);
-        ShopItem item = module.getItemManager().getItem(plr, itemSpec);
+        ShopItem item = module.getItemManager().getItem(plr, itemSpec).orElse(null);
 
         if (module.getTextOutput().checkNonExistant(plr, item, itemSpec)) {
             return;

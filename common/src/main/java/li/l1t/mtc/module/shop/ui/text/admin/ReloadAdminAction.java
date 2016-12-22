@@ -35,6 +35,6 @@ class ReloadAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "reload", "Relodiert die Konfigurierts.");
+        sendHelpLine(plr, "", "Relodiert die Konfigurierts.");
     }
 }

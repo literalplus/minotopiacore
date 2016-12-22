@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.shop;
 
 import com.google.common.base.Preconditions;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.api.ShopItemManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.ToDoubleFunction;
 
 import static li.l1t.common.util.PredicateHelper.not;
@@ -71,20 +73,16 @@ public class ShopPriceCalculator {
 
         return stacks.stream()
                 .filter(not(itemManager::isTradeProhibited))
-                .mapToDouble(toItemWorthFunction(type))
+                .mapToDouble(itemsToWorth(type))
                 .sum();
     }
 
     @Nonnull
-    private ToDoubleFunction<ItemStack> toItemWorthFunction(TransactionType type) {
-        return stack -> {
-            ShopItem item = itemManager.getItem(stack);
-            if (item == null || !type.isTradable(item)) {
-                return 0D;
-            } else {
-                return calculatePrice(item, stack.getAmount(), type);
-            }
-        };
+    private ToDoubleFunction<ItemStack> itemsToWorth(TransactionType type) {
+        return stack -> itemManager.getItem(stack)
+                .filter(type::isTradable)
+                .map(item -> calculatePrice(item, stack.getAmount(), type))
+                .orElse(0D);
     }
 
     /**
@@ -99,7 +97,7 @@ public class ShopPriceCalculator {
         Preconditions.checkNotNull(item, "item");
         Preconditions.checkNotNull(type, "type");
         Preconditions.checkArgument(type.isTradable(item), "%s is not tradable with %s", item, type);
-        return type.getValue(item) * amount;
+        return type.getValue(item, itemManager) * amount;
     }
 
     /**
@@ -117,11 +115,9 @@ public class ShopPriceCalculator {
         if (itemManager.isTradeProhibited(itemStack)) {
             return 0D;
         }
-        ShopItem item = itemManager.getItem(itemStack);
-        if (!type.isTradable(item)) {
-            return 0D;
-        } else {
-            return calculatePrice(item, itemStack.getAmount(), type);
-        }
+        return itemManager.getItem(itemStack)
+                .filter(type::isTradable)
+                .map(item -> calculatePrice(item, itemStack.getAmount(), type))
+                .orElse(0D);
     }
 }

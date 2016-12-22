@@ -8,7 +8,6 @@
 package li.l1t.mtc.module.shop.api;
 
 import li.l1t.mtc.api.misc.Cache;
-import li.l1t.mtc.module.shop.ShopItem;
 import li.l1t.mtc.module.shop.manager.DiscountManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Manages shop items for a shop module.
@@ -30,21 +30,11 @@ public interface ShopItemManager extends Cache {
      * by underscores and the whole string is converted to upper case to match material name
      * declarations.
      *
-     * @param input the string to check for, may be any of alias, material name or type id,
-     *              optionally followed by :&lt;data value&gt;
+     * @param input the string to check for, may be any of alias, material name or type id, optionally followed by
+     *              :&lt;data value&gt;
      * @return the found item or null if there is no such item
      */
-    ShopItem getItem(String input);
-
-    /**
-     * Attempts to get an item managed by this manager matching given item stack. Returns null if
-     * the stack is null, the stack is of {@link Material#AIR} or {@link
-     * #isTradeProhibited(ItemStack) trading of that stack is prohibited}.
-     *
-     * @param stack the stack to find the item for
-     * @return the found item for that stack, or {@code null} otherwise.
-     */
-    ShopItem getItem(ItemStack stack);
+    Optional<? extends ShopItem> getItem(String input);
 
     /**
      * Attempts to get an item managed by this manager matching given input string. If the input
@@ -55,28 +45,42 @@ public interface ShopItemManager extends Cache {
      * @param input the input string
      * @return the found item or null if there is no such item
      */
-    ShopItem getItem(Player plr, String input);
+    Optional<? extends ShopItem> getItem(Player plr, String input);
 
     /**
-     * Attempts to get an item managed by this manager. The special data value {@code -1} represents
-     * a catch-all wildcard item that matches all data values of that material that do not have a
-     * specific item attached to them.
+     * Attempts to get an item managed by this manager matching given item stack. Returns null if
+     * the stack is null, the stack is of {@link Material#AIR} or {@link
+     * #isTradeProhibited(ItemStack) trading of that stack is prohibited}.
      *
-     * @param material  the material to find the item for
-     * @param dataValue the data value to find the item for
-     * @return the found item for the specific data value, if found, the wildcard item, if found, or
-     * {@code null} otherwise.
+     * @param stack the stack to find the item for
+     * @return the found item for that stack, or {@code null} otherwise.
      */
-    ShopItem getItem(Material material, short dataValue);
+    Optional<? extends ShopItem> getItem(ItemStack stack);
 
     /**
-     * Gets the wildcard item for a given material, if any. A wildcard item matches all data values
-     * and is represented internally by the special -1 data value.
+     * Creates a new shop item with its identity taken from given item stack and all other values at their defaults.
      *
-     * @param material the material to match
-     * @return the wildcard item for given material, or null if there is none
+     * @param stack      the stack to use as identity source for the item
+     * @param parameters the additional parameters to provide to the factory
+     * @return the newly created item
+     * @throws IllegalArgumentException if an item with that identity already exists
      */
-    ShopItem getWildcardItem(Material material);
+    ShopItem createItem(ItemStack stack, String... parameters);
+
+    /**
+     * Registers an item with this manager's cache. Note that it is imperative to unregister an item before changing it
+     * since
+     *
+     * @param item the item to register
+     */
+    <T extends ShopItem> void registerItem(T item);
+
+    /**
+     * Unregisters an item from this manager's cache.
+     *
+     * @param item the item to unregister
+     */
+    <T extends ShopItem> void unregisterItem(T item);
 
     /**
      * Checks if trading given item stack is prohibited due to general restrictions not relating to

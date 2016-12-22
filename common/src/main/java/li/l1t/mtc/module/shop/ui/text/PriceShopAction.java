@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.shop.ui.text;
 
 import li.l1t.common.util.StringHelper;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
@@ -64,7 +64,7 @@ class PriceShopAction extends AbstractShopAction {
         }
 
         String name = StringHelper.varArgsString(args, 0, stripArgs, false);
-        ShopItem item = module.getItemManager().getItem(name);
+        ShopItem item = module.getItemManager().getItem(name).orElse(null);
         output.sendPriceInfo(plr, item, amount, "§e\"" + name + "\"§6");
     }
 
@@ -77,13 +77,13 @@ class PriceShopAction extends AbstractShopAction {
     }
 
     private void priceHand(Player plr) {
-        ItemStack itemInHand = plr.getItemInHand();
+        ItemStack itemInHand = plr.getInventory().getItemInMainHand();
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
             output.sendPrefixed(plr, "§cDu hast nichts in der Hand!");
             return;
         }
 
-        ShopItem item = module.getItemManager().getItem(itemInHand);
+        ShopItem item = module.getItemManager().getItem(itemInHand).orElse(null);
         output.sendPriceInfo(plr, item, itemInHand.getAmount(), "in deiner Hand");
     }
 

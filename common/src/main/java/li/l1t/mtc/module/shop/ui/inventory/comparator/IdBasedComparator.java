@@ -7,7 +7,7 @@
 
 package li.l1t.mtc.module.shop.ui.inventory.comparator;
 
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 
 /**
  * Sorts shop items based on the underlying material id and data value.
@@ -27,8 +27,8 @@ public class IdBasedComparator extends AbstractShopItemComparator {
     public int compare(ShopItem o1, ShopItem o2) {
         int result;
         result = Integer.compare(o1.getMaterial().ordinal(), o2.getMaterial().ordinal());
-        if (result == 0) {
-            result = Short.compare(o1.getDataValue(), o2.getDataValue());
+        if (result == 0 && o1.getDisplayName() != null) {
+            result = o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
         }
         return applyOrder(result);
     }

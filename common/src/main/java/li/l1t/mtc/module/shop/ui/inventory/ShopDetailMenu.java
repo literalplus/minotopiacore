@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.hook.VaultHook;
-import li.l1t.mtc.module.shop.ShopItem;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
@@ -52,7 +52,7 @@ public class ShopDetailMenu extends ShopMenu {
     private void initTopRow() {
         setTopRowButton(0, BackToListButton.INSTANCE);
         setTopRowButton(3, new GenericButton(
-                ShopInventoryHelper.createInfoStack(item, false), null
+                ShopInventoryHelper.createInfoStack(item, module.getItemManager()), null
         ));
         setTopRowButton(4, OpenSellMenuButton.INSTANCE);
         setTopRowButton(8, BackToListButton.INSTANCE);
@@ -61,30 +61,44 @@ public class ShopDetailMenu extends ShopMenu {
     private void renderCanvas() {
         renderTopMenu();
         if (item.canBeBought()) {
-            for (int i = 0; i < ITEM_AMOUNT_ROWS.length; i++) {
-                int[] amountRow = ITEM_AMOUNT_ROWS[i];
-                for (int j = 0; j < amountRow.length; j++) {
-                    int amount = amountRow[j];
-                    if (amount == 0) {
-                        continue;
-                    }
-                    int canvasId = i * ROW_SIZE + j;
-                    int slotId = canvasId + ROW_SIZE;
-                    double totalPrice = priceCalculator.calculatePrice(item, amount, TransactionType.BUY);
-
-                    if (canAfford(totalPrice)) {
-                        getInventory().setItem(slotId, createIconStack(amount, totalPrice));
-                    } else {
-                        getInventory().setItem(slotId, createNotAffordableStack(amount, totalPrice));
-                    }
-                }
-            }
+            renderCanvasForBuyableItem();
         } else {
-            getInventory().setItem(2 * ROW_SIZE + 4, new ItemStackFactory(Material.BARRIER)
-                    .lore("§cDieses Item kann nicht gekauft werden!")
-                    .produce()
-            );
+            renderCanvasForNonBuyableItem();
         }
+    }
+
+    private void renderCanvasForBuyableItem() {
+        for (int i = 0; i < ITEM_AMOUNT_ROWS.length; i++) {
+            int[] amountRow = ITEM_AMOUNT_ROWS[i];
+            renderRowOfPurchaseAmountButtons(i, amountRow);
+        }
+    }
+
+    private void renderRowOfPurchaseAmountButtons(int i, int[] amountRow) {
+        for (int j = 0; j < amountRow.length; j++) {
+            int amount = amountRow[j];
+            if (amount != 0) {
+                renderPurchaseAmountButton(i, j, amount);
+            }
+        }
+    }
+
+    private void renderPurchaseAmountButton(int i, int j, int amount) {
+        int canvasId = i * ROW_SIZE + j;
+        int slotId = canvasId + ROW_SIZE;
+        double totalPrice = priceCalculator.calculatePrice(item, amount, TransactionType.BUY);
+        getInventory().setItem(slotId, createStackBasedOnWhetherCanAfford(amount, totalPrice));
+    }
+
+    private ItemStack createStackBasedOnWhetherCanAfford(int amount, double totalPrice) {
+        return canAfford(totalPrice) ? createIconStack(amount, totalPrice) : createNotAffordableStack(amount, totalPrice);
+    }
+
+    private void renderCanvasForNonBuyableItem() {
+        getInventory().setItem(2 * ROW_SIZE + 4, new ItemStackFactory(Material.BARRIER)
+                .lore("§cDieses Item kann nicht gekauft werden!")
+                .produce()
+        );
     }
 
     private boolean canAfford(double totalPrice) {
@@ -136,7 +150,7 @@ public class ShopDetailMenu extends ShopMenu {
                 .lore("§8" + item.getDisplayName() + "§7 zu kaufen.")
                 .lore(" ")
                 .lore("§eKaufpreis: §7" + ShopStringAdaptor.getCurrencyString(totalPrice))
-                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
+                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(module.getItemManager().getBuyCost(item)))
                 .produce();
     }
 
@@ -146,7 +160,7 @@ public class ShopDetailMenu extends ShopMenu {
                 .lore("§4" + item.getDisplayName() + "§c nicht leisten!")
                 .lore(" ")
                 .lore("§eKaufpreis: §7" + ShopStringAdaptor.getCurrencyString(totalPrice))
-                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(item.getManager().getBuyCost(item)))
+                .lore("§eStückpreis: §7" + ShopStringAdaptor.getCurrencyString(module.getItemManager().getBuyCost(item)))
                 .produce();
     }
 
