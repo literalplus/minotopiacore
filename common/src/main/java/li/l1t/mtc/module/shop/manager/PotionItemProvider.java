@@ -13,13 +13,11 @@ import li.l1t.mtc.module.shop.item.PotionShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionData;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Provides caching and factory methods for potion shop items.
@@ -32,18 +30,15 @@ public class PotionItemProvider implements ItemProvider<PotionShopItem> {
 
     @Override
     public Optional<PotionShopItem> findCached(ItemStack stack) {
-        return effectFromStack(stack).flatMap(this::findCached);
+        return findCached(effectFromStack(stack));
     }
 
-    private Optional<PotionEffect> effectFromStack(ItemStack stack) {
-        return Optional.of(stack.getItemMeta())
-                .filter(meta -> meta instanceof PotionMeta).map(meta -> (PotionMeta) meta)
-                .map(PotionMeta::getCustomEffects).map(List::stream)
-                .flatMap(Stream::findFirst);
+    private PotionData effectFromStack(ItemStack stack) {
+        return ((PotionMeta) stack.getItemMeta()).getBasePotionData();
     }
 
-    private Optional<PotionShopItem> findCached(PotionEffect effect) {
-        return findCached(PotionHelper.stringFromEffect(effect));
+    private Optional<PotionShopItem> findCached(PotionData effect) {
+        return findCached(PotionHelper.stringFromData(effect));
     }
 
     private Optional<PotionShopItem> findCached(String effectSpec) {
@@ -56,19 +51,19 @@ public class PotionItemProvider implements ItemProvider<PotionShopItem> {
         if (parameters.length == 0) {
             return Optional.empty();
         } else if (parameters.length == 1) {
-            return findCached(normalizeEffectSpec(parameters[0]));
+            return findCached(normalizeDataSpec(parameters[0]));
         } else {
-            return findCached(normalizeEffectSpec(parameters[0] + ":" + parameters[1]));
+            return findCached(normalizeDataSpec(parameters[0] + ":" + parameters[1]));
         }
     }
 
-    private String normalizeEffectSpec(String spec) {
-        return PotionHelper.stringFromEffect(PotionHelper.effectFromString(spec));
+    private String normalizeDataSpec(String spec) {
+        return PotionHelper.stringFromData(PotionHelper.dataFromString(spec));
     }
 
     @Override
     public void cache(PotionShopItem item) {
-        itemCache.put(PotionHelper.stringFromEffect(item.getEffect()), item);
+        itemCache.put(PotionHelper.stringFromData(item.getPotionData()), item);
     }
 
     @Override

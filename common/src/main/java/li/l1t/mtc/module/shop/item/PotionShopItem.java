@@ -15,8 +15,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,42 +30,42 @@ import java.util.Map;
  */
 @SerializableAs("mtc-shop-item-with-potion-effect")
 public class PotionShopItem extends AbstractShopItem {
-    private static final String POTION_SPEC_PATH = "potion-effect";
-    private final PotionEffect effect;
+    private static final String POTION_SPEC_PATH = "potion-data";
+    private final PotionData data;
 
     public PotionShopItem(double buyCost, double sellWorth, Material material, List<String> aliases,
-                          double discountedPrice, PotionEffect effect) {
+                          double discountedPrice, PotionData data) {
         super(material, aliases, sellWorth, buyCost, discountedPrice);
-        this.effect = Preconditions.checkNotNull(effect, "effect");
+        this.data = Preconditions.checkNotNull(data, "data");
     }
 
     public PotionShopItem(Map<String, Object> input) {
         super(input);
-        this.effect = find(String.class, POTION_SPEC_PATH, input)
-                .map(PotionHelper::effectFromString)
-                .orElse(PotionEffectType.SPEED.createEffect(200, 0));
+        this.data = find(String.class, POTION_SPEC_PATH, input)
+                .map(PotionHelper::dataFromString)
+                .orElse(new PotionData(PotionType.SPEED, false, false));
     }
 
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = super.serialize();
-        result.put(POTION_SPEC_PATH, PotionHelper.stringFromEffect(effect));
+        result.put(POTION_SPEC_PATH, PotionHelper.stringFromData(data));
         return result;
     }
 
     public static PotionShopItem fromItemStack(ItemStack stack, String... parameters) {
         Preconditions.checkNotNull(stack, "stack");
         Preconditions.checkNotNull(parameters, "parameters");
-        PotionEffect effect;
+        PotionData data;
         if(parameters.length == 0) {
             throw new UserException("need at least one argument to specify potion type");
         } else if(parameters.length == 1) {
-            effect = PotionHelper.effectFromString(parameters[0]);
+            data = PotionHelper.dataFromString(parameters[0]);
         } else {
-            effect = PotionHelper.effectFromString(parameters[0] + ":" + parameters[1]);
+            data = PotionHelper.dataFromString(parameters[0] + ":" + parameters[1]);
         }
         return new PotionShopItem(
-                NOT_BUYABLE, NOT_SELLABLE, stack.getType(), new ArrayList<>(), NOT_DISCOUNTABLE, effect
+                NOT_BUYABLE, NOT_SELLABLE, stack.getType(), new ArrayList<>(), NOT_DISCOUNTABLE, data
         );
     }
 
@@ -74,7 +74,7 @@ public class PotionShopItem extends AbstractShopItem {
     public ItemStack toItemStack(int amount) {
         return new ItemStackFactory(getMaterial())
                 .amount(amount)
-                .effect(effect)
+                .potion(data)
                 .produce();
     }
 
@@ -88,21 +88,15 @@ public class PotionShopItem extends AbstractShopItem {
 
     private boolean isMatchingPotion(ItemStack stack) {
         return stack.getItemMeta() instanceof PotionMeta &&
-                effectsMatch((PotionMeta) stack.getItemMeta());
+                potionDataMatches((PotionMeta) stack.getItemMeta());
     }
 
-    private boolean effectsMatch(PotionMeta meta) {
-        return meta.getCustomEffects().stream().allMatch(this::effectMatches);
+    private boolean potionDataMatches(PotionMeta meta) {
+        return meta.getBasePotionData().equals(data);
     }
 
-    private boolean effectMatches(PotionEffect effect) {
-        return effect.getType() == this.effect.getType() &&
-                effect.getAmplifier() == this.effect.getAmplifier() &&
-                effect.getDuration() == this.effect.getDuration();
-    }
-
-    public PotionEffect getEffect() {
-        return effect;
+    public PotionData getPotionData() {
+        return data;
     }
 
     @Override
@@ -117,18 +111,18 @@ public class PotionShopItem extends AbstractShopItem {
 
         PotionShopItem shopItem = (PotionShopItem) o;
 
-        return getMaterial() == shopItem.getMaterial() && effectMatches(shopItem.effect);
+        return getMaterial() == shopItem.getMaterial() && shopItem.data.equals(data);
     }
 
     @Override
     public int hashCode() {
         int result = getMaterial().hashCode();
-        result = 31 * result + effect.hashCode();
+        result = 31 * result + data.hashCode();
         return result;
     }
 
     @Override
     public String getSerializationName() {
-        return getMaterial().name() + ":" + PotionHelper.stringFromEffect(effect);
+        return getMaterial().name() + ":" + PotionHelper.stringFromData(data);
     }
 }
