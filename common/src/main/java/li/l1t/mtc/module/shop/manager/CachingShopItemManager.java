@@ -47,6 +47,7 @@ public class CachingShopItemManager implements ShopItemManager {
             case POTION:
             case LINGERING_POTION:
             case SPLASH_POTION:
+            case TIPPED_ARROW:
                 return potionItemProvider;
             default:
                 return dataValueProvider;
@@ -57,7 +58,7 @@ public class CachingShopItemManager implements ShopItemManager {
     private <T extends ShopItem> ItemProvider<T> getProvider(T item) {
         if (item instanceof DataValueShopItem) {
             return (ItemProvider<T>) dataValueProvider;
-        } else if(item instanceof PotionShopItem) {
+        } else if (item instanceof PotionShopItem) {
             return (ItemProvider<T>) potionItemProvider;
         } else {
             throw new UnsupportedOperationException(item.getClass().toString());
@@ -68,7 +69,7 @@ public class CachingShopItemManager implements ShopItemManager {
     public Optional<? extends ShopItem> getItem(String input) {
         Preconditions.checkNotNull(input, "input");
         Optional<? extends ShopItem> itemByAlias = findItemByAlias(input.toLowerCase(Locale.GERMAN));
-        if(itemByAlias.isPresent()) {
+        if (itemByAlias.isPresent()) {
             return itemByAlias;
         } else {
             return findItemByInput(input);
