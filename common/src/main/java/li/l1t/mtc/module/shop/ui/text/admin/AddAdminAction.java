@@ -27,18 +27,20 @@ import java.util.regex.Pattern;
  * @author Janmm14, Literallie
  */
 class AddAdminAction extends AbstractShopAction {
-    private final Pattern UNESCAPED_COLON_PATTERN = Pattern.compile("(?!\\\\):");
+    private final Pattern UNESCAPED_COLON_PATTERN = Pattern.compile("(?<!\\\\):");
     private final ShopModule module;
 
     AddAdminAction(ShopModule module) {
-        super("shopadmin", "add", 1, null);
+        super("shopadmin", "add", 0, null);
         this.module = module;
     }
 
     @Override
     public void execute(String[] args, Player plr, String label) { //REFACTOR
         // /sa add <options>
-        handleLegacyEscapes(args);
+        if(args.length > 0) {
+            handleLegacyEscapes(args);
+        }
         ItemStack itemInHand = plr.getInventory().getItemInMainHand();
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
             throw new UserException("Du hast nichts in der Hand.");
