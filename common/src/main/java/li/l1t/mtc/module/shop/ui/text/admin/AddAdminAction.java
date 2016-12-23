@@ -38,23 +38,26 @@ class AddAdminAction extends AbstractShopAction {
     @Override
     public void execute(String[] args, Player plr, String label) { //REFACTOR
         // /sa add <options>
-        if(args.length > 0) {
+        if (args.length > 0) {
             handleLegacyEscapes(args);
         }
         ItemStack itemInHand = plr.getInventory().getItemInMainHand();
         if (itemInHand == null || itemInHand.getType() == Material.AIR) {
             throw new UserException("Du hast nichts in der Hand.");
         }
-        ShopItem item = module.getItemManager().createItem(itemInHand, args);
-        module.getItemManager().registerItem(item);
-        module.getItemConfig().asyncSave(module.getPlugin());
-        plr.sendMessage("§aDas Item " + item.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
-        String infoCmd = "/sa info " + item.getSerializationName();
-        ComponentSender.sendTo(
-                new XyComponentBuilder("Nächste Schritte mit deinem Item: ", ChatColor.GOLD)
-                        .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
-                        .hintedCommand(infoCmd), plr
-        );
+        try {
+            ShopItem item = module.getItemManager().createItem(itemInHand, args);
+            module.getItemManager().registerItem(item);
+            module.getItemConfig().asyncSave(module.getPlugin());
+            plr.sendMessage("§aDas Item " + item.getDisplayName() + " wurde erfolgreich zum Shop hinzugefügt.");
+            ComponentSender.sendTo(
+                    new XyComponentBuilder("Nächste Schritte mit deinem Item: ", ChatColor.GOLD)
+                            .append("[hier klicken]", ChatColor.DARK_GREEN, ChatColor.UNDERLINE)
+                            .hintedCommand("/sa info " + item.getSerializationName()), plr
+            );
+        } catch (NullPointerException | IllegalArgumentException e) {
+            throw new UserException(e.getMessage(), e);
+        }
     }
 
     private void handleLegacyEscapes(String[] args) {
