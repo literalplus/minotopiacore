@@ -58,9 +58,9 @@ public abstract class AbstractShopItem implements ShopItem {
                         "invalid or missing material in " + this + ": " + serializedMap
                 ));
         this.aliases = findStringList(ALIASES_PATH, serializedMap).orElseGet(ArrayList::new);
-        this.buyCost = find(Double.class, BUY_COST_PATH, serializedMap).orElse(NOT_BUYABLE);
-        this.sellWorth = find(Double.class, SELL_WORTH_PATH, serializedMap).orElse(NOT_SELLABLE);
-        this.discountedPrice = find(Double.class, DISCOUNTED_PRICE_PATH, serializedMap).orElse(NOT_DISCOUNTABLE);
+        setBuyCost(find(Double.class, BUY_COST_PATH, serializedMap).orElse(NOT_BUYABLE));
+        setSellWorth(find(Double.class, SELL_WORTH_PATH, serializedMap).orElse(NOT_SELLABLE));
+        setDiscountedPrice(find(Double.class, DISCOUNTED_PRICE_PATH, serializedMap).orElse(NOT_DISCOUNTABLE));
     }
 
     @SuppressWarnings("unchecked")
