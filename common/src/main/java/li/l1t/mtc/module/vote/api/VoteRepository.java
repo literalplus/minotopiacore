@@ -7,6 +7,9 @@
 
 package li.l1t.mtc.module.vote.api;
 
+import li.l1t.mtc.module.vote.sql.vote.SqlVote;
+
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +21,20 @@ import java.util.UUID;
  */
 public interface VoteRepository {
     Optional<Vote> findVoteById(UUID voteId);
+
+    Optional<Vote> findLatestVoteByPlayer(UUID playerId);
+
+    Collection<Vote> findVotesFromToday();
+
+    /**
+     * Creates and saves a vote for given data, inferring all other values from the database.
+     *
+     * @param username    the username the vote was issued for
+     * @param serviceName the service name the vote was received from
+     * @param playerId    the unique id of the player the user name was resolved to, or null for none (yet)
+     * @return the created vote
+     */
+    SqlVote createVote(String username, String serviceName, UUID playerId);
 
     void save(Vote vote);
 }

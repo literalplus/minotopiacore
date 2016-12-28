@@ -69,6 +69,10 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-bukkit</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
