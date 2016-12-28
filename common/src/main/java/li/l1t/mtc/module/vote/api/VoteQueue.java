@@ -9,6 +9,7 @@ package li.l1t.mtc.module.vote.api;
 
 import java.time.Duration;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Provides access to the queue of votes that have been queued for players who were offline at the time the vote was
@@ -18,7 +19,9 @@ import java.util.Collection;
  * @since 2016-12-28
  */
 public interface VoteQueue {
-    Collection<Vote> findQueuedVotes(String userName);
+    void queueVote(Vote vote);
+
+    Collection<UUID> findQueuedVotes(String userName);
 
     void purgeVotesOlderThan(Duration duration);
 }
