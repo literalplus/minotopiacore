@@ -10,8 +10,8 @@ package li.l1t.mtc.module.nub.repository;
 import li.l1t.common.exception.DatabaseException;
 import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.common.sql.sane.result.QueryResult;
-import li.l1t.lanatus.sql.common.AbstractJdbcFetcher;
-import li.l1t.lanatus.sql.common.JdbcEntityCreator;
+import li.l1t.common.sql.sane.util.AbstractJdbcFetcher;
+import li.l1t.common.sql.sane.util.JdbcEntityCreator;
 import li.l1t.mtc.module.nub.api.NubProtection;
 
 import java.sql.SQLException;

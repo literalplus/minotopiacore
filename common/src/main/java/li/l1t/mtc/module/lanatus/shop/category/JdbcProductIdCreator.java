@@ -7,7 +7,8 @@
 
 package li.l1t.mtc.module.lanatus.shop.category;
 
-import li.l1t.lanatus.sql.common.AbstractJdbcEntityCreator;
+
+import li.l1t.common.sql.sane.util.AbstractJdbcEntityCreator;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

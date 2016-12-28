@@ -8,7 +8,7 @@
 package li.l1t.mtc.module.lanatus.pex.product;
 
 import li.l1t.common.sql.sane.SaneSql;
-import li.l1t.lanatus.sql.common.JdbcEntityCreator;
+import li.l1t.common.sql.sane.util.JdbcEntityCreator;
 import li.l1t.mtc.module.lanatus.base.product.JdbcProductMetadataFetcher;
 
 /**

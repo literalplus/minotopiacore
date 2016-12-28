@@ -7,7 +7,7 @@
 
 package li.l1t.mtc.module.nub.repository;
 
-import li.l1t.lanatus.sql.common.AbstractJdbcEntityCreator;
+import li.l1t.common.sql.sane.util.AbstractJdbcEntityCreator;
 import li.l1t.mtc.module.nub.api.NubProtection;
 
 import java.sql.ResultSet;
