@@ -2,7 +2,7 @@
 ▒█▒█▒█ ▀█▀ █░░█ █░░█ ░▒█░░ █░░█ █░░█ ▀█▀ █▄▄█ ▒█░░░ █░░█ █▄▄▀ █▀▀ 
 ▒█░░▒█ ▀▀▀ ▀░░▀ ▀▀▀▀ ░▒█░░ ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▒█▄▄█ ▀▀▀▀ ▀░▀▀ ▀▀▀
 MinoTopiaCore (MTC)
-Copyright (C) 2013 - 2016 Literallie / Philipp Nowak (Me) and Contributors.
+Copyright (C) 2013 - 2017 Literallie / Philipp Nowak (Me) and Contributors.
 
 Additional contributions by other people (Contributors) belong to their respective authors but
 are licensed under these license terms. Major contributions (e.g. new files) will be marked

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2013-2016.
+  ~ Copyright (c) 2013-2017.
   ~ This work is protected by international copyright laws and licensed
   ~ under the license terms which can be found at src/main/resources/LICENSE.txt
   ~ or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -41,7 +41,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <powermock.version>1.6.5</powermock.version>
-        <xyc.version>4.3.2.0</xyc.version>
+        <xyc.version>4.3.3.0</xyc.version>
         <minecraft.version>1.11</minecraft.version>
         <spigot-api.release>R0.1</spigot-api.release>
         <rootDir>${project.basedir}</rootDir>
