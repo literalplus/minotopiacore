@@ -7,6 +7,9 @@
 
 package li.l1t.mtc.module.vote.reward;
 
+import com.google.common.collect.ImmutableMap;
+import li.l1t.common.util.config.HashMapConfig;
+import li.l1t.common.util.config.MapConfig;
 import li.l1t.mtc.module.vote.api.Vote;
 import li.l1t.mtc.module.vote.api.reward.Reward;
 import org.bukkit.Server;
@@ -14,7 +17,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,10 +27,16 @@ import java.util.Map;
  */
 @SerializableAs("mtc.vote.reward.command")
 public class CommandReward implements ConfigurationSerializable, Reward {
+    public static final String COMMAND_PATH = "command";
     private final String rawCommand;
 
     public CommandReward(String rawCommand) {
         this.rawCommand = rawCommand;
+    }
+
+    public CommandReward(Map<String, Object> source) {
+        MapConfig config = HashMapConfig.of(source);
+        rawCommand = config.findString(COMMAND_PATH).orElse("/pleaseaddacommand");
     }
 
     @Override
@@ -40,8 +48,9 @@ public class CommandReward implements ConfigurationSerializable, Reward {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("command", rawCommand);
-        return result;
+        return ImmutableMap.<String, Object>builder()
+                .put(
+                        COMMAND_PATH, rawCommand)
+                .build();
     }
 }

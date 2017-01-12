@@ -5,44 +5,44 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.vote.reward;
+package li.l1t.mtc.module.vote.reward.compound;
 
 import com.google.common.collect.ImmutableMap;
 import li.l1t.common.util.config.HashMapConfig;
 import li.l1t.common.util.config.MapConfig;
 import li.l1t.mtc.module.vote.api.Vote;
 import li.l1t.mtc.module.vote.api.reward.Reward;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * A reward that applies other rewards when applied.
+ * A compound reward that applies all of its child rewards when applied.
  *
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-01-10
  */
-@SerializableAs("mtc.vote.reward.compound")
-public class CompoundReward implements Reward, ConfigurationSerializable {
+@SerializableAs("mtc.vote.all-of")
+public class AllOfCompoundReward extends AbstractCompoundReward {
     public static final String REWARDS_PATH = "rewards";
     private final List<Reward> rewards;
 
-    public CompoundReward(List<Reward> rewards) {
+    public AllOfCompoundReward(List<Reward> rewards) {
         this.rewards = rewards;
     }
 
-    public CompoundReward(Map<String, Object> source) {
+    public AllOfCompoundReward(Map<String, Object> source) {
         MapConfig config = HashMapConfig.of(source);
         rewards = config.getCollection(REWARDS_PATH, Reward.class, Collectors.toList());
     }
 
     @Override
-    public void apply(Player player, Vote vote) {
-        rewards.forEach(reward -> reward.apply(player, vote));
+    public Stream<Reward> findRewardsFor(Player player, Vote vote) {
+        return rewards.stream();
     }
 
     @Override
