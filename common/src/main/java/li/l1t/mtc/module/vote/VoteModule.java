@@ -8,8 +8,14 @@
 package li.l1t.mtc.module.vote;
 
 import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.misc.CacheHelper;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Main entry point for the Vote module which listens for votes and dispatches rewards.
@@ -18,9 +24,14 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
  * @since 2016-12-28
  */
 public class VoteModule extends ConfigurableMTCModule {
-    protected VoteModule() {
+    private RewardConfigs rewardConfigs;
+
+    @InjectMe
+    protected VoteModule(MTCPlugin plugin) throws IOException {
         super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD);
         ConfigurationRegistration.registerAll();
+        rewardConfigs = new RewardConfigs(new File(plugin.getDataFolder() + "/modules/vote/"));
+        CacheHelper.registerCache(rewardConfigs);
     }
 
     @Override
@@ -30,6 +41,6 @@ public class VoteModule extends ConfigurableMTCModule {
 
     @Override
     protected void reloadImpl() {
-
+        rewardConfigs.loadAll();
     }
 }
