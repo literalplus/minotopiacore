@@ -20,6 +20,7 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 public class VoteModule extends ConfigurableMTCModule {
     protected VoteModule() {
         super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD);
+        ConfigurationRegistration.registerAll();
     }
 
     @Override
