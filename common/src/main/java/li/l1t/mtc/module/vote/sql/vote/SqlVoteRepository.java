@@ -11,7 +11,8 @@ import com.google.common.base.Preconditions;
 import li.l1t.common.collections.cache.OptionalCache;
 import li.l1t.common.collections.cache.OptionalGuavaCache;
 import li.l1t.lanatus.sql.AbstractSqlLanatusRepository;
-import li.l1t.lanatus.sql.SqlLanatusClient;
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.vote.api.Vote;
 import li.l1t.mtc.module.vote.api.VoteRepository;
 
@@ -32,7 +33,8 @@ public class SqlVoteRepository extends AbstractSqlLanatusRepository implements V
     private final SqlVoteWriter writer;
     private final OptionalCache<UUID, Vote> voteCache = new OptionalGuavaCache<>();
 
-    public SqlVoteRepository(SqlLanatusClient client) {
+    @InjectMe
+    public SqlVoteRepository(MTCLanatusClient client) {
         super(client);
         fetcher = new SqlVoteFetcher(new SqlVoteCreator(), client.sql());
         writer = new SqlVoteWriter(client.sql());

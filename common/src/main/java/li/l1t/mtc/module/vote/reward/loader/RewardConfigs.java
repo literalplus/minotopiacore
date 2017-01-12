@@ -9,7 +9,9 @@ package li.l1t.mtc.module.vote.reward.loader;
 
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.misc.Cache;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.logging.LogManager;
+import li.l1t.mtc.misc.CacheHelper;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
@@ -34,11 +36,17 @@ public class RewardConfigs implements Cache {
     private final File directory;
     private final Map<String, RewardConfig> serviceConfigs = new HashMap<>();
 
+    @InjectMe
+    public RewardConfigs(MTCPlugin plugin) throws IOException {
+        this(new File(plugin.getDataFolder() + "/modules/vote/"));
+    }
+
     public RewardConfigs(File directory) throws IOException {
         this.directory = directory;
         if(!directory.exists()) {
             Files.createDirectories(directory.toPath());
         }
+        CacheHelper.registerCache(this);
     }
 
     public Optional<RewardConfig> findConfig(String serviceName) {

@@ -9,6 +9,7 @@ package li.l1t.mtc.module.vote.sql.queue;
 
 import li.l1t.common.sql.sane.AbstractSqlConnected;
 import li.l1t.common.sql.sane.SaneSql;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.vote.api.Vote;
 import li.l1t.mtc.module.vote.api.VoteQueue;
 
@@ -27,6 +28,7 @@ public class SqlVoteQueue extends AbstractSqlConnected implements VoteQueue {
     private final QueuedVoteFetcher fetcher;
     private final QueuedVoteWriter writer;
 
+    @InjectMe
     public SqlVoteQueue(SaneSql sql) {
         super(sql);
         fetcher = new QueuedVoteFetcher(new QueuedVoteIdCreator(), sql);

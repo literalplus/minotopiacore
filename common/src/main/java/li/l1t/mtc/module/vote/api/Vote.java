@@ -29,6 +29,11 @@ public interface Vote {
     UUID getPlayerId();
 
     /**
+     * @param playerId the new player id to set
+     */
+    void setPlayerId(UUID playerId);
+
+    /**
      * @return whether a player was resolved from the user name this vote was sent to
      */
     boolean hasPlayerId();

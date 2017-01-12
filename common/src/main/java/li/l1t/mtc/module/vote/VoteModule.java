@@ -7,15 +7,14 @@
 
 package li.l1t.mtc.module.vote;
 
+import li.l1t.common.sql.sane.SaneSql;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.misc.CacheHelper;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
-
-import java.io.File;
-import java.io.IOException;
+import li.l1t.mtc.module.vote.sql.queue.SqlVoteQueue;
+import li.l1t.mtc.module.vote.sql.vote.SqlVoteRepository;
 
 /**
  * Main entry point for the Vote module which listens for votes and dispatches rewards.
@@ -24,23 +23,36 @@ import java.io.IOException;
  * @since 2016-12-28
  */
 public class VoteModule extends ConfigurableMTCModule {
-    private RewardConfigs rewardConfigs;
+    private final RewardConfigs rewardConfigs;
+    private final SqlVoteQueue voteQueue;
+    private final SqlVoteRepository voteRepository;
 
     @InjectMe
-    protected VoteModule(MTCPlugin plugin) throws IOException {
+    protected VoteModule(MTCPlugin plugin, SaneSql sql, RewardConfigs rewardConfigs,
+                         SqlVoteQueue voteQueue, SqlVoteRepository voteRepository) {
         super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD);
+        this.rewardConfigs = rewardConfigs;
+        this.voteQueue = voteQueue;
+        this.voteRepository = voteRepository;
         ConfigurationRegistration.registerAll();
-        rewardConfigs = new RewardConfigs(new File(plugin.getDataFolder() + "/modules/vote/"));
-        CacheHelper.registerCache(rewardConfigs);
     }
 
     @Override
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
+        registerListener(inject(VoteListener.class));
     }
 
     @Override
     protected void reloadImpl() {
         rewardConfigs.loadAll();
+    }
+
+    public SqlVoteQueue getVoteQueue() {
+        return voteQueue;
+    }
+
+    public SqlVoteRepository votes() {
+        return voteRepository;
     }
 }
