@@ -17,6 +17,8 @@ import li.l1t.mtc.module.vote.api.Vote;
 import li.l1t.mtc.module.vote.api.VoteRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,8 +71,16 @@ public class SqlVoteRepository extends AbstractSqlLanatusRepository implements V
 
     private int findStreakLengthByName(String username) {
         return fetcher.findLatestVoteByUserName(username)
+                .filter(this::wasTodayOrYesterday)
                 .map(Vote::getStreakLength)
                 .orElse(0);
+    }
+
+    private boolean wasTodayOrYesterday(Vote vote) {
+        return vote.getTimestamp().isAfter(
+                LocalDate.now().minusDays(1)
+                        .atStartOfDay(ZoneId.systemDefault()).toInstant()
+        );
     }
 
     @Override
