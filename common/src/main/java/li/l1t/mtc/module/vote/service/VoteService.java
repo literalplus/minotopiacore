@@ -49,7 +49,7 @@ public class VoteService {
 
     public void handleVote(String username, String serviceName) {
         UUID uuid = null;
-        Player onlinePlayer = Bukkit.getPlayer(username);
+        Player onlinePlayer = Bukkit.getPlayerExact(username);
         if (onlinePlayer != null) {
             uuid = onlinePlayer.getUniqueId();
         }
