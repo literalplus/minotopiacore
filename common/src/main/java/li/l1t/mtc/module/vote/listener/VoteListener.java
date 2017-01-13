@@ -5,7 +5,7 @@
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
  */
 
-package li.l1t.mtc.module.vote;
+package li.l1t.mtc.module.vote.listener;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 import li.l1t.mtc.api.module.inject.InjectMe;

@@ -12,6 +12,8 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.vote.listener.QueueJoinListener;
+import li.l1t.mtc.module.vote.listener.VoteListener;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
 import li.l1t.mtc.module.vote.sql.queue.SqlVoteQueue;
 import li.l1t.mtc.module.vote.sql.vote.SqlVoteRepository;
@@ -41,6 +43,7 @@ public class VoteModule extends ConfigurableMTCModule {
     public void enable(MTCPlugin plugin) throws Exception {
         super.enable(plugin);
         registerListener(inject(VoteListener.class));
+        registerListener(inject(QueueJoinListener.class));
     }
 
     @Override

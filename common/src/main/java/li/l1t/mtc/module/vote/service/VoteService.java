@@ -23,8 +23,10 @@ import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Service that handles votes.
@@ -64,10 +66,7 @@ public class VoteService {
         Preconditions.checkNotNull(player, "player");
         Preconditions.checkNotNull(vote, "vote");
         Optional<RewardConfig> config = rewards.findConfig(vote.getServiceName());
-        if (vote.getPlayerId() == null) {
-            vote.setPlayerId(player.getUniqueId());
-            votes.save(vote);
-        }
+        setAndSavePlayerIdIfNotPresent(player, vote);
         if (config.isPresent()) {
             LOGGER.info("Rewarding {} for {}...", player.getName(), vote);
             config.get().getRewards()
@@ -79,5 +78,23 @@ public class VoteService {
                     vote.getServiceName()
             );
         }
+    }
+
+    private void setAndSavePlayerIdIfNotPresent(Player player, Vote vote) {
+        if (!vote.hasPlayerId()) {
+            vote.setPlayerId(player.getUniqueId());
+            votes.save(vote);
+        }
+    }
+
+    public void checkQueuedVotes(Player player, Consumer<Vote> resultConsumer) {
+        Preconditions.checkNotNull(player, "player");
+        Preconditions.checkNotNull(resultConsumer, "resultConsumer");
+        Collection<UUID> voteIds = voteQueue.findQueuedVotes(player.getName());
+        voteIds.stream()
+                .map(votes::findVoteById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(resultConsumer);
     }
 }
