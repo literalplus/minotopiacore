@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Loads rewards from a directory of configuration files. Keeps backups of working files to ensure smooth operation in
@@ -51,6 +52,10 @@ public class RewardConfigs implements Cache {
 
     public Optional<RewardConfig> findConfig(String serviceName) {
         return Optional.ofNullable(serviceConfigs.get(serviceName));
+    }
+
+    public Stream<RewardConfig> configs() {
+        return serviceConfigs.values().stream();
     }
 
     public void loadAll() {
