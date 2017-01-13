@@ -55,6 +55,7 @@ public class VoteService {
         if (onlinePlayer != null) {
             dispatchVoteReward(onlinePlayer, vote);
         } else {
+            LOGGER.info("Queueing vote: {}", vote);
             voteQueue.queueVote(vote);
         }
     }
@@ -68,9 +69,11 @@ public class VoteService {
             votes.save(vote);
         }
         if (config.isPresent()) {
+            LOGGER.info("Rewarding {} for {}...", player.getName(), vote);
             config.get().getRewards()
                     .forEach(reward -> reward.apply(player, vote));
         } else {
+            LOGGER.warn("Received vote for unknown service: {}", vote);
             MessageType.INTERNAL_ERROR.sendTo(player,
                     "Für diesen Votelink ('%s') ist keine Belohnung festgelegt. Bitte wende dich an den Support.",
                     vote.getServiceName()

@@ -75,4 +75,17 @@ public class SqlVote implements Vote {
     public boolean hasPlayerId() {
         return getPlayerId() != null;
     }
+
+
+    @Override
+    public String toString() {
+        return "SqlVote{" +
+                "uniqueId=" + uniqueId +
+                ", username='" + username + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", timestamp=" + timestamp +
+                ", streakLength=" + streakLength +
+                ", playerId=" + playerId +
+                '}';
+    }
 }
