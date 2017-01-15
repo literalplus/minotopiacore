@@ -8,14 +8,14 @@
 package li.l1t.mtc.module.lanatus.base;
 
 import li.l1t.common.chat.XyComponentBuilder;
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.position.Position;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.api.purchase.Purchase;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -40,7 +40,7 @@ import static li.l1t.mtc.api.chat.MessageType.RESULT_LINE_SUCCESS;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-25
  */
-class LanatusInfoCommand extends BukkitExecutionExecutor {
+class LanatusInfoCommand extends MTCExecutionExecutor {
     private final LanatusClient client;
     private final XLoginHook xLogin;
 
@@ -50,7 +50,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) {
+    public boolean execute(BukkitExecution exec) {
         if (exec.hasNoArgs()) {
             exec.requireIsPlayer();
             showAccountInfo(exec, profile(exec.senderId()));
@@ -93,7 +93,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void showAccountInfo(CommandExecution exec, XLoginHook.Profile profile) {
+    private void showAccountInfo(BukkitExecution exec, XLoginHook.Profile profile) {
         AccountSnapshot account = client.accounts().findOrDefault(profile.getUniqueId());
         exec.respond(HEADER, "Lanatus-Info: §a%s", profile.getName());
         exec.respond(RESULT_LINE, "UUID: §s%s", account.getPlayerId());
@@ -102,7 +102,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         respondAccountActions(exec, profile);
     }
 
-    private void respondSnapshotInstantAndAction(CommandExecution exec, AccountSnapshot account) {
+    private void respondSnapshotInstantAndAction(BukkitExecution exec, AccountSnapshot account) {
         exec.respond(resultLineBuilder()
                 .append("Stand: ")
                 .append(readableInstant(account.getSnapshotInstant()), ChatColor.GREEN)
@@ -120,7 +120,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         return instant.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    private void respondAccountActions(CommandExecution exec, XLoginHook.Profile profile) {
+    private void respondAccountActions(BukkitExecution exec, XLoginHook.Profile profile) {
         exec.respond(resultLineBuilder()
                 .append("[Käufe]", ChatColor.DARK_GREEN)
                 .hintedCommand("/lainfo plist " + profile.getUniqueId())
@@ -136,13 +136,13 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void showPurchaseList(CommandExecution exec, XLoginHook.Profile profile) {
+    private void showPurchaseList(BukkitExecution exec, XLoginHook.Profile profile) {
         Collection<Purchase> purchases = client.purchases().findByPlayer(profile.getUniqueId());
         exec.respond(LIST_HEADER, "%d Käufe von §a%s:", purchases.size(), profile.getName());
         purchases.forEach(purchase -> showPurchaseListItem(exec, purchase));
     }
 
-    private void showPurchaseListItem(CommandExecution exec, Purchase purchase) {
+    private void showPurchaseListItem(BukkitExecution exec, Purchase purchase) {
         exec.respond(appendProductOverview(listItemBuilder(), purchase.getProduct())
                 .appendIf(client.positions().findByPurchase(purchase.getUniqueId()).isPresent(), " (aktiv)", ChatColor.YELLOW)
                 .append(" am ", ChatColor.GOLD, ComponentBuilder.FormatRetention.NONE).underlined(false)
@@ -153,7 +153,7 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void showPurchaseDetails(CommandExecution exec, UUID purchaseId) {
+    private void showPurchaseDetails(BukkitExecution exec, UUID purchaseId) {
         Purchase purchase = client.purchases().findById(purchaseId);
         String playerName = xLogin.getDisplayString(purchase.getPlayerId());
         exec.respond(HEADER, "Kauf %s", purchaseId);
@@ -177,13 +177,13 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         return builder;
     }
 
-    private void showPositionList(CommandExecution exec, XLoginHook.Profile profile) {
+    private void showPositionList(BukkitExecution exec, XLoginHook.Profile profile) {
         Collection<Position> positions = client.positions().findAllByPlayer(profile.getUniqueId());
         exec.respond(LIST_HEADER, "§a%s §pbesitzt %d Items:", profile.getName(), positions.size());
         positions.forEach(position -> showPositionListItem(exec, position));
     }
 
-    private void showPositionListItem(CommandExecution exec, Position position) {
+    private void showPositionListItem(BukkitExecution exec, Position position) {
         XyComponentBuilder builder = listItemBuilder();
         appendProductOverview(builder, position.getProduct());
         exec.respond(builder
@@ -195,12 +195,12 @@ class LanatusInfoCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void handleClearPlayerCache(CommandExecution exec, UUID uuid) {
+    private void handleClearPlayerCache(BukkitExecution exec, UUID uuid) {
         client.clearCachesFor(uuid);
         exec.respond(RESULT_LINE_SUCCESS, "Cache für den Spieler mit der UUID §s%s§p geleert.", uuid);
     }
 
-    private void showUsage(CommandExecution exec) {
+    private void showUsage(BukkitExecution exec) {
         exec.respondUsage("plist", "<Spieler|UUID>", "Zeigt Käufe.");
         exec.respondUsage("purchase", "<UUID>", "Zeigt einen Kauf.");
         exec.respondUsage("ilist", "<Spieler|UUID>", "Zeigt aktuelle Positionen.");

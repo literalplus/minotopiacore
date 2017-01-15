@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.lanatus.shop.command;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.account.AccountSnapshot;
@@ -14,8 +15,7 @@ import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.lanatus.shop.api.event.CategoryDisplayEvent;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 import li.l1t.mtc.module.lanatus.shop.gui.CategorySelectionMenu;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductDetailMenu;
@@ -32,7 +32,7 @@ import java.util.function.Function;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-17-11
  */
-public class LanatusShopCommand extends BukkitExecutionExecutor {
+public class LanatusShopCommand extends MTCExecutionExecutor {
     private final LanatusShopModule module;
 
     public LanatusShopCommand(LanatusShopModule module) {
@@ -40,7 +40,7 @@ public class LanatusShopCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             exec.respondUsage("", "", "Öffnet das Shopmenü.");
         } else {

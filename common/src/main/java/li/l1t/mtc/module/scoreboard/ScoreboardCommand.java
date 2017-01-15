@@ -7,12 +7,12 @@
 
 package li.l1t.mtc.module.scoreboard;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 
 /**
  * Handles the /scb command which allows players to manage their own scoreboard view.
@@ -20,7 +20,7 @@ import li.l1t.mtc.command.BukkitExecutionExecutor;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-15
  */
-public class ScoreboardCommand extends BukkitExecutionExecutor {
+public class ScoreboardCommand extends MTCExecutionExecutor {
     private final CommonScoreboardProvider scoreboard;
 
     @InjectMe
@@ -29,7 +29,7 @@ public class ScoreboardCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "toggle":
@@ -44,7 +44,7 @@ public class ScoreboardCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void handleToggle(CommandExecution exec) {
+    private void handleToggle(BukkitExecution exec) {
         if (scoreboard.isBoardHiddenFor(exec.player())) {
             scoreboard.unhideBoardFor(exec.player());
             exec.respond(MessageType.RESULT_LINE_SUCCESS, "Das Scoreboard wird dir jetzt wieder angezeigt.");
@@ -54,14 +54,14 @@ public class ScoreboardCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void handleRefresh(CommandExecution exec) {
+    private void handleRefresh(BukkitExecution exec) {
         scoreboard.updateScoreboardFor(exec.player());
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Das Scoreboard wurde aktualisiert.");
         exec.respond(MessageType.WARNING, "Manche Daten sind womöglich nicht auf dem allerneuesten Stand. " +
                 "Das Scoreboard aktualisiert sich alle paar Minuten selbst.");
     }
 
-    public void sendUsageTo(CommandExecution exec) {
+    public void sendUsageTo(BukkitExecution exec) {
         exec.respondUsage("toggle", "", "Versteckt/Zeigt Scoreboard");
         exec.respondUsage("refresh", "", "Aktualisiert das Scoreboard sofort");
     }

@@ -9,6 +9,7 @@ package li.l1t.mtc.module.lanatus.perk.ui.text;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Verify;
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.common.inventory.gui.element.LambdaMenuElement;
@@ -18,9 +19,8 @@ import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.ItemIconService;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.perk.LocalPerkManager;
 import li.l1t.mtc.module.lanatus.perk.PerksConfig;
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-07
  */
-public class CommandPerks extends BukkitExecutionExecutor {
+public class CommandPerks extends MTCExecutionExecutor {
     private final Plugin plugin;
     private final LanatusClient lanatus;
     private final PerkRepository perkRepository;
@@ -72,7 +72,7 @@ public class CommandPerks extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         Player player = exec.player();
         if (hasAnyPerksAvailable(player)) {
             openMenu(player);

@@ -7,13 +7,13 @@
 
 package li.l1t.mtc.module.lanatus.base;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-27
  */
-class LanatusProductCommand extends BukkitExecutionExecutor {
+class LanatusProductCommand extends MTCExecutionExecutor {
     private final LanatusClient client;
 
     LanatusProductCommand(LanatusClient client) {
@@ -35,7 +35,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "list":
@@ -52,7 +52,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void showProductListWithFilter(CommandExecution exec, String filter) {
+    private void showProductListWithFilter(BukkitExecution exec, String filter) {
         Collection<Product> products = client.products().query()
                 .inAnyModule()
                 .containing(filter)
@@ -65,7 +65,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
         products.forEach(product -> showProductListItem(exec, product));
     }
 
-    private void showProductListItem(CommandExecution exec, Product product) {
+    private void showProductListItem(BukkitExecution exec, Product product) {
         exec.respond(resultLineBuilder()
                 .append(product.getModule(), ChatColor.GREEN)
                 .command("/laprod list " + product.getModule())
@@ -80,7 +80,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void showProductDetails(CommandExecution exec, UUID uuid) {
+    private void showProductDetails(BukkitExecution exec, UUID uuid) {
         Product product = client.products().findById(uuid);
         exec.respond(MessageType.HEADER, "Produktinfo: %s", product.getDisplayName());
         exec.respond(MessageType.RESULT_LINE, "Beschreibung: §s%s", product.getDescription());
@@ -98,7 +98,7 @@ class LanatusProductCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void showUsage(CommandExecution exec) {
+    private void showUsage(BukkitExecution exec) {
         exec.respondUsage("list", "[Suchbegriff]", "Listet alle Produkte auf.");
         exec.respondUsage("info", "<UUID>", "Zeigt ein Produkt.");
     }

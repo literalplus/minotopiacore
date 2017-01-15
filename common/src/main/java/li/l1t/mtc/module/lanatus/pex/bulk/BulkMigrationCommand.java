@@ -7,15 +7,14 @@
 
 package li.l1t.mtc.module.lanatus.pex.bulk;
 
+import li.l1t.common.command.BukkitExecution;
+import li.l1t.common.command.UserPermissionException;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.common.util.task.ImprovedBukkitRunnable;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.api.command.UserPermissionException;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
-import li.l1t.mtc.hook.XLoginHook;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 import li.l1t.mtc.module.lanatus.pex.LanatusAccountMigrator;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-11-04
  */
-public class BulkMigrationCommand extends BukkitExecutionExecutor {
+public class BulkMigrationCommand extends MTCExecutionExecutor {
     private final Logger LOGGER = LogManager.getLogger(BulkMigrationCommand.class);
     private final AtomicBoolean migrationRunning = new AtomicBoolean(false);
     private final LanatusAccountMigrator migrator;
@@ -55,7 +54,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         requireSenderIsConsole(exec);
         if (exec.hasArg(0) && exec.arg(0).equalsIgnoreCase("start")) {
             requireNoMigrationRunning();
@@ -67,7 +66,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void invokeMigration(CommandExecution exec) {
+    private void invokeMigration(BukkitExecution exec) {
         exec.respond(MessageType.RESULT_LINE, "Starting migration...");
         exec.respond(MessageType.RESULT_LINE, "Consult the misc log file for detailed status information.");
         LOGGER.warn(" --- Starting bulk migration...");
@@ -117,7 +116,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         return task.runTaskTimer(module.getPlugin(), 2L);
     }
 
-    private void logLeftoverUsers(Collection<PexImportUser> leftovers, CommandExecution exec) {
+    private void logLeftoverUsers(Collection<PexImportUser> leftovers, BukkitExecution exec) {
         LOGGER.info("Could not convert these users: {}", leftovers);
         if (leftovers.isEmpty()) {
             exec.respond(MessageType.RESULT_LINE_SUCCESS, "Converted all users with relevant groups.");
@@ -132,7 +131,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         return migrator.findAutoConvertLanatusRank(user).isPresent();
     }
 
-    private void requireSenderIsConsole(CommandExecution exec) {
+    private void requireSenderIsConsole(BukkitExecution exec) {
         if (!(exec.sender() instanceof ConsoleCommandSender)) {
             throw new UserPermissionException("You are not permitted to do this.");
         }
@@ -144,7 +143,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void respondUsage(CommandExecution exec) {
+    private void respondUsage(BukkitExecution exec) {
         exec.respond(MessageType.RESULT_LINE, "Lanatus Manual PEx File Migration");
         respondMigrationStatus(exec);
         exec.respond(MessageType.WARNING, "Only proceed if you know exactly what you are doing!");
@@ -152,7 +151,7 @@ public class BulkMigrationCommand extends BukkitExecutionExecutor {
         exec.respondUsage("start", "", "Immediately starts the migration");
     }
 
-    private void respondMigrationStatus(CommandExecution exec) {
+    private void respondMigrationStatus(BukkitExecution exec) {
         exec.respond(MessageType.RESULT_LINE, "There is currently " + (migrationRunning.get() ? "a" : "no") + " migration running.");
     }
 }

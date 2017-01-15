@@ -7,14 +7,14 @@
 
 package li.l1t.mtc.module.nub.tp;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.common.util.LocationHelper;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.hook.VaultHook;
 import li.l1t.mtc.module.nub.api.ProtectionService;
 import li.l1t.mtc.module.nub.service.SimpleProtectionService;
@@ -31,7 +31,7 @@ import org.bukkit.scheduler.BukkitTask;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-13
  */
-public class NubTpCommand extends BukkitExecutionExecutor {
+public class NubTpCommand extends MTCExecutionExecutor {
     private final NubTpConfig config;
     private final LocationSecurer locationSecurer;
     private final CoordinateSelector coordinateSelector;
@@ -51,7 +51,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             switch (exec.arg(0)) {
                 case "tp":
@@ -62,7 +62,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleTeleport(CommandExecution exec) {
+    private boolean handleTeleport(BukkitExecution exec) {
         exec.requireIsPlayer();
         requireCanAffordIfNotEligibleForFreeTeleport(exec);
         Location targetLocation = coordinateSelector.selectLocation(findTeleportWorldOrFail());
@@ -71,7 +71,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void requireCanAffordIfNotEligibleForFreeTeleport(CommandExecution exec) {
+    private void requireCanAffordIfNotEligibleForFreeTeleport(BukkitExecution exec) {
         if (!isEligibleForFreeTeleport(exec.player())) {
             requireCanAfford(exec.player(), config.getVaultTeleportCost());
         }
@@ -85,7 +85,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         return world;
     }
 
-    private BukkitTask teleportLaterIfHasntMoved(Player player, CommandExecution exec, Location targetLocation) {
+    private BukkitTask teleportLaterIfHasntMoved(Player player, BukkitExecution exec, Location targetLocation) {
         Location initialLocation = player.getLocation();
         return plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             if (LocationHelper.softEqual(initialLocation, player.getLocation())) {
@@ -96,7 +96,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         }, 2L * 20L);
     }
 
-    private void doPaymentAndTeleport(Player player, CommandExecution exec, Location targetLocation) {
+    private void doPaymentAndTeleport(Player player, BukkitExecution exec, Location targetLocation) {
         if (processPayment(player, exec)) {
             locationSecurer.secureLocation(targetLocation, Material.GLASS);
             player.teleport(targetLocation);
@@ -105,7 +105,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private boolean processPayment(Player player, CommandExecution exec) {
+    private boolean processPayment(Player player, BukkitExecution exec) {
         if (isEligibleForFreeTeleport(player)) {
             exec.respond(MessageType.RESULT_LINE, "Da du noch durch N.u.b. geschützt bist, kannst du " +
                     "dich kostenlos teleportieren.");
@@ -134,7 +134,7 @@ public class NubTpCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void respondUsage(CommandExecution exec) {
+    private void respondUsage(BukkitExecution exec) {
         exec.respond(MessageType.RESULT_LINE, "N.u.b. TP teleportiert dich zu zufälligen Koordinaten, " +
                 "damit du dir eine halbwegs sichere Basis bauen kannst.");
         exec.respondUsage("tp", "", "Teleportiert dich.");

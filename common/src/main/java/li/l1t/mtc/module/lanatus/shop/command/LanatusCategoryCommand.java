@@ -8,13 +8,13 @@
 package li.l1t.mtc.module.lanatus.shop.command;
 
 import li.l1t.common.chat.XyComponentBuilder;
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.product.Product;
 import li.l1t.lanatus.shop.api.Category;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.module.lanatus.shop.LanatusShopModule;
 import li.l1t.mtc.module.lanatus.shop.category.SqlCategory;
 import li.l1t.mtc.module.lanatus.shop.gui.ProductSelectionMenu;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-22-11
  */
-public class LanatusCategoryCommand extends BukkitExecutionExecutor {
+public class LanatusCategoryCommand extends MTCExecutionExecutor {
     private final LanatusShopModule module;
 
     public LanatusCategoryCommand(LanatusShopModule module) {
@@ -40,7 +40,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasNoArgs() || exec.arg(0).equalsIgnoreCase("help")) {
             respondUsage(exec);
             return true;
@@ -79,7 +79,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
                 .orElseThrow(() -> new UserException("Keine Kategorie mit der UUID %s gefunden.", categoryId));
     }
 
-    private boolean handleInfo(CommandExecution exec, Category category) {
+    private boolean handleInfo(BukkitExecution exec, Category category) {
         exec.respond(MessageType.HEADER, "Kategorieinfo");
         exec.respond(MessageType.RESULT_LINE, "Anzeigename: §s%s", category.getDisplayName());
         exec.respond(MessageType.RESULT_LINE, "Icon: §s%s", category.getIconName());
@@ -121,28 +121,28 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
                 .append("[aus Datenbank]", ChatColor.DARK_PURPLE).command("/lacat refresh").tooltip("§e§lAchtung: §eLeert Cache für alle Kategorien.");
     }
 
-    private boolean handleIcon(CommandExecution exec, Category category, String newIcon) {
+    private boolean handleIcon(BukkitExecution exec, Category category, String newIcon) {
         category.setIconName(newIcon);
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Icon erfolgreich gesetzt.");
         return true;
     }
 
-    private boolean handleDisplayName(CommandExecution exec, Category category, String newDisplayName) {
+    private boolean handleDisplayName(BukkitExecution exec, Category category, String newDisplayName) {
         category.setDisplayName(newDisplayName);
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Anzeigename erfolgreich gesetzt auf %s§p.", category.getDisplayName());
         return true;
     }
 
-    private boolean handleDescriptionSet(CommandExecution exec, Category category, String description) {
+    private boolean handleDescriptionSet(BukkitExecution exec, Category category, String description) {
         category.setDescription(description);
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Beschreibung erfolgreich überschrieben.");
         return true;
     }
 
-    private boolean handleDescriptionAdd(CommandExecution exec, Category category, String newLine) {
+    private boolean handleDescriptionAdd(BukkitExecution exec, Category category, String newLine) {
         String previousDescription = category.getDescription();
         String lineDelimiter = previousDescription == null || previousDescription.isEmpty() ? "" : "\n";
         category.setDescription(previousDescription + lineDelimiter + newLine);
@@ -151,7 +151,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleList(CommandExecution exec, String filter) {
+    private boolean handleList(BukkitExecution exec, String filter) {
         Collection<Category> categories = module.categories().findAll().stream()
                 .filter(categoryMatches(filter.toLowerCase()))
                 .collect(Collectors.toList());
@@ -160,7 +160,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void showCategoryListItem(CommandExecution exec, Category category) {
+    private void showCategoryListItem(BukkitExecution exec, Category category) {
         exec.respond(
                 resultLineBuilder()
                         .append(ChatColor.stripColor(category.getDisplayName()), ChatColor.YELLOW)
@@ -176,7 +176,7 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
                 cat.getUniqueId().toString().startsWith(filter);
     }
 
-    private boolean handleProductRemove(CommandExecution exec, Category category) {
+    private boolean handleProductRemove(BukkitExecution exec, Category category) {
         ProductSelectionMenu menu = ProductSelectionMenu.withoutParent(
                 category, productRemoveClickHandler(exec, category), exec.player(), module
         );
@@ -185,14 +185,14 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private BiConsumer<Product, ProductSelectionMenu> productRemoveClickHandler(CommandExecution exec, Category category) {
+    private BiConsumer<Product, ProductSelectionMenu> productRemoveClickHandler(BukkitExecution exec, Category category) {
         return (product, newMenu) -> {
             module.categories().dissociate(category, product);
             exec.respond(MessageType.RESULT_LINE_SUCCESS, "Produkt %s §paus der Kategorie %s §pentfernt.", product.getDisplayName(), category.getDisplayName());
         };
     }
 
-    private boolean handleProductAdd(CommandExecution exec, Category category) {
+    private boolean handleProductAdd(BukkitExecution exec, Category category) {
         ProductSelectionMenu menu = ProductSelectionMenu.withoutParent(
                 category, productAddClickHandler(exec, category), exec.player(), module
         );
@@ -209,14 +209,14 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
                 .collect(Collectors.toList());
     }
 
-    private BiConsumer<Product, ProductSelectionMenu> productAddClickHandler(CommandExecution exec, Category category) {
+    private BiConsumer<Product, ProductSelectionMenu> productAddClickHandler(BukkitExecution exec, Category category) {
         return (product, newMenu) -> {
             module.categories().associate(category, product);
             exec.respond(MessageType.RESULT_LINE_SUCCESS, "Produkt %s §pzur Kategorie %s §phinzugefügt.", product.getDisplayName(), category.getDisplayName());
         };
     }
 
-    private Category handleNew(CommandExecution exec, String displayName) {
+    private Category handleNew(BukkitExecution exec, String displayName) {
         SqlCategory category = new SqlCategory(UUID.randomUUID(), "dirt", displayName, "");
         module.categories().save(category);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Kategorie erstellt!");
@@ -224,13 +224,13 @@ public class LanatusCategoryCommand extends BukkitExecutionExecutor {
         return category;
     }
 
-    private boolean handleRefresh(CommandExecution exec) {
+    private boolean handleRefresh(BukkitExecution exec) {
         module.categories().clearCache();
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Globaler Kategoriencache geleert!");
         return true;
     }
 
-    private void respondUsage(CommandExecution exec) {
+    private void respondUsage(BukkitExecution exec) {
         exec.respondUsage("display", "<UUID> <Anzeigename>", "Setzt Anzeigenamen");
         exec.respondUsage("icon", "<UUID> <Iconname>", "Setzt Icon ('stained_clay:15')");
         exec.respondUsage("desc", "<UUID> <neue Beschreibung>", "Setzt die Beschreibung");

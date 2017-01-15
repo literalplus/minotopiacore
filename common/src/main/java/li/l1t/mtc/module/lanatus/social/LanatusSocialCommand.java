@@ -7,14 +7,14 @@
 
 package li.l1t.mtc.module.lanatus.social;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.LanatusClient;
 import li.l1t.lanatus.api.purchase.Purchase;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.module.lanatus.base.MTCLanatusClient;
 
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-13
  */
-public class LanatusSocialCommand extends BukkitExecutionExecutor {
+public class LanatusSocialCommand extends MTCExecutionExecutor {
     private final LanatusSocialModule module;
     private final LanatusClient lanatus;
 
@@ -36,7 +36,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "preview":
@@ -48,7 +48,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         return respondUsage(exec);
     }
 
-    private boolean handleShare(CommandExecution exec, UUID purchaseId) {
+    private boolean handleShare(BukkitExecution exec, UUID purchaseId) {
         checkIsShareable(purchaseId);
         Purchase purchase = lanatus.purchases().findById(purchaseId);
         module.getPlugin().getServer().broadcastMessage(formatShareMessage(exec, purchase));
@@ -56,7 +56,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handlePreview(CommandExecution exec, UUID purchaseId) {
+    private boolean handlePreview(BukkitExecution exec, UUID purchaseId) {
         checkIsShareable(purchaseId);
         Purchase purchase = lanatus.purchases().findById(purchaseId);
         exec.respond(MessageType.RESULT_LINE, "So würde die Nachricht aussehen:");
@@ -64,7 +64,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private String formatShareMessage(CommandExecution exec, Purchase purchase) {
+    private String formatShareMessage(BukkitExecution exec, Purchase purchase) {
         return module.getShareMessage()
                 .replaceAll("\\$player", exec.senderName())
                 .replaceAll("\\$product", purchase.getProduct().getDisplayName());
@@ -76,7 +76,7 @@ public class LanatusSocialCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private boolean respondUsage(CommandExecution exec) {
+    private boolean respondUsage(BukkitExecution exec) {
         exec.respondUsage("preview", "<Kauf-ID>", "Zeigt Vorschau der Nachricht");
         exec.respondUsage("share", "<Kauf-ID>", "Sendet Nachricht");
         return true;

@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.lanatus.base;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.lanatus.api.LanatusClient;
@@ -14,9 +15,8 @@ import li.l1t.lanatus.api.account.AccountSnapshot;
 import li.l1t.lanatus.api.account.LanatusAccount;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.scoreboard.CommonScoreboardProvider;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-27
  */
-class LanatusGiveCommand extends BukkitExecutionExecutor {
+class LanatusGiveCommand extends MTCExecutionExecutor {
     private final LanatusClient client;
     private final XLoginHook xLogin;
     private final Plugin plugin;
@@ -43,7 +43,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             XLoginHook.Profile profile = argumentProfile(exec.arg(0), exec);
             int melonAmount = exec.intArg(1);
@@ -54,7 +54,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private XLoginHook.Profile argumentProfile(String input, CommandExecution exec) {
+    private XLoginHook.Profile argumentProfile(String input, BukkitExecution exec) {
         return xLogin.findSingleMatchingProfileOrFail(
                 input, exec.sender(), profile -> String.format(
                         "/lagive %s %s", profile.getUniqueId(), exec.findArg(1).orElse("")
@@ -62,7 +62,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private void handleGiveMelons(CommandExecution exec, XLoginHook.Profile profile, int amount) {
+    private void handleGiveMelons(BukkitExecution exec, XLoginHook.Profile profile, int amount) {
         respondOperationStart(exec, profile, amount);
         LanatusAccount account = client.accounts().findOrDefault(profile.getUniqueId());
         checkTransactionPossible(amount, account);
@@ -81,7 +81,7 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void respondOperationStart(CommandExecution exec, XLoginHook.Profile profile, int amount) {
+    private void respondOperationStart(BukkitExecution exec, XLoginHook.Profile profile, int amount) {
         exec.respond(MessageType.RESULT_LINE, "Versuche, %s %d Melonen zu geben...",
                 profile.getName(), amount);
     }
@@ -96,20 +96,20 @@ class LanatusGiveCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private void tryModifyMelonsCount(CommandExecution exec, LanatusAccount account, int amount) {
+    private void tryModifyMelonsCount(BukkitExecution exec, LanatusAccount account, int amount) {
         client.creditMelons(account.getPlayerId())
                 .withComment(String.format("/lagive von %s (%s)", exec.senderName(), exec.senderId()))
                 .withMelonsCount(amount)
                 .build();
     }
 
-    private void respondSuccess(CommandExecution exec, XLoginHook.Profile profile) {
+    private void respondSuccess(BukkitExecution exec, XLoginHook.Profile profile) {
         AccountSnapshot remoteAccount = client.accounts().findOrDefault(profile.getUniqueId());
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Aktion erfolgreich! %s hat jetzt %d Melonen.",
                 profile.getName(), remoteAccount.getMelonsCount());
     }
 
-    private void showUsage(CommandExecution exec) {
+    private void showUsage(BukkitExecution exec) {
         exec.respondUsage("", "<Spieler|UUID> <Anzahl>", "Schenkt einem Spieler Melonen.");
     }
 }

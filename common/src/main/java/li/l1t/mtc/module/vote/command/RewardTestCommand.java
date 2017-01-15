@@ -7,12 +7,12 @@
 
 package li.l1t.mtc.module.vote.command;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfig;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
 import li.l1t.mtc.module.vote.service.VoteService;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-01-13
  */
-public class RewardTestCommand extends BukkitExecutionExecutor {
+public class RewardTestCommand extends MTCExecutionExecutor {
     private final RewardConfigs rewards;
     private final VoteService voteService;
 
@@ -36,7 +36,7 @@ public class RewardTestCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         String userName = exec.arg(0);
         String serviceName = exec.findArg(1).orElseGet(firstServiceName());
         voteService.handleVote(userName, serviceName);

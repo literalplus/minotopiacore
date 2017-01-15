@@ -7,14 +7,14 @@
 
 package li.l1t.mtc.module.nub.ui.text;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.common.util.StringHelper;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
 import li.l1t.mtc.api.module.inject.InjectMe;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.nub.LocalProtectionManager;
 import li.l1t.mtc.module.nub.NubConfig;
@@ -36,7 +36,7 @@ import java.util.UUID;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-09
  */
-public class NubCommand extends BukkitExecutionExecutor {
+public class NubCommand extends MTCExecutionExecutor {
     private final Map<UUID, String> pendingConfirmations = new HashMap<>();
     private final ProtectionService service;
     private final LocalProtectionManager manager;
@@ -54,7 +54,7 @@ public class NubCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (exec.hasArg(0)) {
             switch (exec.arg(0).toLowerCase()) {
                 case "status":
@@ -89,7 +89,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         );
     }
 
-    private boolean handleIntro(CommandExecution exec) {
+    private boolean handleIntro(BukkitExecution exec) {
         Integer minutesLeft = manager.getProtection(exec.senderId())
                 .map(NubProtection::getMinutesLeft)
                 .orElse(0);
@@ -97,7 +97,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleOutro(CommandExecution exec) {
+    private boolean handleOutro(BukkitExecution exec) {
         if (manager.hasProtection(exec.senderId())) {
             throw new UserException("Du bist noch geschützt. Du wirst das Outro sehen, sobald dein Schutz ausläuft.");
         }
@@ -105,7 +105,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleStatus(CommandExecution exec, UUID playerId) {
+    private boolean handleStatus(BukkitExecution exec, UUID playerId) {
         service.showProtectionStatusTo(exec.player(), playerId);
         if (exec.hasPermission(NubModule.ADMIN_PERMISSION)) {
             respondStatusActions(exec, playerId);
@@ -113,7 +113,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private void respondStatusActions(CommandExecution exec, UUID playerId) {
+    private void respondStatusActions(BukkitExecution exec, UUID playerId) {
         exec.respond(
                 resultLineBuilder().append("Aktionen: ")
                         .append("[Abbrechen] ", ChatColor.DARK_RED).hintedCommand("/nub ocancel " + playerId)
@@ -140,7 +140,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         }
     }
 
-    private boolean handleCancelOther(CommandExecution exec, UUID playerId) {
+    private boolean handleCancelOther(BukkitExecution exec, UUID playerId) {
         Player player = getPlayerOrFail(playerId);
         requireIsProtected(player, "Dieser Spieler ist nicht geschützt.");
         service.cancelProtection(player);
@@ -148,12 +148,12 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleCancelOwn(CommandExecution exec) {
+    private boolean handleCancelOwn(BukkitExecution exec) {
         requireIsProtected(exec.player(), "Du bist nicht durch N.u.b. geschützt.");
         return handleCancelInternal(exec, exec.player());
     }
 
-    private boolean handleCancelInternal(CommandExecution exec, Player player) {
+    private boolean handleCancelInternal(BukkitExecution exec, Player player) {
         if (!pendingConfirmations.containsKey(player.getUniqueId())) {
             exec.respond(MessageType.WARNING, "Wenn du fortfährst, wird dein N.u.b.-Schutz");
             exec.respond(MessageType.WARNING, "beendet! Das kann nicht rückgängig gemacht werden.");
@@ -181,14 +181,14 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean handleStart(CommandExecution exec, UUID playerId) {
+    private boolean handleStart(BukkitExecution exec, UUID playerId) {
         Player player = getPlayerOrFail(playerId);
         service.startProtection(player);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "%s ist jetzt geschützt.", player.getName());
         return true;
     }
 
-    private boolean handlePause(CommandExecution exec, UUID playerId) {
+    private boolean handlePause(BukkitExecution exec, UUID playerId) {
         requireIsProtected(playerId, "Dieser Spieler ist nicht geschützt.");
         Player player = getPlayerOrFail(playerId);
         service.pauseProtection(player);
@@ -196,7 +196,7 @@ public class NubCommand extends BukkitExecutionExecutor {
         return true;
     }
 
-    private boolean sendUsageTo(CommandExecution exec) {
+    private boolean sendUsageTo(BukkitExecution exec) {
         exec.respondUsage("status", "", "Zeigt den Status deines Schutzes");
         exec.respondUsage("cancel", "", "Bricht deinen Schutz permanent ab");
         exec.respondUsage("intro", "", "Zeigt das Intro nochmal");

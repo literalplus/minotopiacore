@@ -7,11 +7,11 @@
 
 package li.l1t.mtc.module.metrics;
 
+import li.l1t.common.command.BukkitExecution;
 import li.l1t.common.exception.InternalException;
 import li.l1t.common.exception.UserException;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.CommandExecution;
-import li.l1t.mtc.command.BukkitExecutionExecutor;
+import li.l1t.mtc.command.MTCExecutionExecutor;
 import org.bukkit.command.ConsoleCommandSender;
 
 /**
@@ -20,7 +20,7 @@ import org.bukkit.command.ConsoleCommandSender;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-21-11
  */
-public class StatsdTestCommand extends BukkitExecutionExecutor {
+public class StatsdTestCommand extends MTCExecutionExecutor {
     private final StatsdModule module;
 
     public StatsdTestCommand(StatsdModule module) {
@@ -28,7 +28,7 @@ public class StatsdTestCommand extends BukkitExecutionExecutor {
     }
 
     @Override
-    public boolean execute(CommandExecution exec) throws UserException, InternalException {
+    public boolean execute(BukkitExecution exec) throws UserException, InternalException {
         if (!(exec.sender() instanceof ConsoleCommandSender)) {
             throw new UserException("Dieser Befehl kann nur in der Konsole ausgeführt werden.");
         }
@@ -69,7 +69,7 @@ public class StatsdTestCommand extends BukkitExecutionExecutor {
         module.statsd().gauge(metric, value);
     }
 
-    private void respondUsage(CommandExecution exec) {
+    private void respondUsage(BukkitExecution exec) {
         exec.respondUsage("", "<metric> <(int) value>", "Sends a test metric of type counter");
         exec.respondUsage("", "<metric> <(int) value> [type]", "Sends a test metric of a type");
         exec.respond(MessageType.RESULT_LINE, "c=counter, g=gauge");

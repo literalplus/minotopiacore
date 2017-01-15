@@ -9,8 +9,9 @@ package li.l1t.mtc.command;
 
 import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.cmd.XYCCommandExecutor;
+import li.l1t.common.command.ExecutionExecutor;
+import li.l1t.common.command.SimpleBukkitExecution;
 import li.l1t.mtc.api.chat.MessageType;
-import li.l1t.mtc.api.command.ExecutionExecutor;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,10 +24,10 @@ import org.bukkit.command.CommandSender;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-10-26
  */
-public abstract class BukkitExecutionExecutor extends XYCCommandExecutor implements ExecutionExecutor {
+public abstract class MTCExecutionExecutor extends XYCCommandExecutor implements ExecutionExecutor {
     @Override
     public boolean catchCommand(CommandSender sender, String senderName, Command cmd, String label, String[] args) {
-        return execute(new SimpleCommandExecution(sender, cmd, label, args));
+        return execute(new SimpleBukkitExecution(sender, cmd, label, args));
     }
 
     /**

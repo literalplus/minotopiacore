@@ -11,6 +11,7 @@ import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.misc.HelpManager;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.StringHelper;
+import li.l1t.common.util.inventory.InventoryHelper;
 import li.l1t.mtc.MTC;
 import li.l1t.mtc.chat.MTCChatHelper;
 import li.l1t.mtc.clan.ClanHelper;
@@ -142,7 +143,7 @@ public final class CommandMTC extends MTCCommandExecutor {
                     if (CommandHelper.kickConsoleFromMethod(sender, label)) {
                         return true;
                     }
-                    CommandHelper.clearInv((Player) sender);
+                    InventoryHelper.clearInventory((Player) sender);
                     sender.sendMessage("§7Marcel Davis von 1&1 hat deine Items gegessen.");
                     return true;
                 case "sign":

@@ -6,7 +6,8 @@
   ~ or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mtc-parent</artifactId>
         <groupId>li.l1t.mtc</groupId>
@@ -24,6 +25,12 @@
         <dependency>
             <groupId>li.l1t.common</groupId>
             <artifactId>xyc-bukkit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>li.l1t.common</groupId>
+            <artifactId>lanatus-sql</artifactId>
+            <!-- Since XYC-API and XYC have different version numbers, we can't directly include the API without
+            manually having to adjust the XYC-API version on every update -->
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.api.chat;
 
+import li.l1t.common.chat.FormattedResponse;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
@@ -14,10 +15,10 @@ import org.bukkit.command.CommandSender;
  * Enumeration of standardised message types as outlined <a href="https://wiki.minotopia.me/w/Chatformat">in
  * the wiki</a>, providing easy format methods for each.
  *
- * @author <a href="http://xxyy.github.io/">xxyy</a>
+ * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-08-23
  */
-public enum MessageType {
+public enum MessageType implements FormattedResponse {
     WARNING("§e§lAchtung: §e%s"),
     USER_ERROR("§c§lFehler: §c%s"),
     INTERNAL_ERROR("§4§lInterner Fehler: §c%s"),
@@ -34,15 +35,7 @@ public enum MessageType {
         this.template = ChatConstants.convertCustomColorCodes(baseFormat);
     }
 
-    /**
-     * Formats a message of this type according to the type's template.
-     *
-     * @param message   the message to format, possibly {@link ChatConstants#convertCustomColorCodes(String)
-     *                  with custom color codes}, with arguments represented like in {@link
-     *                  String#format(String, Object...)}
-     * @param arguments the arguments for the message
-     * @return the formatted message
-     */
+    @Override
     public String format(String message, Object... arguments) {
         String fullPattern = ChatConstants.convertCustomColorCodes(
                 String.format(template, message)
@@ -50,27 +43,12 @@ public enum MessageType {
         return String.format(fullPattern, arguments);
     }
 
-    /**
-     * Formats a message of this type and sends the formatted message to a command sender.
-     *
-     * @param sender    the receiver of the message
-     * @param message   the message to format
-     * @param arguments the arguments for the message
-     * @see #format(String, Object...) for details on formatting
-     */
+    @Override
     public void sendTo(CommandSender sender, String message, Object... arguments) {
         sender.sendMessage(format(message, arguments));
     }
 
-    /**
-     * Formats a message of this type and sends the formatted message to all players on given
-     * server.
-     *
-     * @param server    the server to get players from
-     * @param message   the message to format
-     * @param arguments the arguments for the message
-     * @see #format(String, Object...) for details on formatting
-     */
+    @Override
     public void broadcast(Server server, String message, Object... arguments) {
         String finalMessage = format(message, arguments);
         server.getOnlinePlayers().forEach(player -> player.sendMessage(finalMessage));
