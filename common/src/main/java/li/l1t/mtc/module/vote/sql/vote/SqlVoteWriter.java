@@ -27,15 +27,18 @@ class SqlVoteWriter extends AbstractSqlConnected {
 
     public void save(Vote vote) {
         Preconditions.checkNotNull(vote, "vote");
-        insertOrUpdate(vote.getUniqueId(), vote.getPlayerId(), vote.getServiceName(), vote.getStreakLength());
+        insertOrUpdate(
+                vote.getUniqueId(), vote.getPlayerId(), vote.getServiceName(),
+                vote.getUserName(), vote.getStreakLength()
+        );
     }
 
-    private void insertOrUpdate(UUID voteId, UUID playerId, String serviceName, int streakLength) {
+    private void insertOrUpdate(UUID voteId, UUID playerId, String serviceName, String userName, int streakLength) {
         String playerIdString = playerId == null ? null : playerId.toString();
         sql().updateRaw(
                 buildInsert(),
                 voteId.toString(), playerIdString,
-                serviceName, streakLength,
+                userName, serviceName, streakLength,
                 playerIdString
         );
     }
