@@ -8,6 +8,9 @@
 package li.l1t.mtc.module.vote.reward;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
+import li.l1t.common.util.config.HashMapConfig;
+import li.l1t.common.util.config.MapConfig;
 import li.l1t.common.util.inventory.ItemStackFactory;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.module.vote.api.Vote;
@@ -19,9 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A reward that adds items to the player's inventory when applied.
@@ -31,31 +34,23 @@ import java.util.Map;
  */
 @SerializableAs("mtc.vote.item")
 public class ItemReward implements ConfigurationSerializable, Reward {
-    private static final String REWARDS_PATH = "rewards";
-    private final List<ItemStack> rewards;
+    private static final String ITEMS_PATH = "items";
+    private final List<ItemStack> items;
 
-    public ItemReward(List<ItemStack> rewards) {
-        this.rewards = rewards;
+    public ItemReward(List<ItemStack> items) {
+        this.items = items;
     }
 
     public ItemReward(Map<String, Object> source) {
-        this.rewards = castToItemStackList(source.get(REWARDS_PATH), "rewards");
-    }
-
-    @SuppressWarnings({"unchecked", "SameParameterValue"})
-    private List<ItemStack> castToItemStackList(Object obj, String description) {
-        Preconditions.checkNotNull(obj, description);
-        Preconditions.checkArgument(obj instanceof List, "%s must be a list, is: %s", description, obj);
-        boolean hasOnlyItemStackValues = ((List) obj).stream().allMatch(i -> i instanceof ItemStack);
-        Preconditions.checkArgument(hasOnlyItemStackValues, "%s may only contain item stacks: %s", description, obj);
-        return (List<ItemStack>) obj;
+        MapConfig config = HashMapConfig.of(source);
+        this.items = config.getCollection(ITEMS_PATH, ItemStack.class, Collectors.toList());
     }
 
     @Override
     public void apply(Player player, Vote vote) {
         Preconditions.checkNotNull(player, "player");
         Preconditions.checkNotNull(vote, "vote");
-        rewards.stream()
+        items.stream()
                 .map(reward -> copyAndReplaceMacros(player, vote, reward))
                 .map(reward -> player.getInventory().addItem(reward))
                 .map(Map::values).flatMap(Collection::stream)
@@ -77,8 +72,8 @@ public class ItemReward implements ConfigurationSerializable, Reward {
 
     @Override
     public Map<String, Object> serialize() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put(REWARDS_PATH, rewards);
-        return result;
+        return ImmutableMap.<String, Object>builder()
+                .put(ITEMS_PATH, items)
+                .build();
     }
 }
