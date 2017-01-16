@@ -12,6 +12,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
+import li.l1t.mtc.module.vote.command.RewardTestCommand;
 import li.l1t.mtc.module.vote.listener.QueueJoinListener;
 import li.l1t.mtc.module.vote.listener.VoteListener;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
@@ -44,6 +45,7 @@ public class VoteModule extends ConfigurableMTCModule {
         super.enable(plugin);
         registerListener(inject(VoteListener.class));
         registerListener(inject(QueueJoinListener.class));
+        registerCommand(inject(RewardTestCommand.class), "rwtest");
     }
 
     @Override
