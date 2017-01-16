@@ -60,7 +60,7 @@ public class QueuedVoteFetcher extends AbstractJdbcFetcher<UUID> {
 
     private String buildInnerJoinSelect(String whereClause) {
         return buildSelect(
-                "INNER JOIN " + SqlVoteRepository.TABLE_NAME + " v" +
+                "INNER JOIN " + SqlVoteRepository.TABLE_NAME + " v " +
                         "ON v.id = vote_id " + whereClause
         );
     }
