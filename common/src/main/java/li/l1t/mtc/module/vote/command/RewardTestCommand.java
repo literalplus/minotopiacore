@@ -37,6 +37,13 @@ public class RewardTestCommand extends MTCExecutionExecutor {
 
     @Override
     public boolean execute(BukkitExecution exec) throws UserException, InternalException {
+        if (exec.hasNoArgs()) {
+            exec.respondUsage("", "<Spieler> [Service]", "Gibt testweise die Votebelohnung aus.");
+            exec.respond(MessageType.RESULT_LINE, "Wenn kein Service angegeben wird, wird irgendeiner verwendet," +
+                    " für den Belohnungen konfiguriert sind.");
+            return true;
+        }
+
         String userName = exec.arg(0);
         String serviceName = exec.findArg(1).orElseGet(firstServiceName());
         voteService.handleVote(userName, serviceName);
@@ -51,6 +58,6 @@ public class RewardTestCommand extends MTCExecutionExecutor {
         return () -> rewards.configs()
                 .findFirst()
                 .map(RewardConfig::getServiceName)
-                .orElseThrow(() -> new UserException("Es gibt keine Belohnungen."));
+                .orElseThrow(() -> new UserException("Es gibt keine Belohnungen. Gib explizit einen Servicenamen an."));
     }
 }
