@@ -32,7 +32,7 @@ public class VoteModule extends ConfigurableMTCModule {
     @InjectMe
     protected VoteModule(MTCPlugin plugin, SaneSql sql, RewardConfigs rewardConfigs,
                          SqlVoteQueue voteQueue, SqlVoteRepository voteRepository) {
-        super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD);
+        super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD, false);
         this.rewardConfigs = rewardConfigs;
         this.voteQueue = voteQueue;
         this.voteRepository = voteRepository;
