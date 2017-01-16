@@ -35,7 +35,7 @@ public class QueuedVoteFetcher extends AbstractJdbcFetcher<UUID> {
 
     public Collection<UUID> findByUsername(String username) {
         ImmutableList.Builder<UUID> votes = ImmutableList.builder();
-        try (QueryResult result = selectByUserName()) {
+        try (QueryResult result = selectByUserName(username)) {
             while (result.rs().next()) {
                 votes.add(creator.createFromCurrentRow(result.rs()));
             }
@@ -45,8 +45,8 @@ public class QueuedVoteFetcher extends AbstractJdbcFetcher<UUID> {
         return votes.build();
     }
 
-    private QueryResult selectByUserName() {
-        return sql().query(buildInnerJoinSelect("WHERE v.username LIKE ?"));
+    private QueryResult selectByUserName(String username) {
+        return sql().query(buildInnerJoinSelect("WHERE v.username LIKE ?"), username);
     }
 
     public void purgeVotesOlderThan(Duration duration) {
