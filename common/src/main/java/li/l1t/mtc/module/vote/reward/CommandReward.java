@@ -25,7 +25,7 @@ import java.util.Map;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-01-10
  */
-@SerializableAs("mtc.vote.reward.command")
+@SerializableAs("mtc.vote.command")
 public class CommandReward implements ConfigurationSerializable, Reward {
     public static final String COMMAND_PATH = "command";
     private final String rawCommand;

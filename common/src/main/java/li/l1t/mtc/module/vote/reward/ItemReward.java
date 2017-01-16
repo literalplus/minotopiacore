@@ -29,7 +29,7 @@ import java.util.Map;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2016-12-29
  */
-@SerializableAs("mtc.vote.reward.item")
+@SerializableAs("mtc.vote.item")
 public class ItemReward implements ConfigurationSerializable, Reward {
     private static final String REWARDS_PATH = "rewards";
     private final List<ItemStack> rewards;
