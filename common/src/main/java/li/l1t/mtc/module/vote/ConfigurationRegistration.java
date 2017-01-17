@@ -8,6 +8,7 @@
 package li.l1t.mtc.module.vote;
 
 import com.google.common.collect.ImmutableList;
+import li.l1t.mtc.module.vote.reward.BroadcastReward;
 import li.l1t.mtc.module.vote.reward.CommandReward;
 import li.l1t.mtc.module.vote.reward.ItemReward;
 import li.l1t.mtc.module.vote.reward.MessageReward;
@@ -26,7 +27,7 @@ class ConfigurationRegistration {
         ImmutableList.of(
                 CommandReward.class, ItemReward.class, StreakCompoundReward.class, WeekdayCompoundReward.class,
                 RandomCompoundReward.class, AllOfCompoundReward.class, WeightedRewardWrapper.class,
-                MessageReward.class
+                MessageReward.class, BroadcastReward.class
         ).forEach(ConfigurationSerialization::registerClass);
         ConfigurationSerialization.registerClass(ItemStack.class, "mtc.itemstack");
     }
