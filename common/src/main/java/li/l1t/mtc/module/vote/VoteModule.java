@@ -19,6 +19,8 @@ import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
 import li.l1t.mtc.module.vote.sql.queue.SqlVoteQueue;
 import li.l1t.mtc.module.vote.sql.vote.SqlVoteRepository;
 
+import java.time.Duration;
+
 /**
  * Main entry point for the Vote module which listens for votes and dispatches rewards.
  *
@@ -46,6 +48,12 @@ public class VoteModule extends ConfigurableMTCModule {
         registerListener(inject(VoteListener.class));
         registerListener(inject(QueueJoinListener.class));
         registerCommand(inject(RewardTestCommand.class), "rwtest");
+    }
+
+    @Override
+    public void clearCache(boolean forced, MTCPlugin plugin) {
+        //RewardConfigs is registered in the ManagedConfiguration constructor
+        voteQueue.purgeVotesOlderThan(Duration.ofDays(14L));
     }
 
     @Override
