@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-01-12
  */
-@SerializableAs("mtc.vote.weighted-single")
+@SerializableAs("mtc.vote.rsub")
 public class WeightedRewardWrapper extends AbstractCompoundReward {
     private static final String WEIGHT_PATH = "weight";
     private static final String REWARDS_PATH = "reward";
