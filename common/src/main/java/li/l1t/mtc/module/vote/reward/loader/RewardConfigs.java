@@ -79,7 +79,7 @@ public class RewardConfigs implements Cache {
                 config = attemptLoadBackupConfig(serviceName);
             }
             if(config != null) {
-                config.trySave();
+                //config.trySave(); // <-- removes comments, which is not acceptable; disabled for now
                 serviceConfigs.put(serviceName, config);
             }
         }
