@@ -95,6 +95,7 @@ public class VoteService {
                 .map(votes::findVoteById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .peek(voteQueue::deleteVoteFromQueue)
                 .forEach(resultConsumer);
     }
 }

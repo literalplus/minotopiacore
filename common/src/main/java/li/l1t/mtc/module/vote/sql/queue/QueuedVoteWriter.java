@@ -26,4 +26,8 @@ public class QueuedVoteWriter extends AbstractSqlConnected {
     public void writeQueuedVote(UUID voteId) {
         sql().updateRaw("INSERT INTO " + SqlVoteQueue.TABLE_NAME + " SET vote_id=?", voteId.toString());
     }
+
+    public void deleteQueuedVote(UUID voteId) {
+        sql().updateRaw("DELETE FROM "+SqlVoteQueue.TABLE_NAME+" WHERE vote_id=?", voteId.toString());
+    }
 }

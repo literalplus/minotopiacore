@@ -23,5 +23,7 @@ public interface VoteQueue {
 
     Collection<UUID> findQueuedVotes(String userName);
 
+    void deleteVoteFromQueue(Vote vote);
+
     void purgeVotesOlderThan(Duration duration);
 }

@@ -46,6 +46,11 @@ public class SqlVoteQueue extends AbstractSqlConnected implements VoteQueue {
     }
 
     @Override
+    public void deleteVoteFromQueue(Vote vote) {
+        writer.deleteQueuedVote(vote.getUniqueId());
+    }
+
+    @Override
     public void purgeVotesOlderThan(Duration duration) {
         fetcher.purgeVotesOlderThan(duration);
     }
