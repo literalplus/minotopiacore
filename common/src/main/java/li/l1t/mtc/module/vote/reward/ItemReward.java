@@ -55,7 +55,7 @@ public class ItemReward implements ConfigurationSerializable, Reward {
                 .map(reward -> player.getInventory().addItem(reward))
                 .map(Map::values).flatMap(Collection::stream)
                 .map(String::valueOf)
-                .forEach(item -> MessageType.WARNING.sendTo(player, "Du konntest %s nicht erhalten, da dein Inventar voll ist!"));
+                .forEach(item -> MessageType.WARNING.sendTo(player, "Du konntest %s nicht erhalten, da dein Inventar voll ist!", item));
     }
 
     private ItemStack copyAndReplaceMacros(Player player, Vote vote, ItemStack stack) {
