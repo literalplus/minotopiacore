@@ -36,8 +36,8 @@ public class StreakCompoundReward extends AbstractCompoundReward {
 
     public StreakCompoundReward(Map<String, Object> source) {
         MapConfig config = HashMapConfig.of(source);
-        moduloBase = config.findTyped(MODULO_BASE_PATH, int.class)
-                .orElseThrow(() -> new UserException("Missing modulo-base for StreakCompoundReward"));
+        moduloBase = config.findTyped(MODULO_BASE_PATH, Number.class)
+                .orElseThrow(() -> new UserException("Missing modulo-base for StreakCompoundReward")).intValue();
         rewardMap = config.getMap(REWARDS_PATH, int.class, Reward.class);
     }
 
