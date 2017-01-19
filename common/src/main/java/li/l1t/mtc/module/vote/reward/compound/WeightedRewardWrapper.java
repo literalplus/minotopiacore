@@ -36,7 +36,7 @@ public class WeightedRewardWrapper extends AbstractCompoundReward {
 
     public WeightedRewardWrapper(Map<String, Object> source) {
         MapConfig config = HashMapConfig.of(source);
-        this.weight = config.findTyped(WEIGHT_PATH, double.class).orElse(1D);
+        this.weight = config.findTyped(WEIGHT_PATH, Number.class).orElse(1D).doubleValue();
         this.rewards = config.getCollection(REWARDS_PATH, Reward.class, Collectors.toList());
     }
 
