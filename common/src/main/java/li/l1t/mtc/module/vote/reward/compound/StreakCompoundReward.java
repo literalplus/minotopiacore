@@ -31,14 +31,14 @@ import java.util.stream.Stream;
 public class StreakCompoundReward extends AbstractCompoundReward {
     private static final String MODULO_BASE_PATH = "modulo-base";
     private static final String REWARDS_PATH = "rewards";
-    private final Map<Integer, Reward> rewardMap;
+    private final Map<Number, Reward> rewardMap;
     private final int moduloBase;
 
     public StreakCompoundReward(Map<String, Object> source) {
         MapConfig config = HashMapConfig.of(source);
         moduloBase = config.findTyped(MODULO_BASE_PATH, Number.class)
                 .orElseThrow(() -> new UserException("Missing modulo-base for StreakCompoundReward")).intValue();
-        rewardMap = config.getMap(REWARDS_PATH, int.class, Reward.class);
+        rewardMap = config.getMap(REWARDS_PATH, Number.class, Reward.class);
     }
 
     @Override
