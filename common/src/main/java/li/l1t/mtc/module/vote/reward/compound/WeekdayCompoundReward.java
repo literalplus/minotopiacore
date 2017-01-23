@@ -19,7 +19,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import java.time.DayOfWeek;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class WeekdayCompoundReward extends AbstractCompoundReward {
 
     @Override
     public Stream<Reward> findRewardsFor(Player player, Vote vote) {
-        Reward todaysReward = rewardMap.get(DayOfWeek.from(Instant.now()));
+        Reward todaysReward = rewardMap.get(DayOfWeek.from(LocalDateTime.now()));
         return Rewards.stream(player, vote, todaysReward);
     }
 
