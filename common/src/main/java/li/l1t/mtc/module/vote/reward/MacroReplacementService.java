@@ -43,7 +43,8 @@ public class MacroReplacementService {
             return input.replaceAll("\\$player", player.getName())
                     .replaceAll("\\$uuid", player.getUniqueId().toString())
                     .replaceAll("\\$weekday", getCurrentWeekDayNameInGerman())
-                    .replaceAll("\\$service", vote.getServiceName());
+                    .replaceAll("\\$service", vote.getServiceName())
+                    .replaceAll("\\$streak", String.valueOf(vote.getStreakLength()));
         }
     }
 
