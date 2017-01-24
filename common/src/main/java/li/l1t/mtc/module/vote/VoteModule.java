@@ -15,6 +15,8 @@ import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.vote.command.RewardTestCommand;
 import li.l1t.mtc.module.vote.listener.QueueJoinListener;
 import li.l1t.mtc.module.vote.listener.VoteListener;
+import li.l1t.mtc.module.vote.reminder.ReminderConfig;
+import li.l1t.mtc.module.vote.reminder.VoteReminderTask;
 import li.l1t.mtc.module.vote.reward.loader.RewardConfigs;
 import li.l1t.mtc.module.vote.sql.queue.SqlVoteQueue;
 import li.l1t.mtc.module.vote.sql.vote.SqlVoteRepository;
@@ -29,14 +31,16 @@ import java.time.Duration;
  */
 public class VoteModule extends ConfigurableMTCModule {
     private final RewardConfigs rewardConfigs;
+    private final ReminderConfig reminderConfig;
     private final SqlVoteQueue voteQueue;
     private final SqlVoteRepository voteRepository;
 
     @InjectMe
     protected VoteModule(MTCPlugin plugin, SaneSql sql, RewardConfigs rewardConfigs,
-                         SqlVoteQueue voteQueue, SqlVoteRepository voteRepository) {
+                         ReminderConfig reminderConfig, SqlVoteQueue voteQueue, SqlVoteRepository voteRepository) {
         super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD, false);
         this.rewardConfigs = rewardConfigs;
+        this.reminderConfig = reminderConfig;
         this.voteQueue = voteQueue;
         this.voteRepository = voteRepository;
         ConfigurationRegistration.registerAll();
@@ -48,6 +52,7 @@ public class VoteModule extends ConfigurableMTCModule {
         registerListener(inject(VoteListener.class));
         registerListener(inject(QueueJoinListener.class));
         registerCommand(inject(RewardTestCommand.class), "rwtest");
+        inject(VoteReminderTask.class).start();
     }
 
     @Override
@@ -59,6 +64,7 @@ public class VoteModule extends ConfigurableMTCModule {
     @Override
     protected void reloadImpl() {
         rewardConfigs.loadAll();
+        reminderConfig.load(configuration);
     }
 
     public SqlVoteQueue getVoteQueue() {
