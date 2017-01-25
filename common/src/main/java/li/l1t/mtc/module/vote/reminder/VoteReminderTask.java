@@ -18,6 +18,7 @@ import li.l1t.mtc.module.vote.sql.vote.SqlVoteRepository;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 /**
@@ -59,7 +60,7 @@ public class VoteReminderTask extends NonAsyncBukkitRunnable {
     }
 
     private boolean wasNotSubmittedToday(Vote vote) {
-        return !LocalDate.from(vote.getTimestamp()).equals(LocalDate.now());
+        return !LocalDate.from(vote.getTimestamp().atZone(ZoneId.systemDefault())).equals(LocalDate.now());
     }
 
     private void sendReminderMessage(Vote latestVote) {
