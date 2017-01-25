@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.vote.reward;
 
+import li.l1t.mtc.api.chat.ChatConstants;
 import li.l1t.mtc.module.vote.api.Vote;
 import org.bukkit.entity.Player;
 
@@ -40,11 +41,12 @@ public class MacroReplacementService {
         if (input == null) {
             return null;
         } else {
-            return input.replaceAll("\\$player", player.getName())
+            String result = input.replaceAll("\\$player", player.getName())
                     .replaceAll("\\$uuid", player.getUniqueId().toString())
                     .replaceAll("\\$weekday", getCurrentWeekDayNameInGerman())
                     .replaceAll("\\$service", vote.getServiceName())
                     .replaceAll("\\$streak", String.valueOf(vote.getStreakLength()));
+            return ChatConstants.convertCustomColorCodes(result);
         }
     }
 
