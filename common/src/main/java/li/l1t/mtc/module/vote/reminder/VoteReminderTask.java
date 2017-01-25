@@ -70,6 +70,6 @@ public class VoteReminderTask extends NonAsyncBukkitRunnable {
     }
 
     private boolean isCheckEnabled() {
-        return config.getCheckIntervalSeconds() < 0;
+        return config.getCheckIntervalSeconds() > 0;
     }
 }
