@@ -38,7 +38,7 @@ public class VoteModule extends ConfigurableMTCModule {
     @InjectMe
     protected VoteModule(MTCPlugin plugin, SaneSql sql, RewardConfigs rewardConfigs,
                          ReminderConfig reminderConfig, SqlVoteQueue voteQueue, SqlVoteRepository voteRepository) {
-        super("Vote", "modules/vote.cfg.yml", ClearCacheBehaviour.RELOAD, false);
+        super("Vote", "modules/vote/vote.cfg.yml", ClearCacheBehaviour.RELOAD, false);
         this.rewardConfigs = rewardConfigs;
         this.reminderConfig = reminderConfig;
         this.voteQueue = voteQueue;
@@ -66,7 +66,7 @@ public class VoteModule extends ConfigurableMTCModule {
         rewardConfigs.loadAll();
         reminderConfig.load(configuration);
         configuration.options().copyDefaults(true);
-        configuration.trySave();
+        save();
     }
 
     public SqlVoteQueue getVoteQueue() {
