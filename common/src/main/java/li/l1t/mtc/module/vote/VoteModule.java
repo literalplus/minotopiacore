@@ -65,6 +65,8 @@ public class VoteModule extends ConfigurableMTCModule {
     protected void reloadImpl() {
         rewardConfigs.loadAll();
         reminderConfig.load(configuration);
+        configuration.options().copyDefaults(true);
+        configuration.trySave();
     }
 
     public SqlVoteQueue getVoteQueue() {
