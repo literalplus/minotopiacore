@@ -40,7 +40,8 @@ public class VoteListener implements Listener {
 
     private void recordVoteToStatsd(String serviceName) {
         if(statsd != null) {
-            statsd.statsd().increment("mtc.vote.receive." + serviceName);
+            String sanitizedServiceName = serviceName.replace('.', '_');
+            statsd.statsd().increment("mtc.vote.receive." + sanitizedServiceName);
         }
     }
 }
