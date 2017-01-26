@@ -9,6 +9,7 @@ package li.l1t.mtc.module.vote.listener;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.metrics.StatsdModule;
 import li.l1t.mtc.module.vote.service.VoteService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +22,8 @@ import org.bukkit.event.Listener;
  */
 public class VoteListener implements Listener {
     private final VoteService voteService;
+    @InjectMe(required = false)
+    private StatsdModule statsd;
 
     @InjectMe
     public VoteListener(VoteService voteService) {
@@ -29,6 +32,15 @@ public class VoteListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onVote(VotifierEvent event) {
-        voteService.handleVote(event.getVote().getUsername(), event.getVote().getServiceName());
+        String serviceName = event.getVote().getServiceName();
+        String userName = event.getVote().getUsername();
+        voteService.handleVote(userName, serviceName);
+        recordVoteToStatsd(serviceName);
+    }
+
+    private void recordVoteToStatsd(String serviceName) {
+        if(statsd != null) {
+            statsd.statsd().increment("mtc.vote.receive." + serviceName);
+        }
     }
 }
