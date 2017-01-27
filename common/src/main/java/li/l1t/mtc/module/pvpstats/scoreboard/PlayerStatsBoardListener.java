@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -50,7 +50,7 @@ public class PlayerStatsBoardListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent evt) {
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin,
-                () -> scoreboard.justSetAll(evt.getPlayer())
+                () -> scoreboard.updateAll(evt.getPlayer())
         ); //May make a database call + ProtocolLib is async save
     }
 }
