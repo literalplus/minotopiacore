@@ -29,7 +29,7 @@ public class BoardUpdateTask extends ImprovedBukkitRunnable {
     }
 
     public void start(long period) {
-        runTaskTimerAsynchronously(plugin, 10L, period);
+        runTaskTimerAsynchronously(plugin, 20L, period);
     }
 
     public void restart(long newPeriod) {
