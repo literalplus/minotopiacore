@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -78,7 +78,7 @@ class AddAdminAction extends AbstractShopAction {
 
     @Override
     public void sendHelpLines(Player plr) {
-        sendHelpLine(plr, "<Parameter>", "Fügt Item in deiner Hand dem Shop hinzu");
+        sendHelpLine(plr, "<Parameter...>", "Fügt Item in deiner Hand dem Shop hinzu");
         sendHelpLine(plr, "", "Verwendet spezifischen Datenwert");
         sendHelpLine(plr, "wildcard", "Verwendet Item mit Wildcard-Datenwert");
     }
