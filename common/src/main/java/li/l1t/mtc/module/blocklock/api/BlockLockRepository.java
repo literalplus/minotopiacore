@@ -35,12 +35,13 @@ public interface BlockLockRepository {
      *
      * @param block   the block to lock
      * @param ownerId the unique id of the new owner of given block
-     * @throws DatabaseException if a database error occurs
+     * @throws DatabaseException     if a database error occurs
+     * @throws IllegalStateException if there is already a lock at given block
      */
     void lockBlock(Block block, UUID ownerId);
 
     /**
-     * Unlocks given block, if a lock is present.
+     * Unlocks given block, if a lock is present. If there is no lock present, no lock is created.
      *
      * @param block     the block to unlock
      * @param removerId the unique id of the player who unlocked given block
