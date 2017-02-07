@@ -59,7 +59,7 @@ public class RecordMetaModule extends MTCModuleAdapter {
         }
 
         private ItemStack removeMetaIfRecord(ItemStack inputStack) {
-            if (inputStack.getType().isRecord()) {
+            if (inputStack != null && inputStack.getType().isRecord()) {
                 inputStack.setItemMeta(null);
             }
             return inputStack;
