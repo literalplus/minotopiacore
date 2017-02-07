@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -11,6 +11,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import li.l1t.mtc.ConfigHelper;
 import li.l1t.mtc.MTC;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.helper.MTCHelper;
 import li.l1t.mtc.misc.AntiLogoutHandler;
 import org.bukkit.Bukkit;
@@ -121,5 +122,11 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             MTCHelper.sendLocArgs("XU-fightstart", target, true, enemy.getName());
         }
         playersInAFight.put(target.getUniqueId(), fightExpiry);
+        if (target.isFlying()) {
+            target.setFlying(false);
+            target.setFlySpeed(1F);
+            target.setAllowFlight(false);
+            MessageType.WARNING.sendTo(target, "Dein Flugmodus wurde beendet, da du jetzt in einem Kampf bist.");
+        }
     }
 }
