@@ -125,7 +125,6 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
         playersInAFight.put(target.getUniqueId(), fightExpiry);
         if (target.isFlying() && target.getGameMode() != GameMode.CREATIVE) {
             target.setFlying(false);
-            target.setFlySpeed(1F);
             target.setAllowFlight(false);
             MessageType.WARNING.sendTo(target, "Dein Flugmodus wurde beendet, da du jetzt in einem Kampf bist.");
         }
