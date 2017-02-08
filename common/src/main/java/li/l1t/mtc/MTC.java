@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,6 +7,7 @@
 
 package li.l1t.mtc;
 
+import com.google.common.base.Preconditions;
 import li.l1t.common.localisation.LangHelper;
 import li.l1t.common.localisation.XyLocalizable;
 import li.l1t.common.misc.HelpManager;
@@ -71,15 +72,9 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         initialise();
     }
 
-    private void initialise() {
-        //Must be here because command spy filters need the logging system before #enable()
-        LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
-    }
-
     /**
      * @return an instance of MTC. No guarantees are made as to which and if it's actually usable.
-     * @deprecated static `getInstance()` methods are a code smell and should not be used unless
-     * absolutely necessary
+     * @deprecated static `getInstance()` methods are a code smell and should not be used unless absolutely necessary
      */
     @Deprecated
     public static MTC instance() {
@@ -88,6 +83,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
 
     public static boolean isUseHologram() {
         return MTC.useHologram;
+    }
+
+    private void initialise() {
+        //Must be here because command spy filters need the logging system before #enable()
+        LogManager.setPlugin(this); // I don't like this either, but this enables us to specify static LOGGER fields
     }
     //Enabling the Plugin
 
@@ -391,5 +391,11 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
      */
     public Logger getLog() {
         return logger;
+    }
+
+    @Override
+    public void async(Runnable task) {
+        Preconditions.checkNotNull(task, "task");
+        getServer().getScheduler().runTaskAsynchronously(this, task);
     }
 }
