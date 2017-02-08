@@ -15,6 +15,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.helper.MTCHelper;
 import li.l1t.mtc.misc.AntiLogoutHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -122,7 +123,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
             MTCHelper.sendLocArgs("XU-fightstart", target, true, enemy.getName());
         }
         playersInAFight.put(target.getUniqueId(), fightExpiry);
-        if (target.isFlying()) {
+        if (target.isFlying() && target.getGameMode() != GameMode.CREATIVE) {
             target.setFlying(false);
             target.setFlySpeed(1F);
             target.setAllowFlight(false);
