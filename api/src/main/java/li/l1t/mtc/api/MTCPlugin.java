@@ -8,6 +8,7 @@
 package li.l1t.mtc.api;
 
 import li.l1t.common.sql.SpigotSql;
+import li.l1t.common.sql.sane.SqlConnected;
 import li.l1t.common.xyplugin.XyPluggable;
 import li.l1t.mtc.api.module.ModuleManager;
 import li.l1t.mtc.api.module.inject.Injectable;
@@ -19,7 +20,7 @@ import org.bukkit.plugin.Plugin;
  * @author <a href="http://xxyy.github.io/">xxyy</a>
  * @since 2015-12-30
  */
-public interface MTCPlugin extends Plugin, XyPluggable, Injectable {
+public interface MTCPlugin extends Plugin, XyPluggable, Injectable, SqlConnected {
 
     /**
      * @return the module manager used by this plugin
