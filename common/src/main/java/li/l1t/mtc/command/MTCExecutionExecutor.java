@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -11,8 +11,8 @@ import li.l1t.common.chat.XyComponentBuilder;
 import li.l1t.common.cmd.XYCCommandExecutor;
 import li.l1t.common.command.ExecutionExecutor;
 import li.l1t.common.command.SimpleBukkitExecution;
+import li.l1t.mtc.api.chat.ChatConstants;
 import li.l1t.mtc.api.chat.MessageType;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,8 +35,7 @@ public abstract class MTCExecutionExecutor extends XYCCommandExecutor implements
      * MessageType#RESULT_LINE}
      */
     protected XyComponentBuilder resultLineBuilder() {
-        return new XyComponentBuilder("➩", ChatColor.YELLOW).bold(true)
-                .append(" ", ChatColor.GOLD).bold(false);
+        return ChatConstants.resultLineBuilder();
     }
 
     /**
@@ -44,7 +43,6 @@ public abstract class MTCExecutionExecutor extends XYCCommandExecutor implements
      * MessageType#LIST_ITEM}
      */
     protected XyComponentBuilder listItemBuilder() {
-        return new XyComponentBuilder("-➩", ChatColor.YELLOW).bold(true)
-                .append(" ", ChatColor.GOLD).bold(false);
+        return ChatConstants.listItemBuilder();
     }
 }
