@@ -35,8 +35,8 @@ public interface BlockLockRepository {
      *
      * @param block   the block to lock
      * @param ownerId the unique id of the new owner of given block
-     * @throws DatabaseException     if a database error occurs
-     * @throws IllegalStateException if there is already a lock at given block
+     * @throws DatabaseException if a database error occurs
+     * @throws DatabaseException if there is already a lock at given block
      */
     void lockBlock(Block block, UUID ownerId);
 
@@ -48,4 +48,11 @@ public interface BlockLockRepository {
      * @throws DatabaseException if a database error occurs
      */
     void unlockBlock(Block block, UUID removerId);
+
+    /**
+     * Completely and permanently removes given lock from the database.
+     *
+     * @param lock the lock to delete
+     */
+    void deleteLock(BlockLock lock);
 }

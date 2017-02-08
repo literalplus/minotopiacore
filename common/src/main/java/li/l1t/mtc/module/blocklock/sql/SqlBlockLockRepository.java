@@ -7,11 +7,13 @@
 
 package li.l1t.mtc.module.blocklock.sql;
 
+import com.google.common.base.Preconditions;
 import li.l1t.common.misc.XyLocation;
-import li.l1t.common.util.LocationHelper;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.blocklock.api.BlockLock;
 import li.l1t.mtc.module.blocklock.api.BlockLockRepository;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -28,6 +30,7 @@ import java.util.UUID;
  */
 public class SqlBlockLockRepository implements BlockLockRepository {
     public static final String TABLE_NAME = "mt_main.mtc_block_lock";
+    private static final Logger LOGGER = LogManager.getLogger(SqlBlockLockRepository.class);
     private final JdbcBlockLockFetcher fetcher;
     private final JdbcBlockLockWriter writer;
 
@@ -46,9 +49,6 @@ public class SqlBlockLockRepository implements BlockLockRepository {
     @Override
     public void lockBlock(Block block, UUID ownerId) {
         Location location = block.getLocation();
-        if (fetcher.findByLocation(location).isPresent()) {
-            throw new IllegalStateException("block already locked at " + LocationHelper.prettyPrint(location));
-        }
         SqlBlockLock lock = new SqlBlockLock(
                 XyLocation.of(location), Instant.now(), block.getType(), ownerId, null, null
         );
@@ -62,5 +62,12 @@ public class SqlBlockLockRepository implements BlockLockRepository {
                     currentLock.markRemoved(removerId);
                     writer.update(currentLock);
                 });
+    }
+
+    @Override
+    public void deleteLock(BlockLock lock) {
+        Preconditions.checkNotNull(lock, "lock");
+        LOGGER.info("Deleting lock: {}", lock);
+        writer.delete(lock);
     }
 }

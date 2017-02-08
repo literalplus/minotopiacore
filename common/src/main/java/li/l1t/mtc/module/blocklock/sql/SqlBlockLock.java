@@ -78,4 +78,16 @@ class SqlBlockLock implements BlockLock {
     public boolean hasBeenRemoved() {
         return removerId != null || removalInstant != null;
     }
+
+    @Override
+    public String toString() {
+        return "SqlBlockLock{" +
+                "location=" + location +
+                ", creationInstant=" + creationInstant +
+                ", type=" + type +
+                ", ownerId=" + ownerId +
+                ", removalInstant=" + removalInstant +
+                ", removerId=" + removerId +
+                '}';
+    }
 }
