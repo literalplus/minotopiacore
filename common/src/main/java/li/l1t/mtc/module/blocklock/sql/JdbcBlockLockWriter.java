@@ -38,7 +38,7 @@ class JdbcBlockLockWriter extends AbstractSqlConnected {
         XyLocation loc = lock.getLocation();
         sql().updateRaw(
                 "INSERT INTO " + SqlBlockLockRepository.TABLE_NAME + " SET " +
-                        "x=?, y=?, z=?, world=?, type=?, creatoruuid=?, removaldate=?, removedby=?",
+                        "x=?, y=?, z=?, world=?, type=?, creatoruuid=?, removaldate=?, removeruuid=?",
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName(),
                 lock.getType().name(), lock.getOwnerId().toString(), lock.getRemovalInstant().orElse(null),
                 lock.getRemoverId().toString()
@@ -49,7 +49,7 @@ class JdbcBlockLockWriter extends AbstractSqlConnected {
         XyLocation loc = lock.getLocation();
         sql().updateRaw(
                 "UPDATE " + SqlBlockLockRepository.TABLE_NAME + " SET " +
-                        "x=?, y=?, z=?, world=?, type=?, creatoruuid=?, removaldate=?, removedby=? " +
+                        "x=?, y=?, z=?, world=?, type=?, creatoruuid=?, removaldate=?, removeruuid=? " +
                         "WHERE x=? AND y=? AND z=? AND world=?",
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName(),
                 lock.getType().name(), lock.getOwnerId().toString(), lock.getRemovalInstant().orElse(null),

@@ -39,7 +39,7 @@ class JdbcBlockLockCreator extends AbstractJdbcEntityCreator<SqlBlockLock> {
         return new SqlBlockLock(
                 location(rs), rs.getTimestamp("creationdate").toInstant(),
                 material(rs.getString("type")), uuid(rs, "creatoruuid"),
-                instantOrNull(rs, "removaldate"), uuid(rs, "removedby")
+                instantOrNull(rs, "removaldate"), uuid(rs, "removeruuid")
         );
     }
 
