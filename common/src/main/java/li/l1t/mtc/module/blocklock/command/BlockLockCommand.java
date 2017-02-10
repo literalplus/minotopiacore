@@ -42,6 +42,7 @@ public class BlockLockCommand extends MTCExecutionExecutor {
                     lockService.destroyLockAndReturn(location.getBlock(), exec.player());
                     return true;
                 case "tool":
+                    exec.requirePermission(BlockLockModule.INFO_PERMISSION);
                     exec.player().getInventory().addItem(
                             new ItemStackFactory(BlockLockModule.TOOL_TYPE)
                                     .displayName(BlockLockModule.TOOL_DISPLAY_NAME)
@@ -52,6 +53,7 @@ public class BlockLockCommand extends MTCExecutionExecutor {
                     return true;
             }
         }
+        exec.respondUsage("tool", "", "Gibt dir das Inspeaktionstool.");
         return true;
     }
 }
