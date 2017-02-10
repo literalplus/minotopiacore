@@ -36,6 +36,16 @@ public interface MTCPlugin extends Plugin, XyPluggable, Injectable, SqlConnected
      * Convenience shorthand for scheduling an asynchronous task with the server's scheduler for immediate execution.
      *
      * @param task the task to execute
+     * @see #serverThread(Runnable) (Runnable) for scheduling in the server thread
      */
     void async(Runnable task);
+
+    /**
+     * Convenience shorthand for scheduling an task with the server's scheduler for immediate execution in the server
+     * thread.
+     *
+     * @param task the task to execute
+     * @see #async(Runnable) for async scheduling
+     */
+    void serverThread(Runnable task);
 }

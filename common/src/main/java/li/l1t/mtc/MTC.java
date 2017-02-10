@@ -398,4 +398,10 @@ public class MTC extends SqlXyPlugin implements XyLocalizable, MTCPlugin {
         Preconditions.checkNotNull(task, "task");
         getServer().getScheduler().runTaskAsynchronously(this, task);
     }
+
+    @Override
+    public void serverThread(Runnable task) {
+        Preconditions.checkNotNull(task, "task");
+        getServer().getScheduler().runTask(this, task);
+    }
 }
