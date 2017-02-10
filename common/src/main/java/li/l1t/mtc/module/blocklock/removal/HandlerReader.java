@@ -33,8 +33,9 @@ public class HandlerReader {
     private VaultHook vaultHook;
 
     public List<RemovalHandler> readHandlers(ConfigurationSection section, String key) {
+        //noinspection unchecked
         return section.getList(key, Collections.emptyList()).stream()
-                .map(Map.class::cast)
+                .map(obj -> (Map<String, Object>) obj)
                 .map(HashMapConfig::of)
                 .map(this::tryInstantiateHandler)
                 .filter(Optional::isPresent)
