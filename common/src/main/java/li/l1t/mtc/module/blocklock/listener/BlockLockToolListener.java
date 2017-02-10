@@ -7,6 +7,8 @@
 
 package li.l1t.mtc.module.blocklock.listener;
 
+import li.l1t.mtc.api.MTCPlugin;
+import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.blocklock.BlockLockModule;
 import li.l1t.mtc.module.blocklock.service.BlockLockService;
 import org.bukkit.event.EventHandler;
@@ -22,9 +24,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public class BlockLockToolListener implements Listener {
     private final BlockLockService lockService;
+    private final MTCPlugin plugin;
 
-    public BlockLockToolListener(BlockLockService lockService) {
+    @InjectMe
+    public BlockLockToolListener(BlockLockService lockService, MTCPlugin plugin) {
         this.lockService = lockService;
+        this.plugin = plugin;
     }
 
     @EventHandler
@@ -33,7 +38,7 @@ public class BlockLockToolListener implements Listener {
             return;
         }
         event.setCancelled(true);
-        lockService.sendLockStatusTo(event.getClickedBlock(), event.getPlayer());
+        plugin.async(() -> lockService.sendLockStatusTo(event.getClickedBlock(), event.getPlayer()));
     }
 
     private boolean isNotABlockLockTool(ItemStack item) {
