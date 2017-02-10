@@ -78,21 +78,49 @@ public class BlockLockService {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(player, "player");
         Optional<BlockLock> lock = findLock(block);
-        Material material = block.getType();
         if (!lock.isPresent()) {
             throw new UserException("Dieser Block ist nicht geschützt: " + block);
         } else {
-            if (!mayRemoveLock(player, lock.get())) {
-                throw new UserException("Diesen Block darfst du nicht zerstören.");
-            } else if (lock.get().hasBeenRemoved()) {
-                throw new UserException("Dieser Block wurde bereits zerstört.");
-            }
-            locks.unlockBlock(block, player.getUniqueId());
-            player.getInventory().addItem(new ItemStack(material));
+            removeLockIfPossible(block, player, lock.get());
         }
+    }
+
+    private void removeLockIfPossible(Block block, Player player, BlockLock lock) {
+        if (!mayRemoveLock(player, lock)) {
+            throw new UserException("Diesen Block darfst du nicht zerstören.");
+        } else if (lock.hasBeenRemoved()) {
+            throw new UserException("Dieser Block wurde bereits zerstört.");
+        } else {
+            boolean refundAllowed = handlersAllowRefund(lock, player);
+            doRemoveLock(block, player);
+            if (refundAllowed) {
+                doRefundBlockAndNotify(block, player, lock);
+            } else {
+                notifyNoRefunds(player);
+            }
+        }
+    }
+
+    private boolean handlersAllowRefund(BlockLock lock, Player player) {
+        return config.getRemovalHandlersFor(lock.getType()).stream()
+                .map(handler -> handler.onRemove(lock, player))
+                .reduce(true, (a, b) -> a && b);
+    }
+
+    private void doRemoveLock(Block block, Player player) {
+        locks.unlockBlock(block, player.getUniqueId());
+        block.setType(Material.AIR, false);
+    }
+
+    private void doRefundBlockAndNotify(Block block, Player player, BlockLock lock) {
+        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(lock.getType()));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
-                "Der Block wurde erfolgreich entfernt. Du hast %s zurückerhalten.",
-                material);
+                "Der Block wurde erfolgreich entfernt. Du hast ihn zurückerhalten.");
+    }
+
+    private void notifyNoRefunds(Player player) {
+        MessageType.RESULT_LINE.sendTo(player,
+                "Der Block wurde erfolgreich entfernt. Du hast ihn nicht zurückerhalten.");
     }
 
     public void sendLockStatusTo(Block block, CommandSender sender) {

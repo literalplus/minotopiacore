@@ -7,13 +7,13 @@
 
 package li.l1t.mtc.module.blocklock;
 
+import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.blocklock.removal.HandlerReader;
+import li.l1t.mtc.module.blocklock.removal.RemovalHandler;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 import org.bukkit.Material;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Manages access to the block lock configuration file.
@@ -23,7 +23,14 @@ import java.util.Set;
  */
 public class BlockLockConfig {
     private static final String TARGET_MATERIALS_PATH = "target-materials";
+    private final HandlerReader handlerReader;
     private Set<Material> targetMaterials = new HashSet<>();
+    private Map<Material, List<RemovalHandler>> materialRemovalHandlers = new HashMap<>();
+
+    @InjectMe
+    public BlockLockConfig(HandlerReader handlerReader) {
+        this.handlerReader = handlerReader;
+    }
 
     public void loadFrom(ManagedConfiguration configuration) {
         registerDefaults(configuration);
@@ -32,6 +39,12 @@ public class BlockLockConfig {
                 .map(Material::matchMaterial)
                 .filter(Objects::nonNull)
                 .forEach(targetMaterials::add);
+        materialRemovalHandlers.clear();
+        targetMaterials.forEach(material -> readAndRegisterHandlerFor(material, configuration));
+    }
+
+    private List<RemovalHandler> readAndRegisterHandlerFor(Material material, ManagedConfiguration configuration) {
+        return materialRemovalHandlers.put(material, handlerReader.readHandlers(configuration, material.name()));
     }
 
     private void registerDefaults(ManagedConfiguration configuration) {
@@ -45,5 +58,9 @@ public class BlockLockConfig {
 
     public boolean isTargetedMaterial(Material material) {
         return targetMaterials.contains(material);
+    }
+
+    public List<RemovalHandler> getRemovalHandlersFor(Material material) {
+        return materialRemovalHandlers.getOrDefault(material, Collections.emptyList());
     }
 }
