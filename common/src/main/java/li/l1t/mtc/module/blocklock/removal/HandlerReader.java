@@ -11,11 +11,14 @@ import li.l1t.common.util.config.HashMapConfig;
 import li.l1t.common.util.config.MapConfig;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.hook.VaultHook;
+import li.l1t.mtc.logging.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
  * @since 2017-02-10
  */
 public class HandlerReader {
+    private static final Logger LOGGER = LogManager.getLogger(HandlerReader.class);
     @InjectMe(required = false)
     private VaultHook vaultHook;
 
@@ -32,8 +36,19 @@ public class HandlerReader {
         return section.getList(key, Collections.emptyList()).stream()
                 .map(Map.class::cast)
                 .map(HashMapConfig::of)
-                .map(this::instantiateHandler)
+                .map(this::tryInstantiateHandler)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private Optional<RemovalHandler> tryInstantiateHandler(MapConfig config) {
+        try {
+            return Optional.of(instantiateHandler(config));
+        } catch (HandlerConfigException e) {
+            LOGGER.warn("Unable to read a removal handler: ", e);
+            return Optional.empty();
+        }
     }
 
     private RemovalHandler instantiateHandler(MapConfig config) {
