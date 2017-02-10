@@ -12,6 +12,7 @@ import li.l1t.mtc.module.blocklock.removal.HandlerReader;
 import li.l1t.mtc.module.blocklock.removal.RemovalHandler;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.*;
 
@@ -40,11 +41,23 @@ public class BlockLockConfig {
                 .filter(Objects::nonNull)
                 .forEach(targetMaterials::add);
         materialRemovalHandlers.clear();
-        targetMaterials.forEach(material -> readAndRegisterHandlerFor(material, configuration));
+        ConfigurationSection section = getOrCreateSection("removal-handlers", configuration);
+        targetMaterials.forEach(material -> {
+            readAndRegisterHandlerFor(material, section);
+        });
     }
 
-    private List<RemovalHandler> readAndRegisterHandlerFor(Material material, ManagedConfiguration configuration) {
-        return materialRemovalHandlers.put(material, handlerReader.readHandlers(configuration, material.name()));
+    private ConfigurationSection getOrCreateSection(String path, ConfigurationSection root) {
+        ConfigurationSection section = root.getConfigurationSection(path);
+        if (section == null) {
+            return root.createSection(path);
+        } else {
+            return section;
+        }
+    }
+
+    private List<RemovalHandler> readAndRegisterHandlerFor(Material material, ConfigurationSection section) {
+        return materialRemovalHandlers.put(material, handlerReader.readHandlers(section, material.name()));
     }
 
     private void registerDefaults(ManagedConfiguration configuration) {
