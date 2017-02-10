@@ -113,7 +113,13 @@ public class BlockLockService {
     }
 
     private void doRefundBlockAndNotify(Block block, Player player, BlockLock lock) {
-        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(lock.getType()));
+        if (lock.getType() != block.getType()) {
+            MessageType.WARNING.sendTo(player, "Dieser Block wurde als %s platziert, ist jetzt aber %s. " +
+                            "Daher hast du ihn nicht zurückerhalten.",
+                    lock.getType(), block.getType());
+            return;
+        }
+        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType()));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Der Block wurde erfolgreich entfernt. Du hast ihn zurückerhalten.");
     }
