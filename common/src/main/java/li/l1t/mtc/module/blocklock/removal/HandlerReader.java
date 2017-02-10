@@ -50,8 +50,8 @@ public class HandlerReader {
 
     private RandomChanceHandler instantiateRandomChanceHandler(MapConfig config) {
         return new RandomChanceHandler(
-                config.findTyped("percent-chance", Number.class).map(Number::intValue)
-                        .orElseThrow(() -> new HandlerConfigException("Random chance handler needs percent-chance!"))
+                config.findTyped("droprate", Number.class).map(Number::intValue)
+                        .orElseThrow(() -> new HandlerConfigException("Random chance handler needs droprate!"))
         );
     }
 

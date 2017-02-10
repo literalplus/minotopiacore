@@ -19,18 +19,18 @@ import org.bukkit.entity.Player;
  * @since 2017-02-08
  */
 public class RandomChanceHandler implements RemovalHandler {
-    private final int percentChance;
+    private final int dropRate;
 
-    public RandomChanceHandler(int percentChance) {
-        if (percentChance < 0 || percentChance > 100) {
-            throw new HandlerConfigException("RandomChanceHandler chance must be between 0 and 100");
+    public RandomChanceHandler(int dropRate) {
+        if (dropRate < 0 || dropRate > 100) {
+            throw new HandlerConfigException("RandomChanceHandler droprate must be between 0 and 100");
         }
-        this.percentChance = percentChance;
+        this.dropRate = dropRate;
     }
 
     @Override
     public boolean onRemove(BlockLock lock, Player player) {
-        if (RandomUtils.nextInt(0, 100) > percentChance) {
+        if (RandomUtils.nextInt(0, 100) < dropRate) {
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Du hast Glück gehabt!");
             return true;
         } else {
