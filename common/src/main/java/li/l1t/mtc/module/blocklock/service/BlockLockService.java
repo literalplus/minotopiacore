@@ -93,7 +93,7 @@ public class BlockLockService {
         } else {
             boolean refundAllowed = handlersAllowRefund(lock, player);
             doRemoveLock(block, player);
-            if (refundAllowed) {
+            if (refundAllowed || player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
                 doRefundBlockAndNotify(block, player, lock);
             } else {
                 notifyNoRefunds(player);
@@ -175,6 +175,8 @@ public class BlockLockService {
                             .append("[zerstören]").hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
                     sender
             );
+            config.getRemovalHandlersFor(lock.getType())
+                    .forEach(handler -> handler.describeTo(sender));
         }
     }
 
