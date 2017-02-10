@@ -9,6 +9,7 @@ package li.l1t.mtc.module.blocklock.removal;
 
 import li.l1t.common.exception.NonSensitiveException;
 import li.l1t.mtc.module.blocklock.api.BlockLock;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -27,4 +28,12 @@ public interface RemovalHandler {
      * @throws NonSensitiveException if the removal should not occur
      */
     boolean onRemove(BlockLock lock, Player player);
+
+    /**
+     * Describes the effect of this handler to a command sender, so that they may consider whether they actually want to
+     * destroy the block.
+     *
+     * @param sender the sender to describe this handler to
+     */
+    void describeTo(CommandSender sender);
 }

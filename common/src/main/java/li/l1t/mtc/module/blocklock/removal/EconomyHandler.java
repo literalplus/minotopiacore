@@ -12,6 +12,7 @@ import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.hook.VaultHook;
 import li.l1t.mtc.module.blocklock.api.BlockLock;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -39,5 +40,10 @@ public class EconomyHandler implements RemovalHandler {
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "%d MineCoins wurden von deinem Konto abgebucht.", removalCost);
         return true;
+    }
+
+    @Override
+    public void describeTo(CommandSender sender) {
+        MessageType.RESULT_LINE.sendTo(sender, "Das Entfernen dieses Blocks kostet %d MineCoins.", removalCost);
     }
 }

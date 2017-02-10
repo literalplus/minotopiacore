@@ -10,6 +10,7 @@ package li.l1t.mtc.module.blocklock.removal;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.module.blocklock.api.BlockLock;
 import org.apache.commons.lang3.RandomUtils;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -38,5 +39,12 @@ public class RandomChanceHandler implements RemovalHandler {
                     "Versuche es bei der nächsten Staffel erneut.");
             return false;
         }
+    }
+
+    @Override
+    public void describeTo(CommandSender sender) {
+        MessageType.RESULT_LINE.sendTo(sender,
+                "Du erhältst den Block mit einer %d%%igen Wahrscheinlichkeit zurück.",
+                dropRate);
     }
 }
