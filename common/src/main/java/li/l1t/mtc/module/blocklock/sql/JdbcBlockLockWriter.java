@@ -41,7 +41,7 @@ class JdbcBlockLockWriter extends AbstractSqlConnected {
                         "x=?, y=?, z=?, world=?, type=?, creatoruuid=?, removaldate=?, removeruuid=?",
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName(),
                 lock.getType().name(), lock.getOwnerId().toString(), lock.getRemovalInstant().orElse(null),
-                lock.getRemoverId().toString()
+                lock.getRemoverId().orElse(null)
         );
     }
 
@@ -53,7 +53,7 @@ class JdbcBlockLockWriter extends AbstractSqlConnected {
                         "WHERE x=? AND y=? AND z=? AND world=?",
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName(),
                 lock.getType().name(), lock.getOwnerId().toString(), lock.getRemovalInstant().orElse(null),
-                lock.getRemoverId().toString(),
+                lock.getRemoverId().orElse(null),
                 loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName()
         );
     }
