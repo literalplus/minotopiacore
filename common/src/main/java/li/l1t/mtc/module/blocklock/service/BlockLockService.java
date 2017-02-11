@@ -91,14 +91,28 @@ public class BlockLockService {
         } else if (lock.hasBeenRemoved()) {
             throw new UserException("Dieser Block wurde bereits zerstört.");
         } else {
-            boolean refundAllowed = handlersAllowRefund(lock, player);
-            doRemoveLock(block, player);
-            if (refundAllowed || player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
-                doRefundBlockAndNotify(block, player, lock);
-            } else {
-                notifyNoRefunds(player);
-            }
+            removeLockAndRefundIfAllowed(block, player, lock);
         }
+    }
+
+    private void removeLockAndRefundIfAllowed(Block block, Player player, BlockLock lock) {
+        boolean refundAllowed = isRefundAllowed(block, player, lock);
+        doRemoveLock(block, player);
+        if (refundAllowed || player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
+            doRefundBlockAndNotify(block, player, lock);
+        } else {
+            notifyNoRefunds(player);
+        }
+    }
+
+    private boolean isRefundAllowed(Block block, Player player, BlockLock lock) {
+        if (lock.getType() != block.getType()) {
+            MessageType.WARNING.sendTo(player, "Dieser Block wurde als %s platziert, ist jetzt aber %s. " +
+                            "Daher kannst du ihn nicht zurückerhalten.",
+                    lock.getType(), block.getType());
+            return false;
+        }
+        return handlersAllowRefund(lock, player);
     }
 
     private boolean handlersAllowRefund(BlockLock lock, Player player) {
@@ -113,12 +127,6 @@ public class BlockLockService {
     }
 
     private void doRefundBlockAndNotify(Block block, Player player, BlockLock lock) {
-        if (lock.getType() != block.getType()) {
-            MessageType.WARNING.sendTo(player, "Dieser Block wurde als %s platziert, ist jetzt aber %s. " +
-                            "Daher hast du ihn nicht zurückerhalten.",
-                    lock.getType(), block.getType());
-            return;
-        }
         block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType()));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Der Block wurde erfolgreich entfernt. Du hast ihn zurückerhalten.");
