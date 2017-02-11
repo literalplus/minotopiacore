@@ -172,7 +172,8 @@ public class BlockLockService {
             ComponentSender.sendTo(
                     ChatConstants.resultLineBuilder()
                             .append("Du kannst diesen Block entfernen: ", ChatColor.GOLD)
-                            .append("[zerstören]").hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
+                            .append("[zerstören]", ChatColor.DARK_RED)
+                            .hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
                     sender
             );
             config.getRemovalHandlersFor(lock.getType())
