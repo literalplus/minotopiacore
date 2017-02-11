@@ -141,7 +141,7 @@ public class BlockLockService {
     public void sendLockStatusTo(Block block, CommandSender sender) {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(sender, "sender");
-        Optional<BlockLock> lockOptional = findLock(block);
+        Optional<BlockLock> lockOptional = locks.findLockAt(block.getLocation());
         if (lockOptional.isPresent()) {
             BlockLock lock = lockOptional.get();
             if (maySeeInformation(sender, lock)) {
