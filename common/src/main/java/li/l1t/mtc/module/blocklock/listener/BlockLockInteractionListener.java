@@ -44,6 +44,6 @@ public class BlockLockInteractionListener implements Listener {
     private boolean isIrrelevant(PlayerInteractEvent event) {
         return event.getAction() != Action.LEFT_CLICK_BLOCK ||
                 event.getClickedBlock() == null ||
-                lockService.isLockable(event.getClickedBlock());
+                !lockService.isLockable(event.getClickedBlock());
     }
 }
