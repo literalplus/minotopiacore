@@ -44,6 +44,6 @@ public class EconomyHandler implements RemovalHandler {
 
     @Override
     public void describeTo(CommandSender sender) {
-        MessageType.RESULT_LINE.sendTo(sender, "Das Entfernen dieses Blocks kostet %d MineCoins.", removalCost);
+        MessageType.RESULT_LINE.sendTo(sender, "Das Entfernen dieses Blocks kostet %f MineCoins.", removalCost);
     }
 }

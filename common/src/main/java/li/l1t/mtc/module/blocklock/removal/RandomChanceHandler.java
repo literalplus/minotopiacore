@@ -44,7 +44,7 @@ public class RandomChanceHandler implements RemovalHandler {
     @Override
     public void describeTo(CommandSender sender) {
         MessageType.RESULT_LINE.sendTo(sender,
-                "Du erhältst den Block mit einer %d%%igen Wahrscheinlichkeit zurück.",
+                "Du erhältst den Block mit %d%%iger Wahrscheinlichkeit zurück.",
                 dropRate);
     }
 }
