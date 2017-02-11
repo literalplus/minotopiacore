@@ -96,10 +96,11 @@ public class BlockLockService {
     }
 
     private void removeLockAndRefundIfAllowed(Block block, Player player, BlockLock lock) {
+        Material previousMaterial = block.getType();
         boolean refundAllowed = isRefundAllowed(block, player, lock);
         doRemoveLock(block, player);
         if (refundAllowed || player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
-            doRefundBlockAndNotify(block, player, lock);
+            doRefundBlockAndNotify(block, player, previousMaterial);
         } else {
             notifyNoRefunds(player);
         }
@@ -126,8 +127,8 @@ public class BlockLockService {
         block.setType(Material.AIR, false);
     }
 
-    private void doRefundBlockAndNotify(Block block, Player player, BlockLock lock) {
-        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType()));
+    private void doRefundBlockAndNotify(Block block, Player player, Material dropMaterial) {
+        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Der Block wurde erfolgreich entfernt. Du hast ihn zurückerhalten.");
     }
