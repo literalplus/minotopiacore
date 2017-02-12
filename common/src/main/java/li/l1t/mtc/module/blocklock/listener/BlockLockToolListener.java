@@ -11,6 +11,7 @@ import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.blocklock.BlockLockModule;
 import li.l1t.mtc.module.blocklock.service.BlockLockService;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -38,7 +39,8 @@ public class BlockLockToolListener implements Listener {
             return;
         }
         event.setCancelled(true);
-        plugin.async(() -> lockService.sendLockStatusTo(event.getClickedBlock(), event.getPlayer()));
+        Block placedBlock = event.getClickedBlock().getRelative(event.getBlockFace());
+        plugin.async(() -> lockService.sendLockStatusTo(placedBlock, event.getPlayer()));
     }
 
     private boolean isNotABlockLockTool(ItemStack item) {
