@@ -34,7 +34,7 @@ public class EconomyHandler implements RemovalHandler {
     public boolean onRemove(BlockLock lock, Player player) {
         EconomyResponse response = vaultHook.withdrawPlayer(player, removalCost);
         if (!response.transactionSuccess()) {
-            throw new UserException("Das Entfernen von Blöcken dieser Art kostet %d MineCoins. " +
+            throw new UserException("Das Entfernen von Blöcken dieser Art kostet %.0f MineCoins. " +
                     "Das kannst du dir leider nicht leisten.", removalCost);
         }
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
@@ -44,6 +44,6 @@ public class EconomyHandler implements RemovalHandler {
 
     @Override
     public void describeTo(CommandSender sender) {
-        MessageType.RESULT_LINE.sendTo(sender, "Das Entfernen dieses Blocks kostet %f MineCoins.", removalCost);
+        MessageType.RESULT_LINE.sendTo(sender, "Das Entfernen dieses Blocks kostet %.0f MineCoins.", removalCost);
     }
 }
