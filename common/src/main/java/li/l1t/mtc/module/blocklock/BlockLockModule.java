@@ -13,7 +13,7 @@ import li.l1t.mtc.misc.ClearCacheBehaviour;
 import li.l1t.mtc.module.ConfigurableMTCModule;
 import li.l1t.mtc.module.blocklock.command.BlockLockCommand;
 import li.l1t.mtc.module.blocklock.listener.BlockLockInteractionListener;
-import li.l1t.mtc.module.blocklock.listener.BlockLockPlaceListener;
+import li.l1t.mtc.module.blocklock.listener.BlockLockPlaceBreakListener;
 import li.l1t.mtc.module.blocklock.listener.BlockLockToolListener;
 import org.bukkit.Material;
 
@@ -41,7 +41,7 @@ public class BlockLockModule extends ConfigurableMTCModule {
         super.enable(plugin);
         registerCommand(inject(BlockLockCommand.class), "bl");
         registerListener(inject(BlockLockInteractionListener.class));
-        registerListener(inject(BlockLockPlaceListener.class));
+        registerListener(inject(BlockLockPlaceBreakListener.class));
         registerListener(inject(BlockLockToolListener.class));
     }
 

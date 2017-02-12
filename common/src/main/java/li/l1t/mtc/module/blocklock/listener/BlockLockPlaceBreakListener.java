@@ -7,6 +7,7 @@
 
 package li.l1t.mtc.module.blocklock.listener;
 
+import li.l1t.common.exception.NonSensitiveException;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
@@ -15,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 /**
@@ -23,12 +25,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
  * @author <a href="https://l1t.li/">Literallie</a>
  * @since 2017-02-08
  */
-public class BlockLockPlaceListener implements Listener {
+public class BlockLockPlaceBreakListener implements Listener {
     private final BlockLockService lockService;
     private final MTCPlugin plugin;
 
     @InjectMe
-    public BlockLockPlaceListener(BlockLockService lockService, MTCPlugin plugin) {
+    public BlockLockPlaceBreakListener(BlockLockService lockService, MTCPlugin plugin) {
         this.lockService = lockService;
         this.plugin = plugin;
     }
@@ -42,6 +44,21 @@ public class BlockLockPlaceListener implements Listener {
                 lockService.addLockTo(placedBlock, player);
                 MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                         "Dieser Block ist geschützt. Du kannst ihn später zerstören.");
+            });
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if (lockService.isLockable(block)) {
+            plugin.async(() -> {
+                try {
+                    lockService.destroyLockAndReturn(block, player);
+                } catch (NonSensitiveException e) {
+                    player.sendMessage(e.getColoredMessage());
+                }
             });
         }
     }
