@@ -41,7 +41,7 @@ public class BlockLockPlaceListener implements Listener {
             plugin.async(() -> {
                 lockService.addLockTo(placedBlock, player);
                 MessageType.RESULT_LINE_SUCCESS.sendTo(player,
-                        "Dieser Block ist jetzt geschützt. Nur du kannst ihn zerstören.");
+                        "Dieser Block ist geschützt. Du kannst ihn später zerstören.");
             });
         }
     }
