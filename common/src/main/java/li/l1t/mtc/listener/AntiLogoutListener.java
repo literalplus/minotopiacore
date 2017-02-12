@@ -24,7 +24,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.SimpleDateFormat;
@@ -57,8 +56,7 @@ public final class AntiLogoutListener implements Listener, AntiLogoutHandler {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onTp(PlayerTeleportEvent e) {
-        if (!isFighting(e.getPlayer().getUniqueId()) ||
-                e.getCause() != TeleportCause.ENDER_PEARL) {
+        if (!isFighting(e.getPlayer().getUniqueId())) {
             return;
         }
         MTCHelper.sendLoc("XU-fighttp", e.getPlayer(), true);
