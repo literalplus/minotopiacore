@@ -38,7 +38,7 @@ public class EconomyHandler implements RemovalHandler {
                     "Das kannst du dir leider nicht leisten.", removalCost);
         }
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
-                "%d MineCoins wurden von deinem Konto abgebucht.", removalCost);
+                "%.0f MineCoins wurden von deinem Konto abgebucht.", removalCost);
         return true;
     }
 
