@@ -195,9 +195,9 @@ public class BlockLockService {
 
     private void sendRestrictedLockInfoTo(CommandSender sender, BlockLock lock) {
         if (lock.hasBeenRemoved()) {
-            MessageType.RESULT_LINE.sendTo(sender, "Hier war einmal ein geschützter Block.");
+            MessageType.RESULT_LINE.sendTo(sender, "Was hier früher war, konntest du nicht abbauen.");
         } else {
-            MessageType.RESULT_LINE.sendTo(sender, "Dieser Block ist geschützt.");
+            MessageType.RESULT_LINE.sendTo(sender, "Du kannst diesen Block nicht abbauen.");
         }
     }
 
