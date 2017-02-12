@@ -114,7 +114,7 @@ public class BlockLockService {
             return false;
         } else if (player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
             MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Aufgrund deiner internationalen konspirativen " +
-                    "Beziehungen bekommst du diesen Block nicht erstattet. (§s%s§p)", BlockLockModule.ADMIN_PERMISSION);
+                    "Beziehungen bekommst du diesen Block nicht erstattet. (§p%s§s)", BlockLockModule.ADMIN_PERMISSION);
             return false;
         }
         return handlersAllowRefund(lock, player);
