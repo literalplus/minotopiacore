@@ -179,7 +179,6 @@ public class BlockLockService {
                     lock.getRemoverId().map(xLogin::getDisplayString).orElse("niemandem"),
                     lock.getRemovalInstant().orElse(null));
         } else {
-            MessageType.RESULT_LINE.sendTo(sender, "Der Block dürfte noch existieren.");
             if (mayRemoveLock(sender, lock)) {
                 ComponentSender.sendTo(
                         ChatConstants.resultLineBuilder()
