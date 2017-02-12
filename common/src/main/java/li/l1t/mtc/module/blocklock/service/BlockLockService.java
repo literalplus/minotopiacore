@@ -180,17 +180,17 @@ public class BlockLockService {
                     lock.getRemovalInstant().orElse(null));
         } else {
             MessageType.RESULT_LINE.sendTo(sender, "Der Block dürfte noch existieren.");
-        }
-        if (mayRemoveLock(sender, lock)) {
-            ComponentSender.sendTo(
-                    ChatConstants.resultLineBuilder()
-                            .append("Du kannst diesen Block entfernen: ", ChatColor.GOLD)
-                            .append("[zerstören]", ChatColor.DARK_RED)
-                            .hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
-                    sender
-            );
-            config.getRemovalHandlersFor(lock.getType())
-                    .forEach(handler -> handler.describeTo(sender));
+            if (mayRemoveLock(sender, lock)) {
+                ComponentSender.sendTo(
+                        ChatConstants.resultLineBuilder()
+                                .append("Du kannst diesen Block entfernen: ", ChatColor.GOLD)
+                                .append("[zerstören]", ChatColor.DARK_RED)
+                                .hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
+                        sender
+                );
+                config.getRemovalHandlersFor(lock.getType())
+                        .forEach(handler -> handler.describeTo(sender));
+            }
         }
     }
 
