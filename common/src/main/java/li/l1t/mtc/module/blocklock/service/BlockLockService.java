@@ -99,7 +99,7 @@ public class BlockLockService {
         Material previousMaterial = block.getType();
         boolean refundAllowed = isRefundAllowed(block, player, lock);
         doRemoveLock(block, player);
-        if (refundAllowed || player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
+        if (refundAllowed) {
             doRefundBlockAndNotify(block, player, previousMaterial);
         } else {
             notifyNoRefunds(player);
@@ -111,6 +111,10 @@ public class BlockLockService {
             MessageType.WARNING.sendTo(player, "Dieser Block wurde als %s platziert, ist jetzt aber %s. " +
                             "Daher kannst du ihn nicht zurückerhalten.",
                     lock.getType(), block.getType());
+            return false;
+        } else if (player.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
+            MessageType.RESULT_LINE_SUCCESS.sendTo(player, "Aufgrund deiner internationalen konspirativen " +
+                    "Beziehungen bekommst du diesen Block nicht erstattet. (§s%s§p)", BlockLockModule.ADMIN_PERMISSION);
             return false;
         }
         return handlersAllowRefund(lock, player);
