@@ -119,7 +119,7 @@ public class BlockLockService {
     private boolean handlersAllowRefund(BlockLock lock, Player player) {
         return config.getRemovalHandlersFor(lock.getType()).stream()
                 .map(handler -> handler.onRemove(lock, player))
-                .reduce(true, (a, b) -> a && b);
+                .allMatch(Boolean.TRUE::equals);
     }
 
     private void doRemoveLock(Block block, Player player) {
