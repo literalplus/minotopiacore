@@ -40,14 +40,14 @@ public class VoteReminderTask extends NonAsyncBukkitRunnable {
     }
 
     public void start() {
-        if(isCheckEnabled()) {
+        if (isCheckEnabled()) {
             runTaskTimer(plugin, config.getCheckIntervalTicks());
         }
     }
 
     @Override
     public void run() {
-        if(isCheckEnabled()) {
+        if (isCheckEnabled()) {
             plugin.getServer().getOnlinePlayers().stream()
                     .map(Player::getUniqueId)
                     .map(votes::findLatestVoteByPlayer)
@@ -60,7 +60,11 @@ public class VoteReminderTask extends NonAsyncBukkitRunnable {
     }
 
     private boolean wasNotSubmittedToday(Vote vote) {
-        return !LocalDate.from(vote.getTimestamp().atZone(ZoneId.systemDefault())).equals(LocalDate.now());
+        return !voteDay(vote).equals(LocalDate.now());
+    }
+
+    private LocalDate voteDay(Vote vote) {
+        return LocalDate.from(vote.getTimestamp().atZone(ZoneId.systemDefault()));
     }
 
     private void sendReminderMessage(Vote latestVote) {
