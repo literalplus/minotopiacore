@@ -190,7 +190,7 @@ public class BlockLockService {
                                 .hintedCommand("/bl destroy " + lock.getLocation().serializeToString()),
                         sender
                 );
-                if (sender.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
+                if (!sender.hasPermission(BlockLockModule.ADMIN_PERMISSION)) {
                     config.getRemovalHandlersFor(lock.getType())
                             .forEach(handler -> handler.describeTo(sender));
                 }
