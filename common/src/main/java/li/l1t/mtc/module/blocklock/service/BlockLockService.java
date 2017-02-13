@@ -19,6 +19,7 @@ import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.logging.LogManager;
 import li.l1t.mtc.module.blocklock.BlockLockConfig;
 import li.l1t.mtc.module.blocklock.BlockLockModule;
+import li.l1t.mtc.module.blocklock.NotLockedException;
 import li.l1t.mtc.module.blocklock.api.BlockLock;
 import li.l1t.mtc.module.blocklock.api.BlockLockRepository;
 import li.l1t.mtc.module.blocklock.sql.SqlBlockLockRepository;
@@ -79,7 +80,7 @@ public class BlockLockService {
         Preconditions.checkNotNull(player, "player");
         Optional<BlockLock> lock = findLock(block);
         if (!lock.isPresent()) {
-            throw new UserException("Dieser Block ist nicht geschützt: " + block);
+            throw new NotLockedException(block);
         } else {
             removeLockIfPossible(block, player, lock.get());
         }
