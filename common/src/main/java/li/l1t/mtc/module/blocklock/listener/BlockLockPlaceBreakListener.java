@@ -11,10 +11,13 @@ import li.l1t.common.exception.NonSensitiveException;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.api.module.inject.InjectMe;
+import li.l1t.mtc.module.blocklock.NotLockedException;
 import li.l1t.mtc.module.blocklock.service.BlockLockService;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -48,14 +51,22 @@ public class BlockLockPlaceBreakListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
+        /*
+        Needs to be on HIGHEST to catch cancellations at lower priorities - we can't reliably catch cancellations
+        of same-priority listeners though, because we need to cancel the event ourselves in order to perform the
+        lock check async.
+         */
         Block block = event.getBlock();
         Player player = event.getPlayer();
         if (lockService.isLockable(block)) {
+            event.setCancelled(true);
             plugin.async(() -> {
                 try {
                     lockService.destroyLockAndReturn(block, player);
+                } catch (NotLockedException e) {
+                    block.setType(Material.AIR, true);
                 } catch (NonSensitiveException e) {
                     player.sendMessage(e.getColoredMessage());
                 }
