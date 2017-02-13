@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -10,11 +10,12 @@ package li.l1t.mtc.module.shop.ui.inventory;
 import com.google.common.base.Preconditions;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.common.util.inventory.ItemStackFactory;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.hook.VaultHook;
-import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ShopModule;
 import li.l1t.mtc.module.shop.ShopPriceCalculator;
 import li.l1t.mtc.module.shop.TransactionType;
+import li.l1t.mtc.module.shop.api.ShopItem;
 import li.l1t.mtc.module.shop.ui.inventory.button.BackToListButton;
 import li.l1t.mtc.module.shop.ui.inventory.button.GenericButton;
 import li.l1t.mtc.module.shop.ui.inventory.button.OpenSellMenuButton;
@@ -47,6 +48,20 @@ public class ShopDetailMenu extends ShopMenu {
         this.item = item;
         initTopRow();
         renderCanvas();
+    }
+
+    /**
+     * Opens a new shop detail menu for a given player.
+     *
+     * @param player the player to open the menu for
+     * @param module the shop module managing the menu
+     * @param item   the item to show details for
+     * @return the created menu
+     */
+    public static ShopDetailMenu openMenu(Player player, ShopModule module, ShopItem item) {
+        ShopDetailMenu menu = new ShopDetailMenu(player, module, item);
+        menu.open();
+        return menu;
     }
 
     private void initTopRow() {
@@ -96,7 +111,7 @@ public class ShopDetailMenu extends ShopMenu {
 
     private void renderCanvasForNonBuyableItem() {
         getInventory().setItem(2 * ROW_SIZE + 4, new ItemStackFactory(Material.BARRIER)
-                .lore("§cDieses Item kann nicht gekauft werden!")
+                .lore("§cDieses Item kann nicht gekauft werden.")
                 .produce()
         );
     }
@@ -108,6 +123,10 @@ public class ShopDetailMenu extends ShopMenu {
 
     @Override
     protected void handleCanvasClick(InventoryClickEvent evt, int canvasId) {
+        if (!item.canBeBought()) {
+            MessageType.USER_ERROR.sendTo(getPlayer(), "Dieses Item kann nicht gekauft werden.");
+            return;
+        }
         int row = Math.floorDiv(canvasId, ROW_SIZE);
         int column = canvasId % ROW_SIZE;
         int amount = ITEM_AMOUNT_ROWS[row][column];
@@ -128,20 +147,6 @@ public class ShopDetailMenu extends ShopMenu {
      */
     public ShopItem getItem() {
         return item;
-    }
-
-    /**
-     * Opens a new shop detail menu for a given player.
-     *
-     * @param player the player to open the menu for
-     * @param module the shop module managing the menu
-     * @param item   the item to show details for
-     * @return the created menu
-     */
-    public static ShopDetailMenu openMenu(Player player, ShopModule module, ShopItem item) {
-        ShopDetailMenu menu = new ShopDetailMenu(player, module, item);
-        menu.open();
-        return menu;
     }
 
     private ItemStack createIconStack(int amount, double totalPrice) {
