@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 /**
  * Listens for interactions on locked blocks and blocks them.
@@ -49,7 +50,7 @@ public class BlockLockInteractionListener implements Listener {
     }
 
     private boolean isRelevantClick(PlayerInteractEvent event) {
-        return event.getAction() == Action.RIGHT_CLICK_BLOCK ||
+        return (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) ||
                 (event.getAction() == Action.LEFT_CLICK_BLOCK && event.getPlayer().getGameMode() == GameMode.CREATIVE);
     }
 }
