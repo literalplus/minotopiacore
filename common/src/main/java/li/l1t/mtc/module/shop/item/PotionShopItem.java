@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017.
+ * Copyright (c) 2013-2016.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -43,16 +43,23 @@ public class PotionShopItem extends AbstractShopItem {
         super(input);
         this.data = find(String.class, POTION_SPEC_PATH, input)
                 .map(PotionHelper::dataFromString)
-                .orElse(new PotionData(PotionType.UNCRAFTABLE, false, false));
+                .orElse(new PotionData(PotionType.SPEED, false, false));
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> result = super.serialize();
+        result.put(POTION_SPEC_PATH, PotionHelper.stringFromData(data));
+        return result;
     }
 
     public static PotionShopItem fromItemStack(ItemStack stack, String... parameters) {
         Preconditions.checkNotNull(stack, "stack");
         Preconditions.checkNotNull(parameters, "parameters");
         PotionData data;
-        if (parameters.length == 0) {
+        if(parameters.length == 0) {
             throw new UserException("need at least one argument to specify potion type");
-        } else if (parameters.length == 1) {
+        } else if(parameters.length == 1) {
             data = PotionHelper.dataFromString(parameters[0]);
         } else {
             data = PotionHelper.dataFromString(parameters[0] + ":" + parameters[1]);
@@ -63,21 +70,12 @@ public class PotionShopItem extends AbstractShopItem {
     }
 
     @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> result = super.serialize();
-        result.put(POTION_SPEC_PATH, PotionHelper.stringFromData(data));
-        return result;
-    }
-
-    @Override
     @SuppressWarnings("deprecation")
     public ItemStack toItemStack(int amount) {
-        ItemStackFactory factory = new ItemStackFactory(getMaterial())
-                .amount(amount);
-        if (data.getType() != PotionType.UNCRAFTABLE) {
-            factory.potion(data);
-        }
-        return factory.produce();
+        return new ItemStackFactory(getMaterial())
+                .amount(amount)
+                .potion(data)
+                .produce();
     }
 
     @Override
@@ -106,10 +104,13 @@ public class PotionShopItem extends AbstractShopItem {
         if (this == o) {
             return true;
         }
+
         if (!(o instanceof PotionShopItem)) {
             return false;
         }
+
         PotionShopItem shopItem = (PotionShopItem) o;
+
         return getMaterial() == shopItem.getMaterial() && shopItem.data.equals(data);
     }
 
