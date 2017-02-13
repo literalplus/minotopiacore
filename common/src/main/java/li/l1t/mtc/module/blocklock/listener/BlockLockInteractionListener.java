@@ -10,6 +10,7 @@ package li.l1t.mtc.module.blocklock.listener;
 import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.api.module.inject.InjectMe;
 import li.l1t.mtc.module.blocklock.service.BlockLockService;
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -42,8 +43,9 @@ public class BlockLockInteractionListener implements Listener {
     }
 
     private boolean isIrrelevant(PlayerInteractEvent event) {
-        return event.getAction() != Action.LEFT_CLICK_BLOCK ||
+        return !(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) ||
                 event.getClickedBlock() == null ||
+                event.getPlayer().getGameMode() == GameMode.CREATIVE ||
                 !lockService.isLockable(event.getClickedBlock());
     }
 }
