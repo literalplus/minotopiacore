@@ -75,18 +75,21 @@ public class BlockLockService {
         locks.lockBlock(block, player.getUniqueId());
     }
 
-    public void destroyLockAndReturn(Block block, Player player) {
+    public void destroyLockAndRefund(Block block, Player player) {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(player, "player");
         Optional<BlockLock> lock = findLock(block);
         if (!lock.isPresent()) {
             throw new NotLockedException(block);
         } else {
-            removeLockIfPossible(block, player, lock.get());
+            destroyLockAndRefund(block, player, lock.get());
         }
     }
 
-    private void removeLockIfPossible(Block block, Player player, BlockLock lock) {
+    public void destroyLockAndRefund(Block block, Player player, BlockLock lock) {
+        Preconditions.checkNotNull(block, "block");
+        Preconditions.checkNotNull(player, "player");
+        Preconditions.checkNotNull(lock, "lock");
         if (!mayRemoveLock(player, lock)) {
             throw new UserException("Diesen Block darfst du nicht zerstören.");
         } else if (lock.hasBeenRemoved()) {
@@ -97,11 +100,10 @@ public class BlockLockService {
     }
 
     private void removeLockAndRefundIfAllowed(Block block, Player player, BlockLock lock) {
-        Material previousMaterial = block.getType();
         boolean refundAllowed = isRefundAllowed(block, player, lock);
         doRemoveLock(block, player);
         if (refundAllowed) {
-            doRefundBlockAndNotify(block, player, previousMaterial);
+            doRefundBlockAndNotify(block, player, lock);
         } else {
             notifyNoRefunds(player);
         }
@@ -132,8 +134,8 @@ public class BlockLockService {
         block.setType(Material.AIR, false);
     }
 
-    private void doRefundBlockAndNotify(Block block, Player player, Material dropMaterial) {
-        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMaterial));
+    private void doRefundBlockAndNotify(Block block, Player player, BlockLock lock) {
+        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(lock.getType()));
         MessageType.RESULT_LINE_SUCCESS.sendTo(player,
                 "Der Block wurde erfolgreich entfernt. Du hast ihn zurückerhalten.");
     }

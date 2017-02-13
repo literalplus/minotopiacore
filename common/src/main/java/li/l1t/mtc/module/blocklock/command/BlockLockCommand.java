@@ -39,7 +39,7 @@ public class BlockLockCommand extends MTCExecutionExecutor {
             switch (exec.arg(0).toLowerCase()) {
                 case "destroy":
                     XyLocation location = LocationHelper.deserialize(exec.arg(1));
-                    lockService.destroyLockAndReturn(location.getBlock(), exec.player());
+                    lockService.destroyLockAndRefund(location.getBlock(), exec.player());
                     return true;
                 case "tool":
                     exec.requirePermission(BlockLockModule.INFO_PERMISSION);
