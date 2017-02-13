@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -46,7 +46,7 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
     }
 
     @Override
-    public void notifyOnMatch(String command, Player sender) {
+    public boolean notifyOnMatch(String command, Player sender) {
         /*
         This implementation is separate from #matches(...)Z so that we can mark matches in the notification
          */
@@ -57,9 +57,10 @@ public class RegExCommandSpyFilter extends MultiSubscriberCommandSpyFilter {
 
                 getOnlineSubscribers()
                         .forEach(plr -> plr.sendMessage(message));
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     protected String formatMatch(Matcher matcher, Player sender, String command) {

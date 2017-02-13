@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -35,8 +35,8 @@ public class MockCommandSpyFilter implements CommandSpyFilter {
     }
 
     @Override
-    public void notifyOnMatch(String command, Player sender) {
-        //empty
+    public boolean notifyOnMatch(String command, Player sender) {
+        return false;
     }
 
     @Override

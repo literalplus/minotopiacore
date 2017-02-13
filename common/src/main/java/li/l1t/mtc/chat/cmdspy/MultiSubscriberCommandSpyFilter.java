@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -10,12 +10,7 @@ package li.l1t.mtc.chat.cmdspy;
 import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 /**
@@ -50,9 +45,12 @@ public class MultiSubscriberCommandSpyFilter extends SimpleCommandSpyFilter {
     }
 
     @Override
-    public void notifyOnMatch(String command, Player sender) {
+    public boolean notifyOnMatch(String command, Player sender) {
         if (matches(command, sender)) {
             notifySubscribers(command, sender);
+            return true;
+        } else {
+            return false;
         }
     }
 
