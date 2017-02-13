@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -30,7 +30,12 @@ public class ShopMenuListener implements Listener {
 
         InventoryHolder holder = evt.getClickedInventory().getHolder();
         if (holder != null && holder instanceof ShopMenu) {
-            evt.setCancelled(((ShopMenu) holder).handleClick(evt));
+            try {
+                evt.setCancelled(((ShopMenu) holder).handleClick(evt));
+            } catch (Exception e) {
+                evt.setCancelled(true);
+                e.printStackTrace();
+            }
         }
     }
 
