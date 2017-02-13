@@ -43,9 +43,13 @@ public class BlockLockInteractionListener implements Listener {
     }
 
     private boolean isIrrelevant(PlayerInteractEvent event) {
-        return !(event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) ||
+        return !isRelevantClick(event) ||
                 event.getClickedBlock() == null ||
-                event.getPlayer().getGameMode() == GameMode.CREATIVE ||
                 !lockService.isLockable(event.getClickedBlock());
+    }
+
+    private boolean isRelevantClick(PlayerInteractEvent event) {
+        return event.getAction() == Action.RIGHT_CLICK_BLOCK ||
+                (event.getAction() == Action.LEFT_CLICK_BLOCK && event.getPlayer().getGameMode() == GameMode.CREATIVE);
     }
 }
