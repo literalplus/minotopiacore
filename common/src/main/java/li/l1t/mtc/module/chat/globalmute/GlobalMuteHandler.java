@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -29,7 +29,7 @@ class GlobalMuteHandler extends AbstractChatHandler {
 
     @Override
     public void handle(ChatMessageEvent evt) {
-        if (module.isGlobalMute()) {
+        if (module.isGlobalMute() && !evt.getPlayer().hasPermission(GlobalMuteModule.BYPASS_PERMISSION)) {
             evt.tryDenyMessage(getErrorMessage(), null);
         }
     }

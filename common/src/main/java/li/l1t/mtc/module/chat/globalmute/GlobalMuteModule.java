@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -21,6 +21,7 @@ import li.l1t.mtc.module.chat.ChatModule;
  * @since 2016-08-21
  */
 public class GlobalMuteModule extends MTCModuleAdapter {
+    public static final String BYPASS_PERMISSION = "mtc.globalmute.exempt";
     @InjectMe(failSilently = true)
     private ChatModule chatModule;
     private boolean globalMute = false;
@@ -42,6 +43,11 @@ public class GlobalMuteModule extends MTCModuleAdapter {
         return globalMute;
     }
 
+    private void setGlobalMute(boolean globalMute) {
+        this.globalMute = globalMute;
+        setGlobalMuteReason(null);
+    }
+
     public void toggleGlobalMute(String reason) {
         setGlobalMute(!globalMute, reason);
     }
@@ -49,11 +55,6 @@ public class GlobalMuteModule extends MTCModuleAdapter {
     public void setGlobalMute(boolean globalMute, String reason) {
         setGlobalMute(globalMute);
         setGlobalMuteReason(reason);
-    }
-
-    private void setGlobalMute(boolean globalMute) {
-        this.globalMute = globalMute;
-        setGlobalMuteReason(null);
     }
 
     public void enableGlobalMute(String reason) {
@@ -64,14 +65,14 @@ public class GlobalMuteModule extends MTCModuleAdapter {
         setGlobalMute(false);
     }
 
+    public String getGlobalMuteReason() {
+        return globalMuteReason;
+    }
+
     private void setGlobalMuteReason(String reason) {
         if (reason == null) {
             reason = "";
         }
         this.globalMuteReason = reason;
-    }
-
-    public String getGlobalMuteReason() {
-        return globalMuteReason;
     }
 }
