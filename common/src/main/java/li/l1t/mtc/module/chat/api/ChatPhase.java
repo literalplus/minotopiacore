@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -25,10 +25,6 @@ public enum ChatPhase {
      */
     CHECKING,
     /**
-     * Blocking handlers, that block all messages based on external conditions.
-     */
-    BLOCKING,
-    /**
      * Filtering handlers, that block messages based on content.
      */
     FILTERING,
@@ -44,6 +40,10 @@ public enum ChatPhase {
      * Forwarding handlers, that drop some messages and forward them to another subsystem.
      */
     FORWARDING,
+    /**
+     * Blocking handlers, that block messages from being sent to global chat based on external conditions.
+     */
+    BLOCKING,
     /**
      * Monitoring handlers, that just listen to messages but don't change them.
      */
