@@ -9,6 +9,7 @@ package li.l1t.mtc.api.chat;
 
 import li.l1t.common.chat.XyComponentBuilder;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 /**
  * Provides constant expressions commonly used in chat messages as public static final fields.
@@ -61,5 +62,15 @@ public class ChatConstants {
     public static XyComponentBuilder listItemBuilder() {
         return new XyComponentBuilder("-➩", ChatColor.YELLOW).bold(true)
                 .append(" ", ChatColor.GOLD).bold(false);
+    }
+
+    /**
+     * @return a new component builder like {@link #MTC_PREFIX}
+     */
+    public static XyComponentBuilder prefixBuilder() {
+        return new XyComponentBuilder("[", ChatColor.GRAY)
+                .append("MTC", ChatColor.GOLD, ChatColor.BOLD)
+                .append("]", ChatColor.GRAY, ComponentBuilder.FormatRetention.NONE)
+                .append(" ", ChatColor.GOLD);
     }
 }

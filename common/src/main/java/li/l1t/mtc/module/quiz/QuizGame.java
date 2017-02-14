@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,8 +7,12 @@
 
 package li.l1t.mtc.module.quiz;
 
+import li.l1t.mtc.api.chat.ChatConstants;
+import li.l1t.mtc.api.chat.MessageType;
 import li.l1t.mtc.helper.MTCHelper;
 import li.l1t.mtc.module.chat.globalmute.GlobalMuteModule;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -64,8 +68,14 @@ public class QuizGame {
 
     public void reset(Player winner) {
         Validate.isTrue(currentQuestion != null, "Cannot reset when not running!");
-        module.getPlugin().getServer().broadcastMessage(MTCHelper.locArgs("XU-qzanswer", "CONSOLE", false,
-                winner.getName(), getCurrentQuestion().getAnswer()));
+        BaseComponent[] winnerComponents = ChatConstants.prefixBuilder()
+                .append(winner.getName(), ChatColor.YELLOW).tooltip("kopieren").suggest(winner.getName())
+                .append(" hat ", ChatColor.GOLD).tooltip("UUID kopieren: " + winner.getUniqueId().toString())
+                .append("gewonnen. Die richtige Antwort war:")
+                .suggest(winner.getUniqueId().toString()).create();
+        module.getPlugin().getServer().getOnlinePlayers()
+                .forEach(receiver -> receiver.spigot().sendMessage(winnerComponents));
+        MessageType.BROADCAST.broadcast(module.getPlugin().getServer(), "§d%s", getCurrentQuestion().getAnswer());
         currentQuestion = null;
         resetGlobalMute();
     }
