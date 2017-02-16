@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -141,11 +141,16 @@ public class NubCommand extends MTCExecutionExecutor {
     }
 
     private boolean handleCancelOther(BukkitExecution exec, UUID playerId) {
+        requireAdminPermission(exec);
         Player player = getPlayerOrFail(playerId);
         requireIsProtected(player, "Dieser Spieler ist nicht geschützt.");
         service.cancelProtection(player);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "Der Schutz von §p%s§s wurde aufgehoben.", player.getName());
         return true;
+    }
+
+    private void requireAdminPermission(BukkitExecution exec) {
+        exec.requirePermission(NubModule.ADMIN_PERMISSION);
     }
 
     private boolean handleCancelOwn(BukkitExecution exec) {
@@ -182,6 +187,7 @@ public class NubCommand extends MTCExecutionExecutor {
     }
 
     private boolean handleStart(BukkitExecution exec, UUID playerId) {
+        requireAdminPermission(exec);
         Player player = getPlayerOrFail(playerId);
         service.startProtection(player);
         exec.respond(MessageType.RESULT_LINE_SUCCESS, "%s ist jetzt geschützt.", player.getName());
@@ -189,6 +195,7 @@ public class NubCommand extends MTCExecutionExecutor {
     }
 
     private boolean handlePause(BukkitExecution exec, UUID playerId) {
+        requireAdminPermission(exec);
         requireIsProtected(playerId, "Dieser Spieler ist nicht geschützt.");
         Player player = getPlayerOrFail(playerId);
         service.pauseProtection(player);
