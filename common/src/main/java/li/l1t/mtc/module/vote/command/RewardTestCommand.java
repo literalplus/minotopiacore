@@ -37,6 +37,7 @@ public class RewardTestCommand extends MTCExecutionExecutor {
 
     @Override
     public boolean execute(BukkitExecution exec) throws UserException, InternalException {
+        exec.requirePermission("mtc.vote.rwtest");
         if (exec.hasNoArgs()) {
             exec.respondUsage("", "<Spieler> [Service]", "Gibt testweise die Votebelohnung aus.");
             exec.respond(MessageType.RESULT_LINE, "Wenn kein Service angegeben wird, wird irgendeiner verwendet," +
