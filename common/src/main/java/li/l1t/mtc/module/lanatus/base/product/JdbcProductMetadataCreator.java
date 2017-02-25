@@ -27,6 +27,6 @@ public abstract class JdbcProductMetadataCreator<T extends ProductMetadata> exte
 
     protected List<String> commaSeparated(ResultSet rs, String column) throws SQLException {
         String source = rs.getString(column);
-        return Arrays.asList(source.split(", ?"));
+        return Arrays.asList(source.split("(?<!\\\\), ?"));
     }
 }
