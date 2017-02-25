@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://l1t.li/">Literallie</a>
@@ -27,6 +28,8 @@ public abstract class JdbcProductMetadataCreator<T extends ProductMetadata> exte
 
     protected List<String> commaSeparated(ResultSet rs, String column) throws SQLException {
         String source = rs.getString(column);
-        return Arrays.asList(source.split("(?<!\\\\), ?"));
+        return Arrays.stream(source.split("(?<!\\\\), ?"))
+                .map(str -> str.replaceAll("\\\\,", ","))
+                .collect(Collectors.toList());
     }
 }
