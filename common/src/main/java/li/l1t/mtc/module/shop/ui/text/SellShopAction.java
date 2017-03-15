@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -69,7 +69,7 @@ class SellShopAction extends AbstractShopAction {
         int amount;
         ItemStack itemInHand = plr.getInventory().getItemInMainHand();
         ShopItem item = module.getItemManager().getItem(itemInHand)
-                .orElseThrow(() -> new UserException("Dieses Item gibt es nicht."));
+                .orElseThrow(() -> new UserException("Das kannst du nicht verkaufen."));
 
         if (!output.checkTradable(plr, item, "in deiner Hand", TransactionType.SELL)) {
             return;
