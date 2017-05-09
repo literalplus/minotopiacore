@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016.
+ * Copyright (c) 2013-2017.
  * This work is protected by international copyright laws and licensed
  * under the license terms which can be found at src/main/resources/LICENSE.txt
  * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
@@ -7,18 +7,14 @@
 
 package li.l1t.mtc.module.chat.mute.yaml;
 
+import li.l1t.mtc.api.MTCPlugin;
 import li.l1t.mtc.hook.XLoginHook;
 import li.l1t.mtc.module.chat.mute.api.Mute;
 import li.l1t.mtc.module.chat.mute.api.MuteManager;
 import li.l1t.mtc.yaml.ManagedConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Handles management of mute metadata.
@@ -29,9 +25,9 @@ import java.util.UUID;
 public class YamlMuteManager implements MuteManager {
     private final Map<UUID, Mute> mutes = new HashMap<>();
     private final ManagedConfiguration config;
-    private final Plugin plugin;
+    private final MTCPlugin plugin;
 
-    public YamlMuteManager(ManagedConfiguration config, Plugin plugin) {
+    public YamlMuteManager(ManagedConfiguration config, MTCPlugin plugin) {
         this.config = config;
         this.plugin = plugin;
         loadFromConfiguration();
