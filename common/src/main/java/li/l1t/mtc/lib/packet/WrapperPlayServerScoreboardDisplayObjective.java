@@ -1,14 +1,7 @@
 /*
- * Copyright (c) 2013-2016.
- * This work is protected by international copyright laws and licensed
- * under the license terms which can be found at src/main/resources/LICENSE.txt
- * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
- */
-
-/*
  * This file is part of PacketWrapper.
  * Copyright (C) 2012-2015 Kristian S. Strangeland
- * Copyright (C) 2015-2016 dmulloy2
+ * Copyright (C) 2015-2017 dmulloy2
  *
  * PacketWrapper is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

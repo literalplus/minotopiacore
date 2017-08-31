@@ -1,10 +1,32 @@
+MinoTopiaCore
+-------------
 ````
 ▒█▀▄▀█ ░▀░ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀█ █▀▀█ ░▀░ █▀▀█ ▒█▀▀█ █▀▀█ █▀▀█ █▀▀ 
 ▒█▒█▒█ ▀█▀ █░░█ █░░█ ░▒█░░ █░░█ █░░█ ▀█▀ █▄▄█ ▒█░░░ █░░█ █▄▄▀ █▀▀ 
 ▒█░░▒█ ▀▀▀ ▀░░▀ ▀▀▀▀ ░▒█░░ ▀▀▀▀ █▀▀▀ ▀▀▀ ▀░░▀ ▒█▄▄█ ▀▀▀▀ ▀░▀▀ ▀▀▀ 
-Copyright (C) 2013 - 2017 xxyy98 / Literallie / Philipp Nowak (me) and contributors.
 ````
+
+This is the core plugin for the MinoTopia Minecraft server.
+It provides a huge pile of interwoven legacy components, but
+also a shiny module system for new code.
+
+**Note:** This project contains some legacy code, notably
+most classes outside of the `li.l1t.mtc.module` package,
+which may be toxic to the eye. Read at your own risk.
+
+Contributing
+------------
 
 See [CONTRIBUTING.md](https://bitbucket.org/minotopia/minotopiacore/src/master/CONTRIBUTING.md?at=master) for details on contribution guidelines.
 
-You agree to the license located at `bootstrap/src/main/resources/LICENSE.txt`.
+````
+//TODO: Populate README.md
+````
+
+License
+-------
+
+This project is licensed under a GNU APGL v3 license.
+
+For details, refer to the `LICENSE` file. A non-legally-binding
+summary is available [here](https://choosealicense.com/licenses/agpl-3.0/).

@@ -1,8 +1,19 @@
 /*
- * Copyright (c) 2013-2016.
- * This work is protected by international copyright laws and licensed
- * under the license terms which can be found at src/main/resources/LICENSE.txt
- * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
+ * MinoTopiaCore
+ * Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package li.l1t.mtc.module.fulltag;
@@ -28,18 +39,9 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-import static net.md_5.bungee.api.ChatColor.BLUE;
-import static net.md_5.bungee.api.ChatColor.DARK_AQUA;
-import static net.md_5.bungee.api.ChatColor.DARK_GRAY;
-import static net.md_5.bungee.api.ChatColor.DARK_GREEN;
-import static net.md_5.bungee.api.ChatColor.GRAY;
+import static net.md_5.bungee.api.ChatColor.*;
 
 /**
  * Executes the /full command, which allows specifically privileged administrators to manage Full

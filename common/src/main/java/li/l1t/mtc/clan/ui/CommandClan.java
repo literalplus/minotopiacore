@@ -1,8 +1,19 @@
 /*
- * Copyright (c) 2013-2016.
- * This work is protected by international copyright laws and licensed
- * under the license terms which can be found at src/main/resources/LICENSE.txt
- * or alternatively obtained by sending an email to xxyy98+mtclicense@gmail.com.
+ * MinoTopiaCore
+ * Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package li.l1t.mtc.clan.ui;
@@ -10,12 +21,7 @@ package li.l1t.mtc.clan.ui;
 import li.l1t.common.util.CommandHelper;
 import li.l1t.mtc.ConfigHelper;
 import li.l1t.mtc.MTC;
-import li.l1t.mtc.clan.ClanHelper;
-import li.l1t.mtc.clan.ClanInfo;
-import li.l1t.mtc.clan.ClanMemberInfo;
-import li.l1t.mtc.clan.ClanPermission;
-import li.l1t.mtc.clan.InvitationInfo;
-import li.l1t.mtc.clan.RunnableTpClanBase;
+import li.l1t.mtc.clan.*;
 import li.l1t.mtc.helper.LaterMessageHelper;
 import li.l1t.mtc.helper.MTCHelper;
 import li.l1t.mtc.misc.cmd.MTCCommandExecutor;
