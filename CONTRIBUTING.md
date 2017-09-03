@@ -1,8 +1,8 @@
 # MinoTopiaCore contribution terms
 
 If you contribute code, concepts or anything else to this project, you agree that these contributions be bundled with
-this project and licensed under its license, which can be found at `bootstrap/src/main/resources/LICENSE.txt` or
-obtained by sending an email to `xxyy98+mtclicense@gmail.com`.
+this project and licensed under the project's license, as specified in
+the `LICENSE` file.
 
 # Code style
 
@@ -40,7 +40,8 @@ All commit messages **must** comply to the following standards:
 	
 Here are some examples of complying ("good") commit messages:
 
- * `[1.6.6] Refactor Module Framework with Dependency Injection`
+````
+    [1.6.6] Refactor Module Framework with Dependency Injection
     
     This commit changes the internal architecture of the Module Framework from a mostly-static
     API based on MTCModuleAdapter to a more dynamic, instance-based approach. In this new
@@ -58,8 +59,8 @@ Here are some examples of complying ("good") commit messages:
     This commit also adds test cases for ModuleLoader. Please treat them with respect, it has been a
      lot of hassle to get them to work with mocking MTC. Some test-related things have been changed in
     the poms to allow for the tests to run correctly.
-	
-	_(yes, the whole thing)_
+````
+_(yes, the whole thing)_
     
  * `Relocate Fanciful to lib package to prevent incompatibilities`
  * `RepeaterModule: Fix null appearing in message list`
@@ -67,7 +68,8 @@ Here are some examples of complying ("good") commit messages:
 Here are some examples of non-complying commit messages that will be rejected:
 
  * `rename MainInventoryOpenListener to VehicleInventoryOpenListener & ignore cancelled events & priority NORMAL -> HIGHEST`
-     (way too long first line, first letter lowercase)
+     (way too long first line, first letter lowercase, also too many
+     changes, but that is hard to avoid sometimes, so might be ok)
  * `fix #386` (not meaningful)
  * `Added HolographicDisplays source because Maven sucks` (not present tense)
  
@@ -93,7 +95,7 @@ Command help messages must follow a consistent style. That style is as follows f
 Note that the `--some-option` part is not usual Minecraft style and should be avoided. It is not yet used in MTC, but
 if it were to be used, a library should be included for argument parsing.
 
-Also note that this is also valid:
+Further note that this is also valid:
 
 ````
 /command sub additem <Item[:Data value]>
