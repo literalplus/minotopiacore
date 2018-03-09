@@ -1,6 +1,6 @@
 <!--
   ~ MinoTopiaCore
-  ~ Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+  ~ Copyright (C) 2013 - 2018 Philipp Nowak (https://github.com/xxyy) and contributors.
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as published
@@ -35,15 +35,14 @@
     <url>https://l1t.li/</url>
 
     <scm>
-        <connection>scm:git:git@bitbucket.org:minotopia/minotopiacore.git</connection>
+        <connection>scm:git:git@github.com:xxyy/minotopiacore.git</connection>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
-        <downloadUrl>https://ci.minotopia.me/job/pvp~mtc/</downloadUrl>
         <repository>
             <id>xxyy-repo</id>
-            <url>https://repo.l1t.li/xxyy-private/</url>
+            <url>https://repo.l1t.li/xxyy-public/</url>
         </repository>
     </distributionManagement>
 
