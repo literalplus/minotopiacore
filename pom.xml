@@ -66,7 +66,7 @@
         <repository>
             <id>xxyy-repo</id>
             <!-- HolographicDisplays, xLogin, etc. -->
-            <url>https://repo.l1t.li/libs-all/</url>
+            <url>https://repo.l1t.li/public-all/</url>
         </repository>
         <repository>
             <id>jcenter</id>
@@ -143,7 +143,7 @@
             <dependency>
                 <groupId>com.comphenix.protocol</groupId>
                 <artifactId>ProtocolLib</artifactId>
-                <version>3.6.4</version>
+                <version>4.3.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -314,6 +314,18 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.3.0.603</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.9</version>
                 </plugin>
             </plugins>
         </pluginManagement>
