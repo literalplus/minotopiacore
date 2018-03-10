@@ -1,6 +1,6 @@
 /*
  * MinoTopiaCore
- * Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+ * Copyright (C) 2013 - 2018 Philipp Nowak (https://github.com/xxyy) and contributors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,11 @@
 package li.l1t.mtc.listener;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LightningStrike;
+import org.bukkit.entity.MushroomCow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.LightningStrikeEvent;

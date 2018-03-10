@@ -1,6 +1,6 @@
 /*
  * MinoTopiaCore
- * Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+ * Copyright (C) 2013 - 2018 Philipp Nowak (https://github.com/xxyy) and contributors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -24,6 +24,11 @@ import li.l1t.mtc.clan.ClanHelper;
 import li.l1t.mtc.clan.ClanMemberInfo;
 import li.l1t.mtc.helper.MTCHelper;
 import org.bukkit.DyeColor;
+import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

@@ -1,6 +1,6 @@
 /*
  * MinoTopiaCore
- * Copyright (C) 2013 - 2017 Philipp Nowak (https://github.com/xxyy) and contributors.
+ * Copyright (C) 2013 - 2018 Philipp Nowak (https://github.com/xxyy) and contributors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -20,6 +20,13 @@ package li.l1t.mtc.module.framework;
 
 import com.google.common.base.Preconditions;
 import li.l1t.mtc.api.module.ModuleManager;
+import li.l1t.mtc.api.module.inject.ConstructorInjection;
+import li.l1t.mtc.api.module.inject.FieldInjection;
+import li.l1t.mtc.api.module.inject.Injection;
+import li.l1t.mtc.api.module.inject.InjectionTarget;
+import li.l1t.mtc.api.module.inject.Injector;
+import li.l1t.mtc.api.module.inject.PluginDependency;
+import li.l1t.mtc.api.module.inject.SimpleInjectionTarget;
 import li.l1t.mtc.api.module.inject.exception.InjectionException;
 import org.bukkit.plugin.java.JavaPlugin;
 
