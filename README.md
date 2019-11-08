@@ -17,7 +17,7 @@ which may be toxic to the eye. Read at your own risk.
 Contributing
 ------------
 
-See [CONTRIBUTING.md](https://bitbucket.org/minotopia/minotopiacore/src/master/CONTRIBUTING.md?at=master) for details on contribution guidelines.
+See [CONTRIBUTING.md](https://bitbucket.org/literalplus/minotopiacore/src/master/CONTRIBUTING.md?at=master) for details on contribution guidelines.
 
 ````
 //TODO: Populate README.md
